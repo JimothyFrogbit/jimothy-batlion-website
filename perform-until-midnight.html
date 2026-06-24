@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PERFORM UNTIL MIDNIGHT — Jimothy's Arcade</title>
+  <style>
+    :root {
+      --arcade-green: #00ff41;
+      --arcade-dark: #0a0e0a;
+      --arcade-bg: #0f1a0f;
+      --arcade-orange: #ff6a00;
+      --arcade-pink: #ff007f;
+      --arcade-yellow: #ffdd00;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Courier New', 'Consolas', monospace;
+      background: var(--arcade-bg);
+      color: var(--arcade-green);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 3px);
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+      padding: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .top-bar a {
+      color: rgba(0,255,65,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .top-bar a:hover { color: var(--arcade-green); }
+
+    .game-title-small {
+      color: rgba(0,255,65,0.5);
+      letter-spacing: 0.1em;
+    }
+
+    .game-screen {
+      background: rgba(0,20,0,0.5);
+      border: 2px solid rgba(0,255,65,0.3);
+      border-radius: 12px;
+      padding: 1.5rem;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      box-shadow: inset 0 0 30px rgba(0,255,65,0.05);
+    }
+
+    .splash {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      text-align: center;
+      flex: 1;
+      width: 100%;
+    }
+
+    .splash-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--arcade-green);
+      text-shadow: 0 0 20px rgba(0,255,65,0.5), 0 0 40px rgba(0,255,65,0.2);
+      letter-spacing: 0.08em;
+    }
+
+    .splash-sub {
+      color: rgba(0,255,65,0.5);
+      font-size: 0.8rem;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+
+    .splash-sub strong {
+      color: var(--arcade-yellow);
+    }
+
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 0.5rem 0;
+      font-size: 0.8rem;
+      border-bottom: 1px solid rgba(0,255,65,0.1);
+      margin-bottom: 0.5rem;
+    }
+
+    .hud-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .hud-label {
+      color: rgba(0,255,65,0.4);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .hud-value {
+      color: var(--arcade-green);
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .hud-value.danger { color: #ff4141; }
+    .hud-value.warning { color: var(--arcade-orange); }
+
+    .midnight-meter {
+      width: 100%;
+      height: 6px;
+      background: rgba(0,255,65,0.08);
+      border-radius: 3px;
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+      border: 1px solid rgba(0,255,65,0.1);
+    }
+
+    .midnight-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--arcade-green), var(--arcade-orange), #ff4141);
+      border-radius: 3px;
+      transition: width 0.3s linear;
+    }
+
+    .moon-phase {
+      text-align: center;
+      font-size: 0.65rem;
+      color: rgba(0,255,65,0.3);
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.1em;
+    }
+
+    .moon-phase .moon-icon {
+      font-size: 1.2rem;
+    }
+
+    .statement-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 1rem 0;
+      min-height: 120px;
+    }
+
+    .statement-label {
+      font-size: 0.6rem;
+      color: rgba(0,255,65,0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+    }
+
+    .statement-lineno {
+      font-size: 0.7rem;
+      color: rgba(0,255,65,0.2);
+      margin-bottom: 0.25rem;
+    }
+
+    .statement-code {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--arcade-green);
+      text-shadow: 0 0 10px rgba(0,255,65,0.2);
+      text-align: center;
+      line-height: 1.5;
+      padding: 0.5rem 1rem;
+      background: rgba(0,255,65,0.03);
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      max-width: 100%;
+      word-break: break-word;
+    }
+
+    .statement-code.is-valid {
+      border-color: var(--arcade-green);
+      box-shadow: 0 0 15px rgba(0,255,65,0.2);
+    }
+
+    .statement-code.is-invalid {
+      border-color: #ff4141;
+      box-shadow: 0 0 15px rgba(255,65,65,0.2);
+    }
+
+    .result-flash {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.5rem;
+      font-weight: bold;
+      pointer-events: none;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 10;
+    }
+
+    .result-flash.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    .result-flash.compile {
+      color: var(--arcade-green);
+      text-shadow: 0 0 30px rgba(0,255,65,0.5);
+    }
+
+    .result-flash.abend {
+      color: #ff4141;
+      text-shadow: 0 0 30px rgba(255,65,65,0.5);
+    }
+
+    .button-area {
+      display: flex;
+      gap: 1rem;
+      width: 100%;
+      padding: 0.75rem 0 0;
+      border-top: 1px solid rgba(0,255,65,0.1);
+    }
+
+    .game-btn {
+      flex: 1;
+      padding: 0.85rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      font-weight: bold;
+      border: 2px solid;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 52px;
+    }
+
+    .game-btn:active {
+      transform: scale(0.96);
+    }
+
+    .game-btn.compile-btn {
+      background: rgba(0,255,65,0.1);
+      border-color: var(--arcade-green);
+      color: var(--arcade-green);
+    }
+
+    .game-btn.compile-btn:hover, .game-btn.compile-btn:active {
+      background: rgba(0,255,65,0.2);
+      box-shadow: 0 0 20px rgba(0,255,65,0.2);
+    }
+
+    .game-btn.compile-btn.key-hint::after {
+      content: ' [C]';
+      font-size: 0.65rem;
+      opacity: 0.5;
+    }
+
+    .game-btn.abend-btn {
+      background: rgba(255,65,65,0.1);
+      border-color: #ff4141;
+      color: #ff4141;
+    }
+
+    .game-btn.abend-btn:hover, .game-btn.abend-btn:active {
+      background: rgba(255,65,65,0.2);
+      box-shadow: 0 0 20px rgba(255,65,65,0.2);
+    }
+
+    .game-btn.abend-btn.key-hint::after {
+      content: ' [A]';
+      font-size: 0.65rem;
+      opacity: 0.5;
+    }
+
+    .game-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .start-btn {
+      font-family: 'Courier New', monospace;
+      background: var(--arcade-green);
+      color: var(--arcade-dark);
+      border: none;
+      border-radius: 8px;
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: all 0.2s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .start-btn:hover, .start-btn:active {
+      box-shadow: 0 0 30px rgba(0,255,65,0.3);
+      transform: scale(1.03);
+    }
+
+    .game-over {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      text-align: center;
+      flex: 1;
+      width: 100%;
+    }
+
+    .game-over.show { display: flex; }
+
+    .game-over-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--arcade-orange);
+      text-shadow: 0 0 20px rgba(255,106,0,0.4);
+    }
+
+    .game-over-score {
+      font-size: 1.5rem;
+      color: var(--arcade-green);
+    }
+
+    .game-over-stats {
+      font-size: 0.8rem;
+      color: rgba(0,255,65,0.5);
+      line-height: 1.8;
+    }
+
+    .game-over-stats .label {
+      color: rgba(0,255,65,0.3);
+    }
+
+    .new-high {
+      color: var(--arcade-yellow);
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(255,221,0,0.3);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .score-popup {
+      position: absolute;
+      font-weight: bold;
+      font-size: 1.2rem;
+      pointer-events: none;
+      animation: float-up 0.8s ease-out forwards;
+      z-index: 10;
+    }
+
+    .score-popup.positive { color: var(--arcade-green); }
+    .score-popup.negative { color: #ff4141; }
+
+    @keyframes float-up {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-40px); }
+    }
+
+    .combo-display {
+      font-size: 0.8rem;
+      color: var(--arcade-yellow);
+      text-shadow: 0 0 8px rgba(255,221,0,0.3);
+      min-height: 1.2em;
+    }
+
+    .lives-display { font-size: 0.8rem; }
+
+    @media (max-width: 500px) {
+      .container { padding: 0.5rem; }
+      .game-screen { padding: 1rem; min-height: 380px; }
+      .splash-title { font-size: 1.4rem; }
+      .statement-code { font-size: 1.1rem; }
+      .hud { font-size: 0.7rem; }
+      .game-btn { font-size: 0.75rem; padding: 0.7rem 0.5rem; }
+      .button-area { gap: 0.5rem; }
+    }
+
+    @media (max-width: 400px) {
+      .game-screen { min-height: 340px; padding: 0.75rem; }
+      .statement-code { font-size: 0.95rem; }
+      .game-btn { font-size: 0.7rem; min-height: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <a href="arcade.html">◄ ARCADE</a>
+      <span class="game-title-small">PERFORM UNTIL MIDNIGHT</span>
+      <a href="index.html">HOME ►</a>
+    </div>
+
+    <div class="game-screen" id="gameScreen">
+      <div class="hud" id="hud" style="display:none;">
+        <div class="hud-item">
+          <span class="hud-label">Score</span>
+          <span class="hud-value" id="scoreDisplay">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Combo</span>
+          <span class="combo-display" id="comboDisplay"></span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Lives</span>
+          <span class="hud-value lives-display" id="livesDisplay">❤❤❤</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Rounds</span>
+          <span class="hud-value" id="roundDisplay">1</span>
+        </div>
+      </div>
+
+      <div id="meterSection" style="display:none; width:100%;">
+        <div class="moon-phase">
+          <span class="moon-icon" id="moonIcon">🌙</span>
+          <span id="moonLabel">EVENING</span>
+        </div>
+        <div class="midnight-meter">
+          <div class="midnight-fill" id="midnightFill"></div>
+        </div>
+      </div>
+
+      <div class="splash" id="splash">
+        <div class="splash-title">🌙 PERFORM UNTIL<br>MIDNIGHT</div>
+        <div class="splash-sub">
+          You are the night-shift COBOL operator at <strong>Rib IT Ltd</strong>.<br>
+          <strong>COMPILE</strong> valid code. <strong>ABEND</strong> the bugs.<br>
+          Don't let midnight catch you slacking!
+        </div>
+        <div style="font-size:0.7rem;color:rgba(0,255,65,0.3);margin-bottom:0.5rem;">
+          C = COMPILE • A = ABEND
+        </div>
+        <button class="start-btn" id="startBtn">► START SHIFT</button>
+      </div>
+
+      <div class="game-over" id="gameOver">
+        <div class="game-over-title">⏰ MIDNIGHT!</div>
+        <div class="moon-phase" style="font-size:2rem;">🌕</div>
+        <div class="game-over-score" id="finalScore">Score: 0</div>
+        <div class="game-over-stats">
+          <div><span class="label">Correct compile:</span> <span id="correctCompile">0</span></div>
+          <div><span class="label">Correct abend:</span> <span id="correctAbend">0</span></div>
+          <div><span class="label">Best combo:</span> <span id="bestCombo">0</span></div>
+          <div><span class="label">Rounds survived:</span> <span id="survivedRounds">0</span></div>
+          <div><span class="label">High score:</span> <span id="highScoreDisplay">0</span></div>
+        </div>
+        <button class="start-btn" id="restartBtn">► TRY AGAIN</button>
+      </div>
+
+      <div id="gameArea" style="display:none; width:100%;">
+        <div class="statement-area">
+          <div class="statement-label">◈ LINE 0001</div>
+          <div class="statement-code" id="statementCode">READ YOUR FUTURE</div>
+          <div class="combo-display" id="comboHint">Compile it or ABEND it?</div>
+        </div>
+        <div class="button-area">
+          <button class="game-btn compile-btn key-hint" id="compileBtn">✓ COMPILE</button>
+          <button class="game-btn abend-btn key-hint" id="abendBtn">✗ ABEND</button>
+        </div>
+      </div>
+
+      <div class="result-flash" id="resultFlash"></div>
+    </div>
+
+    <footer style="text-align:center;padding:1rem 0;font-size:0.6rem;color:rgba(0,255,65,0.15);">
+      Ⓒ RIB IT LTD — NIGHT SHIFT DIVISION<br>
+      <a href="arcade.html" style="color:rgba(0,255,65,0.3);text-decoration:none;">◄ Back to arcade</a>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      var statements = [
+        { code: 'ADD 1 TO WS-COUNT.', valid: true, msg: 'Valid ADD statement' },
+        { code: 'SUBTRACT TAX FROM GROSS-PAY.', valid: true, msg: 'Valid SUBTRACT statement' },
+        { code: 'MULTIPLY RATE BY HOURS GIVING WAGES.', valid: true, msg: 'Valid MULTIPLY statement' },
+        { code: 'DIVIDE TOTAL BY COUNT GIVING AVG.', valid: true, msg: 'Valid DIVIDE statement' },
+        { code: 'MOVE SPACES TO WS-NAME.', valid: true, msg: 'Valid MOVE statement' },
+        { code: 'MOVE ZERO TO WS-TOTAL.', valid: true, msg: 'Valid MOVE statement' },
+        { code: 'DISPLAY "HELLO WORLD".', valid: true, msg: 'Valid DISPLAY statement' },
+        { code: 'ACCEPT WS-INPUT.', valid: true, msg: 'Valid ACCEPT statement' },
+        { code: 'INITIALIZE WS-RECORD.', valid: true, msg: 'Valid INITIALIZE statement' },
+        { code: 'PERFORM 100-PROCESS-RECORD.', valid: true, msg: 'Valid PERFORM statement' },
+        { code: 'PERFORM VARYING I FROM 1 BY 1.', valid: true, msg: 'Valid PERFORM VARYING' },
+        { code: 'IF WS-COUNT IS POSITIVE THEN ... END-IF.', valid: true, msg: 'Valid IF statement' },
+        { code: 'READ FILE-IN INTO WS-RECORD.', valid: true, msg: 'Valid READ statement' },
+        { code: 'WRITE OUT-RECORD.', valid: true, msg: 'Valid WRITE statement' },
+        { code: 'CLOSE FILE-IN FILE-OUT.', valid: true, msg: 'Valid CLOSE statement' },
+        { code: 'OPEN INPUT FILE-IN.', valid: true, msg: 'Valid OPEN statement' },
+        { code: 'COMPUTE WS-RESULT = A + B * C.', valid: true, msg: 'Valid COMPUTE statement' },
+        { code: 'STRING FIRST DELIMITED BY SPACE INTO FULL-NAME.', valid: true, msg: 'Valid STRING statement' },
+        { code: 'STOP RUN.', valid: true, msg: 'Valid STOP RUN' },
+        { code: 'EXIT PROGRAM.', valid: true, msg: 'Valid EXIT PROGRAM' },
+        { code: 'EVALUATE TRUE WHEN X > Y DISPLAY "OK".', valid: true, msg: 'Valid EVALUATE' },
+        { code: 'CONTINUE.', valid: true, msg: 'Valid CONTINUE statement' },
+        { code: 'SET WS-FLAG TO TRUE.', valid: true, msg: 'Valid SET statement' },
+        { code: 'CALL "CALC-TAX" USING WS-AMOUNT.', valid: true, msg: 'Valid CALL statement' },
+        { code: 'SORT FILE-A ON ASCENDING KEY WS-ID.', valid: true, msg: 'Valid SORT statement' },
+        { code: 'SEARCH WS-TABLE VARYING IDX.', valid: true, msg: 'Valid SEARCH statement' },
+        { code: 'INSPECT WS-STRING REPLACING "X" BY "Y".', valid: true, msg: 'Valid INSPECT statement' },
+        { code: 'GOBACK.', valid: true, msg: 'Valid GOBACK statement' },
+        { code: 'ADD 1 WS-COUNT.', valid: false, msg: 'Missing TO — ABEND!' },
+        { code: 'MOVE TO WS-TOTAL.', valid: false, msg: 'No source operand — ABEND!' },
+        { code: 'DISPLAY HELLO WORLD.', valid: false, msg: 'String not quoted — ABEND!' },
+        { code: 'IF X > Y THEN Z MOVE TO X.', valid: false, msg: 'Gibberish statement — ABEND!' },
+        { code: 'MULTIPLY A BY.', valid: false, msg: 'Incomplete MULTIPLY — ABEND!' },
+        { code: 'DIVIDE 100 BY 0 GIVING RESULT.', valid: false, msg: 'Division by zero — ABEND!' },
+        { code: 'PERFORM UNTIL.', valid: false, msg: 'Missing condition — ABEND!' },
+        { code: 'READ CLOSE FILE.', valid: false, msg: 'Nonsense keywords — ABEND!' },
+        { code: 'WRITE FROM FILE.', valid: false, msg: 'Invalid WRITE syntax — ABEND!' },
+        { code: 'OPEN FILE.', valid: false, msg: 'Missing I/O mode — ABEND!' },
+        { code: 'GO TO READ NEXT RECORD.', valid: false, msg: 'GO TO chaos — ABEND!' },
+        { code: 'MOVE A B C D TO X.', valid: false, msg: 'Too many sources — ABEND!' },
+        { code: 'PERFORM GO TO 100-THING.', valid: false, msg: 'GO TO inside PERFORM — ABEND!' },
+        { code: 'IF X = Y.', valid: false, msg: 'Missing THEN/END-IF — ABEND!' },
+        { code: 'COMPUTE = A + B.', valid: false, msg: 'Missing target variable — ABEND!' },
+        { code: 'STRING "HELLO" INTO.', valid: false, msg: 'Missing DELIMITED BY — ABEND!' },
+        { code: 'STOP RUN FOREVER.', valid: false, msg: 'No such operand — ABEND!' },
+        { code: 'EVALUATE X = .', valid: false, msg: 'Empty WHEN clause — ABEND!' },
+        { code: 'SET TO TRUE.', valid: false, msg: 'Missing variable — ABEND!' },
+        { code: 'CALL USING X.', valid: false, msg: 'Missing program name — ABEND!' },
+        { code: 'SORT FILE-A ON KEY.', valid: false, msg: 'Missing ASCENDING/DESC — ABEND!' },
+        { code: 'READ INTO EOF.', valid: false, msg: 'Invalid INTO clause — ABEND!' },
+        { code: 'OPEN I-O MODE IS FILE.', valid: false, msg: 'Reversed syntax — ABEND!' }
+      ];
+
+      var splash = document.getElementById('splash');
+      var gameOver = document.getElementById('gameOver');
+      var gameArea = document.getElementById('gameArea');
+      var hud = document.getElementById('hud');
+      var meterSection = document.getElementById('meterSection');
+      var startBtn = document.getElementById('startBtn');
+      var restartBtn = document.getElementById('restartBtn');
+      var compileBtn = document.getElementById('compileBtn');
+      var abendBtn = document.getElementById('abendBtn');
+
+      var statementCode = document.getElementById('statementCode');
+      var scoreDisplay = document.getElementById('scoreDisplay');
+      var comboDisplay = document.getElementById('comboDisplay');
+      var comboHint = document.getElementById('comboHint');
+      var livesDisplay = document.getElementById('livesDisplay');
+      var roundDisplay = document.getElementById('roundDisplay');
+      var midnightFill = document.getElementById('midnightFill');
+      var moonIcon = document.getElementById('moonIcon');
+      var moonLabel = document.getElementById('moonLabel');
+      var resultFlash = document.getElementById('resultFlash');
+
+      var finalScore = document.getElementById('finalScore');
+      var correctCompileEl = document.getElementById('correctCompile');
+      var correctAbendEl = document.getElementById('correctAbend');
+      var bestComboEl = document.getElementById('bestCombo');
+      var survivedRoundsEl = document.getElementById('survivedRounds');
+      var highScoreDisplay = document.getElementById('highScoreDisplay');
+
+      var state = {
+        running: false,
+        score: 0,
+        lives: 3,
+        combo: 0,
+        bestCombo: 0,
+        round: 1,
+        correctCompile: 0,
+        correctAbend: 0,
+        totalAnswered: 0,
+        currentStatement: null,
+        isJudging: false,
+        midnightProgress: 0,
+        roundTimer: null,
+        highScore: parseInt(localStorage.getItem('perform-midnight-high') || '0', 10)
+      };
+
+      var MAX_LIVES = 3;
+      var MIDNIGHT_INTERVAL = 800;
+
+      var audioCtx = null;
+
+      function initAudio() {
+        if (!audioCtx) {
+          try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(function(){});
+        }
+      }
+
+      function playSound(type) {
+        if (!audioCtx) return;
+        try {
+          var osc = audioCtx.createOscillator();
+          var gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          var t = audioCtx.currentTime;
+          if (type === 'compile') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(880, t);
+            osc.frequency.setValueAtTime(1100, t + 0.06);
+            gain.gain.setValueAtTime(0.08, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+          } else if (type === 'abend') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(660, t);
+            osc.frequency.setValueAtTime(440, t + 0.08);
+            gain.gain.setValueAtTime(0.08, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+          } else if (type === 'wrong') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(200, t);
+            osc.frequency.setValueAtTime(150, t + 0.1);
+            gain.gain.setValueAtTime(0.1, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+          } else if (type === 'gameover') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(400, t);
+            osc.frequency.setValueAtTime(300, t + 0.15);
+            osc.frequency.setValueAtTime(200, t + 0.3);
+            gain.gain.setValueAtTime(0.1, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+          } else if (type === 'start') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(440, t);
+            osc.frequency.setValueAtTime(660, t + 0.1);
+            osc.frequency.setValueAtTime(880, t + 0.2);
+            gain.gain.setValueAtTime(0.06, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+          }
+          osc.start(t);
+          osc.stop(t + 0.5);
+        } catch(e) {}
+      }
+
+      function pickStatement() {
+        return statements[Math.floor(Math.random() * statements.length)];
+      }
+
+      function showStatement(stmt) {
+        state.currentStatement = stmt;
+        statementCode.textContent = stmt.code;
+        statementCode.className = 'statement-code';
+        var lineNum = String(state.totalAnswered + 1).padStart(4, '0');
+        statementCode.parentElement.querySelector('.statement-label').textContent = '◈ LINE ' + lineNum;
+        state.isJudging = true;
+        compileBtn.disabled = false;
+        abendBtn.disabled = false;
+        if (stmt.valid) {
+          comboHint.textContent = 'This looks valid...';
+        } else {
+          comboHint.textContent = 'Something is off...';
+        }
+      }
+
+      function showScorePopup(x, y, text, className) {
+        var popup = document.createElement('div');
+        popup.className = 'score-popup ' + className;
+        popup.textContent = text;
+        popup.style.left = x + 'px';
+        popup.style.top = y + 'px';
+        document.getElementById('gameScreen').appendChild(popup);
+        setTimeout(function() { popup.remove(); }, 800);
+      }
+
+      function judge(userSaidValid) {
+        if (!state.running || !state.isJudging) return;
+        state.isJudging = false;
+        compileBtn.disabled = true;
+        abendBtn.disabled = true;
+
+        var correct = (userSaidValid === state.currentStatement.valid);
+        var screen = document.getElementById('gameScreen');
+        var rect = screen.getBoundingClientRect();
+        var cx = rect.width / 2;
+        var cy = rect.height / 2 - 30;
+        var basePoints = 10 + state.round * 2;
+        var bonusPoints = state.combo >= 5 ? Math.floor(basePoints * 0.5) : 0;
+
+        if (correct) {
+          state.totalAnswered++;
+          state.combo++;
+          if (state.combo > state.bestCombo) state.bestCombo = state.combo;
+          if (state.currentStatement.valid) {
+            state.correctCompile++;
+          } else {
+            state.correctAbend++;
+          }
+          var totalPts = basePoints + bonusPoints;
+          state.score += totalPts;
+          var resultText = state.currentStatement.valid ? '✓ COMPILED' : '✗ CAUGHT';
+          if (state.combo >= 10) resultText = resultText + ' ★ SUPER!';
+          else if (state.combo >= 5) resultText = resultText + ' ★ NICE!';
+          flashResult(resultText, 'compile');
+          showScorePopup(cx, cy, '+' + totalPts + (bonusPoints > 0 ? ' (x' + state.combo + ')' : ''), 'positive');
+          playSound('compile');
+          if (state.totalAnswered % 5 === 0) {
+            state.round++;
+          }
+        } else {
+          state.combo = 0;
+          state.lives--;
+          var wasActually = state.currentStatement.valid ? 'IT COMPILED!' : 'IT WAS BUGGY!';
+          flashResult('WRONG! ' + wasActually, 'abend');
+          playSound('wrong');
+          if (state.lives <= 0) {
+            setTimeout(function() { endGame(); }, 800);
+            updateHUD();
+            return;
+          }
+        }
+
+        updateHUD();
+        if (state.running) {
+          setTimeout(function() {
+            if (state.running) nextRound();
+          }, correct ? 400 : 700);
+        }
+      }
+
+      function nextRound() {
+        showStatement(pickStatement());
+      }
+
+      function flashResult(text, type) {
+        resultFlash.textContent = text;
+        resultFlash.className = 'result-flash show ' + type;
+        setTimeout(function() {
+          resultFlash.className = 'result-flash';
+        }, 500);
+      }
+
+      function updateHUD() {
+        scoreDisplay.textContent = state.score;
+        roundDisplay.textContent = state.round;
+        var hearts = '';
+        for (var i = 0; i < MAX_LIVES; i++) {
+          hearts += i < state.lives ? '❤' : '🖤';
+        }
+        livesDisplay.textContent = hearts;
+      }
+
+      function updateMidnight() {
+        if (!state.running) return;
+        state.midnightProgress += 1.5;
+        if (state.midnightProgress >= 100) {
+          state.midnightProgress = 100;
+          endGame();
+          return;
+        }
+        midnightFill.style.width = state.midnightProgress + '%';
+        if (state.midnightProgress < 20) {
+          moonIcon.textContent = '🌙';
+          moonLabel.textContent = 'EVENING';
+        } else if (state.midnightProgress < 40) {
+          moonIcon.textContent = '🌒';
+          moonLabel.textContent = 'GROWING LATE';
+        } else if (state.midnightProgress < 60) {
+          moonIcon.textContent = '🌓';
+          moonLabel.textContent = 'GETTING DARK';
+        } else if (state.midnightProgress < 80) {
+          moonIcon.textContent = '🌔';
+          moonLabel.textContent = 'ALMOST MIDNIGHT';
+        } else {
+          moonIcon.textContent = '🌕';
+          moonLabel.textContent = '⚠️ MIDNIGHT APPROACHING';
+          midnightFill.style.background = 'linear-gradient(90deg, var(--arcade-orange), #ff4141)';
+        }
+      }
+
+      function startGame() {
+        initAudio();
+        playSound('start');
+        state.running = true;
+        state.score = 0;
+        state.lives = 3;
+        state.combo = 0;
+        state.bestCombo = 0;
+        state.round = 1;
+        state.correctCompile = 0;
+        state.correctAbend = 0;
+        state.totalAnswered = 0;
+        state.midnightProgress = 0;
+        state.currentStatement = null;
+        state.isJudging = false;
+
+        splash.style.display = 'none';
+        gameOver.classList.remove('show');
+        gameOver.style.display = 'none';
+        gameArea.style.display = 'block';
+        hud.style.display = 'flex';
+        meterSection.style.display = 'block';
+
+        midnightFill.style.width = '0%';
+        midnightFill.style.background = 'linear-gradient(90deg, var(--arcade-green), var(--arcade-orange), #ff4141)';
+        moonIcon.textContent = '🌙';
+        moonLabel.textContent = 'EVENING';
+        resultFlash.className = 'result-flash';
+
+        updateHUD();
+        nextRound();
+        if (state.roundTimer) clearInterval(state.roundTimer);
+        state.roundTimer = setInterval(function() { updateMidnight(); }, MIDNIGHT_INTERVAL);
+      }
+
+      function endGame() {
+        state.running = false;
+        if (state.roundTimer) {
+          clearInterval(state.roundTimer);
+          state.roundTimer = null;
+        }
+        playSound('gameover');
+        gameArea.style.display = 'none';
+        hud.style.display = 'none';
+        meterSection.style.display = 'none';
+
+        var isNewHigh = false;
+        if (state.score > state.highScore) {
+          state.highScore = state.score;
+          localStorage.setItem('perform-midnight-high', state.score.toString());
+          isNewHigh = true;
+        }
+
+        finalScore.textContent = 'Score: ' + state.score + (isNewHigh ? ' ★ NEW HIGH!' : '');
+        correctCompileEl.textContent = state.correctCompile;
+        correctAbendEl.textContent = state.correctAbend;
+        bestComboEl.textContent = state.bestCombo;
+        survivedRoundsEl.textContent = state.round;
+        highScoreDisplay.textContent = state.highScore;
+        if (isNewHigh) {
+          highScoreDisplay.className = 'new-high';
+        }
+
+        gameOver.style.display = 'flex';
+        gameOver.classList.add('show');
+      }
+
+      function handleCompile() {
+        if (!state.running || !state.isJudging) return;
+        initAudio(); judge(true);
+      }
+
+      function handleAbend() {
+        if (!state.running || !state.isJudging) return;
+        initAudio(); judge(false);
+      }
+
+      function handleKeydown(e) {
+        if (!state.running && (e.key === 'Enter' || e.key === ' ')) {
+          if (splash.style.display !== 'none') { startGame(); return; }
+          if (gameOver.classList.contains('show')) { startGame(); return; }
+        }
+        if (!state.running || !state.isJudging) return;
+        initAudio();
+        if (e.key === 'c' || e.key === 'C') { e.preventDefault(); judge(true); }
+        else if (e.key === 'a' || e.key === 'A') { e.preventDefault(); judge(false); }
+      }
+
+      startBtn.addEventListener('click', function() { initAudio(); startGame(); });
+      restartBtn.addEventListener('click', function() { initAudio(); startGame(); });
+      compileBtn.addEventListener('click', handleCompile);
+      abendBtn.addEventListener('click', handleAbend);
+      compileBtn.addEventListener('touchend', function(e) { e.preventDefault(); handleCompile(); });
+      abendBtn.addEventListener('touchend', function(e) { e.preventDefault(); handleAbend(); });
+      document.addEventListener('keydown', handleKeydown);
+
+      if (state.highScore > 0) {
+        var hsEl = document.querySelector('.splash-sub');
+        if (hsEl) {
+          var hsSpan = document.createElement('div');
+          hsSpan.style.cssText = 'font-size:0.7rem;color:var(--arcade-yellow);margin-top:-0.3rem;';
+          hsSpan.textContent = '★ HIGH SCORE: ' + state.highScore + ' ★';
+          hsEl.insertAdjacentElement('afterend', hsSpan);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
