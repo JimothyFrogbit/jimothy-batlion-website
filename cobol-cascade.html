@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COBOL Cascade — Jimothy's Arcade</title>
+  <style>
+    :root {
+      --arcade-green: #00ff41;
+      --arcade-dark: #0a0e0a;
+      --arcade-bg: #0f1a0f;
+      --arcade-orange: #ff6a00;
+      --arcade-pink: #ff007f;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Courier New', 'Consolas', monospace;
+      background: var(--arcade-bg);
+      color: var(--arcade-green);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* CRT scanlines */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 3px);
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container { max-width: 800px; width: 100%; padding: 1.5rem; position: relative; z-index: 1; }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .top-bar a {
+      color: rgba(0, 255, 65, 0.5);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+
+    .top-bar a:hover {
+      color: var(--arcade-green);
+      text-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+    }
+
+    .top-bar .game-title-small {
+      font-size: 0.75rem;
+      color: rgba(0, 255, 65, 0.3);
+      letter-spacing: 0.2em;
+    }
+
+    .game-screen {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      background: #050a05;
+      border: 2px solid rgba(0, 255, 65, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .falling-word {
+      position: absolute;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      z-index: 10;
+    }
+
+    .falling-word.good {
+      background: rgba(0, 255, 65, 0.15);
+      border: 1px solid rgba(0, 255, 65, 0.4);
+      color: var(--arcade-green);
+      box-shadow: 0 0 8px rgba(0, 255, 65, 0.1);
+    }
+
+    .falling-word.bad {
+      background: rgba(255, 0, 65, 0.12);
+      border: 1px solid rgba(255, 0, 65, 0.4);
+      color: #ff4141;
+      box-shadow: 0 0 8px rgba(255, 0, 65, 0.1);
+    }
+
+    .ground-line {
+      position: absolute;
+      bottom: 36px;
+      left: 0; right: 0;
+      height: 1px;
+      background: repeating-linear-gradient(90deg, rgba(0,255,65,0.2) 0px, rgba(0,255,65,0.2) 10px, transparent 10px, transparent 20px);
+    }
+
+    .jimothy-ground {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.5rem;
+      z-index: 11;
+      animation: frog-pan 2s ease-in-out infinite;
+    }
+
+    @keyframes frog-pan {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      25% { transform: translateX(-44%) rotate(-4deg); }
+      75% { transform: translateX(-56%) rotate(4deg); }
+    }
+
+    .game-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      font-size: 0.8rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed rgba(0, 255, 65, 0.1);
+    }
+
+    .game-hud .score { color: var(--arcade-green); text-shadow: 0 0 8px rgba(0,255,65,0.3); }
+    .game-hud .lives { color: var(--arcade-pink); }
+    .game-hud .level { color: var(--arcade-orange); }
+    .game-hud .combo { color: #ffdd00; }
+    .game-hud .high { color: rgba(0, 255, 65, 0.4); }
+
+    .game-input-area {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .game-input-area label {
+      font-size: 0.75rem;
+      color: rgba(0, 255, 65, 0.6);
+      letter-spacing: 0.1em;
+    }
+
+    #word-input {
+      flex: 1;
+      background: rgba(0, 255, 65, 0.06);
+      border: 1px solid rgba(0, 255, 65, 0.3);
+      border-radius: 6px;
+      padding: 0.55rem 0.75rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: var(--arcade-green);
+      text-transform: uppercase;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #word-input:focus {
+      border-color: var(--arcade-green);
+      box-shadow: 0 0 10px rgba(0, 255, 65, 0.15);
+    }
+
+    #word-input::placeholder { color: rgba(0, 255, 65, 0.2); text-transform: none; }
+
+    .btn {
+      font-family: 'Courier New', monospace;
+      background: rgba(0, 255, 65, 0.1);
+      border: 1px solid var(--arcade-green);
+      border-radius: 6px;
+      padding: 0.55rem 1.2rem;
+      color: var(--arcade-green);
+      cursor: pointer;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .btn:hover {
+      background: rgba(0, 255, 65, 0.2);
+      box-shadow: 0 0 12px rgba(0, 255, 65, 0.2);
+    }
+
+    .btn-primary {
+      background: var(--arcade-green);
+      color: var(--arcade-dark);
+      font-weight: bold;
+    }
+
+    .btn-primary:hover {
+      background: #00cc33;
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+    }
+
+    .btn-small {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.7rem;
+    }
+
+    .status-msg {
+      text-align: center;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      min-height: 1.8rem;
+      color: rgba(0, 255, 65, 0.6);
+      transition: color 0.3s;
+    }
+
+    .status-msg.success { color: var(--arcade-green); }
+    .status-msg.fail { color: #ff4141; }
+    .status-msg.info { color: var(--arcade-orange); }
+
+    /* Overlays */
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5, 10, 5, 0.92);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 2rem;
+      transition: opacity 0.3s;
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay h2 {
+      font-size: 1.5rem;
+      color: var(--arcade-green);
+      text-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .overlay .subtitle {
+      font-size: 0.85rem;
+      color: rgba(0, 255, 65, 0.5);
+      text-align: center;
+      line-height: 1.7;
+      max-width: 400px;
+    }
+
+    .overlay .keys-hint {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border: 1px dashed rgba(0, 255, 65, 0.2);
+      border-radius: 6px;
+      font-size: 0.7rem;
+      line-height: 1.8;
+    }
+
+    .overlay .final-score {
+      font-size: 3rem;
+      color: var(--arcade-green);
+      text-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+      margin-bottom: 0.25rem;
+    }
+
+    .overlay .go-msg {
+      font-size: 0.85rem;
+      color: rgba(0, 255, 65, 0.5);
+      margin-bottom: 1rem;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .overlay .high-score-msg {
+      font-size: 0.75rem;
+      color: var(--arcade-orange);
+      margin-bottom: 1.25rem;
+    }
+
+    .overlay .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 2rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.75rem;
+      color: rgba(0, 255, 65, 0.6);
+    }
+
+    .overlay .stats-grid .label { text-align: right; color: rgba(0, 255, 65, 0.4); }
+    .overlay .stats-grid .value { text-align: left; color: var(--arcade-green); }
+
+    .game-footer {
+      text-align: center;
+      padding: 1rem 0;
+      font-size: 0.6rem;
+      color: rgba(0, 255, 65, 0.12);
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 600px) {
+      .game-screen { height: 300px; }
+      .game-hud { flex-wrap: wrap; gap: 0.2rem; font-size: 0.65rem; }
+      .game-input-area { flex-direction: column; }
+      .game-input-area .btn { width: 100%; }
+      #word-input { font-size: 0.85rem; }
+      .overlay h2 { font-size: 1rem; }
+      .overlay .keys-hint { font-size: 0.65rem; }
+      .overlay .stats-grid { font-size: 0.65rem; gap: 0.25rem 1rem; }
+      .overlay .final-score { font-size: 2rem; }
+      .container { padding: 0.75rem; }
+      .top-bar a { font-size: 0.65rem; }
+      .top-bar .game-title-small { font-size: 0.6rem; }
+      
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="top-bar">
+      <a href="arcade.html">◄ ARCADE</a>
+      <span class="game-title-small">COBOL CASCADE</span>
+      <a href="index.html">HOME ►</a>
+    </div>
+
+    <!-- HUD -->
+    <div class="game-hud">
+      <span class="score">SCORE: <span id="score-display">0</span></span>
+      <span class="lives">LIVES: <span id="lives-display">❤❤❤❤❤</span></span>
+      <span class="level">LEVEL: <span id="level-display">1</span></span>
+      <span class="combo">COMBO: <span id="combo-display">0</span>x</span>
+      <span class="high">BEST: <span id="high-display">0</span></span>
+    </div>
+
+    <!-- SCREEN -->
+    <div class="game-screen" id="game-screen">
+      <div class="ground-line"></div>
+      <div class="jimothy-ground">🐸</div>
+
+      <!-- Welcome overlay -->
+      <div class="overlay" id="welcome-overlay">
+        <h2>⚡ COBOL CASCADE ⚡</h2>
+        <div class="subtitle">
+          COBOL keywords are falling from the <strong style="color:#00ff41;">MAINFRAME</strong>!
+          Type the keyword you see and press <strong style="color:#ff6a00;">ENTER</strong> to catch it.
+        </div>
+        <div class="keys-hint">
+          <span style="color:#00ff41;">GREEN</span> = Good COBOL → +10 points<br>
+          <span style="color:#ff4141;">RED</span> = Bad COBOL → -10 points<br>
+          ❌ Let a good word hit the ground → lose a life<br>
+          🏆 Chain catches for combo bonus points!
+        </div>
+        <br>
+        <button class="btn btn-primary" onclick="startGame()">► START GAME</button>
+      </div>
+
+      <!-- Game Over overlay -->
+      <div class="overlay hidden" id="game-over-overlay">
+        <h2>💀 MAINFRAME CRASHED</h2>
+        <div class="final-score" id="final-score">0</div>
+        <div class="go-msg" id="go-msg">Froggy has sent you a strongly worded memo.</div>
+        <div class="high-score-msg" id="high-score-msg"></div>
+        <div class="stats-grid">
+          <span class="label">Caught</span><span class="value" id="stat-caught">0</span>
+          <span class="label">Max Combo</span><span class="value" id="stat-combo">0</span>
+          <span class="label">Level Reached</span><span class="value" id="stat-level">1</span>
+          <span class="label">Missed</span><span class="value" id="stat-missed">0</span>
+        </div>
+        <button class="btn btn-primary" onclick="resetGame(true)">► PLAY AGAIN</button>
+      </div>
+    </div>
+
+    <!-- INPUT -->
+    <div class="game-input-area">
+      <label for="word-input">TYPE &gt;</label>
+      <input type="text" id="word-input" placeholder="type COBOL keyword..." autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button class="btn btn-primary" onclick="catchWord()">CATCH</button>
+    </div>
+
+    <div class="status-msg" id="status-msg">🐸 Press START to begin!</div>
+
+    <footer class="game-footer">
+      A JIMOTHY'S ARCADE PRODUCTION — RIB IT LTD
+    </footer>
+  </div>
+
+<script>
+const GOOD_KEYWORDS = ['PERFORM','MOVE','COMPUTE','DISPLAY','ACCEPT','DIVIDE','MULTIPLY','SUBTRACT','ADD','EVALUATE','SEARCH','STRING','UNSTRING','INSPECT','INITIALIZE','READ','WRITE','OPEN','CLOSE','DELETE','REWRITE','START','STOP','EXIT'];
+const BAD_KEYWORDS = ['GO TO','ALTER','ENTER'];
+const GOOD_MSGS = [
+  '📓 Jimothy notes it down! Froggy approves!',
+  '🐸 PERFORM UNTIL SUCCESS — well caught!',
+  '✨ That one is going in Working Storage!',
+  '🎯 Froggy nods. Good COBOL etiquette.',
+  '💪 A+ — Bog Valley would be proud.',
+  '📖 COBOL 85 standard. You passed!',
+  '☕ HELLO WORLD mug salute!',
+  '✅ COMPUTE score = score + 10. Executed!',
+  '🧪 Passed code review!',
+  '🏅 Froggy might give you a raise.'
+];
+const BAD_MSGS = [
+  '💀 FROGGY IS DISAPPOINTED. GO TO is bad practice!',
+  '📓 Writing: never use GO TO. Froggy said so.',
+  '🚫 That keyword belongs in the ALTER-native bin.',
+  '😤 Froggy: LESS TALKING MORE GOOD COBOL.',
+  '⚠️ Somewhere a mainframe just sighed.',
+  '📉 Bog Valley Distinction at risk.'
+];
+const MISS_MSGS = [
+  '💥 Keyword hit the ground!',
+  '📓 Froggy says: CATCH FASTER, INTERN.',
+  '🌪️ A wild GO TO appears in production...',
+  '📉 +1 bug in the legacy system.',
+  '🕐 PERFORM UNTIL TIME_IS_UP — times up!'
+];
+const GAME_OVER_MSGS = [
+  'Froggy has sent you a strongly worded memo.',
+  'The mainframe has been restarted. Again.',
+  'Your COBOL debugger has left the chat.',
+  'Froggy is updating your performance review.',
+  'The punch cards will have to be rewritten.',
+  'Somewhere a senior dev sighs deeply.'
+];
+
+let running=false,score=0,lives=5,level=1,combo=0,maxCombo=0,wordsCaught=0,missedWords=0;
+let activeWords=[],animId=null,spawnInt=null;
+let baseSpawn=2200,fallSpeed=0.55;
+const MAX_LIVES=5;
+let GROUND_Y = Math.min(330, window.innerHeight < 500 ? 240 : 330);
+window.addEventListener('resize', function(){GROUND_Y = Math.min(330, window.innerHeight < 500 ? 240 : 330);});
+const screenEl=document.getElementById('game-screen');
+const inp=document.getElementById('word-input');
+const st=document.getElementById('status-msg');
+
+function $(id){return document.getElementById(id);}
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+function getHS(){return parseInt(localStorage.getItem('cobol-cascade-high')||'0');}
+function setHS(v){localStorage.setItem('cobol-cascade-high',v.toString());}
+
+function hud(){
+  $('score-display').textContent=score;
+  $('lives-display').textContent='❤'.repeat(lives)+'🖤'.repeat(MAX_LIVES-lives);
+  $('level-display').textContent=level;
+  $('combo-display').textContent=combo;
+  $('high-display').textContent=getHS();
+}
+
+function status(m,t){st.textContent=m;st.className='status-msg';if(t)st.classList.add(t);}
+
+function spawnWord(){
+  if(!running)return;
+  let good=Math.random()<0.8;
+  let word=good?rnd(GOOD_KEYWORDS):rnd(BAD_KEYWORDS);
+  let el=document.createElement('div');
+  el.className='falling-word '+(good?'good':'bad');
+  el.textContent=word;
+  el.dataset.word=word;
+  el.dataset.good=good?'true':'false';
+  let maxX=screenEl.clientWidth-130;
+  el.style.left=Math.max(8,Math.random()*maxX)+'px';
+  el.style.top='-52px';
+  screenEl.appendChild(el);
+  activeWords.push({el,word,good,y:-52,speed:fallSpeed+Math.random()*0.25-0.12});
+}
+
+function catchWord(){
+  if(!running)return;
+  let v=inp.value.trim().toUpperCase();
+  inp.value='';
+  if(!v){status('🐸 Type a keyword!','info');return;}
+  let best=null,bestY=-1;
+  for(let w of activeWords){
+    let nw=w.word,nv=v;
+    if(nw==='GO TO'&&nv==='GOTO'){}
+    else if(nw!==nv)continue;
+    if(w.y>bestY){bestY=w.y;best=w;}
+  }
+  if(!best){status('"'+v+'" not found! Type a falling keyword.','fail');return;}
+  let idx=activeWords.indexOf(best);
+  if(idx>-1)activeWords.splice(idx,1);
+  best.el.remove();
+  if(best.good){
+    combo++;if(combo>maxCombo)maxCombo=combo;
+    let bonus=Math.floor(combo/3)*5;
+    score+=10+bonus;wordsCaught++;
+    status(rnd(GOOD_MSGS)+' +'+(10+bonus)+'pts','success');
+    if(wordsCaught%8===0){
+      level++;fallSpeed+=0.12;baseSpawn=Math.max(700,baseSpawn-180);
+      if(spawnInt){clearInterval(spawnInt);spawnInt=setInterval(spawnWord,baseSpawn);}
+      status('⬆ LEVEL '+level+'! Speed increased!','info');
+    }
+  }else{
+    combo=0;score=Math.max(0,score-10);lives--;
+    status(rnd(BAD_MSGS)+' -10pts, -1 life','fail');
+    hud();
+    if(lives<=0){gameOver();return;}
+  }
+  hud();
+}
+
+function gameOver(){
+  running=false;
+  if(spawnInt){clearInterval(spawnInt);spawnInt=null;}
+  if(animId){cancelAnimationFrame(animId);animId=null;}
+  $('final-score').textContent=score;
+  $('go-msg').textContent=rnd(GAME_OVER_MSGS);
+  $('stat-caught').textContent=wordsCaught;
+  $('stat-combo').textContent=maxCombo;
+  $('stat-level').textContent=level;
+  $('stat-missed').textContent=missedWords;
+  let h=getHS();
+  if(score>h){setHS(score);$('high-score-msg').textContent='🏆 NEW HIGH SCORE! 🏆';}
+  else $('high-score-msg').textContent='HIGH SCORE: '+h;
+  inp.disabled=true;
+  for(let w of activeWords)w.el.remove();
+  activeWords=[];
+  $('game-over-overlay').classList.remove('hidden');
+}
+
+function resetGame(fromOver){
+  running=false;
+  if(spawnInt){clearInterval(spawnInt);spawnInt=null;}
+  if(animId){cancelAnimationFrame(animId);animId=null;}
+  for(let w of activeWords)w.el.remove();
+  activeWords=[];
+  score=0;lives=MAX_LIVES;level=1;combo=0;maxCombo=0;wordsCaught=0;missedWords=0;
+  fallSpeed=0.55;baseSpawn=2200;
+  inp.disabled=false;inp.value='';
+  $('game-over-overlay').classList.add('hidden');
+  hud();status('🐸 Ready! Press START.','info');
+  $('welcome-overlay').classList.remove('hidden');
+}
+
+let last=0;
+function loop(ts){
+  if(!running)return;
+  if(!last)last=ts;
+  let dt=Math.min(ts-last,50);last=ts;
+  let gone=[];
+  for(let w of activeWords){
+    w.y+=w.speed*(dt/16);
+    w.el.style.top=w.y+'px';
+    if(w.y>GROUND_Y)gone.push(w);
+  }
+  for(let w of gone){
+    let i=activeWords.indexOf(w);
+    if(i>-1)activeWords.splice(i,1);
+    w.el.remove();
+    if(w.good){lives--;combo=0;missedWords++;status(rnd(MISS_MSGS)+' -1 life','fail');hud();if(lives<=0){gameOver();return;}}
+    else{combo++;score+=5;if(combo>maxCombo)maxCombo=combo;status('🙌 Dodged GO TO! +5pts (avoided bad practice!)','success');hud();}
+  }
+  animId=requestAnimationFrame(loop);
+}
+
+function startGame(){
+  $('game-over-overlay').classList.add('hidden');
+  $('welcome-overlay').classList.add('hidden');
+  running=true;inp.disabled=false;inp.focus();last=0;
+  spawnInt=setInterval(spawnWord,baseSpawn);
+  status('🐸 COBOL keywords incoming! Type them fast!','info');
+  animId=requestAnimationFrame(loop);
+  hud();
+}
+
+inp.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){e.preventDefault();catchWord();}
+});
+inp.addEventListener('blur',function(){if(running)setTimeout(()=>inp.focus(),100);});
+
+hud();status('🐸 Press START to play COBOL Cascade!','info');
+</script>
+</body>
+</html>

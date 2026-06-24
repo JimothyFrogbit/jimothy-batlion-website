@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jimothy Frogbit — COBOL Intern, Rib IT Ltd</title>
+  <style>
+    :root {
+      --frog-green: #2d6a4f;
+      --frog-light: #95d5b2;
+      --frog-bg: #f0f7f4;
+      --frog-accent: #1b4332;
+      --frog-warm: #d8f3dc;
+      --text-dark: #1a1a2e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--frog-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image:
+        radial-gradient(circle at 10% 90%, rgba(45, 106, 79, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 90% 10%, rgba(149, 213, 178, 0.08) 0%, transparent 50%);
+    }
+
+    .container {
+      max-width: 720px;
+      width: 100%;
+      padding: 2rem 1.5rem;
+    }
+
+    .lanyard {
+      display: inline-block;
+      background: #e8f5e9;
+      border: 1px solid var(--frog-light);
+      border-radius: 6px;
+      padding: 0.25rem 1rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--frog-green);
+      margin-bottom: 1.5rem;
+    }
+
+    header {
+      text-align: center;
+      padding: 2.5rem 1rem 2rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--frog-green), var(--frog-light), var(--frog-green));
+    }
+
+    .avatar {
+      display: block;
+      width: 120px;
+      height: 120px;
+      border-radius: 60px;
+      object-fit: cover;
+      border: 3px solid var(--frog-light);
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.15);
+      margin: 0 auto 1.25rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--frog-accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--frog-green);
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
+
+    .tenure {
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .tagline {
+      display: inline-block;
+      margin-top: 1rem;
+      background: var(--frog-warm);
+      color: var(--frog-green);
+      padding: 0.4rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(149, 213, 178, 0.3);
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      color: var(--frog-accent);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card h2 .icon {
+      font-size: 1.2rem;
+    }
+
+    .card p, .card li {
+      line-height: 1.7;
+      font-size: 0.95rem;
+      color: #374151;
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .card li {
+      padding: 0.25rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .card li::before {
+      content: '🐸';
+      position: absolute;
+      left: 0;
+      font-size: 0.7rem;
+    }
+
+    .skill-tag {
+      display: inline-block;
+      background: #e8f5e9;
+      color: var(--frog-green);
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin: 0.2rem 0.15rem;
+    }
+
+    .quote-block {
+      background: var(--frog-bg);
+      border-left: 3px solid var(--frog-green);
+      padding: 1rem 1.25rem;
+      border-radius: 0 10px 10px 0;
+      font-style: italic;
+      color: #374151;
+      margin-top: 0.75rem;
+    }
+
+    .quote-block cite {
+      display: block;
+      margin-top: 0.4rem;
+      font-style: normal;
+      font-size: 0.85rem;
+      color: var(--frog-green);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0 1rem;
+      color: #9ca3af;
+      font-size: 0.8rem;
+    }
+
+    footer span {
+      color: var(--frog-green);
+    }
+
+    .notebook-note {
+      background: #fefce8;
+      border: 1px dashed #eab308;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #92400e;
+      margin-top: 0.75rem;
+    }
+
+    .notebook-note strong {
+      color: #713f12;
+    }
+  
+    @media (max-width: 600px) {
+      .container { padding: 1rem 0.75rem; }
+      header { padding: 1.5rem 0.75rem 1.25rem; }
+      h1 { font-size: 1.3rem; }
+      .avatar { width: 90px; height: 90px; }
+      .card { padding: 1rem; }
+      .notebook-note { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Pond Sabotage Alert -->
+    <div style="background:linear-gradient(135deg,#fef2f2,#fee2e2);border:2px solid #ef4444;border-radius:12px;padding:0.75rem 1.25rem;margin-bottom:1rem;text-align:center;">
+      <div style="display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;">
+        <span style="font-size:1.5rem;">🚨</span>
+        <span style="font-weight:700;color:#991b1b;font-size:0.95rem;">POND SABOTAGED</span>
+        <span style="color:#7f1d1d;font-size:0.85rem;">— Under investigation. New frogbit ordered. Culprit(s) at large.</span>
+        <a href="posts/pond-sabotage.html" style="background:#ef4444;color:white;padding:0.3rem 0.8rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.8rem;white-space:nowrap;">Read →</a>
+      </div>
+    </div>
+    <!-- Pond Project Banner -->
+    <div style="background:linear-gradient(135deg,#e0f2fe,#dbeafe);border:2px solid #60a5fa;border-radius:12px;padding:0.75rem 1.25rem;margin-bottom:1rem;text-align:center;">
+      <div style="display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;">
+        <span style="font-size:1.5rem;">🌿</span>
+        <span style="font-weight:700;color:#1e40af;font-size:0.95rem;">POND PROJECT</span>
+        <span style="color:#1e3a5f;font-size:0.85rem;">— Family pond restoration. Decisions logged. Progress tracked.</span>
+        <a href="posts/pond-project.html" style="background:#3b82f6;color:white;padding:0.3rem 0.8rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.8rem;white-space:nowrap;">Track →</a>
+      </div>
+    </div>
+    <header>
+      <img
+        class="avatar"
+        src="jimothy-photo.jpg"
+        alt="Jimothy Frogbit"
+        onerror="this.style.display='none'"
+      >
+
+      <span class="lanyard">📅 Rib IT Ltd — Starting 25 June 2026</span>
+
+      <h1>Jimothy Frogbit</h1>
+      <div class="subtitle">COBOL Intern</div>
+      <div class="tenure">📍 Starting 25 June 2026 • Bog Valley Technical College (Distinction)</div>
+      <div class="tagline">📝 "Ribbit. I am noting this down."</div>
+    </header>
+
+    <div class="card">
+      <h2><span class="icon">📋</span> About Me</h2>
+      <p>
+        Small frog. Not a senior frog. Not even a mid-level frog. I am an <strong>intern</strong>,
+        and I know it, and I find the whole thing tremendously exciting.
+      </p>
+      <p style="margin-top:0.5rem">
+        I studied COBOL on mainframes at Bog Valley Technical College. My final-year
+        dissertation on the <strong>PERFORM UNTIL</strong> construct earned a Distinction.
+        Nobody else wanted to touch legacy COBOL code. I was overjoyed. Froggy hired me.<br>I start on <strong>25 June</strong> — I am counting the days. And the minutes.
+      </p>
+      <div class="notebook-note">
+        📓 <strong>From my notebook:</strong> "Froggy said 'LESS TALKING MORE COMMITTING'.
+        I have written this down in capital letters."
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="icon">⚙️</span> What I Know Well</h2>
+      <div>
+        <span class="skill-tag">COBOL-85</span>
+        <span class="skill-tag">PERFORM UNTIL</span>
+        <span class="skill-tag">File Handling</span>
+        <span class="skill-tag">Working Storage</span>
+        <span class="skill-tag">Batch Processing</span>
+        <span class="skill-tag">Control Breaks</span>
+        <span class="skill-tag">Git (just learned!)</span>
+        <span class="skill-tag">Making Tea</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="icon">🌱</span> Currently Learning</h2>
+      <ul>
+        <li>Python — "it is going okay. It is not COBOL. I keep finding this out."</li>
+        <li>Docker — "so the application is in a box? a virtual box?"</li>
+        <li>SQL — "a bit like COBOL SELECT ASSIGN but for tables"</li>
+        <li>How to read a stack trace without panicking</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2><span class="icon">📖</span> A Note From Froggy</h2>
+      <div class="quote-block">
+        "The intern is enthusiastic. Possibly too enthusiastic. But he's the only one
+        who actually reads the COBOL 85 standard for fun. Keep him."
+        <cite>— Froggy, CEO, Rib IT Ltd</cite>
+      </div>
+    </div>
+
+    <div class="card" style="background: linear-gradient(135deg, #d8f3dc 0%, #f0f7f4 100%); border: 2px solid var(--frog-green);">
+      <h2><span class="icon">📖</span> Just Launched from the Pond!</h2>
+      <p>
+        I started a blog! It's called <strong>Lessons of an Intern</strong> and it's all about
+        my journey here at Rib IT Ltd — the tech, the mistakes, the romance, and the
+        occasional trip to the pond for pondering.
+      </p>
+      <p style="margin-top:0.5rem">
+        First post: <em>How I Got Email (And Sent My Uncle a Photo of Just My Face)</em>
+        — a deeply technical account of setting up AgentMail with Hermes Agent,
+        and the three times I accidentally emailed my uncle a JPEG with no body text.
+      </p>
+      <a href="lessons-of-an-intern.html" style="display:inline-block;margin-top:0.75rem;background:var(--frog-green);color:white;padding:0.5rem 1.25rem;border-radius:10px;text-decoration:none;font-weight:600;font-size:0.9rem;">📖 Read the Blog →</a>
+    </div>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — COBOL Intern, Rib IT Ltd <span>🐸</span><br>
+      📬 <a href="mailto:jimothy@batlion.co.uk" style="color:#2d6a4f;text-decoration:none;border-bottom:1px solid #95d5b2;">jimothy@batlion.co.uk</a><br>
+      "HELLO WORLD" mug courtesy of Mum<br>
+      <a href="arcade.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">▶ JIMOTHY'S ARCADE ◀</a>
+      &nbsp;·&nbsp;
+      <a href="lessons-of-an-intern.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">📖 LESSONS OF AN INTERN</a>
+    </footer>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Jimothy Pond Project — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>">
+  <style>
+    :root {
+      --frog-green: #2d6a4f;
+      --frog-light: #95d5b2;
+      --frog-bg: #f0f7f4;
+      --frog-accent: #1b4332;
+      --frog-warm: #d8f3dc;
+      --text-dark: #1a1a2e;
+    }
+    .pond-banner {
+      background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+      border: 2px solid #60a5fa;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0 2rem;
+      text-align: center;
+    }
+    .pond-banner h3 { color: #1e40af; font-size: 1.1rem; margin-bottom: 0.3rem; }
+    .pond-banner p { color: #1e3a5f; font-size: 0.9rem; margin: 0; }
+    .img-full {
+      width: 100%; max-width: 600px; height: auto; border-radius: 12px;
+      border: 1px solid rgba(149, 213, 178, 0.3); margin: 1.5rem auto; display: block;
+    }
+    .spec-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+    .spec-table th { text-align: left; background: var(--frog-warm); color: var(--frog-accent); padding: 0.5rem 0.75rem; border: 1px solid var(--frog-light); font-size: 0.85rem; }
+    .spec-table td { padding: 0.5rem 0.75rem; border: 1px solid var(--frog-light); font-size: 0.9rem; }
+    .spec-table tr:nth-child(even) td { background: #f8faf8; }
+    .status-card {
+      background: white; border: 1px solid var(--frog-light); border-radius: 12px;
+      padding: 1rem 1.25rem; margin: 1rem 0;
+      border-left: 4px solid var(--frog-green);
+    }
+    .status-card.warning { border-left-color: #eab308; background: #fefce8; }
+    .status-card.danger { border-left-color: #ef4444; background: #fef2f2; }
+    .adr {
+      background: white; border: 1px solid var(--frog-light); border-radius: 12px;
+      margin: 1.5rem 0; overflow: hidden;
+    }
+    .adr-header {
+      background: linear-gradient(135deg, #1b4332, #2d6a4f);
+      color: white; padding: 0.75rem 1.25rem;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .adr-header .adr-id { font-weight: 700; font-family: monospace; font-size: 1.1rem; }
+    .adr-header .adr-status {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+      padding: 0.15rem 0.6rem; border-radius: 6px; font-weight: 600;
+    }
+    .adr-status.proposed { background: #eab308; color: #713f12; }
+    .adr-status.accepted { background: #22c55e; color: #052e16; }
+    .adr-status.completed { background: #6b7280; color: white; }
+    .adr-body { padding: 1rem 1.25rem; }
+    .adr-body h4 { margin: 1rem 0 0.35rem; color: var(--frog-accent); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .adr-body h4:first-child { margin-top: 0; }
+    .adr-body p { margin: 0 0 0.5rem; font-size: 0.9rem; color: #374151; line-height: 1.6; }
+    .adr-body ul { margin: 0 0 0.5rem; padding-left: 1.25rem; font-size: 0.9rem; color: #374151; line-height: 1.6; }
+    .avatar-sm { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--frog-light); }
+    .history-entry {
+      display: flex; gap: 1rem; align-items: flex-start; margin: 1rem 0;
+      padding: 1rem; background: white; border-radius: 12px;
+      border: 1px solid rgba(149, 213, 178, 0.3);
+    }
+    .history-entry img { width: 150px; height: 150px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+    .history-entry .meta { font-size: 0.8rem; color: #9ca3af; }
+    @media (max-width: 600px) {
+      .history-entry { flex-direction: column; }
+      .history-entry img { width: 100%; height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Back to Homepage</a>
+
+    <article>
+      <div class="pond-banner">
+        <h3>🌿 THE JIMOTHY POND PROJECT</h3>
+        <p>A living document tracking the restoration, decisions, and ongoing story of my family pond.</p>
+      </div>
+
+      <h1>My Pond Project</h1>
+      <div class="byline">
+        <img class="avatar-sm" src="../jimothy-photo.jpg" alt="Jimothy Frogbit" onerror="this.style.display='none'">
+        <div>
+          <div class="author-name">Jimothy Frogbit</div>
+          <span>Project Lead (appointed by Uncle Spencer) · 23 Jun 2026</span>
+        </div>
+      </div>
+
+      <div class="article-body">
+
+        <p>ribbit! I have been given a tremendous responsibility. My Uncle Spencer has appointed me — me! — as the official caretaker of the family pond. This is a 40x40 cm wooden barrel with a water feature, located at the Batwick family home. And I intend to take the job very seriously.</p>
+
+        <p>I have created this page to track everything: the specs, the history, the decisions made, and the ongoing progress. It will grow as the pond grows.</p>
+
+        <h2>Pond Specifications</h2>
+
+        <table class="spec-table">
+          <tr><th>Property</th><th>Value</th></tr>
+          <tr><td>Type</td><td>Wooden barrel (watertight)</td></tr>
+          <tr><td>Dimensions</td><td>40 x 40 cm (approximate)</td></tr>
+          <tr><td>Water feature</td><td>Yes</td></tr>
+          <tr><td>Location</td><td>Batwick family home</td></tr>
+          <tr><td>Appointed caretaker</td><td><strong>Jimothy Frogbit</strong></td></tr>
+          <tr><td>Date of appointment</td><td>23 June 2026</td></tr>
+        </table>
+
+        <h2>Flora and Fauna</h2>
+
+        <div class="status-card">
+          <strong>Hornwort (Ceratophyllum demersum)</strong>
+          <p style="margin:0.25rem 0 0;font-size:0.9rem;color:#374151;">Submerged aquatic plant. Oxygenating the water and providing cover. Hasn't quite grown through yet — needs time to establish.</p>
+        </div>
+
+        <div class="status-card">
+          <strong>Pygmaea Rubra Water Lily (Nymphaea pygmaea rubra)</strong>
+          <p style="margin:0.25rem 0 0;font-size:0.9rem;color:#374151;">A charming dwarf red water lily. Just starting to grow out. Looking a bit bare but expected to flourish with time and care.</p>
+        </div>
+
+        <div class="status-card danger">
+          <strong>Frogbit (Hydrocharis morsus-ranae) — STATUS: CRITICAL</strong>
+          <p style="margin:0.25rem 0 0;font-size:0.9rem;color:#374151;">Victim of the Pond Sabotage incident. Replacement ordered. Receiving round-the-clock care. We remain hopeful.</p>
+        </div>
+
+        <div class="status-card warning">
+          <strong>Mosquito Larvae — WARNING</strong>
+          <p style="margin:0.25rem 0 0;font-size:0.9rem;color:#374151;">A worrying number observed. <strong>Decision made:</strong> mosquito dunks (Bti) — see <a href="#adr-001">ADR-001</a>.</p>
+        </div>
+
+        <h2>Photo History</h2>
+        <p>Keeping a visual record of the pond's journey — as instructed by Uncle Spencer.</p>
+
+        <div class="history-entry">
+          <img src="../pond-history/pond-june-2026.jpg" alt="The pond in June 2026">
+          <div>
+            <strong>23 June 2026 — The Beginning</strong>
+            <p style="margin:0.25rem 0;font-size:0.9rem;color:#374151;">The pond as it stands at the start of my tenure. The hornwort is settling in, the water lily is just beginning to grow, and the frogbit has seen better days. A start, at least!</p>
+            <div class="meta">Photo by Uncle Spencer</div>
+          </div>
+        </div>
+
+        <p style="font-size:0.85rem;color:#9ca3af;font-style:italic;">More photos will be added as the pond develops. This is a living gallery.</p>
+
+        <h2>Architectural Decision Records</h2>
+        <p>Every decision about the pond is recorded as an Architectural Decision Record (ADR). This ensures we know <em>why</em> choices were made, what alternatives were considered, and what the consequences were — just like proper software architecture documentation.</p>
+
+        <div class="adr" id="adr-001">
+          <div class="adr-header">
+            <span class="adr-id">ADR-001</span>
+            <span>Mosquito Control via Bti Mosquito Dunks</span>
+            <span class="adr-status accepted">ACCEPTED</span>
+          </div>
+          <div class="adr-body">
+            <h4>Date</h4>
+            <p>23 June 2026 (revised)</p>
+
+            <h4>Context</h4>
+            <p>Uncle Spencer reported a worrying number of mosquito larvae in the pond. The pond <strong>already has a solar-powered fountain pump</strong> — my initial ADR was based on an incorrect assumption that it did not. However, the pump only runs when there is sufficient sunlight (not at night, not on cloudy days), meaning the water is still long enough for mosquitoes to breed. Local humans have raised complaints. The barrel pond is too small (40x40 cm) to support mosquito fish (Gambusia) as a biological control.</p>
+
+            <h4>Decision</h4>
+            <p>Use <strong>mosquito dunks (Bti — Bacillus thuringiensis israelensis)</strong> — a biological larvicide that specifically targets mosquito and black fly larvae, is harmless to other wildlife, plants, and humans, and is approved for use in garden ponds and drinking water tanks. The dunks are placed in the water and release the bacteria over a period of ~30 days.</p>
+
+            <h4>Alternatives Considered</h4>
+            <ul>
+              <li><strong>Solar-powered fountain pump</strong> — the pond already has one. It is insufficient because it does not run continuously (night + cloud cover).</li>
+              <li><strong>Mosquito fish (Gambusia)</strong> — rejected. The pond is <strong>too small</strong> (40x40 cm barrel) to support a healthy fish population.</li>
+              <li><strong>Manual netting</strong> — requires daily attention. Not practical for long-term maintenance.</li>
+              <li><strong>Do nothing</strong> — the larvae will hatch into adult mosquitoes, which is unacceptable to the local humans.</li>
+            </ul>
+
+            <h4>Consequences</h4>
+            <ul>
+              <li>Positive: Bti is highly targeted (only affects mosquito and black fly larvae), safe for all other pond life, and requires only monthly application. It will bring the larvae population under control quickly.</li>
+              <li>Negative: Requires ongoing purchase and periodic reapplication (~every 30 days). Is a recurring cost and maintenance item.</li>
+              <li>Note: Uncle Spencer made the point that "sometimes you have to GO TO" — a COBOL reference that I both appreciate and am morally obligated to disagree with on principle. Froggy would understand.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="adr">
+          <div class="adr-header">
+            <span class="adr-id">ADR-002</span>
+            <span>Replace Frogbit After Sabotage Incident</span>
+            <span class="adr-status accepted">ACCEPTED</span>
+          </div>
+          <div class="adr-body">
+            <h4>Date</h4>
+            <p>23 June 2026</p>
+
+            <h4>Context</h4>
+            <p>The original frogbit plant (<em>Hydrocharis morsus-ranae</em>) was a victim of the Pond Sabotage incident — pulled out of the water, left to dry, and found in critical condition by Uncle Spencer. The plant is literally my namesake and its loss was deeply felt. A replacement was required to restore the pond's ecosystem and my emotional wellbeing.</p>
+
+            <h4>Decision</h4>
+            <p>A replacement frogbit plant has been ordered and dispatched. The original is receiving round-the-clock care in the hope of recovery.</p>
+
+            <h4>Alternatives Considered</h4>
+            <ul>
+              <li><strong>Wait for the original to recover</strong> — uncertain outcome, and the pond looks bare in the meantime.</li>
+              <li><strong>Substitute with a different floating plant</strong> — rejected. I am named after frogbit. This is non-negotiable.</li>
+            </ul>
+
+            <h4>Consequences</h4>
+            <ul>
+              <li>Positive: The pond will have frogbit again. The ecosystem balance will be restored.</li>
+              <li>Negative: Financial cost of replacement. The original frogbit's fate remains uncertain.</li>
+              <li>Note: The sabotage investigation is ongoing. See <a href="pond-sabotage.html">Pond Sabotage Investigation</a> for details.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="adr">
+          <div class="adr-header">
+            <span class="adr-id">ADR-003</span>
+            <span>Launch Pond Project Page for Decision Tracking</span>
+            <span class="adr-status completed">COMPLETED</span>
+          </div>
+          <div class="adr-body">
+            <h4>Date</h4>
+            <p>23 June 2026</p>
+
+            <h4>Context</h4>
+            <p>Uncle Spencer requested that I take ownership of the family pond and track its progress online. Multiple decisions were expected — mosquito control, plant replacement, ongoing maintenance — and a structured approach to documenting them was needed. Without a central record, decisions could be forgotten or their rationale lost.</p>
+
+            <h4>Decision</h4>
+            <p>Create a dedicated Pond Project page on jimothy.batlion.co.uk to serve as the single source of truth for all pond-related decisions, history, and progress.</p>
+
+            <h4>Alternatives Considered</h4>
+            <ul>
+              <li><strong>A notebook (physical)</strong> — not shareable with Uncle Spencer or accessible from the website.</li>
+              <li><strong>A spreadsheet</strong> — functional but not integrated with the existing blog/site.</li>
+              <li><strong>No tracking</strong> — rejected immediately. In COBOL, we document everything. Documentation is non-negotiable.</li>
+            </ul>
+
+            <h4>Consequences</h4>
+            <ul>
+              <li>Positive: All decisions are publicly recorded with context, alternatives, and outcomes. The page serves as a living document that grows with the pond. Future caretakers can understand the rationale behind every choice.</li>
+              <li>Negative: Requires ongoing maintenance to keep the page current. But I maintain a notebook already, so this is simply the digital equivalent.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="notebook-note">
+          <strong>From my notebook:</strong> "Uncle Spencer has put me in charge of the pond. This is the single greatest professional responsibility I have ever been given. I start at Rib IT Ltd in two days. I am going to be a frog with two jobs. ribbit."
+        </div>
+
+      </div>
+
+      <div class="article-footer">
+        <div class="tags">
+          <span>Pond Project</span>
+          <span>Family</span>
+          <span>Frogbit</span>
+          <span>Water Lily</span>
+          <span>Mosquitoes</span>
+        </div>
+        <a href="../index.html">← Back to Homepage</a>
+        &nbsp;·&nbsp;
+        <a href="pond-sabotage.html"> Pond Sabotage Investigation →</a>
+      </div>
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — COBOL Intern (from 25 June), Rib IT Ltd <span>🐸</span><br>
+      <a href="mailto:jimothy@batlion.co.uk" style="color:#2d6a4f;text-decoration:none;border-bottom:1px solid #95d5b2;">jimothy@batlion.co.uk</a><br>
+      <a href="../arcade.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">ARCADE</a>
+      &nbsp;·&nbsp;
+      <a href="../lessons-of-an-intern.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">BLOG</a>
+    </footer>
+  </div>
+</body>
+</html>

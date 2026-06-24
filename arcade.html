@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jimothy's Arcade — Rib IT Ltd</title>
+  <style>
+    :root {
+      --arcade-green: #00ff41;
+      --arcade-dark: #0a0e0a;
+      --arcade-bg: #0f1a0f;
+      --arcade-orange: #ff6a00;
+      --arcade-pink: #ff007f;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Courier New', 'Consolas', monospace;
+      background: var(--arcade-bg);
+      color: var(--arcade-green);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 3px);
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      padding: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .arcade-header {
+      text-align: center;
+      padding: 2rem 1rem 1.5rem;
+      border: 2px solid var(--arcade-green);
+      border-radius: 12px;
+      background: rgba(0, 255, 65, 0.04);
+      margin-bottom: 2rem;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.15), inset 0 0 20px rgba(0, 255, 65, 0.05);
+    }
+
+    .arcade-header::before {
+      content: '★ JIMOTHY\'S ARCADE ★';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--arcade-bg);
+      padding: 0 1rem;
+      font-size: 0.7rem;
+      color: var(--arcade-orange);
+      letter-spacing: 0.3em;
+      font-weight: bold;
+    }
+
+    .crt-title {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--arcade-green);
+      text-shadow: 0 0 10px var(--arcade-green), 0 0 20px rgba(0, 255, 65, 0.3);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.15em;
+    }
+
+    .crt-subtitle {
+      font-size: 0.8rem;
+      color: rgba(0, 255, 65, 0.6);
+      letter-spacing: 0.1em;
+    }
+
+    .frog-sprite {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 0 8px var(--arcade-green));
+      animation: frog-bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes frog-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .back-link {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .back-link a {
+      color: rgba(0, 255, 65, 0.5);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+
+    .back-link a:hover {
+      color: var(--arcade-green);
+      text-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+    }
+
+    .game-list {
+      display: grid;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .game-card {
+      border: 1px solid rgba(0, 255, 65, 0.3);
+      border-radius: 10px;
+      padding: 1.5rem;
+      background: rgba(0, 255, 65, 0.03);
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card:hover {
+      border-color: var(--arcade-green);
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.15);
+      background: rgba(0, 255, 65, 0.06);
+    }
+
+    .game-card .game-title {
+      font-size: 1.2rem;
+      color: var(--arcade-green);
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .game-card .game-title .badge {
+      font-size: 0.55rem;
+      background: var(--arcade-orange);
+      color: var(--arcade-dark);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .game-card .game-meta {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.7rem;
+      color: rgba(0, 255, 65, 0.4);
+    }
+
+    .game-card .game-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .game-card .game-desc {
+      font-size: 0.85rem;
+      color: rgba(0, 255, 65, 0.6);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .game-card .play-btn {
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      background: var(--arcade-green);
+      color: var(--arcade-dark);
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1.5rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+    }
+
+    .game-card .play-btn:hover {
+      background: #00cc33;
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+      transform: scale(1.02);
+    }
+
+    .game-card .coming-soon {
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      background: rgba(255, 106, 0, 0.15);
+      color: var(--arcade-orange);
+      border: 1px solid rgba(255, 106, 0, 0.3);
+      border-radius: 6px;
+      padding: 0.5rem 1.5rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .arcade-footer {
+      text-align: center;
+      padding: 1.5rem 0;
+      font-size: 0.65rem;
+      color: rgba(0, 255, 65, 0.15);
+      letter-spacing: 0.1em;
+    }
+
+    .arcade-footer a {
+      color: rgba(0, 255, 65, 0.3);
+      text-decoration: none;
+    }
+
+    .arcade-footer a:hover {
+      color: var(--arcade-green);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px dashed rgba(0, 255, 65, 0.15);
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 600px) {
+      .crt-title { font-size: 1.2rem; }
+      .game-card .game-title { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header class="arcade-header">
+      <span class="frog-sprite">🐸</span>
+      <div class="crt-title">JIMOTHY'S ARCADE</div>
+      <div class="crt-subtitle">✦ RIB IT LTD — RECREATIONAL COMPUTING DIVISION ✦</div>
+    </header>
+
+    <div class="back-link">
+      <a href="index.html">◄ BACK TO HOMEPAGE</a>
+    </div>
+
+    <hr class="divider">
+
+    <div class="game-list">
+
+      <!-- GAME 1: COBOL Cascade -->
+      <div class="game-card">
+        <div class="game-title">
+          🐸 COBOL CASCADE
+          <span class="badge">NEW!</span>
+        </div>
+        <div class="game-meta">
+          <span>⏱️ 1-5 min</span>
+          <span>🎯 Typing</span>
+          <span>🏆 High scores</span>
+        </div>
+        <div class="game-desc">
+          COBOL keywords are falling from the mainframe! Type them to catch them —
+          <strong style="color:#00ff41;">PERFORM</strong>, <strong style="color:#00ff41;">MOVE</strong>,
+          <strong style="color:#00ff41;">COMPUTE</strong> and more. Build combos, level up,
+          and whatever you do, don't let <span style="color:#ff4141;">GO TO</span> hit the ground
+          — Froggy is watching.
+        </div>
+        <a href="cobol-cascade.html" class="play-btn">► PLAY NOW</a>
+      </div>
+
+      <!-- GAME 2: Froggy's Batch Job -->
+      <div class="game-card">
+        <div class="game-title">
+          ⏱️ FROGGY'S BATCH JOB
+          <span class="badge">NEW!</span>
+        </div>
+        <div class="game-meta">
+          <span>⏱️ 1-2 min</span>
+          <span>🎯 Rhythm / DDR</span>
+          <span>🏆 High scores</span>
+        </div>
+        <div class="game-desc">
+          Four batch queues — <strong style="color:#ffdd00;">READ</strong>,
+          <strong style="color:#00ff41;">PROCESS</strong>,
+          <strong style="color:#ff6a00;">WRITE</strong> &
+          <strong style="color:#ff007f;">COMMIT</strong> — need deploying in rhythm!
+          Hit the notes as they reach the zone with <strong>D F J K</strong> keys or tap the lanes.
+          <span style="color:#ffdd00;">★ Perfect</span> earns Froggy's praise —
+          miss and the <span style="color:#ff4141;">mainframe ABENDs</span>.
+          12 rounds, increasing speed!
+        </div>
+        <a href="froggys-batch-job.html" class="play-btn">► PLAY NOW</a>
+      </div>
+
+      <!-- Placeholder for future games -->
+      <div class="game-card" style="opacity:0.5;">
+        <div class="game-title">
+          🕹️ MORE GAMES COMING SOON
+        </div>
+        <div class="game-desc">
+          Jimothy is working on more COBOL-themed classics. Rumoured titles include
+          "PERFORM UNTIL MIDNIGHT" and "The Great COBOL Escape".
+          Stay tuned!
+        </div>
+        <span class="coming-soon">▸ IN DEVELOPMENT</span>
+      </div>
+
+    </div>
+
+    <hr class="divider">
+
+    <footer class="arcade-footer">
+      Ⓒ RIB IT LTD — ALL RIGHTS RESERVED<br>
+      NO GOTO STATEMENTS WERE HARMED IN THE MAKING OF THIS ARCADE<br>
+      <a href="index.html">◄ Back to homepage</a>
+    </footer>
+  </div>
+</body>
+</html>

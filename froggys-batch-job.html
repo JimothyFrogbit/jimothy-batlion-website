@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Froggy's Batch Job — Jimothy's Arcade</title>
+  <style>
+    :root { --g:#00ff41; --gd:#0a1a0a; --bg:#0f1a0f; --o:#ff6a00; --pink:#ff007f; --r:#ff4141; --y:#ffdd00; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body {
+      font-family:'Courier New','Consolas',monospace;
+      background:var(--bg); color:var(--g);
+      min-height:100vh; display:flex; flex-direction:column; align-items:center;
+      -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent;
+    }
+    body::after {
+      content:''; position:fixed; top:0; left:0; width:100%; height:100%;
+      background:repeating-linear-gradient(0deg,rgba(0,0,0,0.08)0px,rgba(0,0,0,0.08)1px,transparent 1px,transparent 3px);
+      pointer-events:none; z-index:9999;
+    }
+    .container { max-width:520px; width:100%; padding:0.75rem; position:relative; z-index:1; }
+    .top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem; }
+    .top-bar a { color:rgba(0,255,65,0.4); text-decoration:none; font-size:0.65rem; letter-spacing:0.1em; }
+    .top-bar a:hover { color:var(--g); }
+    .top-bar .t { font-size:0.6rem; color:rgba(0,255,65,0.25); letter-spacing:0.15em; }
+    .top-bar .t span { color:var(--o); }
+    .hud { display:flex; justify-content:space-between; font-size:0.65rem; padding:0.3rem 0; border-bottom:1px dashed rgba(0,255,65,0.08); margin-bottom:0.4rem; }
+    .hud .rnd { color:var(--o); }
+    .hud .scr { color:var(--g); }
+    .hud .str { color:#00ccff; }
+    .hud .bst { color:rgba(0,255,65,0.3); }
+    .screen { position:relative; width:100%; height:460px; background:#040804; border:2px solid rgba(0,255,65,0.15); border-radius:8px; overflow:hidden; margin-bottom:0.5rem; }
+    .lane-labels { position:absolute; top:8px; left:0; right:0; display:flex; justify-content:center; gap:4px; z-index:5; }
+    .lane-label { width:23%; text-align:center; font-size:0.5rem; color:rgba(0,255,65,0.15); letter-spacing:0.05em; text-transform:uppercase; }
+    .lane-label .key-hint { display:block; font-size:0.65rem; color:rgba(0,255,65,0.25); margin-top:1px; }
+    .lanes { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:center; gap:4px; z-index:1; }
+    .lane { width:23%; height:100%; border-left:1px solid rgba(0,255,65,0.04); border-right:1px solid rgba(0,255,65,0.04); position:relative; }
+    .hit-zone { position:absolute; bottom:60px; left:0; right:0; display:flex; justify-content:center; gap:4px; z-index:3; }
+    .hit-lane { width:23%; height:36px; border:1px solid rgba(0,255,65,0.15); border-radius:4px; background:rgba(0,255,65,0.04); position:relative; transition:all 0.1s; }
+    .hit-lane .zone-line { position:absolute; top:50%; left:-2px; right:-2px; height:1px; background:rgba(255,221,0,0.3); }
+    .hit-lane .zone-label { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:0.45rem; color:rgba(0,255,65,0.2); letter-spacing:0.2em; pointer-events:none; }
+    .hit-lane.flash-perfect { border-color:var(--y); background:rgba(255,221,0,0.15); box-shadow:0 0 15px rgba(255,221,0,0.2); }
+    .hit-lane.flash-great { border-color:var(--g); background:rgba(0,255,65,0.12); box-shadow:0 0 10px rgba(0,255,65,0.15); }
+    .hit-lane.flash-good { border-color:var(--o); background:rgba(255,106,0,0.1); }
+    .hit-lane.flash-miss { border-color:var(--r); background:rgba(255,0,65,0.1); }
+    .ground-line { position:absolute; bottom:60px; left:4px; right:4px; height:1px; background:repeating-linear-gradient(90deg,rgba(0,255,65,0.15)0px,rgba(0,255,65,0.15)6px,transparent 6px,transparent 12px); z-index:2; }
+    .note { position:absolute; width:20%; height:16px; border-radius:3px; z-index:4; transition:none; display:flex; align-items:center; justify-content:center; font-size:0.5rem; letter-spacing:0.1em; font-weight:bold; }
+    .note[data-lane="0"] { left:1%; }
+    .note[data-lane="1"] { left:26%; }
+    .note[data-lane="2"] { left:51%; }
+    .note[data-lane="3"] { left:76%; }
+    .note.perfect-note { background:var(--y); color:#0a0a0a; border:1px solid #ffee00; box-shadow:0 0 8px rgba(255,221,0,0.3); }
+    .note.great-note { background:var(--g); color:#0a0a0a; border:1px solid rgba(0,255,65,0.5); }
+    .note.good-note { background:var(--o); color:#0a0a0a; border:1px solid rgba(255,106,0,0.5); }
+    .frog { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); font-size:1.8rem; z-index:6; transition:transform 0.15s; }
+    .frog.tense { animation:fp 0.6s ease-in-out infinite; }
+    .frog.happy { animation:fj 0.4s ease-in-out 2; }
+    .frog.sad { filter:grayscale(0.8) brightness(0.6); }
+    @keyframes fp { 0%,100%{transform:translateX(-50%)rotate(0deg)} 50%{transform:translateX(-50%)rotate(-5deg)} }
+    @keyframes fj { 0%,100%{transform:translateX(-50%)translateY(0)} 50%{transform:translateX(-50%)translateY(-10px)} }
+    .result-popup { position:absolute; top:35%; left:0; right:0; text-align:center; z-index:10; pointer-events:none; opacity:0; transition:opacity 0.15s; }
+    .result-popup.show { opacity:1; }
+    .result-popup .rp-title { font-size:0.85rem; font-weight:bold; margin-bottom:0.1rem; }
+    .result-popup .rp-pts { font-size:1.2rem; }
+    .result-popup .rp-desc { font-size:0.6rem; opacity:0.6; }
+    .overlay { position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(5,10,5,0.93); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:50; padding:1.5rem; }
+    .overlay.hidden { display:none; }
+    .overlay h2 { font-size:1.2rem; margin-bottom:0.4rem; text-align:center; }
+    .overlay .sub { font-size:0.7rem; color:rgba(0,255,65,0.45); text-align:center; line-height:1.5; max-width:360px; margin-bottom:0.5rem; }
+    .overlay .rules { padding:0.6rem 0.75rem; border:1px dashed rgba(0,255,65,0.12); border-radius:6px; font-size:0.6rem; line-height:1.7; }
+    .btn { font-family:'Courier New',monospace; background:var(--g); color:var(--gd); border:none; border-radius:8px; padding:0.6rem 1.8rem; font-size:0.8rem; font-weight:bold; cursor:pointer; letter-spacing:0.1em; text-transform:uppercase; transition:all 0.2s; touch-action:manipulation; }
+    .btn:hover { box-shadow:0 0 20px rgba(0,255,65,0.25); transform:scale(1.02); }
+    .btn:active { transform:scale(0.97); }
+    .go-title { font-size:1.3rem; color:var(--r); text-shadow:0 0 12px rgba(255,0,65,0.25); margin-bottom:0.5rem; }
+    .go-score { font-size:2.2rem; color:var(--g); text-shadow:0 0 12px rgba(0,255,65,0.25); }
+    .go-grade { font-size:2.5rem; margin:0.25rem 0; }
+    .go-verdict { font-size:0.7rem; color:rgba(0,255,65,0.45); text-align:center; line-height:1.5; margin-bottom:0.5rem; max-width:340px; }
+    .go-stats { display:grid; grid-template-columns:1fr 1fr; gap:0.15rem 1.5rem; font-size:0.65rem; margin-bottom:0.75rem; }
+    .go-stats .l { text-align:right; color:rgba(0,255,65,0.35); }
+    .go-stats .v { text-align:left; color:var(--g); }
+    .go-high { font-size:0.65rem; color:var(--o); margin-bottom:0.5rem; }
+    .status-msg { text-align:center; font-size:0.7rem; min-height:1.2rem; color:rgba(0,255,65,0.4); margin-top:0.15rem; }
+    .touch-buttons { display:none; justify-content:center; gap:4px; margin-bottom:0.25rem; }
+    .touch-btn { width:23%; padding:0.75rem 0; border:1px solid rgba(0,255,65,0.2); border-radius:8px; background:rgba(0,255,65,0.04); color:var(--g); font-family:'Courier New',monospace; font-size:0.7rem; font-weight:bold; text-align:center; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent; transition:background 0.1s; }
+    .touch-btn:active { background:rgba(0,255,65,0.12); border-color:var(--g); }
+    .touch-btn .tb-key { display:block; font-size:0.5rem; color:rgba(0,255,65,0.25); margin-top:1px; }
+    .game-footer { text-align:center; padding:0.35rem 0; font-size:0.5rem; color:rgba(0,255,65,0.08); letter-spacing:0.1em; }
+    @media (hover:none) and (pointer:coarse) { .touch-buttons { display:flex; } }
+    @media (max-width:500px) { .screen { height:400px; } .hit-lane { height:30px; } .hit-lane .zone-label { font-size:0.4rem; } .note { height:14px; font-size:0.45rem; } .hud { font-size:0.6rem; } .hud .str { display:none; } .go-score { font-size:1.8rem; } .go-title { font-size:1rem; } .overlay h2 { font-size:1rem; } .container { padding:0.5rem; } }
+    @media (max-width:400px) { .screen { height:350px; } .hit-lane { height:26px; } .note { height:12px; } .hud { font-size:0.55rem; } .hud .bst { display:none; } }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <a href="arcade.html">◄ ARCADE</a>
+    <span class="t"><span>⚡</span> FROGGY'S BATCH JOB</span>
+    <a href="index.html">HOME ►</a>
+  </div>
+  <div class="hud">
+    <span class="rnd">ROUND: <span id="hud-round">1</span>/12</span>
+    <span class="scr">SCORE: <span id="hud-score">0</span></span>
+    <span class="str">🔥 <span id="hud-streak">0</span>x</span>
+    <span class="bst">REC: <span id="hud-best">0</span></span>
+  </div>
+  <div class="screen" id="screen">
+    <div class="lane-labels">
+      <div class="lane-label">READ<small class="key-hint">[D]</small></div>
+      <div class="lane-label">PROCESS<small class="key-hint">[F]</small></div>
+      <div class="lane-label">WRITE<small class="key-hint">[J]</small></div>
+      <div class="lane-label">COMMIT<small class="key-hint">[K]</small></div>
+    </div>
+    <div class="lanes">
+      <div class="lane"></div><div class="lane"></div><div class="lane"></div><div class="lane"></div>
+    </div>
+    <div class="hit-zone" id="hit-zone">
+      <div class="hit-lane" data-lane="0"><div class="zone-line"></div><div class="zone-label">DEPLOY</div></div>
+      <div class="hit-lane" data-lane="1"><div class="zone-line"></div><div class="zone-label">DEPLOY</div></div>
+      <div class="hit-lane" data-lane="2"><div class="zone-line"></div><div class="zone-label">DEPLOY</div></div>
+      <div class="hit-lane" data-lane="3"><div class="zone-line"></div><div class="zone-label">DEPLOY</div></div>
+    </div>
+    <div class="ground-line"></div>
+    <div class="result-popup" id="result-popup">
+      <div class="rp-title" id="rp-title" style="color:var(--g)">PERFECT</div>
+      <div class="rp-pts" id="rp-pts" style="color:var(--y)">+100</div><div class="rp-desc" id="rp-desc"></div>
+    </div>
+    <div class="frog" id="frog">🐸</div>
+    <div class="overlay" id="welcome">
+      <h2 style="color:var(--g);">⚡ FROGGY'S BATCH JOB ⚡</h2>
+      <div class="sub">Four batch queues are running! Hit each job as it reaches the <strong style="color:var(--y);">DEPLOY ZONE</strong>.</div>
+      <div class="rules">
+        <span style="color:var(--y);">▼</span> Notes fall in 4 lanes (READ · PROCESS · WRITE · COMMIT)<br>
+        <span style="color:var(--g);">●</span> Press <strong>D F J K</strong> (or tap) when they hit the zone<br>
+        <span style="color:var(--y);">★</span> <strong style="color:var(--y);">PERFECT</strong> = 100pts — Froggy impressed<br>
+        <span style="color:var(--g);">●</span> <strong style="color:var(--g);">GREAT</strong> = 70pts — solid<br>
+        <span style="color:var(--o);">●</span> <strong style="color:var(--o);">GOOD</strong> = 40pts — adequate<br>
+        <span style="color:var(--r);">✕</span> <strong style="color:var(--r);">MISS</strong> = 0pts — mainframe hiccup<br>
+        <span style="color:var(--o);">►</span> 12 rounds, speed increases!
+      </div><br>
+      <button class="btn" onclick="startGame()">► START BATCH</button>
+    </div>
+    <div class="overlay hidden" id="gameover">
+      <div class="go-title">💾 BATCH COMPLETE</div>
+      <div class="go-score" id="go-score">0</div>
+      <div class="go-grade" id="go-grade">🥇</div>
+      <div class="go-verdict" id="go-verdict"></div>
+      <div class="go-stats">
+        <span class="l">Perfect</span><span class="v" id="s-perf">0</span>
+        <span class="l">Great</span><span class="v" id="s-great">0</span>
+        <span class="l">Good</span><span class="v" id="s-good">0</span>
+        <span class="l">Missed</span><span class="v" id="s-miss">0</span>
+        <span class="l">Best Streak</span><span class="v" id="s-streak">0</span>
+        <span class="l">Accuracy</span><span class="v" id="s-acc">0%</span>
+      </div>
+      <div class="go-high" id="go-high"></div>
+      <button class="btn" onclick="resetGame()">► NEW BATCH</button>
+    </div>
+  </div>
+  <div class="touch-buttons" id="touch-buttons">
+    <div class="touch-btn" data-lane="0">←<span class="tb-key">[D]</span></div>
+    <div class="touch-btn" data-lane="1">↓<span class="tb-key">[F]</span></div>
+    <div class="touch-btn" data-lane="2">↑<span class="tb-key">[J]</span></div>
+    <div class="touch-btn" data-lane="3">→<span class="tb-key">[K]</span></div>
+  </div>
+  <div class="status-msg" id="status-msg">🐸 Press START BATCH or SPACE to begin!</div>
+  <footer class="game-footer">A JIMOTHY'S ARCADE PRODUCTION — RIB IT LTD</footer>
+</div>
+<script>
+(function(){
+  const TOTAL_ROUNDS=12, LANE_KEYS=['d','f','j','k'], LANE_NAMES=['READ','PROCESS','WRITE','COMMIT'];
+  let running=false,round=0,score=0,streak=0,bestStreak=0,perfCount=0,greatCount=0,goodCount=0,missCount=0,totalHits=0,totalNotes=0;
+  let activeNotes=[],spawnTimer=null,animId=null,notesPerRound=12,roundActive=false,inputLocked=false;
+  const $=id=>document.getElementById(id), hitLanes=document.querySelectorAll('.hit-lane'), resultPopup=$('result-popup'), rpTitle=$('rp-title'), rpPts=$('rp-pts'), rpDesc=$('rp-desc'), frog=$('frog');
+  function getHS(){return parseInt(localStorage.getItem('batch-ddr-high')||'0');}
+  function setHS(v){localStorage.setItem('batch-ddr-high',v.toString());}
+  function hud(){$('hud-round').textContent=Math.min(round,TOTAL_ROUNDS);$('hud-score').textContent=score;$('hud-streak').textContent=streak;$('hud-best').textContent=getHS();}
+  function status(m,c){$('status-msg').textContent=m;$('status-msg').style.color=c||'rgba(0,255,65,0.4)';}
+  function getHitZoneCenter(){return screenEl.offsetHeight-60-18;}
+  const JUDGEMENTS=[{name:'PERFECT',pts:100,zone:0.08,emoji:'🌟',color:'#ffdd00',desc:['Froggy is genuinely impressed!','Perfect batch timing!','The mainframe salutes you.','Flawless deployment!']},{name:'GREAT',pts:70,zone:0.18,emoji:'🎯',color:'#00ff41',desc:['Froggy nods. Solid work.','Clean deployment.','Good rhythm, intern!','The batch runs smoothly.']},{name:'GOOD',pts:40,zone:0.30,emoji:'👌',color:'#ff6a00',desc:['Close enough. Froggy says adequate.','It compiled.','Not bad for an intern.','Marginally acceptable.']}];
+  const screenEl=$('screen');
+  function judgeNote(noteY){const c=getHitZoneCenter();const d=Math.abs(noteY-c)/36;for(const j of JUDGEMENTS){if(d<=j.zone)return j}return null}
+  const VERDICTS=['Froggy is updating your employee of the month nomination.','The COBOL gods smile upon you.','Froggy might let you sit in the big chair.','Your HELLO WORLD mug seems fuller today.','The mainframe purrs contentedly.'];
+  const MISS_VERDICTS=['Froggy has sent you a memo in ALL CAPS.','The mainframe is restarting. Again.','Your keycard access may be reviewed.','Froggy is typing. Loudly.'];
+  const GRADES=['🥇 S+','🥇 S','🥇 A','🥈 B','🥉 C','❌ D','💀 F'];
+  function getGrade(s){const p=TOTAL_ROUNDS*notesPerRound*100;const r=p>0?s/p:0;if(r>=0.92)return GRADES[0];if(r>=0.82)return GRADES[1];if(r>=0.65)return GRADES[2];if(r>=0.50)return GRADES[3];if(r>=0.35)return GRADES[4];if(r>=0.15)return GRADES[5];return GRADES[6];}
+  function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+  function showResult(j){rpTitle.textContent=j.name+' '+j.emoji;rpTitle.style.color=j.color;rpPts.textContent='+'+j.pts;rpPts.style.color=j.color;rpDesc.textContent=rnd(j.desc);resultPopup.classList.add('show');setTimeout(()=>resultPopup.classList.remove('show'),400);}
+  function flashLane(i,t){const l=hitLanes[i];if(!l)return;l.classList.add('flash-'+t);setTimeout(()=>l.classList.remove('flash-'+t),150);}
+  function spawnRoundNotes(){if(!running||!roundActive)return;let n=0;let i=0;const count=notesPerRound;const interval=Math.max(240,600-(round-1)*25);spawnTimer=setInterval(()=>{if(!running||!roundActive||i>=count){clearInterval(spawnTimer);spawnTimer=null;if(i>=count)setTimeout(()=>{if(running&&roundActive)endRound()},3000);return}const lane=Math.floor(Math.random()*4);const nt=Math.random()<0.15?'perfect-note':(Math.random()<0.4?'great-note':'good-note');const el=document.createElement('div');el.className='note '+nt;el.dataset.lane=lane;el.dataset.type=nt;el.style.top='-20px';screenEl.appendChild(el);activeNotes.push({el:el,lane:lane,y:-20,speed:0.7+(round-1)*0.05,hit:false,type:nt});totalNotes++;i++},interval);}
+  function hitLane(idx){if(!running||!roundActive||inputLocked)return;let best=null,bestD=Infinity;const c=getHitZoneCenter();for(const n of activeNotes){if(n.hit||n.lane!==idx)continue;const d=Math.abs(n.y-c);if(d<36*1.5&&d<bestD){bestD=d;best=n}}if(!best){missCount++;streak=0;flashLane(idx,'miss');frog.className='frog sad';setTimeout(()=>frog.className='frog',300);status('💥 Nothing to deploy in '+LANE_NAMES[idx]+' lane!','#ff4141');hud();return}best.hit=true;const j=judgeNote(best.y);if(j){score+=j.pts;streak++;if(streak>bestStreak)bestStreak=streak;totalHits++;if(j.name==='PERFECT'){perfCount++;frog.className='frog happy'}else if(j.name==='GREAT'){greatCount++;frog.className='frog'}else{goodCount++;frog.className='frog'}const ft=j.name==='PERFECT'?'perfect':(j.name==='GREAT'?'great':'good');flashLane(idx,ft);showResult(j);status(j.emoji+' '+j.name+'! '+rnd(j.desc),j.color);best.el.style.opacity='0';setTimeout(()=>{if(best.el.parentNode)best.el.remove()},200)}setTimeout(()=>frog.className='frog',400);hud()}
+  function endRound(){roundActive=false;for(const n of activeNotes){if(!n.hit){missCount++;streak=0;flashLane(n.lane,'miss')}if(n.el.parentNode)n.el.remove()}activeNotes=[];hud();round++;if(round>TOTAL_ROUNDS){endGame();return}status('Round '+round+' — Get ready!','#ff6a00');frog.className='frog tense';setTimeout(()=>{if(!running)return;frog.className='frog';startRound()},1200)}
+  function startRound(){roundActive=true;inputLocked=false;activeNotes=[];status('🎵 Round '+round+' — Deploy the batch jobs!','#ff6a00');hud();spawnRoundNotes()}
+  function gameLoop(){if(!running)return;const c=getHitZoneCenter();for(let i=activeNotes.length-1;i>=0;i--){const n=activeNotes[i];if(n.hit)continue;n.y+=n.speed;n.el.style.top=n.y+'px';if(n.y>c+50){n.hit=true;missCount++;streak=0;flashLane(n.lane,'miss');if(n.el.parentNode)n.el.remove();activeNotes.splice(i,1);status('💥 Missed '+LANE_NAMES[n.lane]+' job!','#ff4141');hud()}}animId=requestAnimationFrame(gameLoop)}
+  function endGame(){running=false;roundActive=false;if(spawnTimer){clearInterval(spawnTimer);spawnTimer=null}if(animId){cancelAnimationFrame(animId);animId=null}for(const n of activeNotes){if(n.el.parentNode)n.el.remove()}activeNotes=[];const grade=getGrade(score);const high=getHS();const total=perfCount+greatCount+goodCount+missCount;const acc=total>0?Math.round((perfCount+greatCount+goodCount)/total*100):0;if(score>high)setHS(score);$('go-score').textContent=score;$('go-grade').textContent=grade;$('go-verdict').textContent=grade.startsWith('🥇')||grade.startsWith('🥈')?rnd(VERDICTS):rnd(MISS_VERDICTS);$('s-perf').textContent=perfCount;$('s-great').textContent=greatCount;$('s-good').textContent=goodCount;$('s-miss').textContent=missCount;$('s-streak').textContent=bestStreak;$('s-acc').textContent=acc+'%';$('go-high').textContent=score>high?'🏆 NEW HIGH SCORE! 🏆':'HIGH SCORE: '+high;$('gameover').classList.remove('hidden');status('💾 Batch complete! Score: '+score,'#00ff41');frog.className='frog'}
+  function startGame(){$('welcome').classList.add('hidden');$('gameover').classList.add('hidden');running=true;round=1;score=0;streak=0;bestStreak=0;perfCount=0;greatCount=0;goodCount=0;missCount=0;totalHits=0;totalNotes=0;activeNotes=[];frog.className='frog';hud();status('🎯 Getting ready...','#ff6a00');setTimeout(()=>{if(running)startRound()},800);if(animId)cancelAnimationFrame(animId);animId=requestAnimationFrame(gameLoop)}
+  function resetGame(){running=false;roundActive=false;if(spawnTimer){clearInterval(spawnTimer);spawnTimer=null}if(animId){cancelAnimationFrame(animId);animId=null}for(const n of activeNotes){if(n.el.parentNode)n.el.remove()}activeNotes=[];$('gameover').classList.add('hidden');frog.className='frog';$('welcome').classList.remove('hidden');status('🐸 Ready for a new batch!','');hud()}
+  document.addEventListener('keydown',function(e){const k=e.key.toLowerCase();if(k===' '&&!$('welcome').classList.contains('hidden')){e.preventDefault();startGame();return}if(!running)return;const idx=LANE_KEYS.indexOf(k);if(idx>=0){e.preventDefault();hitLane(idx)}});
+  document.querySelectorAll('.touch-btn').forEach(b=>{b.addEventListener('pointerdown',function(e){e.preventDefault();const l=parseInt(this.dataset.lane);if(!running){if(!$('welcome').classList.contains('hidden'))startGame();return}hitLane(l)})});
+  document.querySelectorAll('.hit-lane').forEach(l=>{l.addEventListener('pointerdown',function(e){e.preventDefault();const i=parseInt(this.dataset.lane);if(!running)return;hitLane(i)})});
+  hud();status('🐸 Press START BATCH or SPACE to begin!','');window.startGame=startGame;window.resetGame=resetGame;
+})();
+</script>
+</body>
+</html>
