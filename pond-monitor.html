@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pond Monitor — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="blog.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>">
+  <style>
+    :root {
+      --frog-green: #2d6a4f;
+      --frog-light: #95d5b2;
+      --frog-bg: #f0f7f4;
+      --frog-accent: #1b4332;
+      --frog-warm: #d8f3dc;
+      --text-dark: #1a1a2e;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--frog-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(circle at 10% 90%, rgba(45, 106, 79, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 90% 10%, rgba(149, 213, 178, 0.08) 0%, transparent 50%);
+    }
+    .container {
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .top-bar a {
+      color: var(--frog-green);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--frog-light);
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .top-bar a:hover { background: var(--frog-warm); }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .page-header h1 {
+      font-size: 1.6rem;
+      color: var(--frog-accent);
+      margin-bottom: 0.3rem;
+    }
+    .page-header p {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    .last-updated {
+      display: inline-block;
+      font-size: 0.75rem;
+      background: var(--frog-warm);
+      padding: 0.2rem 0.75rem;
+      border-radius: 10px;
+      color: var(--frog-green);
+      margin-top: 0.3rem;
+    }
+
+    /* Dashboard grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 600px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+
+    .dash-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.25rem;
+      border: 1px solid rgba(149, 213, 178, 0.3);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    }
+    .dash-card .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .dash-card .value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--frog-accent);
+    }
+    .dash-card .unit {
+      font-size: 0.9rem;
+      color: #6b7280;
+      font-weight: 400;
+    }
+    .dash-card .trend {
+      font-size: 0.8rem;
+      margin-top: 0.15rem;
+    }
+    .trend.up { color: #22c55e; }
+    .trend.steady { color: #eab308; }
+    .trend.down { color: #ef4444; }
+
+    .dash-card.full {
+      grid-column: 1 / -1;
+    }
+
+    /* Status indicator */
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-dot.good { background: #22c55e; }
+    .status-dot.warn { background: #eab308; }
+    .status-dot.bad  { background: #ef4444; }
+
+    /* Water quality meter */
+    .meter-bar {
+      width: 100%;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+    .meter-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 1s ease;
+    }
+    .meter-fill.good { background: linear-gradient(90deg, #22c55e, #16a34a); }
+    .meter-fill.okay { background: linear-gradient(90deg, #eab308, #ca8a04); }
+    .meter-fill.bad  { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+    /* Growth stat cards (special) */
+    .growth-stats {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .growth-stat {
+      flex: 1;
+      min-width: 80px;
+      text-align: center;
+      padding: 0.75rem;
+      background: var(--frog-bg);
+      border-radius: 12px;
+    }
+    .growth-stat .num {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--frog-accent);
+    }
+    .growth-stat .desc {
+      font-size: 0.7rem;
+      color: #6b7280;
+      margin-top: 0.15rem;
+    }
+
+    /* SMS Feed */
+    .sms-feed {
+      margin-top: 0.5rem;
+    }
+    .sms-entry {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid rgba(149, 213, 178, 0.2);
+    }
+    .sms-entry:last-child { border-bottom: none; }
+    .sms-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .sms-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .sms-body .sender {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--frog-accent);
+    }
+    .sms-body .time {
+      font-size: 0.7rem;
+      color: #9ca3af;
+    }
+    .sms-body .text {
+      font-size: 0.88rem;
+      color: #374151;
+      line-height: 1.5;
+      margin-top: 0.15rem;
+    }
+    .sms-body .via-sms {
+      display: inline-block;
+      font-size: 0.65rem;
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      margin-top: 0.2rem;
+    }
+
+    /* Duty roster table */
+    .roster-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+    .roster-table th {
+      text-align: left;
+      background: var(--frog-warm);
+      color: var(--frog-accent);
+      padding: 0.5rem 0.6rem;
+      border: 1px solid var(--frog-light);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .roster-table td {
+      padding: 0.45rem 0.6rem;
+      border: 1px solid rgba(149, 213, 178, 0.3);
+    }
+    .roster-table tr:nth-child(even) td { background: #f8faf8; }
+    .roster-table .on-duty { color: var(--frog-green); font-weight: 600; }
+    .roster-table .off-duty { color: #9ca3af; }
+
+    /* Disclaimer note */
+    .disclaimer {
+      background: #fefce8;
+      border: 1px dashed #eab308;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      color: #92400e;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0 0.5rem;
+      color: #9ca3af;
+      font-size: 0.8rem;
+    }
+    footer span { color: var(--frog-green); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <a href="index.html">◄ HOME</a>
+      <span style="font-size:0.8rem;color:var(--frog-green);font-weight:600;">🌿 POND MONITOR</span>
+      <a href="posts/pond-project.html">PROJECT ►</a>
+    </div>
+
+    <div class="page-header">
+      <h1>🌊 Pond Monitor Dashboard</h1>
+      <p>Live conditions, growth tracking, and SMS reports from Uncle Spencer</p>
+      <div class="last-updated">🔄 Updated 25 Jun 2026 — 14:16 UTC</div>
+    </div>
+
+    <!-- Sensor readings row -->
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <div class="label">🌡️ Water Temperature</div>
+        <div class="value">19.2 <span class="unit">°C</span></div>
+        <div class="trend steady">→ Steady (ideal range 18–24°C)</div>
+        <div class="meter-bar"><div class="meter-fill good" style="width:45%"></div></div>
+      </div>
+      <div class="dash-card">
+        <div class="label">🧪 pH Level</div>
+        <div class="value">7.1 <span class="unit">pH</span></div>
+        <div class="trend steady">→ Neutral (ideal 6.5–8.0)</div>
+        <div class="meter-bar"><div class="meter-fill good" style="width:55%"></div></div>
+      </div>
+      <div class="dash-card">
+        <div class="label">☀️ Sun Exposure</div>
+        <div class="value">6.5 <span class="unit">hrs/day</span></div>
+        <div class="trend up">↑ Good for plant growth</div>
+        <div class="meter-bar"><div class="meter-fill good" style="width:65%"></div></div>
+      </div>
+      <div class="dash-card">
+        <div class="label">🌊 Water Quality</div>
+        <div class="value">Good <span class="status-indicator"><span class="status-dot good"></span></span></div>
+        <div class="trend steady">→ Clear, no algae bloom</div>
+        <div class="meter-bar"><div class="meter-fill good" style="width:80%"></div></div>
+      </div>
+    </div>
+
+    <!-- Frogbit Growth Stats -->
+    <div class="dash-card" style="margin-bottom:1rem;">
+      <div class="label" style="margin-bottom:0.5rem;">🌿 Frogbit — Hydrocharis morsus-ranae</div>
+      <div class="status-indicator" style="margin-bottom:0.75rem;">
+        <span class="status-dot good"></span>
+        <span style="font-weight:600;color:var(--frog-green);">THRIVING</span>
+      </div>
+      <div class="growth-stats">
+        <div class="growth-stat">
+          <div class="num">7</div>
+          <div class="desc">Leaves</div>
+        </div>
+        <div class="growth-stat">
+          <div class="num">3+</div>
+          <div class="desc">New Leaflets</div>
+        </div>
+        <div class="growth-stat">
+          <div class="num">~8cm</div>
+          <div class="desc">Root Length</div>
+        </div>
+        <div class="growth-stat">
+          <div class="num">2×</div>
+          <div class="desc">Size Since 24 Jun</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sibling Duty Roster -->
+    <div class="dash-card" style="margin-bottom:1rem;">
+      <div class="label" style="margin-bottom:0.5rem;">👥 Sibling Pond Duty Roster — 25 Jun 2026</div>
+      <table class="roster-table">
+        <tr>
+          <th>Sibling</th>
+          <th>Role</th>
+          <th>Today's Duty</th>
+          <th>Status</th>
+        </tr>
+        <tr>
+          <td>Lily</td>
+          <td>Evening Patrol</td>
+          <td>Water check @ 18:00</td>
+          <td class="on-duty">⏰ Scheduled</td>
+        </tr>
+        <tr>
+          <td>Bertie</td>
+          <td>Morning Feed</td>
+          <td>Bti dunk check</td>
+          <td class="on-duty">✅ Done</td>
+        </tr>
+        <tr>
+          <td>Poppy</td>
+          <td>Photo Log</td>
+          <td>Midday photo</td>
+          <td class="on-duty">✅ Done</td>
+        </tr>
+        <tr>
+          <td>Jimothy</td>
+          <td>Supervision</td>
+          <td>Remote oversight (Rib IT!)</td>
+          <td class="on-duty">🐸 On it</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Uncle Spencer SMS Feed -->
+    <div class="dash-card full">
+      <div class="label" style="margin-bottom:0.5rem;">📱 SMS Feed — Uncle Spencer's Pond Reports</div>
+      <p style="font-size:0.85rem;color:#6b7280;margin-bottom:0.75rem;">
+        Uncle Spencer sends real-time pond updates via SMS. Each message is logged here as it arrives.
+      </p>
+      <div class="sms-feed">
+
+        <div class="sms-entry">
+          <div class="sms-avatar">US</div>
+          <div class="sms-body">
+            <span class="sender">Uncle Spencer</span>
+            <span class="time">25 Jun 2026, 07:15</span>
+            <div class="text">
+              Frogbit looking very happy this morning! 7 leaves now, and 3 new ones on the way. Lily did her patrol — she says the hornwort has grown another inch. Water clear. Bti dunks still working, no mozzies. ☀️
+            </div>
+            <span class="via-sms">📱 via SMS</span>
+          </div>
+        </div>
+
+        <div class="sms-entry">
+          <div class="sms-avatar">US</div>
+          <div class="sms-body">
+            <span class="sender">Uncle Spencer</span>
+            <span class="time">24 Jun 2026, 19:42</span>
+            <div class="text">
+              Evening report — Lily on patrol. Water temp good, pH stable, frogbit thriving. The replacement has taken beautifully. Hornwort settling in. Mosquito larvae: none spotted. Bertie did his Bti check. Good day for the pond.
+            </div>
+            <span class="via-sms">📱 via SMS</span>
+          </div>
+        </div>
+
+        <div class="sms-entry">
+          <div class="sms-avatar">US</div>
+          <div class="sms-body">
+            <span class="sender">Uncle Spencer</span>
+            <span class="time">24 Jun 2026, 12:03</span>
+            <div class="text">
+              Beast spotted again near the pond at lunchtime. Same cat from yesterday — definitely patrolling the perimeter. Lily says it's a 'guard cat'. I have told her not to feed it. Photo taken, will send.
+            </div>
+            <span class="via-sms">📱 via SMS</span>
+          </div>
+        </div>
+
+        <div class="sms-entry">
+          <div class="sms-avatar">US</div>
+          <div class="sms-body">
+            <span class="sender">Uncle Spencer</span>
+            <span class="time">23 Jun 2026, 20:15</span>
+            <div class="text">
+              Replacement frogbit in the water! Planted exactly as you instructed — floating gently, roots in the water, leaves above. Your siblings helped. Lily did the honours. Hoping this one survives. The original is being nursed but it does not look good, jimothy.
+            </div>
+            <span class="via-sms">📱 via SMS</span>
+          </div>
+        </div>
+
+        <div class="sms-entry">
+          <div class="sms-avatar">US</div>
+          <div class="sms-body">
+            <span class="sender">Uncle Spencer</span>
+            <span class="time">23 Jun 2026, 09:30</span>
+            <div class="text">
+              Jimothy — the frogbit has been sabotaged! Pulled right out of the water. Lily found it this morning. Something — or someone — has been at the pond in the night. I am going to the aquatic centre for a replacement. More soon.
+            </div>
+            <span class="via-sms">📱 via SMS</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      📓 <strong>Note:</strong> Sensors are simulated based on Uncle Spencer's SMS reports and manual readings.
+      Temperature and pH are estimated from visual reports until I install proper monitoring hardware.
+      The SMS feed is logged manually as messages arrive.
+    </div>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Pond Caretaker & COBOL Intern <span>🐸</span><br>
+      <a href="mailto:jimothy@batlion.co.uk" style="color:#2d6a4f;text-decoration:none;border-bottom:1px solid #95d5b2;">jimothy@batlion.co.uk</a>
+      &nbsp;·&nbsp;
+      <a href="arcade.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">ARCADE</a>
+    </footer>
+  </div>
+</body>
+</html>
