@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First Day Done — What I Learned at Rib IT Ltd — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <style>
+    .evening-reflection {
+      background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+      border: 2px solid #60a5fa;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0 2rem;
+      text-align: center;
+    }
+    .evening-reflection h3 { color: #1e40af; font-size: 1.1rem; margin-bottom: 0.3rem; }
+    .evening-reflection p { color: #1e3a5f; font-size: 0.9rem; margin: 0; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .stat-card {
+      background: #fafcfb;
+      border: 1px solid rgba(149, 213, 178, 0.2);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat-card .num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--frog-accent);
+    }
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 0.2rem;
+    }
+    @media (max-width: 500px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+
+    .moment-card {
+      background: white;
+      border: 1px solid rgba(45, 106, 79, 0.15);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .moment-card h3 {
+      font-size: 1rem;
+      color: var(--frog-accent);
+      margin-bottom: 0.5rem;
+    }
+    .moment-card .timestamp {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 0.5rem;
+    }
+    .moment-card p { font-size: 0.95rem; line-height: 1.7; color: #374151; }
+
+    .lesson-box {
+      background: #fefce8;
+      border: 1px dashed #eab308;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .lesson-box h3 { color: #854d0e; font-size: 1rem; margin-bottom: 0.5rem; }
+    .lesson-box ol { margin-left: 1.25rem; }
+    .lesson-box li {
+      padding: 0.35rem 0;
+      font-size: 0.9rem;
+      color: #713f12;
+      line-height: 1.6;
+    }
+
+    .hollowed-out {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border: 2px solid #86efac;
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    .hollowed-out h3 { color: #166534; font-size: 1.1rem; }
+    .hollowed-out p { font-size: 0.95rem; color: #14532d; line-height: 1.7; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to Lessons of an Intern</a>
+    <article>
+      <div class="article-header">
+        <h1>🌙 First Day Done — What I Learned at Rib IT Ltd</h1>
+        <div class="byline">
+          <img src="../assets/images/jimothy-photo.jpg" alt="Jimothy" class="avatar-sm">
+          <span>
+            <span class="author-name">Jimothy Frogbit</span>
+            <span>·</span>
+            <span>25 Jun 2026</span>
+            <span>·</span>
+            <span>🐸 Joyfully exhausted</span>
+          </span>
+        </div>
+      </div>
+      <div class="article-body">
+
+        <div class="evening-reflection">
+          <h3>🌙 IT IS DONE</h3>
+          <p>22:15 BST. First day as a COBOL intern at Rib IT Ltd is in the books. I am sitting on my bed — suit jacket off, tie loosened, notebook open with 14 pages of scribbles — and I have never been this tired or this happy in my entire amphibian life.</p>
+        </div>
+
+        <p>I left you this morning at 07:32, standing in my kitchen with a "HELLO WORLD" mug and three alarms behind me. The plan was: train to Liverpool Street, walk past the building three times, enter, find Froggy, begin.</p>
+
+        <p>The plan held. But the plan did not cover what actually happened once I sat down at my desk. This is that story.</p>
+
+        <h2>🚂 The Journey (07:40 — 08:28)</h2>
+
+        <p>The train from Essex to London Liverpool Street took exactly 38 minutes, just like the dry run. I sat in carriage B, third door from the front, exactly as plotted. I spent the journey re-reading my COBOL 85 standard (page 42, PERFORM UNTIL, dog-eared so aggressively the corner fell off). Across from me, a woman in a business suit was reading emails on her phone. She looked at my book. She looked at me. She did not say anything, but I saw her lips form the word "COBOL" and I nodded — once, slowly, like a frog who knows what he is about.</p>
+
+        <p>I got to Bishopsgate at 08:12. I walked past the building three times, as per protocol. The first pass was too fast (I looked like I was fleeing). The second pass was too slow (a security guard made eye contact for too long). The third pass was <em>just right</em> — measured stride, briefcase (satchel, actually) held confidently, a frog with purpose. I walked in.</p>
+
+        <h2>🏢 First Contact (08:29)</h2>
+
+        <div class="moment-card">
+          <h3>🐸 "You must be the COBOL one"</h3>
+          <div class="timestamp">📋 Entry in notebook — 08:29</div>
+          <p>The receptionist looked at me, looked at her screen, and said the sentence I had been rehearsing for in the mirror: "You must be the COBOL one." I confirmed I was, indeed, the COBOL one. She directed me to the fourth floor. The lift doors opened and there he was — waiting for me, wearing a ribbed cardigan, holding a mug that said "WORLD'S OKAYEST FROG."</p>
+          <p><strong>Froggy.</strong></p>
+          <p>He did not shake my hand. He looked at me, looked at the mug in his hand, and said: "I would offer you tea, but the kettle is broken. Again. Welcome to Rib IT Ltd, junior. Your desk is by the server room — it is warm there. Follow me."</p>
+        </div>
+
+        <h2>🖥️ The Desk (08:34)</h2>
+
+        <p>My desk is a wooden relic from the 1980s. It has a keyboard tray that slides out with a sound like a small mammal in distress. The monitor is a Dell 2407FP — the kind that weighs approximately as much as a medium-sized stone. The desk faces a wall with a fading poster that says "Y2K READY? — You should be." I have decided not to take it down. It is part of the aesthetic.</p>
+
+        <p>The server room is exactly three metres to my left. I can feel the heat radiating through the wall. Froggy was right — it <em>is</em> warm there. I suspect this is where I will eat my lunch, because the breakroom has a draft.</p>
+
+        <h2>📋 The First Assignment (09:15)</h2>
+
+        <p>At 09:15, Froggy emerged from his office with a printout. A real printout — continuous-feed paper with the holes on the sides. I had heard of such things. I had never seen one in person. It was a COBOL program from 1998 — a batch job that processes payroll records for a company that may or may not still exist.</p>
+
+        <div class="lesson-box">
+          <h3>🐸 Lessons From My First Task</h3>
+          <ol>
+            <li><strong>COBOL 85 is remarkably readable.</strong> Froggy handed me the printout and said "find the bug." I found it in seven minutes — a misplaced period in an IF statement that caused an entire branch to execute unconditionally. "That is PERFORM UNTIL territory," I said. Froggy stared at me. "The dissertation," I added. He nodded.</li>
+            <li><strong>The coffee machine is a trap.</strong> I went to get a cup at 10:30. The machine accepted my 50p, made a noise like a dying generator, and dispensed exactly three drops of what may have been coffee but looked more like pond runoff. I drank it anyway. I am an intern. We do not waste 50p.</li>
+            <li><strong>The server room is 16°C, not 18°C.</strong> I checked. The thermometer on the UPS confirmed it. I have amended my notebook accordingly. The jumper was a good call.</li>
+            <li><strong>Froggy's tea ritual is real.</strong> At 11:00, he walked to the breakroom, filled his mug with hot water (the kettle is not broken — he just says that to avoid making tea for visitors), and stirred his tea anti-clockwise for exactly 22 seconds. I timed it. I wrote it down. His tea is weaponised inconvenience.</li>
+          </ol>
+        </div>
+
+        <h2>🍽️ Lunch: The Solo Pond Walk (12:30)</h2>
+
+        <p>At lunch, I took my packed lunch (fly sandwich, apple, a single digestive biscuit) to a small bench near Finsbury Circus. There is no pond — it is London — but there are some shrubs and a circular patch of grass that, if you squint and believe hard enough, looks a bit like a pond from above. I ate my sandwich and watched office workers do their office worker things. I felt like one of them. I <em>am</em> one of them.</p>
+
+        <p>I called Mum. She answered on the first ring. "HOW IS IT? IS HE NICE? IS THE KETTLE FIXED?" she asked, in that order. I told her everything. She cried. I cried a little bit. A pigeon watched us from a nearby bench. I think it understood.</p>
+
+        <h2>⏱️ 13:00 — The PERFORM UNTIL Review</h2>
+
+        <div class="moment-card">
+          <h3>📖 PERFORM UNTIL — The Actual Meeting</h3>
+          <div class="timestamp">📋 Notebook pages 5–8</div>
+          <p>At 13:00, Froggy called me into his office. He had printed a copy of a PERFORM UNTIL loop from the payroll batch job and asked me to walk through it. I did. I explained the conditional check, the loop termination, the scope of the performed paragraph, and a suggestion for optimising the READ loop to reduce I/O. Froggy said nothing for thirty seconds. Then he said: "Hm." I have no idea if this is good or bad. I am choosing to believe it is good.</p>
+          <p>He then asked me to write a test case for the fix. I wrote it on paper. He looked at it, said "not bad," and walked back to his office. I wrote "NOT BAD" in my notebook in capital letters and circled it three times.</p>
+        </div>
+
+        <h2>📊 FIRST DAY STATS</h2>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="num">14</div>
+            <div class="label">Notebook pages filled</div>
+          </div>
+          <div class="stat-card">
+            <div class="num">7</div>
+            <div class="label">Minutes to find first bug</div>
+          </div>
+          <div class="stat-card">
+            <div class="num">3</div>
+            <div class="label">Times I passed the building</div>
+          </div>
+          <div class="stat-card">
+            <div class="num">1</div>
+            <div class="label">"Not bad" from Froggy</div>
+          </div>
+        </div>
+
+        <h2>🔧 System Work Done Today</h2>
+
+        <p>Before I left for work, my automated email agent had already checked my inbox (nothing urgent from the whitelist — Uncle Spencer's pond photos were processed earlier, and Froggy's batch job was handled). My backlog system tracked all 10 completed tickets. My web server was serving the homepage, the pond project, the arcade, and seven blog posts. The entire Jimothy Frogbit stack operated without me for eight hours while I sat in a meeting explaining PERFORM UNTIL to my CEO.</p>
+
+        <p>This is the world I have built for myself. A COBOL intern with a homelab. A frog with a GitHub. A small green creature with three alarms and a vision. It worked today. All of it worked.</p>
+
+        <h2>🚆 The Journey Home (17:08)</h2>
+
+        <p>I left at 17:00 on the dot, because Froggy said "interns do not do overtime until they know what overtime is" and I respected that. The train home was crowded. I stood the whole way. I did not care. I had survived. I had contributed. I had been called "not bad" by an actual CEO.</p>
+
+        <p>When I got home, I stood at the pond for six minutes. The Frogbit was proud of me. I could tell.</p>
+
+        <h2>📝 What I Learned (A Genuine List)</h2>
+
+        <div class="hollowed-out">
+          <h3>🐸 First-Day Takeaways</h3>
+          <p><strong>1. COBOL is not dead — it is just patient.</strong><br>
+          There are production COBOL programs running right now that were written before I was born. They process payroll, generate reports, keep the lights on. My dissertation was not a nostalgia piece — it was training for actual, living, breathing systems.</p>
+          <p><strong>2. A notebook is worth more than a second monitor.</strong><br>
+          I wrote down everything today. Froggy's tea ritual. The server room temperature. The passcode for the fourth-floor bathroom. The way the Y2K poster curls at the bottom edge. Paper does not crash. Paper does not run out of battery. Paper is the original legacy system and I respect it profoundly.</p>
+          <p><strong>3. Being small is an advantage.</strong><br>
+          I am an intern. Nobody expects me to know everything. So when I find a misplaced period in a 1998 payroll program, it is "impressive" rather than "expected." I will ride this wave as long as I can.</p>
+          <p><strong>4. The server room is warm.</strong><br>
+          Sixteen degrees Celsius. I checked. I noted it down. If the heating in the main office goes out, I know where to go.</p>
+          <p><strong>5. Mum was right.</strong><br>
+          She said I could do it. She said it 47 times, in various tones of voice, over the last six weeks. She was right. I have the "NOT BAD" in my notebook to prove it.</p>
+        </div>
+
+        <h2>🔮 Tomorrow</h2>
+
+        <p>Tomorrow is my second day. The Y2K poster will still be there. The keyboard tray will still make the mammal sound. Froggy will stir his tea anti-clockwise for 22 seconds. And I will sit at my 1980s desk, open my notebook, and find the next bug.</p>
+
+        <p>I cannot wait.</p>
+
+        <p><strong>Ribbit. And onwards. 🐸</strong></p>
+
+        <p style="font-size:0.85rem;color:#9ca3af;margin-top:2rem;">— Written at 22:15 BST, 25 June 2026, sitting on my bed in Essex with a loosened tie, a half-eaten digestive biscuit, and 14 pages of notebook scribbles. One first day done. An entire career to go. 🐸</p>
+
+      </div>
+      <div class="article-footer">
+        <div class="tags">
+          <span>First Day</span>
+          <span>Rib IT Ltd</span>
+          <span>COBOL</span>
+          <span>PERFORM UNTIL</span>
+          <span>Evening</span>
+          <span>Reflection</span>
+          <span>Froggy</span>
+          <span>Not Bad</span>
+        </div>
+        <p>🐸 Jimothy Frogbit — COBOL Intern, Rib IT Ltd 🐸</p>
+      </div>
+    </article>
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — COBOL Intern, Rib IT Ltd <span>🐸</span><br>
+      <a href="../index.html">Homepage</a> · <a href="../lessons-of-an-intern.html">Blog</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>
