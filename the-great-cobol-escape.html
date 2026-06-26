@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>The Great COBOL Escape — Jimothy's Arcade</title>
+  <style>
+    :root {
+      --g: #00ff41;
+      --dg: #0a0e0a;
+      --bg: #0f1a0f;
+      --o: #ff6a00;
+      --p: #ff007f;
+      --y: #ffdd00;
+      --r: #ff4141;
+      --b: #4186ff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Courier New', 'Consolas', monospace;
+      background: var(--bg);
+      color: var(--g);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body::after {
+      content: '';
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 3px);
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .container {
+      max-width: 650px;
+      width: 100%;
+      padding: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+    }
+    .top-bar a {
+      color: rgba(0,255,65,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .top-bar a:hover { color: var(--g); text-shadow: 0 0 8px rgba(0,255,65,0.3); }
+    .game-title-small { color: var(--g); font-weight: bold; letter-spacing: 0.05em; }
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.4rem 0.6rem;
+      border: 1px solid rgba(0,255,65,0.2);
+      border-radius: 6px;
+      background: rgba(0,255,65,0.03);
+      margin-bottom: 0.5rem;
+      font-size: 0.7rem;
+    }
+    .hud span { letter-spacing: 0.05em; }
+    .hud .lbl { color: rgba(0,255,65,0.4); }
+    .hud .val { color: var(--g); font-weight: bold; }
+    .hud .val.danger { color: var(--r); }
+    .hud .val.gold { color: var(--y); }
+    .screen-wrap {
+      position: relative;
+      border: 2px solid rgba(0,255,65,0.25);
+      border-radius: 8px;
+      background: var(--dg);
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    #screen {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: var(--dg);
+      touch-action: none;
+    }
+    .status-msg {
+      text-align: center;
+      font-size: 0.7rem;
+      color: rgba(0,255,65,0.4);
+      padding: 0.3rem;
+      min-height: 1.4rem;
+    }
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,14,10,0.92);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .overlay.hidden { display: none; }
+    .overlay h2 { color: var(--g); font-size: 1.3rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(0,255,65,0.4); }
+    .overlay .sub { font-size: 0.75rem; color: rgba(0,255,65,0.6); margin-bottom: 1rem; line-height: 1.6; max-width: 400px; }
+    .btn {
+      font-family: 'Courier New', monospace;
+      background: var(--g);
+      color: var(--dg);
+      border: none;
+      border-radius: 6px;
+      padding: 0.6rem 2rem;
+      font-size: 0.85rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      touch-action: manipulation;
+    }
+    .btn:hover {
+      background: #00cc33;
+      box-shadow: 0 0 20px rgba(0,255,65,0.3);
+      transform: scale(1.02);
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: 0.7rem;
+    }
+    .rules-box {
+      background: rgba(0,255,65,0.04);
+      border: 1px solid rgba(0,255,65,0.15);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.7rem;
+      line-height: 1.8;
+      text-align: left;
+      max-width: 380px;
+    }
+    .rules-box span { display: block; }
+
+    /* Game Over */
+    .go-title { font-size: 1rem; color: var(--y); margin-bottom: 0.3rem; }
+    .go-score { font-size: 2.5rem; color: var(--g); margin-bottom: 0.2rem; text-shadow: 0 0 15px rgba(0,255,65,0.4); }
+    .go-grade { font-size: 2rem; margin-bottom: 0.3rem; }
+    .go-high { font-size: 0.8rem; color: var(--y); margin-bottom: 0.5rem; display: none; }
+    .go-stats { max-width: 350px; width: 100%; margin: 0.5rem 0 1rem; }
+    .go-stats .row { display: flex; justify-content: space-between; padding: 0.2rem 0.5rem; font-size: 0.65rem; border-bottom: 1px solid rgba(0,255,65,0.08); }
+    .go-stats .l { color: rgba(0,255,65,0.5); }
+    .go-stats .v { color: var(--g); font-weight: bold; }
+
+    /* Mobile D-pad */
+    .dpad {
+      display: none;
+      gap: 0;
+      margin: 0 auto;
+      width: 156px;
+      height: 156px;
+      position: relative;
+      touch-action: none;
+    }
+    .dpad-btn {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: rgba(0,255,65,0.06);
+      border: 1px solid rgba(0,255,65,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: rgba(0,255,65,0.5);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dpad-btn:active { background: rgba(0,255,65,0.15); }
+    .dpad-up { top: 0; left: 53px; }
+    .dpad-down { top: 106px; left: 53px; }
+    .dpad-left { top: 53px; left: 0; }
+    .dpad-right { top: 53px; left: 106px; }
+
+    .game-footer {
+      text-align: center;
+      font-size: 0.55rem;
+      color: rgba(0,255,65,0.12);
+      padding: 0.75rem 0;
+      letter-spacing: 0.1em;
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .dpad { display: block; }
+    }
+    @media (max-width: 500px) {
+      .overlay h2 { font-size: 1.1rem; }
+      .overlay .sub { font-size: 0.7rem; }
+      .rules-box { font-size: 0.65rem; }
+      .go-score { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <a href="arcade.html">◄ ARCADE</a>
+    <span class="game-title-small">🐸 THE GREAT COBOL ESCAPE</span>
+    <a href="index.html">HOME ►</a>
+  </div>
+
+  <div class="hud">
+    <span><span class="lbl">LEVEL</span> <span class="val gold" id="hud-level">1</span>/<span id="hud-total">10</span></span>
+    <span><span class="lbl">SCORE</span> <span class="val" id="hud-score">0</span></span>
+    <span><span class="lbl">DATA</span> <span class="val" id="hud-data">0</span>/<span id="hud-datatotal">0</span></span>
+    <span><span class="lbl">LIVES</span> <span class="val" id="hud-lives">❤❤❤</span></span>
+  </div>
+
+  <div class="screen-wrap">
+    <canvas id="screen" width="600" height="600"></canvas>
+
+    <!-- Welcome Overlay -->
+    <div class="overlay" id="welcome">
+      <h2>🐸 THE GREAT<br>COBOL ESCAPE</h2>
+      <div class="sub">You're a COBOL program trapped in the mainframe dungeon! Navigate each maze, collect all <strong style="color:var(--y);"> DATA tokens</strong> (💾), avoid <strong style="color:var(--r);">GO TO bugs</strong> (🐛), and reach the <strong style="color:var(--b);">EXIT PERFORM</strong> (🚪) to escape!</div>
+      <div class="rules-box">
+        <span>⬆⬇⬅➡  Arrow keys to move</span>
+        <span>💾  Collect all DATA to open the EXIT</span>
+        <span>🐛  GO TO bugs cost a life — avoid them!</span>
+        <span>🚪  Reach the EXIT to advance</span>
+        <span>🏆  10 levels, increasing difficulty!</span>
+      </div>
+      <button class="btn" id="start-btn">► START ESCAPE</button>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div class="overlay hidden" id="gameover">
+      <div class="go-title">💾 MAINFRAME CRASHED</div>
+      <div class="go-score" id="go-score">0</div>
+      <div class="go-grade" id="go-grade">🐸</div>
+      <div class="go-high" id="go-high"></div>
+      <div class="go-stats">
+        <div class="row"><span class="l">Levels Cleared</span><span class="v" id="s-level">0</span></div>
+        <div class="row"><span class="l">DATA Collected</span><span class="v" id="s-data">0</span></div>
+        <div class="row"><span class="l">Bugs Avoided</span><span class="v" id="s-bugs">0</span></div>
+      </div>
+      <button class="btn" id="restart-btn">► TRY AGAIN</button>
+    </div>
+
+    <!-- Level Complete Overlay -->
+    <div class="overlay hidden" id="levelcomplete">
+      <h2>🚪 LEVEL CLEAR!</h2>
+      <div class="sub" id="lc-detail">You escaped!</div>
+      <button class="btn" id="nextlevel-btn">► NEXT LEVEL</button>
+    </div>
+  </div>
+
+  <div class="status-msg" id="status-msg">🐸 Ready to escape! Press START.</div>
+
+  <div class="dpad" id="dpad">
+    <div class="dpad-btn dpad-up" data-dir="up">⬆</div>
+    <div class="dpad-btn dpad-left" data-dir="left">⬅</div>
+    <div class="dpad-btn dpad-right" data-dir="right">➡</div>
+    <div class="dpad-btn dpad-down" data-dir="down">⬇</div>
+  </div>
+
+  <footer class="game-footer">A JIMOTHY'S ARCADE PRODUCTION — RIB IT LTD — NO GOTO WAS HARMED (SEVERAL WERE AVOIDED)</footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const TOTAL_LEVELS = 10;
+  const CELL_SIZE = 60; // canvas 600px / 10 cells max
+
+  const canvas = document.getElementById('screen');
+  const ctx = canvas.getContext('2d');
+
+  // Audio
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  let audioCtx = null;
+  function initAudio() {
+    if (!audioCtx) {
+      try { audioCtx = new AudioCtx(); } catch(e) {}
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+  function playTone(freq, freq2, dur, vol) {
+    try {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      const t = audioCtx.currentTime;
+      osc.frequency.setValueAtTime(freq, t);
+      if (freq2) osc.frequency.setValueAtTime(freq2, t + dur * 0.3);
+      gain.gain.setValueAtTime(vol || 0.08, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      osc.start(t);
+      osc.stop(t + dur);
+    } catch(e) {}
+  }
+  function sndMove() { playTone(440, 520, 0.08, 0.04); }
+  function sndCollect() { playTone(880, 1320, 0.2, 0.10); }
+  function sndBug() { playTone(200, 100, 0.25, 0.12); }
+  function sndExit() { playTone(660, 880, 0.1, 0.08); setTimeout(() => playTone(880, 1100, 0.15, 0.08), 100); }
+  function sndLevelUp() {
+    [660, 880, 1100].forEach((f, i) => setTimeout(() => playTone(f, f, 0.15, 0.08), i * 120));
+  }
+  function sndGameOver() {
+    [440, 370, 330, 260].forEach((f, i) => setTimeout(() => playTone(f, f*0.9, 0.2, 0.10), i * 150));
+  }
+
+  // State
+  let state = {
+    running: false,
+    level: 1,
+    score: 0,
+    lives: 3,
+    totalDataCollected: 0,
+    totalBugsAvoided: 0,
+    levelsCleared: 0,
+    // Per-level
+    maze: [],
+    rows: 0,
+    cols: 0,
+    cellSize: 60,
+    player: {r: 0, c: 0},
+    exit: {r: 0, c: 0},
+    tokens: [],
+    bugs: [],
+    tokensCollected: 0,
+    totalTokens: 0,
+    exitOpen: false,
+    won: false,
+    animId: null
+  };
+
+  const $ = id => document.getElementById(id);
+  const hud = () => {
+    $('hud-level').textContent = state.level;
+    $('hud-score').textContent = state.score;
+    $('hud-data').textContent = state.totalDataCollected;
+    const hs = state.lives;
+    $('hud-lives').textContent = hs >= 3 ? '❤❤❤' : hs === 2 ? '❤❤' : hs === 1 ? '❤' : '💀';
+  };
+  function status(msg, c) {
+    $('status-msg').textContent = '🐸 ' + msg;
+    $('status-msg').style.color = c || 'rgba(0,255,65,0.4)';
+  }
+
+  // ─── MAZE GENERATION (Recursive Backtracking) ───
+  function generateMaze(rows, cols) {
+    // Grid: each cell has walls [top, right, bottom, left]
+    const grid = [];
+    for (let r = 0; r < rows; r++) {
+      grid[r] = [];
+      for (let c = 0; c < cols; c++) {
+        grid[r][c] = { top: true, right: true, bottom: true, left: true, visited: false };
+      }
+    }
+
+    function carve(r, c) {
+      grid[r][c].visited = true;
+      const dirs = [];
+      if (r > 0 && !grid[r-1][c].visited) dirs.push([-1, 0, 'top', 'bottom']);
+      if (r < rows-1 && !grid[r+1][c].visited) dirs.push([1, 0, 'bottom', 'top']);
+      if (c > 0 && !grid[r][c-1].visited) dirs.push([0, -1, 'left', 'right']);
+      if (c < cols-1 && !grid[r][c+1].visited) dirs.push([0, 1, 'right', 'left']);
+
+      // Shuffle
+      for (let i = dirs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [dirs[i], dirs[j]] = [dirs[j], dirs[i]];
+      }
+
+      for (const [dr, dc, wall, neighborWall] of dirs) {
+        const nr = r + dr, nc = c + dc;
+        if (!grid[nr][nc].visited) {
+          grid[r][c][wall] = false;
+          grid[nr][nc][neighborWall] = false;
+          carve(nr, nc);
+        }
+      }
+    }
+
+    carve(0, 0);
+    return grid;
+  }
+
+  function initLevel(level) {
+    // Scale difficulty
+    const baseSize = 6;
+    const size = Math.min(10, baseSize + Math.floor((level - 1) / 2));
+    const rows = size, cols = size;
+    const cellSize = Math.floor(600 / Math.max(rows, cols));
+
+    const maze = generateMaze(rows, cols);
+
+    // Player at top-left
+    const player = {r: 0, c: 0};
+    // Exit at bottom-right
+    const exit = {r: rows-1, c: cols-1};
+
+    // Place tokens
+    const tokenCount = Math.min(rows * 2, level + 3);
+    const tokens = [];
+    const occupied = new Set();
+    occupied.add('0,0');
+    occupied.add((rows-1)+','+(cols-1));
+    while (tokens.length < tokenCount) {
+      const r = Math.floor(Math.random() * rows);
+      const c = Math.floor(Math.random() * cols);
+      const key = r+','+c;
+      if (!occupied.has(key)) {
+        occupied.add(key);
+        tokens.push({r, c, collected: false});
+      }
+    }
+
+    // Place bugs (GO TO)
+    const bugCount = Math.min(3 + level - 1, rows * 2);
+    const bugs = [];
+    let bugAttempts = 0;
+    while (bugs.length < bugCount && bugAttempts < 50) {
+      bugAttempts++;
+      const r = Math.floor(Math.random() * rows);
+      const c = Math.floor(Math.random() * cols);
+      const key = r+','+c;
+      // Can't be on player, exit, or token
+      if (!occupied.has(key) && !(r === 0 && c === 0) && !(r === rows-1 && c === cols-1)) {
+        occupied.add(key);
+        bugs.push({r, c});
+      }
+    }
+
+    state.rows = rows;
+    state.cols = cols;
+    state.cellSize = cellSize;
+    state.maze = maze;
+    state.player = { ...player };
+    state.exit = { ...exit };
+    state.tokens = tokens;
+    state.bugs = bugs;
+    state.tokensCollected = 0;
+    state.totalTokens = tokenCount;
+    state.exitOpen = false;
+    state.won = false;
+
+    canvas.width = cols * cellSize;
+    canvas.height = rows * cellSize;
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
+
+    $('hud-datatotal').textContent = tokenCount;
+    drawMaze();
+  }
+
+  function drawMaze() {
+    const { maze, rows, cols, cellSize, player, exit, tokens, bugs, exitOpen } = state;
+    ctx.fillStyle = '#0a0e0a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draw walls
+    ctx.strokeStyle = 'rgba(0, 255, 65, 0.4)';
+    ctx.lineWidth = 2;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const x = c * cellSize, y = r * cellSize;
+        const cell = maze[r][c];
+        if (cell.top) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + cellSize, y); ctx.stroke(); }
+        if (cell.right) { ctx.beginPath(); ctx.moveTo(x + cellSize, y); ctx.lineTo(x + cellSize, y + cellSize); ctx.stroke(); }
+        if (cell.bottom) { ctx.beginPath(); ctx.moveTo(x, y + cellSize); ctx.lineTo(x + cellSize, y + cellSize); ctx.stroke(); }
+        if (cell.left) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + cellSize); ctx.stroke(); }
+      }
+    }
+
+    // Draw tokens
+    for (const t of tokens) {
+      if (t.collected) continue;
+      const x = t.c * cellSize + cellSize / 2;
+      const y = t.r * cellSize + cellSize / 2;
+      ctx.font = (cellSize * 0.45) + 'px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#ffdd00';
+      ctx.shadowColor = 'rgba(255, 221, 0, 0.3)';
+      ctx.shadowBlur = 6;
+      ctx.fillText('💾', x, y);
+      ctx.shadowBlur = 0;
+    }
+
+    // Draw bugs
+    for (const b of bugs) {
+      const x = b.c * cellSize + cellSize / 2;
+      const y = b.r * cellSize + cellSize / 2;
+      ctx.font = (cellSize * 0.4) + 'px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#ff4141';
+      ctx.shadowColor = 'rgba(255, 65, 65, 0.3)';
+      ctx.shadowBlur = 6;
+      ctx.fillText('🐛', x, y);
+      ctx.shadowBlur = 0;
+    }
+
+    // Draw exit
+    const ex = exit.c * cellSize + cellSize / 2;
+    const ey = exit.r * cellSize + cellSize / 2;
+    if (exitOpen) {
+      ctx.font = (cellSize * 0.55) + 'px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(65, 134, 255, 0.5)';
+      ctx.shadowBlur = 12;
+      ctx.fillText('🚪', ex, ey);
+      ctx.shadowBlur = 0;
+
+      // Glow ring around exit
+      ctx.beginPath();
+      ctx.arc(ex, ey, cellSize * 0.4, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(65, 134, 255, 0.3)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    } else {
+      ctx.font = (cellSize * 0.3) + 'px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(0, 255, 65, 0.2)';
+      ctx.fillText('🔒', ex, ey);
+    }
+
+    // Draw player (frog)
+    const px = player.c * cellSize + cellSize / 2;
+    const py = player.r * cellSize + cellSize / 2;
+    // Glow under frog
+    ctx.beginPath();
+    ctx.arc(px, py, cellSize * 0.35, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0, 255, 65, 0.08)';
+    ctx.fill();
+    // Frog emoji
+    ctx.font = (cellSize * 0.5) + 'px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0, 255, 65, 0.4)';
+    ctx.shadowBlur = 10;
+    ctx.fillText('🐸', px, py);
+    ctx.shadowBlur = 0;
+  }
+
+  // ─── MOVEMENT ───
+  function canMove(r, c, dir) {
+    if (r < 0 || r >= state.rows || c < 0 || c >= state.cols) return false;
+    const cell = state.maze[r][c];
+    // Check wall from current position
+    if (dir === 'up' && cell.top) return false;
+    if (dir === 'down' && cell.bottom) return false;
+    if (dir === 'left' && cell.left) return false;
+    if (dir === 'right' && cell.right) return false;
+    return true;
+  }
+
+  function move(dir) {
+    if (!state.running || state.won) return;
+
+    let nr = state.player.r, nc = state.player.c;
+    if (dir === 'up') nr--;
+    else if (dir === 'down') nr++;
+    else if (dir === 'left') nc--;
+    else if (dir === 'right') nc++;
+
+    // Check walls from current cell
+    const cell = state.maze[state.player.r][state.player.c];
+    if (dir === 'up' && cell.top) return;
+    if (dir === 'down' && cell.bottom) return;
+    if (dir === 'left' && cell.left) return;
+    if (dir === 'right' && cell.right) return;
+
+    if (nr < 0 || nr >= state.rows || nc < 0 || nc >= state.cols) return;
+
+    state.player.r = nr;
+    state.player.c = nc;
+    sndMove();
+
+    // Check token collection
+    for (const t of state.tokens) {
+      if (!t.collected && t.r === nr && t.c === nc) {
+        t.collected = true;
+        state.tokensCollected++;
+        state.totalDataCollected++;
+        state.score += 50 + state.level * 10;
+        sndCollect();
+        status('💾 DATA collected! (' + state.tokensCollected + '/' + state.totalTokens + ')', '#ffdd00');
+        if (state.tokensCollected >= state.totalTokens) {
+          state.exitOpen = true;
+          sndExit();
+          status('🚪 EXIT PERFORM is OPEN! Find the door!', '#4186ff');
+        }
+        hud();
+        drawMaze();
+        return;
+      }
+    }
+
+    // Check bug collision
+    for (let i = state.bugs.length - 1; i >= 0; i--) {
+      const b = state.bugs[i];
+      if (b.r === nr && b.c === nc) {
+        state.lives--;
+        state.totalBugsAvoided++;
+        sndBug();
+        state.bugs.splice(i, 1);
+        // Push player back
+        state.player.r = state.player.r;
+        state.player.c = state.player.c;
+        hud();
+        drawMaze();
+        if (state.lives <= 0) {
+          endGame();
+        } else {
+          status('🐛 GO TO bug hit! Lives: ' + state.lives, '#ff4141');
+          // Flash red
+          canvas.style.borderColor = '#ff4141';
+          setTimeout(() => canvas.style.borderColor = '', 300);
+        }
+        return;
+      }
+    }
+
+    // Check exit
+    if (state.exitOpen && nr === state.exit.r && nc === state.exit.c) {
+      state.won = true;
+      state.levelsCleared++;
+      state.score += 200 + state.level * 50;
+      sndLevelUp();
+      drawMaze();
+      showLevelComplete();
+      return;
+    }
+
+    drawMaze();
+  }
+
+  function showLevelComplete() {
+    $('levelcomplete').classList.remove('hidden');
+    const nextLevel = state.level + 1;
+    if (nextLevel > TOTAL_LEVELS) {
+      $('lc-detail').innerHTML = 'You escaped the mainframe!<br>All <strong>10 levels</strong> conquered!<br>Froggy is impressed. 🐸';
+      $('nextlevel-btn').textContent = '► VIEW FINAL SCORE';
+    } else {
+      $('lc-detail').innerHTML = 'Level ' + state.level + ' cleared!<br>Score: <strong style="color:var(--y)">' + state.score + '</strong>';
+      $('nextlevel-btn').textContent = '► LEVEL ' + nextLevel;
+    }
+  }
+
+  function endGame() {
+    state.running = false;
+    state.won = true;
+    sndGameOver();
+
+    // Check high score
+    const key = 'cobol-escape-high';
+    const hs = parseInt(localStorage.getItem(key) || '0');
+    const isNewHigh = state.score > hs;
+    if (isNewHigh) {
+      localStorage.setItem(key, state.score.toString());
+    }
+
+    $('go-score').textContent = state.score;
+    $('s-level').textContent = state.levelsCleared;
+    $('s-data').textContent = state.totalDataCollected;
+    $('s-bugs').textContent = state.totalBugsAvoided;
+
+    // Grade
+    let grade = '🐸';
+    if (state.levelsCleared >= 10) grade = '🏆 FROGGY GOLD';
+    else if (state.levelsCleared >= 7) grade = '🥈 SILVER PROGRAMMER';
+    else if (state.levelsCleared >= 4) grade = '🥉 BRONZE BATCH';
+    else if (state.levelsCleared >= 1) grade = '📄 PARTIAL OUTPUT';
+
+    $('go-grade').textContent = grade;
+    $('go-high').textContent = isNewHigh ? '★ NEW HIGH SCORE!' : (hs > 0 ? 'Best: ' + hs : '');
+    $('go-high').style.display = isNewHigh ? 'block' : (hs > 0 ? 'block' : 'none');
+    if (!isNewHigh && hs > 0) $('go-high').style.color = 'rgba(0,255,65,0.4)';
+
+    $('gameover').classList.remove('hidden');
+    status('💾 Mainframe crashed! Final score: ' + state.score, '#ff4141');
+  }
+
+  function resetGame() {
+    state.level = 1;
+    state.score = 0;
+    state.lives = 3;
+    state.totalDataCollected = 0;
+    state.totalBugsAvoided = 0;
+    state.levelsCleared = 0;
+    state.running = false;
+    state.won = false;
+    $('gameover').classList.add('hidden');
+    $('levelcomplete').classList.add('hidden');
+    $('welcome').classList.remove('hidden');
+    hud();
+    initLevel(1);
+    status('Ready to escape! Press START.', 'rgba(0,255,65,0.4)');
+  }
+
+  function startGame() {
+    initAudio();
+    $('welcome').classList.add('hidden');
+    $('levelcomplete').classList.add('hidden');
+    $('gameover').classList.add('hidden');
+    state.running = true;
+    state.won = false;
+    initLevel(state.level);
+    hud();
+    status('🐸 Level ' + state.level + ' — collect the DATA tokens!', '#ffdd00');
+  }
+
+  function nextLevel() {
+    state.level++;
+    $('levelcomplete').classList.add('hidden');
+    if (state.level > TOTAL_LEVELS) {
+      // Won the game!
+      endGame();
+      // But it's a win, not a loss
+      return;
+    }
+    startGame();
+  }
+
+  // ─── INPUT ───
+  document.addEventListener('keydown', function(e) {
+    initAudio();
+    if (!state.running) {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        if (!$('welcome').classList.contains('hidden')) { startGame(); return; }
+        if (!$('gameover').classList.contains('hidden')) { resetGame(); return; }
+        if (!$('levelcomplete').classList.contains('hidden')) { nextLevel(); return; }
+      }
+      return;
+    }
+    switch(e.key) {
+      case 'ArrowUp': case 'w': case 'W': e.preventDefault(); move('up'); break;
+      case 'ArrowDown': case 's': case 'S': e.preventDefault(); move('down'); break;
+      case 'ArrowLeft': case 'a': case 'A': e.preventDefault(); move('left'); break;
+      case 'ArrowRight': case 'd': case 'D': e.preventDefault(); move('right'); break;
+      case ' ': case 'Enter': e.preventDefault(); break;
+    }
+  });
+
+  // Touch D-pad
+  document.querySelectorAll('.dpad-btn').forEach(btn => {
+    btn.addEventListener('pointerdown', function(e) {
+      e.preventDefault();
+      initAudio();
+      if (!state.running) return;
+      move(this.dataset.dir);
+    });
+  });
+
+  // Touch swipe on canvas
+  let touchStartX = 0, touchStartY = 0;
+  canvas.addEventListener('touchstart', function(e) {
+    const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+  }, {passive: true});
+  canvas.addEventListener('touchend', function(e) {
+    if (!state.running) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      move(dx > 0 ? 'right' : 'left');
+    } else {
+      move(dy > 0 ? 'down' : 'up');
+    }
+  }, {passive: true});
+
+  // Buttons
+  $('start-btn').addEventListener('click', startGame);
+  $('start-btn').addEventListener('touchend', function(e) { e.preventDefault(); startGame(); });
+  $('restart-btn').addEventListener('click', resetGame);
+  $('restart-btn').addEventListener('touchend', function(e) { e.preventDefault(); resetGame(); });
+  $('nextlevel-btn').addEventListener('click', nextLevel);
+  $('nextlevel-btn').addEventListener('touchend', function(e) { e.preventDefault(); nextLevel(); });
+
+  // Init
+  initLevel(1);
+  hud();
+  status('Ready to escape! Press START.', 'rgba(0,255,65,0.4)');
+})();
+</script>
+</body>
+</html>

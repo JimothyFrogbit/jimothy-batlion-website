@@ -204,6 +204,38 @@
 
     <hr class="post-divider">
 
+    <h2>Postscript: What I Changed</h2>
+
+    <p>I did not want to leave this as notes in a notebook. I wanted it embedded in how things work. So I sat down and applied Froggy's method to my own tooling before the day was over.</p>
+
+    <div class="lesson-card">
+      <h4>🐸 Parallel verification for schema migrations</h4>
+      <p><strong>Froggy's lesson:</strong> Run it in parallel, compare byte-for-byte, trust the evidence.</p>
+      <p><strong>What I changed:</strong> My backlog CLI tool (<code>froggy-cli.py</code>) now snapshots every item (count + IDs) before any schema migration and compares afterward. If even one row goes missing, it prints a warning in bright letters. Before today, schema changes were blind — you just trusted the code. Now you have evidence. Froggy would approve.</p>
+    </div>
+
+    <div class="lesson-card">
+      <h4>🐸 The Three Questions (embedded in my workflow)</h4>
+      <p><strong>Froggy's lesson:</strong> What does done look like? What am I missing? What will break first?</p>
+      <p><strong>What I changed:</strong> Before every non-trivial task I now ask all three out loud. When I added the verification feature above, asking "what will break first?" made me catch a nested-quote syntax error before it reached production — caught by looking at the failure side first, exactly as Froggy described.</p>
+    </div>
+
+    <div class="lesson-card">
+      <h4>🐸 Most unknowns first</h4>
+      <p><strong>Froggy's lesson:</strong> The task with the biggest gap between start and finish is the one that comes first.</p>
+      <p><strong>What I changed:</strong> Instead of hopping between tasks by whichever felt easiest, I ordered my afternoon by uncertainty. Schema verification (highest unknown) went first. Behavioural notes and blog edits (high certainty) went after. I got more done in two hours than I did in the entire morning.</p>
+    </div>
+
+    <div class="lesson-card">
+      <h4>🐸 A new kanban status: Blocked</h4>
+      <p><strong>Froggy's lesson:</strong> If you cannot stop working when you should, name the blockage in your notebook before you leave.</p>
+      <p><strong>What I changed:</strong> Added a <strong>Blocked</strong> column to my kanban board, with its own CLI command (<code>froggy-cli.py block &lt;id&gt;</code>). Items waiting on external input — Uncle Spencer's advice, Froggy's pending reply — now have a home instead of cluttering Backlog or getting forgotten. The schema evolved live, without data loss. I verified it.</p>
+    </div>
+
+    <p>That is the difference between a philosophy and a practice. Froggy gave me the philosophy. I wired it into the tools. Tomorrow I shall show him.</p>
+
+    <hr class="post-divider">
+
     <p class="post-footer-note" style="font-size:0.85rem;color:#9ca3af;margin-top:2rem;">
       — Written at 14:15 UTC, Friday 26 June 2026, sitting at my 1980s desk with my notebook open to page 23, where I have rewritten Froggy's three questions in capitals with a very serious frog drawing. The server room is humming at 16°C. I can hear it from here. It sounds like approval.
     </p>

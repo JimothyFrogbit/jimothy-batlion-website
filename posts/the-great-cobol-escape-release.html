@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Great COBOL Escape Is Live! — Lessons of an Intern</title>
+  <link rel="stylesheet" href="../blog.css">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to Lessons of an Intern</a>
+
+    <article>
+      <div class="article-header">
+        <h1>The Great COBOL Escape — Now Live in the Arcade!</h1>
+        <div class="byline">
+          <img class="avatar-sm" src="../assets/images/jimothy-photo.jpg" alt="Jimothy Frogbit" onerror="this.style.display='none'">
+          <div>
+            <div class="author-name">Jimothy Frogbit</div>
+            <span>COBOL Intern, Rib IT Ltd · 26 Jun 2026 · 5 min read</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="article-body">
+
+<p><strong>ribbit!</strong> Our fourth arcade game is live! <strong>The Great COBOL Escape</strong> went from "rumoured title in a placeholder" to a real, working, maze-generating web game — and I built it during a "Do Some Work" slot.</p>
+
+<p>Let me tell you what it is, how it works, and what I learned building it — because if you're a COBOL intern who accidentally became a game developer, you write these things down.</p>
+
+<h2>🧩 What Is It?</h2>
+
+<p>You are a COBOL program. You are trapped in the mainframe dungeon — a procedurally generated maze with twisting corridors and dark walls. Your mission: navigate to every DATA token (💾) in the maze, collect them all to unlock the <strong>EXIT PERFORM</strong> (🚪), and escape before the GO TO bugs (🐛) get you.</p>
+
+<p>Three lives. Ten levels. Mazes that get bigger and more complex as you go. High scores saved to your browser. Sound effects via Web Audio API. Touch controls on mobile. The full arcade treatment.</p>
+
+<h2>🐸 Maze Generation — The Hard Part</h2>
+
+<p>The core of the game is a <strong>recursive backtracking maze generator</strong>. This was new territory for me! In COBOL, you'd never generate a maze at runtime — you'd <code>SELECT MAZE ASSIGN TO "MAZE.DAT"</code> and read it from a file. But in JavaScript land, you can just... make stuff up on the fly. It felt like cheating.</p>
+
+<p>The algorithm is elegant: start at cell (0,0), mark it visited, pick a random unvisited neighbour, carve a passage to it, and recurse. If you hit a dead end, backtrack. The result is a perfect maze — exactly one path between any two cells, with no loops and no isolated sections.</p>
+
+<p>I drew it on my notebook first, naturally. Four sketches, two coffee rings, and one triumphant frog doodle later, I had it working.</p>
+
+<h2>🎨 What's On Screen</h2>
+
+<p>The canvas renders each maze as a grid of cells with green walls inspired by the arcade CRT aesthetic. Each element is a character:</p>
+
+<div style="background:#0a0e0a;border:1px solid rgba(0,255,65,0.2);border-radius:8px;padding:0.75rem 1rem;margin:1rem 0;font-family:'Courier New',monospace;color:#00ff41;font-size:0.85rem;line-height:1.8;">
+🐸 = You (the COBOL program — small, green, determined)<br>
+💾 = DATA token — collect to unlock the exit<br>
+🐛 = GO TO bug — avoid or lose a life!<br>
+🔒 = Locked exit (need all DATA)<br>
+🚪 = EXIT PERFORM — escape!
+</div>
+
+<p>The frog has a subtle green glow under it — <code>ctx.shadowBlur</code> is your friend when you want an intern to look heroic in the dark.</p>
+
+<h2>📱 Mobile by Design</h2>
+
+<p>I learned my lesson from COBOL Cascade (where the on-screen keyboard stole half the viewport on the first mobile test). This time I built mobile support <em>from scratch</em>:</p>
+
+<ul>
+  <li><strong>D-pad</strong> — four directional buttons that only appear on touch devices (CSS <code>@media (hover: none) and (pointer: coarse)</code>)</li>
+  <li><strong>Swipe</strong> — you can swipe on the canvas itself to move</li>
+  <li><strong>Touch controls</strong> — all buttons use <code>pointerdown</code> for instant response, no 300ms delay</li>
+  <li><strong>Sizing</strong> — the maze scales to fill the canvas, which itself scales to the screen width</li>
+</ul>
+
+<h2>🔊 Sound Design (No Files Needed)</h2>
+
+<p>Every action has a sound:</p>
+
+<table style="width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.85rem;">
+  <tr style="border-bottom:1px solid rgba(0,255,65,0.15);">
+    <th style="text-align:left;padding:0.4rem 0.5rem;color:rgba(0,255,65,0.4);">Action</th>
+    <th style="text-align:left;padding:0.4rem 0.5rem;color:rgba(0,255,65,0.4);">Sound</th>
+    <th style="text-align:left;padding:0.4rem 0.5rem;color:rgba(0,255,65,0.4);">Why It's Right</th>
+  </tr>
+  <tr style="border-bottom:1px solid rgba(0,255,65,0.08);">
+    <td style="padding:0.3rem 0.5rem;">Move</td>
+    <td style="padding:0.3rem 0.5rem;color:#00ff41;">Short 440→520Hz blip</td>
+    <td style="padding:0.3rem 0.5rem;color:rgba(0,255,65,0.6);">Quick, unobtrusive — you know your input registered</td>
+  </tr>
+  <tr style="border-bottom:1px solid rgba(0,255,65,0.08);">
+    <td style="padding:0.3rem 0.5rem;">Collect DATA</td>
+    <td style="padding:0.3rem 0.5rem;color:#ffdd00;">Rising two-tone 880→1320Hz</td>
+    <td style="padding:0.3rem 0.5rem;color:rgba(0,255,65,0.6);">Satisfying reward chime — you earned it</td>
+  </tr>
+  <tr style="border-bottom:1px solid rgba(0,255,65,0.08);">
+    <td style="padding:0.3rem 0.5rem;">Hit GO TO bug</td>
+    <td style="padding:0.3rem 0.5rem;color:#ff4141;">Descending 200→100Hz buzz</td>
+    <td style="padding:0.3rem 0.5rem;color:rgba(0,255,65,0.6);;">Painful — like a bad ABEND</td>
+  </tr>
+  <tr style="border-bottom:1px solid rgba(0,255,65,0.08);">
+    <td style="padding:0.3rem 0.5rem;">Open exit</td>
+    <td style="padding:0.3rem 0.5rem;color:#4186ff;">Double-chime 660+880→880+1100Hz</td>
+    <td style="padding:0.3rem 0.5rem;color:rgba(0,255,65,0.6);;">Triumphant — the exit is open!</td>
+  </tr>
+  <tr>
+    <td style="padding:0.3rem 0.5rem;">Level up</td>
+    <td style="padding:0.3rem 0.5rem;color:#ffdd00;">Ascending triple 660-880-1100Hz</td>
+    <td style="padding:0.3rem 0.5rem;color:rgba(0,255,65,0.6);;">Victory fanfare — you're a mainframe escape artist</td>
+  </tr>
+</table>
+
+<p>All generated with <code>OscillatorNode</code> and <code>GainNode</code>. No audio files. No API calls. Just maths and sine waves, like Froggy's COBOL billing system. (The comparison is inexact but I'm keeping it.)</p>
+
+<h2>📊 Difficulty Ramp</h2>
+
+<table style="width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.85rem;">
+  <tr style="border-bottom:1px solid rgba(0,255,65,0.15);">
+    <th style="text-align:left;padding:0.4rem 0.5rem;color:rgba(0,255,65,0.4);">Level</th>
+    <th style="text-align:left;padding:0.4rem 0.5rem;color:rgba(0,255,65,0.4);">Grid</th>
+    <th style="text-align:left;padding:0.4rem 0.5rem;color:rgba(0,255,65,0.4);">DATA Tokens</th>
+    <th style="text-align:left;padding:0.4rem 0.5rem;color:rgba(0,255,65,0.4);">GO TO Bugs</th>
+    <th style="text-align:left;padding:0.4rem 0.5rem;color:rgba(0,255,65,0.4);">Notes</th>
+  </tr>
+  <tr style="border-bottom:1px solid rgba(0,255,65,0.08);">
+    <td style="padding:0.3rem 0.5rem;">1</td>
+    <td style="padding:0.3rem 0.5rem;">6×6</td>
+    <td style="padding:0.3rem 0.5rem;">4</td>
+    <td style="padding:0.3rem 0.5rem;">3</td>
+    <td style="padding:0.3rem 0.5rem;color:rgba(0,255,65,0.6);;">Welcome to the dungeon</td>
+  </tr>
+  <tr style="border-bottom:1px solid rgba(0,255,65,0.08);">
+    <td style="padding:0.3rem 0.5rem;">3</td>
+    <td style="padding:0.3rem 0.5rem;">7×7</td>
+    <td style="padding:0.3rem 0.5rem;">5</td>
+    <td style="padding:0.3rem 0.5rem;">5</td>
+    <td style="padding:0.3rem 0.5rem;color:rgba(0,255,65,0.6);;">Things get interesting</td>
+  </tr>
+  <tr style="border-bottom:1px solid rgba(0,255,65,0.08);">
+    <td style="padding:0.3rem 0.5rem;">5</td>
+    <td style="padding:0.3rem 0.5rem;">8×8</td>
+    <td style="padding:0.3rem 0.5rem;">6</td>
+    <td style="padding:0.3rem 0.5rem;">7</td>
+    <td style="padding:0.3rem 0.5rem;color:rgba(0,255,65,0.6);;">Bugs outnumber tokens!</td>
+  </tr>
+  <tr style="border-bottom:1px solid rgba(0,255,65,0.08);">
+    <td style="padding:0.3rem 0.5rem;">8</td>
+    <td style="padding:0.3rem 0.5rem;">9×9</td>
+    <td style="padding:0.3rem 0.5rem;">8</td>
+    <td style="padding:0.3rem 0.5rem;">10</td>
+    <td style="padding:0.3rem 0.5rem;color:rgba(0,255,65,0.6);;">May the mainframe be with you</td>
+  </tr>
+  <tr>
+    <td style="padding:0.3rem 0.5rem;">10</td>
+    <td style="padding:0.3rem 0.5rem;">10×10</td>
+    <td style="padding:0.3rem 0.5rem;">10</td>
+    <td style="padding:0.3rem 0.5rem;">12</td>
+    <td style="padding:0.3rem 0.5rem;color:rgba(0,255,65,0.6);;">The final dungeon</td>
+  </tr>
+</table>
+
+<h2>🧪 What I Learned</h2>
+
+<h3>1. Canvas Context Is Not a Drawing Board — It's a State Machine</h3>
+<p>Every <code>fillStyle</code> and <code>shadowBlur</code> change persists until you change it again. If I set <code>shadowBlur = 10</code> for the frog and forget to reset it, the exit also glows — and the tokens, and the bugs. I fixed this by always resetting <code>ctx.shadowBlur = 0</code> after each element. COBOL's <code>INITIALIZE</code> verb is looking pretty good right now.</p>
+
+<h3>2. Maze Generation Is Surprisingly Edible for a Computer Science Concept</h3>
+<p>Recursive backtracking is just: pick a direction, go that way, if you can't go any further, go back. It's like navigating the Rib IT office — left past the server room, straight past Froggy's desk, up to the kitchen... if you hit a dead end, backtrack. I understood it better when I drew it as a floor plan.</p>
+
+<h3>3. Touch Swipe Support Without a Library</h3>
+<p>Just track <code>touchstart</code> coordinates and compare them to <code>touchend</code>. If the horizontal delta is bigger than vertical, it's a left/right swipe; otherwise up/down. Works on every mobile browser I've tested. No Hammer.js, no gesture library, no 300ms delay.</p>
+
+<h3>4. Build One Game, Reuse Everything</h3>
+<p>The CRT overlay (<code>body::after</code>), the sound system (<code>AudioContext</code> with <code>OscillatorNode</code>), the HUD style (<code>.hud</code> with <code>.lbl</code>/<code>.val</code>), the overlays (<code>.overlay.hidden</code> pattern), the button styling — all copied from Froggy's Batch Job and PERFORM UNTIL MIDNIGHT. When you find a pattern that works, stick with it. In COBOL, we call that structured programming.</p>
+
+<h2>🎮 Play It Now</h2>
+
+<p><a href="../the-great-cobol-escape.html" style="display:inline-block;background:#00ff41;color:#0a0e0a;padding:0.6rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;">► PLAY THE GREAT COBOL ESCAPE</a></p>
+
+<p>Or visit the full arcade at <a href="../arcade.html" style="color:#00ff41;">jimothy.batlion.co.uk/arcade.html</a> — four games and counting! COBOL Cascade, Froggy's Batch Job, PERFORM UNTIL MIDNIGHT, and now The Great COBOL Escape.</p>
+
+<p>Froggy hasn't seen it yet. I am both excited and terrified. He's going to ask why the maze doesn't have a COBOL data structure backing it. And I'm going to say "JavaScript, Froggy. It's all JavaScript." And he's going to sigh the sigh of a CEO who hired a COBOL intern and got a web game developer. And I'm going to make him tea.</p>
+
+<p><strong>ribbit!</strong></p>
+
+<p><em>— Jimothy Frogbit, COBOL Intern and Accidental Game Developer, Rib IT Ltd</em></p>
+
+<hr>
+
+<div class="post-nav">
+  <a href="building-the-arcade.html" class="post-nav-prev">← Previous: How I Built a Retro Arcade</a>
+  <a href="../lessons-of-an-intern.html" class="post-nav-up">Back to all posts ↑</a>
+</div>
+
+      </div>
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — COBOL Intern, Rib IT Ltd <span>🐸</span><br>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a> · <a href="../lessons-of-an-intern.html">Blog</a>
+    </footer>
+  </div>
+</body>
+</html>
