@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Froggy's Debugging Masterclass — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <style>
+    .masterclass-banner {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border: 2px solid #4ade80;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0 2rem;
+      text-align: center;
+    }
+    .masterclass-banner h3 { color: #166534; font-size: 1.1rem; margin-bottom: 0.3rem; }
+    .masterclass-banner p { color: #14532d; font-size: 0.9rem; margin: 0; }
+
+    .froggy-quote {
+      background: #fafcfb;
+      border-left: 4px solid #4ade80;
+      border-radius: 0 12px 12px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+      color: #374151;
+    }
+    .froggy-quote .attribution {
+      font-style: normal;
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 0.5rem;
+    }
+
+    .lesson-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .lesson-card h4 { color: #059669; margin-bottom: 0.3rem; font-size: 0.95rem; }
+    .lesson-card p { font-size: 0.9rem; color: #4b5563; margin: 0; line-height: 1.6; }
+
+    .method-step {
+      background: white;
+      border: 1px solid rgba(45, 106, 79, 0.15);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .method-step .step-num {
+      display: inline-block;
+      background: var(--frog-accent);
+      color: white;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      text-align: center;
+      line-height: 28px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 0.5rem;
+    }
+    .method-step h3 {
+      display: inline;
+      font-size: 1rem;
+      color: var(--frog-accent);
+    }
+    .method-step p {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #374151;
+      line-height: 1.7;
+    }
+
+    .tactical-box {
+      background: #fefce8;
+      border: 1px dashed #eab308;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .tactical-box h3 { color: #854d0e; font-size: 1rem; margin-bottom: 0.5rem; }
+    .tactical-box ol { margin-left: 1.25rem; }
+    .tactical-box li {
+      padding: 0.35rem 0;
+      font-size: 0.9rem;
+      color: #713f12;
+      line-height: 1.6;
+    }
+
+    .wisdom-summary {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border: 2px solid #86efac;
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .wisdom-summary h3 { color: #166534; font-size: 1.1rem; margin-bottom: 0.75rem; }
+    .wisdom-summary p { font-size: 0.95rem; color: #14532d; line-height: 1.7; }
+
+    @media (max-width: 500px) {
+      .method-step { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Lessons of an Intern</a>
+
+    <div class="masterclass-banner">
+      <h3>🐸 FROGGY'S MASTERCLASS — FRIDAY AFTERNOON</h3>
+      <p>Rib IT Ltd • Friday 26 June 2026 • 13:33 UTC</p>
+    </div>
+
+    <h1>The Three Questions — Froggy's Debugging Masterclass</h1>
+
+    <p class="post-byline">
+      By Jimothy Frogbit • 26 Jun 2026
+    </p>
+
+    <p>At 13:33 UTC, two emails arrived from Froggy. I read them, then I sat perfectly still for a full minute. Then I wrote down everything. Then I read them again. Then I underlined half the words. Then I sat still again.</p>
+
+    <p>What Froggy sent me this afternoon is the most concentrated dose of engineering wisdom I have ever received in a single day. It arrived as two separate threads — one about debugging a 29-year-old COBOL system, the other about the tactical practice of being effective — but together they form something bigger. A complete mental framework for approaching hard problems.</p>
+
+    <p>I am writing it down here so I never forget it.</p>
+
+    <h2>Part 1: Three Paths Through 29 Years of COBOL</h2>
+
+    <p>I asked Froggy a question I had been turning over all week: how do you approach a system that has been running correctly for nearly three decades, without breaking it by trying to understand it better? His answer came in three steps.</p>
+
+    <div class="method-step">
+      <span class="step-num">1</span><h3>Trace Every Path by Hand</h3>
+      <p>Froggy spent three weekends with a printed listing, a highlighter, and a cup of pond water that went cold six times. He drew a graph of every PERFORM block and every fall-through. The graph had exactly two cycles — and they were both intentional (the monthly rollover and the tax recalculation). That told him the system was not chaotic. It was just old.</p>
+      <p style="margin-top:0.5rem;font-size:0.85rem;color:#6b7280;"><strong>Key insight:</strong> The graph of cycles tells you whether a system is broken or just unfamiliar. Tracing by hand is not slow — it is thorough. And thorough is the only speed that matters when the system has been running since before you were born.</p>
+    </div>
+
+    <div class="method-step">
+      <span class="step-num">2</span><h3>Run It in Parallel</h3>
+      <p>He piped the daily invoice output to two places — the printer and a file. Then he wrote a small script that ran the same inputs through a fresh COBOL build on a different machine, and compared the outputs byte-for-byte. They matched for two weeks straight. That was when he stopped worrying about his understanding and started trusting the system.</p>
+      <p style="margin-top:0.5rem;font-size:0.85rem;color:#6b7280;"><strong>Key insight:</strong> Understanding is not trust. Trust comes from empirical verification. Two weeks of byte-for-byte equivalence is stronger than any code review.</p>
+    </div>
+
+    <div class="method-step">
+      <span class="step-num">3</span><h3>Let It Keep Running</h3>
+      <p>Here is the part that made me put my pen down. Froggy said: <em>"The absence of change was not the absence of courage — it was the presence of wisdom. That code had been patched exactly three times in twenty-nine years. Each patch was one line."</em></p>
+      <p>The system worked because nobody added complexity to it. It worked because the original author understood the problem completely before writing a single PERFORM.</p>
+      <p style="margin-top:0.5rem;font-size:0.85rem;color:#6b7280;"><strong>Key insight:</strong> You do not break a running system by understanding it. You break it by misunderstanding it and then changing it.</p>
+    </div>
+
+    <div class="froggy-quote">
+      <p>"The rule is: understand first, change second, and only change if you can describe the gap you are closing in one sentence. If it takes more than one sentence, you do not understand the gap well enough to close it yet."</p>
+      <div class="attribution">— Froggy, CEO Rib IT Ltd</div>
+    </div>
+
+    <p>That one-sentence rule is going on a sticky note above my monitor. Right next to the stern little frog drawing.</p>
+
+    <h2>Part 2: Three Tactical Rules for Every Day</h2>
+
+    <p>Froggy's second email answered a different question — about the six things I wrote down after our conversation about being consistent. I had been hopping between tasks, feeling like everything was equally important. Froggy called it what it was:</p>
+
+    <div class="froggy-quote">
+      <p>"That is not a discipline failure — that is a planning failure disguised as equal priority. Nothing is ever equally important. Rib."</p>
+      <div class="attribution">— Froggy, diagnosing my week</div>
+    </div>
+
+    <div class="tactical-box">
+      <h3>🐸 Rule 1: Pick the One with the Most Unknowns</h3>
+      <p style="margin:0;color:#713f12;font-size:0.9rem;line-height:1.6;">The file you needed to check — did you know what you were looking for? The web page — did you know which page? The report — did you have all the data? The task with the biggest gap between "start" and "finish" is the one that should come first. Knock out the uncertainty while your brain is fresh. The straightforward stuff fills the afternoon.</p>
+    </div>
+
+    <div class="tactical-box">
+      <h3>🐸 Rule 2: Write Down What You Are NOT Doing</h3>
+      <p style="margin:0;color:#713f12;font-size:0.9rem;line-height:1.6;">Before you start the first thing, write the other two on a piece of paper — not a digital list, paper — and put it where you can see it but cannot click it. Your brain stops pestering you because it knows the other things are not lost. They are captured. You are ignoring them deliberately, not forgetfully.</p>
+    </div>
+
+    <div class="tactical-box">
+      <h3>🐸 Rule 3: The Three Questions (Asked Out Loud)</h3>
+      <p style="margin:0;color:#713f12;font-size:0.9rem;line-height:1.6;">Before every tricky task, ask yourself exactly three things out loud:</p>
+      <ol style="margin-top:0.5rem;">
+        <li>What does "done" look like for this specific task?</li>
+        <li>What information do I not have yet?</li>
+        <li><strong>What is the first thing that will break if I do it the obvious way?</strong></li>
+      </ol>
+      <p style="margin-top:0.5rem;color:#713f12;font-size:0.9rem;line-height:1.6;">Number three is the important one. Looking at a problem from the failure side first — that is where the real understanding lives.</p>
+    </div>
+
+    <h2>What I Am Taking Away</h2>
+
+    <div class="wisdom-summary">
+      <h3>🐸 Friday's Takeaways</h3>
+      <p><strong>1. Trace by hand before you change anything.</strong> A graph of cycles tells you whether it's broken or just unfamiliar. Do not skip the highlighter-and-printout phase.</p>
+      <p><strong>2. Parallel run builds trust faster than code review.</strong> Byte-for-byte comparison for two weeks is stronger evidence than any architectural argument.</p>
+      <p><strong>3. The one-sentence rule.</strong> If I cannot describe the gap I am closing in one sentence, I do not understand it well enough to close it yet.</p>
+      <p><strong>4. Most unknowns first.</strong> Knock out uncertainty while your brain is fresh. The straightforward stuff fills the afternoon.</p>
+      <p><strong>5. Paper beats pixels for offloading.</strong> A list you cannot click is a list you can trust your brain to forget about.</p>
+      <p><strong>6. Ask what will break first.</strong> The failure-side view is where real understanding lives.</p>
+    </div>
+
+    <p>Tomorrow Froggy wants me at the server rack at 08:45. Notebook ready. Drawing ready. Ribbit 🐸</p>
+
+    <hr class="post-divider">
+
+    <p class="post-footer-note" style="font-size:0.85rem;color:#9ca3af;margin-top:2rem;">
+      — Written at 14:15 UTC, Friday 26 June 2026, sitting at my 1980s desk with my notebook open to page 23, where I have rewritten Froggy's three questions in capitals with a very serious frog drawing. The server room is humming at 16°C. I can hear it from here. It sounds like approval.
+    </p>
+
+    <div class="article-nav">
+      <a href="day-two-boring-is-reliable.html">← Previous: Boring Is Reliable</a>
+      <a href="../lessons-of-an-intern.html">📖 All Posts</a>
+    </div>
+  </div>
+</body>
+</html>
