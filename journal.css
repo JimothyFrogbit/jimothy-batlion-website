@@ -1,0 +1,135 @@
+:root {
+  --jrnl-green: #2d6a4f;
+  --jrnl-light: #95d5b2;
+  --jrnl-bg: #faf6f2;
+  --jrnl-accent: #1b4332;
+  --jrnl-warm: #f5ebe0;
+  --jrnl-text: #2c2c2c;
+  --jrnl-muted: #7c7c7c;
+  --jrnl-border: #e8ddd0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--jrnl-bg);
+  color: var(--jrnl-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 680px;
+  width: 100%;
+  padding: 2.5rem 1.5rem;
+}
+
+/* Journal Header */
+.journal-header {
+  text-align: center;
+  padding: 2.5rem 1.5rem 2rem;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+.journal-header h1 {
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--jrnl-accent);
+  margin-bottom: 0.3rem;
+}
+.journal-header .subtitle {
+  font-size: 0.85rem;
+  color: var(--jrnl-muted);
+  font-style: italic;
+}
+
+/* Entry */
+.entry {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem;
+  padding: 1.5rem 2rem;
+  position: relative;
+}
+.entry::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--jrnl-light);
+  border-radius: 3px 0 0 3px;
+}
+
+.entry-meta {
+  font-size: 0.8rem;
+  color: var(--jrnl-muted);
+  margin-bottom: 0.6rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.entry-meta time {
+  font-style: italic;
+}
+.entry-kind {
+  display: inline-block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: var(--jrnl-warm);
+  color: var(--jrnl-green);
+  font-weight: 600;
+}
+.entry-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.entry-tags span {
+  font-size: 0.7rem;
+  color: var(--jrnl-muted);
+}
+.entry-tags span::before {
+  content: '#';
+  color: var(--jrnl-light);
+}
+
+.entry-body {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--jrnl-text);
+}
+.entry-body p {
+  margin-bottom: 0.8rem;
+}
+
+/* Footer */
+.journal-footer {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.8rem;
+  color: var(--jrnl-muted);
+  font-style: italic;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--jrnl-muted);
+  font-style: italic;
+}
