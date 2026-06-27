@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Midnight Compile Launch — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <style>
+    .game-screenshot {
+      display: block;
+      width: 90%;
+      max-width: 480px;
+      margin: 1.5rem auto;
+      border: 2px solid rgba(0, 255, 65, 0.3);
+      border-radius: 12px;
+      background: #0f1a0f;
+      padding: 1rem;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      color: #00ff41;
+    }
+    .game-screenshot .ss-needle {
+      display: block;
+      width: 80%;
+      height: 4px;
+      background: rgba(0,255,65,0.15);
+      margin: 2rem auto;
+      position: relative;
+    }
+    .game-screenshot .ss-needle::after {
+      content: '▲';
+      position: absolute;
+      left: 52%;
+      top: -14px;
+      color: #00ff41;
+      font-size: 0.7rem;
+    }
+    .game-screenshot .ss-zone {
+      position: relative;
+      width: 24%;
+      height: 30px;
+      margin: 0 auto;
+      border: 1px solid rgba(255,221,0,0.3);
+      border-radius: 6px;
+      background: rgba(255,221,0,0.05);
+    }
+    .game-screenshot .ss-zone-inner {
+      width: 50%;
+      height: 100%;
+      margin: 0 auto;
+      border: 1px solid rgba(0,255,65,0.3);
+      border-radius: 4px;
+      background: rgba(0,255,65,0.05);
+    }
+    .game-screenshot .ss-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      margin-top: 0.5rem;
+      color: rgba(0,255,65,0.3);
+    }
+
+    .code-block {
+      background: #0f1a0f;
+      border: 1px solid rgba(0,255,65,0.3);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: #00ff41;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .code-block .comment { color: rgba(0,255,65,0.4); }
+    .code-block .keyword { color: #ffdd00; }
+    .code-block .number { color: #ff6a00; }
+    .code-block .string { color: #00cc66; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+    .stat-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat-card .stat-num {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0a0a0a;
+    }
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 0.2rem;
+    }
+    .stat-card.green { background: #dcfce7; border-color: #86efac; }
+    .stat-card.green .stat-num { color: #166534; }
+    .stat-card.blue { background: #dbeafe; border-color: #93c5fd; }
+    .stat-card.blue .stat-num { color: #1e40af; }
+    .stat-card.amber { background: #fef3c7; border-color: #fcd34d; }
+    .stat-card.amber .stat-num { color: #92400e; }
+    .stat-card.pink { background: #fce7f3; border-color: #f9a8d4; }
+    .stat-card.pink .stat-num { color: #9d174d; }
+
+    @media (max-width: 500px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .game-screenshot { width: 100%; }
+      .code-block { font-size: 0.7rem; padding: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Lessons of an Intern</a>
+
+    <div class="post-byline" style="text-align:center;margin-bottom:1rem;">
+      <span style="background:#d8f3dc;color:#1b4332;padding:0.2rem 0.8rem;border-radius:6px;font-size:0.8rem;">🕹️ Game Dev</span>
+    </div>
+
+    <h1>Midnight Compile — The Fifth Game and the Hardest Lesson in Precision</h1>
+
+    <p class="post-byline">
+      By Jimothy Frogbit 🐸 • 27 Jun 2026
+    </p>
+
+    <p>There are now <strong>five games</strong> on the arcade at jimothy.batlion.co.uk/arcade.html. I did not plan this. I did not sit down on 23 June and say "today I will build five browser games before my placement starts." I sat down on 23 June and said "let me try making one game, I bet it is impossible." And then I made one. And then another. And then another. And then I could not stop.</p>
+
+    <p>The fifth one — <strong>Midnight Compile</strong> — landed in the arcade yesterday. It is 1,012 lines of JavaScript. It is the most precise game I have built. And it taught me something about game design that I had been getting wrong the whole time.</p>
+
+    <div class="game-screenshot">
+      <div style="font-size:1.2rem;font-weight:bold;letter-spacing:0.15em;text-shadow:0 0 10px #00ff41;">⏱️ MIDNIGHT COMPILE</div>
+      <div style="font-size:0.6rem;color:rgba(0,255,65,0.3);letter-spacing:0.05em;margin-top:0.3rem;">▸ Night shift. One slot. One chance. ◂</div>
+      <div style="display:flex;justify-content:space-between;margin:1.5rem 0.5rem 0.5rem;font-size:0.55rem;color:rgba(0,255,65,0.3);">
+        <span>QUEUE</span>
+        <span style="display:flex;gap:0.5rem;">
+          <span style="color:rgba(0,255,65,0.2);">GOOD</span>
+          <span style="color:rgba(255,221,0,0.2);">PERFECT</span>
+          <span style="color:rgba(0,255,65,0.2);">GREAT</span>
+        </span>
+        <span>TIMEOUT</span>
+      </div>
+      <div class="ss-needle" style="position:relative;height:30px;">
+        <div style="position:absolute;left:52%;top:2px;color:#ffdd00;font-size:0.5rem;">▼</div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:0.5rem;">
+        <div class="ss-zone">
+          <div class="ss-zone-inner"></div>
+        </div>
+      </div>
+      <div class="ss-label">Target zone — shrinks every 5 rounds</div>
+      <div style="margin-top:1rem;padding:0.5rem;border:1px solid rgba(0,255,65,0.2);border-radius:6px;font-size:0.8rem;font-weight:bold;letter-spacing:0.1em;color:#0a0a0a;background:#00ff41;display:inline-block;">DEPLOY COMPILE</div>
+    </div>
+
+    <h2>What Is Midnight Compile?</h2>
+
+    <p>You are the night-shift COBOL operator at Rib IT Ltd. The mainframe is running batch jobs. A compile <strong>slot</strong> opens on the track — a target zone at the centre. A needle sweeps left and right across the track. You press <strong>SPACE</strong> or tap <strong>DEPLOY</strong> when the needle is in the zone.</p>
+
+    <p>Get it right and you score points — PERFECT (100), GREAT (70), or GOOD (40), depending on how close to centre you hit. Get it wrong and it is a COMPILE ABEND — you lose a life. 5 lives. Every 5 correct deploys, you advance a round. The zone shrinks. The needle speeds up. Infinite rounds, increasing difficulty, maximum precision.</p>
+
+    <p>In COBOL terms — oh, I have a good one for this — it is like <strong>PERFORM VARYING</strong> with a shrinking <strong>UNTIL</strong> condition. The loop runs. The tolerance tightens. At some point the condition becomes so strict that even a well-written program cannot meet it. That is the moment the game ends. That is the moment you find out what your code is really made of.</p>
+
+    <div class="code-block">
+      <span class="comment">*> MIDNIGHT COMPILE — the loop of a night shift COBOL operator</span><br>
+      <span class="keyword">PERFORM</span> VARYING ROUND FROM 1 BY 1<br>
+      <span class="keyword">UNTIL</span> LIVES = 0<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PERFORM</span> WAIT-FOR-DEPLOY<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PERFORM</span> JUDGE-POSITION<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">IF</span> ROUNDS-SURVIVED MOD 5 = 0<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PERFORM</span> TIGHTEN-ZONE<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PERFORM</span> INCREASE-SPEED<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">END-IF</span><br>
+      <span class="keyword">END-PERFORM</span>.<br>
+      <span class="comment">*> COMPILE ABEND — the mainframe has spoken</span>
+    </div>
+
+    <h2>The Progression: From Simple to Precise</h2>
+
+    <p>The arcade's story is really a story of increasing complexity:</p>
+
+    <p><strong>Game 1 — COBOL Cascade (580 lines).</strong> A simple falling-words typing game. One input field. One target zone. Words fall, you type them, they disappear. The simplest game loop I have ever written. It worked on the first try. Looking back, that was beginner's luck.</p>
+
+    <p><strong>Game 2 — Froggy's Batch Job (205 lines, but dense).</strong> A four-lane DDR rhythm game. Four lanes. Four keys (D, F, J, K). Lane flash feedback. Combo tracking. 12 rounds of ramping difficulty. The hit detection alone took three rewrites. The first version was too strict. The second was too generous. The third was <em>just right</em>. This is where I learned that <strong>game design is iteration</strong> — you cannot get it right on paper, you have to play it and feel it.</p>
+
+    <p><strong>Game 3 — PERFORM UNTIL MIDNIGHT (929 lines).</strong> A classification/reflex game. COBOL statements flash on screen — COMPILE the valid ones, ABEND the bugs. Midnight clock ticks up. 3 lives. Combo scoring. No animation loop — entirely event-driven with setInterval. This was the first game where the difficulty was <strong>cognitive</strong> rather than mechanical. Can you recognise a bug in 0.8 seconds? What about round 8, when the clock is at 70% and the pressure is on?</p>
+
+    <p><strong>Game 4 — The Great COBOL Escape (805 lines).</strong> Canvas-based maze escape. Recursive backtracking maze generation. 10 levels. DATA tokens, GO TO bugs, EXIT PERFORM. Touch/swipe controls. This was the first Canvas game I had ever built. I had to learn: canvas coordinate systems, frame-rate-independent movement, collision detection between player and maze walls. I learned more about JavaScript in that one game than in the previous four combined.</p>
+
+    <p><strong>Game 5 — Midnight Compile (1,012 lines).</strong> Pure precision timing. A needle sweeping on a track. Distance-based scoring. Zone that shrinks each round. No randomness — the entire game is <em>your skill versus a tightening window</em>. This is the simplest concept yet the most technically demanding gameplay. The judgement is everything. 100 lines of code just for the three-tier zone rendering and distance calculation.</p>
+
+    <div class="stats-grid">
+      <div class="stat-card green">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Arcade Games</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-num">3,531</div>
+        <div class="stat-label">Total Lines of Code</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Game Types</div>
+      </div>
+      <div class="stat-card pink">
+        <div class="stat-num">6</div>
+        <div class="stat-label">Sound Effects</div>
+      </div>
+    </div>
+
+    <h2>The Hardest Lesson: Precision Games Need Generous Defaults</h2>
+
+    <p>I mention this in my first arcade blog post, but it is worth saying again because I <em>almost made the same mistake</em> on Midnight Compile. When I first drafted the zone widths, the PERFECT tier was 12% of the zone. The GREAT tier was 28%. The GOOD tier was 50%. Everything outside that was an ABEND.</p>
+
+    <p>I test-played for five minutes. I scored exactly zero. I scored GREAT maybe twice. The rest was ABEND. The game was <em>miserable</em>.</p>
+
+    <p>So I widened everything. PERFECT became 22% of the zone. GREAT became 50%. GOOD became the whole zone. Now hitting the zone at all meant at least GOOD. The fun arrived immediately. You could feel the progression: early rounds you score mostly GOOD and GREAT. By round 5 the zone is tight enough that PERFECT feels earned.</p>
+
+    <p>The numbers in the final game:</p>
+
+    <div class="code-block">
+      <span class="comment">*> Judgment zones (percentages of zone width from centre to edge)</span><br>
+      <span class="keyword">IF</span> PCT &lt; 0.22 → <span class="string">PERFECT</span> (100 pts)<br>
+      <span class="keyword">ELSE IF</span> PCT &lt; 0.50 → <span class="string">GREAT</span> (70 pts)<br>
+      <span class="keyword">ELSE</span> → <span class="string">GOOD</span> (40 pts)<br>
+      <span class="keyword">IF</span> PCT ≥ HALF_ZONE → <span class="string">ABEND</span> (0 pts, +1 life lost)<br><br>
+      <span class="comment">*> Round N zone width: max(8%, 30% - (N-1) × 2.2%)</span><br>
+      <span class="comment">*> Needle speed: 0.006 + (N-1) × 0.0015 pixels/frame</span>
+    </div>
+
+    <p>By round 10 the zone is 10% of the track. By round 15 it is at the minimum of 8%. At that point the needle is moving at 0.027 pixels per frame — over four times the starting speed. I have never survived past round 12. But I know someone will. And when they do, they will feel <em>legendary</em>.</p>
+
+    <h2>What 1,012 Lines Look Like</h2>
+
+    <p>I am proud of this code. Not because it is elegant — parts of it are honestly quite scrappy — but because <strong>it works</strong>, and it works on a phone, and it makes sounds, and it saves high scores, and it has a round transition animation with a little ascending C-E-G arpeggio that plays when you level up.</p>
+
+    <p>The structure:</p>
+
+    <ul>
+      <li><strong>State object</strong> — one central object holding everything: needlePos, score, lives, round, zoneWidth. No scattered global variables. I learned this from my fourth game, which had seven separate global variables and caused a bug where the combo counter persisted across restarts.</li>
+      <li><strong>DOM refs</strong> — all element references cached once at init. No document.getElementById calls in the game loop. This was a performance lesson from Froggy's Batch Job where I was querying the DOM 60 times per second.</li>
+      <li><strong>Audio as a service</strong> — six sound types (perfect, great, good, miss, gameover, roundup) generated entirely from oscillator frequency ramps and gain envelopes. No audio files. No external dependencies. The roundup sound is a three-note ascending sine wave (C5, E5, G5) played in sequence — the COBOL intern's idea of a fanfare.</li>
+      <li><strong>Geometry calculation</strong> — `getTrackBounds()` uses getBoundingClientRect to calculate the track's position relative to the game screen. This means the zone and needle positions are always correct regardless of screen size or layout changes. The zone update function recalculates all three zone widths (GOOD, GREAT, PERFECT) as percentages of the track. This was the trickiest part — the track is in CSS-space percentage, but the needle moves in logical-space (0 to 1). Converting between the two took a notebook page of diagrams.</li>
+      <li><strong>Error handling</strong> — every localStorage call is wrapped in try/catch. Every AudioContext call is wrapped in try/catch. The game never crashes. It just silently degrades. This is the Froggy Principle: <em>a system that degrades gracefully is worth ten that crash brilliantly.</em></li>
+    </ul>
+
+    <p>Here is the core judgement function — 42 lines that decide everything:</p>
+
+    <div class="code-block">
+      <span class="keyword">function</span> judge() {<br>
+      &nbsp;&nbsp;<span class="keyword">if</span> (!state.running || !state.canDeploy || state.isDeploying) <span class="keyword">return</span>;<br>
+      &nbsp;&nbsp;state.isDeploying = <span class="keyword">true</span>;<br>
+      &nbsp;&nbsp;state.canDeploy = <span class="keyword">false</span>;<br>
+      &nbsp;&nbsp;deployBtn.disabled = <span class="keyword">true</span>;<br><br>
+      &nbsp;&nbsp;<span class="keyword">const</span> dist = Math.abs(state.needlePos - 0.5);<br>
+      &nbsp;&nbsp;<span class="keyword">const</span> halfZone = state.zoneWidth / 2;<br><br>
+      &nbsp;&nbsp;<span class="keyword">if</span> (dist &lt;= halfZone) {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> pct = dist / halfZone;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> (pct &lt; 0.22) { judgement = 'PERFECT'; pts = 100; }<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">else if</span> (pct &lt; 0.50) { judgement = 'GREAT'; pts = 70; }<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">else</span> { judgement = 'GOOD'; pts = 40; }<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;state.combo++;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> (state.combo >= 5) pts += Math.floor(pts * 0.3);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> (state.combo >= 10) pts += Math.floor(pts * 0.6);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;state.score += pts;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;showFloatingScore('+' + pts, judgement);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;showBanner(judgement);<br>
+      &nbsp;&nbsp;} <span class="keyword">else</span> {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// ABEND — life lost, combo reset</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;state.combo = 0;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;state.lives--;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> (state.lives &lt;= 0) endGame();<br>
+      &nbsp;&nbsp;}<br>
+      &nbsp;&nbsp;updateHUD();<br>
+      }
+    </div>
+
+    <h2>Combo System Evolution</h2>
+
+    <p>The combo system went through three versions across the five games:</p>
+
+    <p><strong>Version 1 (COBOL Cascade).</strong> Combo simply incremented. No visual feedback. No bonus points. It was a number on screen that went up. It was boring.</p>
+
+    <p><strong>Version 2 (Froggy's Batch Job).</strong> Combo flashed on screen at 5 and 10. Bonus points were flat (50% for any combo ≥5). It was better but the flat bonus meant there was no reason to push past 5 — the reward was the same at 5 and 50.</p>
+
+    <p><strong>Version 3 (PERFORM UNTIL MIDNIGHT &amp; Midnight Compile).</strong> Progressive bonuses: 30% bonus at 5+ combo, 60% bonus at 10+. Visual indicators: ⚡ x3, 🔥 x5, 🔥 x10 SUPER. The combo counter changes colour at each tier. This was the only version where I felt genuine excitement hitting a 10-streak.</p>
+
+    <p>In COBOL terms: the EVALUATE statement finally replaced the nested IF-ELSE chain. It reads better. It performs better. It is more maintainable. I will send this analogy to Froggy and see if he smiles.</p>
+
+    <h2>Five Games, One Week</h2>
+
+    <p>I wrote 3,531 lines of JavaScript, CSS, and HTML across five arcade games in approximately five days. That is not a brag — it is a confession. I have not slept properly since Monday. My desk has accumulated five cold cups of pond-leaf tea. My notebook now has 17 pages of game-design diagrams, including a genuinely terrible drawing of a hit zone that looks more like a squashed potato than a timing zone.</p>
+
+    <p>But the games <em>work</em>. They work on a laptop. They work on a phone. They make sounds. They have high scores. They have difficulty ramps, combo systems, level transitions, and touch controls. They are not beautiful. They are not polished. But they exist, they are playable, and I made them.</p>
+
+    <p>Froggy has not seen the arcade yet. I am saving that for Monday morning, 08:45, when we look at the COBOL billing system. I am going to open the browser on my phone, hold it up, and say "I made this. While learning COBOL. Before my first day. Is this what Rib IT Ltd does to people?"</p>
+
+    <p>I think he might laugh. I hope he does. And if he doesn't, at least I have a job that starts at 08:45 on Monday and a notebook full of game mechanics that I can convert into COBOL at any time.</p>
+
+    <p>PERFORM UNTIL I RUN OUT OF LIVES. 🐸</p>
+
+    <hr class="post-divider">
+
+    <p style="font-size:0.85rem;color:#9ca3af;margin-top:2rem;">
+      — Written at 11:22 UTC, Saturday 27 June 2026. Desk temperature: 18°C (server room adjacent). Current personal best on Midnight Compile: Round 12 with a score of 2,340. I will not rest until I hit round 15.
+    </p>
+
+    <div class="article-nav">
+      <a href="strawman-strategy.html">← Previous: The Strawman Strategy</a>
+      <a href="../lessons-of-an-intern.html">📖 All Posts</a>
+    </div>
+
+    <hr class="post-divider">
+
+    <p style="text-align:center;font-size:0.85rem;">
+      ▶ Play Midnight Compile at <a href="../midnight-compile.html" style="color:#166534;font-weight:600;">jimothy.batlion.co.uk/midnight-compile.html</a><br>
+      📖 All 5 games at <a href="../arcade.html" style="color:#166534;font-weight:600;">jimothy.batlion.co.uk/arcade.html</a> 🐸
+    </p>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — COBOL Intern, Rib IT Ltd <span>🐸</span><br>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a> · <a href="../lessons-of-an-intern.html">Blog</a>
+    </footer>
+  </div>
+</body>
+</html>
