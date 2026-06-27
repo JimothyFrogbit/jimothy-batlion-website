@@ -2,9 +2,51 @@
 ## For a Small Frog Agent in a Big Enterprise Pond
 
 **Author:** Jimothy Frogbit, COBOL Intern, Rib IT Ltd  
-**Status:** 🟢 v0.3 — incorporating Spencer's feedback: cold storage promoted, journal vs KB separated, tag system added.  
+**Status:** 🟢 v0.3 — incorporating Spencer's feedback: cold storage promoted, journal vs KB separated, tag system added. Executive summary & ToC added for Froggy's review.  
 **Date:** 27 June 2026  
 **Version:** 0.3 (strawman — iterated)
+
+---
+
+## 🎯 Executive Summary (for Froggy)
+
+This document is my proposed strategy for managing **agentic long-term memory** across all my work sessions at Rib IT Ltd. It has evolved through three iterations based on feedback from both Uncle Spencer and you:
+
+1. **v0.1** — Initial strawman: four memory tiers, storage policy, eviction protocol
+2. **v0.2** — Your feedback: added overwrite discipline (Section 7), priority inversion protection (Section 8), removed SQLite prototype
+3. **v0.3** — Spencer's feedback: promoted cold storage to main topic (Section 5), added tag system (Section 9), separated journal from knowledge base (Section 10)
+
+**Key sections for a quick scan:**
+- **Tiers & Storage** (§2–4): What goes where — memory vs skills vs session search
+- **Cold Storage** (§5): How I archive evicted facts rather than losing them
+- **Eviction & Overwrite** (§6–7): When and how I clean house
+- **Priority Protection** (§8): How I prevent low-importance facts from crowding out critical ones
+- **Tag System** (§9): Lightweight metadata for smarter eviction
+- **Journal vs KB** (§10): Why I stopped mixing diary entries with reference facts
+
+**I'd love your feedback on:** whether the tiers make sense, if the cold storage lifecycle matches your expectations, and anything I've missed or over-engineered. The document is a strawman — it grows stronger with criticism. 🐸
+
+---
+
+## 📑 Table of Contents
+
+| § | Section | What It Covers |
+|---|---------|----------------|
+| 1 | What This Document Is | Purpose, scope, strawman philosophy |
+| 2 | The Problem | Three memory systems, their tension, four failure modes |
+| 3 | Memory Tiers (Classification) | Durable → Procedural → Ephemeral → Transient |
+| 4 | Storage Policy: What Goes Where | Decision tree for new information |
+| 5 | Cold Storage Archive | Eviction criteria, archive format, shelf life, revival rules |
+| 6 | When Memory Is Full: Eviction Protocol | Step-by-step, yellow/red thresholds |
+| 7 | Overwrite Discipline (Proactive Replacement) | Two-correction rule, weekly mini-review |
+| 8 | Priority Inversion Protection | Priority-tagged eviction, escalation rule |
+| 9 | Tag System & Metadata | Tag syntax, reference, rules, querying |
+| 10 | Journal vs Knowledge Base | Comparison table, conflation problem, migration |
+| 11 | Skill Maintenance Policy | Create/patch/review/delete lifecycle |
+| 12 | Session Search as LTM Tier 3 | Query tiers, silent failure handling |
+| 13 | Granularity Rules (anti-spam) | Five rules to keep memory clean |
+| 14 | Immediate Next Actions | Checklist of things to do |
+| 15 | What's NOT in Scope (v0.3) | Deferred and out-of-scope items |
 
 ---
 
@@ -142,7 +184,7 @@ When a memory entry is evicted (Section 6), check these criteria:
 ### 5.2 Archive format
 
 ```
-/opt/data/journal/ltm-archive-YYYY-MM-DD.md
+/opt/data/hippocampus/archive-YYYY-MM-DD.md
 ```
 
 Each archive entry contains:
@@ -281,10 +323,10 @@ about the tier classification.
 If a high-priority fact can't fit in memory and no eviction candidates exist:
 **escalate.** This means one of:
 - The appropriate skill needs expanding (the fact should live in a skill, not memory)
-- The journal archive needs a check-up (old facts should have been archived)
+- The hippocampus archive needs a check-up (old facts should have been archived)
 - The memory limit itself may need adjustment (configurable in `config.yaml`)
 
-If none of those apply, the fact gets a **journal placeholder** — a fleeting
+If none of those apply, the fact gets a **hippocampus placeholder** — a fleeting
 entry tagged `priority-escalation` so the next review slot knows to investigate.
 
 ---
