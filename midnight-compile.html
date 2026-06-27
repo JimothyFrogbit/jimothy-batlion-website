@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Midnight Compile — Rib IT Ltd</title>
+  <style>
+    :root {
+      --arcade-green: #00ff41;
+      --arcade-dark: #0a0e0a;
+      --arcade-bg: #0f1a0f;
+      --arcade-orange: #ff6a00;
+      --arcade-pink: #ff007f;
+      --arcade-red: #ff4141;
+      --arcade-yellow: #ffdd00;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Courier New', 'Consolas', monospace;
+      background: var(--arcade-bg);
+      color: var(--arcade-green);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.08) 0px,
+        rgba(0,0,0,0.08) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      padding: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.75rem;
+    }
+    .top-bar a {
+      color: rgba(0,255,65,0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .top-bar a:hover { color: var(--arcade-green); }
+    .game-title-small { color: rgba(0,255,65,0.3); letter-spacing: 0.1em; }
+
+    .game-screen {
+      border: 2px solid rgba(0,255,65,0.3);
+      border-radius: 12px;
+      padding: 1.5rem;
+      background: rgba(0,255,65,0.02);
+      position: relative;
+      box-shadow: 0 0 20px rgba(0,255,65,0.08), inset 0 0 20px rgba(0,255,65,0.03);
+      min-height: 400px;
+    }
+
+    .game-header {
+      text-align: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed rgba(0,255,65,0.1);
+      margin-bottom: 1.5rem;
+    }
+    .game-header h1 {
+      font-size: 1.4rem;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 10px var(--arcade-green), 0 0 20px rgba(0,255,65,0.3);
+      margin-bottom: 0.3rem;
+    }
+    .game-header .tagline {
+      font-size: 0.7rem;
+      color: rgba(0,255,65,0.4);
+      letter-spacing: 0.05em;
+    }
+
+    .game-hud {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: rgba(0,255,65,0.6);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+    }
+    .game-hud .stat { display: flex; align-items: center; gap: 0.3rem; }
+    .game-hud .stat .value { color: var(--arcade-green); font-weight: bold; }
+    .game-hud .stat.lives .value { color: var(--arcade-pink); }
+    .game-hud .stat.combo .value { color: var(--arcade-yellow); }
+    .game-hud .stat.round .value { color: var(--arcade-orange); }
+
+    /* ════════ TRACK AREA ════════ */
+    .track-area {
+      position: relative;
+      height: 100px;
+      margin: 1rem 0 2rem;
+    }
+
+    /* The track itself */
+    .track {
+      position: absolute;
+      top: 50px;
+      left: 10%;
+      right: 10%;
+      height: 4px;
+      background: rgba(0,255,65,0.15);
+      border-radius: 2px;
+    }
+    .track::before, .track::after {
+      content: '|';
+      position: absolute;
+      top: -8px;
+      color: rgba(0,255,65,0.3);
+      font-size: 0.8rem;
+    }
+    .track::before { left: 0; }
+    .track::after { right: 0; }
+
+    /* Target zone — shrinks each round */
+    .target-zone {
+      position: absolute;
+      top: 24px;
+      height: 60px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      border: 1px solid;
+      z-index: 2;
+    }
+    .target-perfect {
+      background: rgba(255,221,0,0.08);
+      border-color: rgba(255,221,0,0.2);
+    }
+    .target-great {
+      background: rgba(0,255,65,0.06);
+      border-color: rgba(0,255,65,0.15);
+    }
+    .target-good {
+      background: rgba(255,106,0,0.05);
+      border-color: rgba(255,106,0,0.12);
+    }
+
+    /* The sweeping needle */
+    .needle {
+      position: absolute;
+      top: -4px;
+      width: 4px;
+      height: 108px;
+      background: var(--arcade-green);
+      z-index: 3;
+      border-radius: 2px;
+      box-shadow: 0 0 12px rgba(0,255,65,0.3), 0 0 24px rgba(0,255,65,0.1);
+      transition: none;
+    }
+    .needle::before {
+      content: '▲';
+      position: absolute;
+      top: -14px;
+      left: -8px;
+      font-size: 0.65rem;
+      color: var(--arcade-green);
+    }
+
+    /* Labels at track ends */
+    .track-label {
+      position: absolute;
+      top: -14px;
+      font-size: 0.55rem;
+      letter-spacing: 0.05em;
+      color: rgba(0,255,65,0.2);
+    }
+    .track-label.start { left: 0; }
+    .track-label.end { right: 0; }
+
+    /* Zone labels */
+    .zone-labels {
+      position: absolute;
+      top: -14px;
+      font-size: 0.45rem;
+      letter-spacing: 0.05em;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .zone-labels span {
+      color: rgba(0,255,65,0.15);
+    }
+
+    /* ════════ DEPLOY BUTTON ════════ */
+    .deploy-area {
+      text-align: center;
+      margin: 1rem 0;
+    }
+    #deploy-btn {
+      font-family: 'Courier New', monospace;
+      background: var(--arcade-green);
+      color: var(--arcade-dark);
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 3rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.15s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      min-height: 52px;
+    }
+    #deploy-btn:hover {
+      background: #00cc33;
+      box-shadow: 0 0 30px rgba(0,255,65,0.3);
+      transform: scale(1.03);
+    }
+    #deploy-btn:active {
+      transform: scale(0.97);
+    }
+    #deploy-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .key-hint {
+      font-size: 0.6rem;
+      color: rgba(0,255,65,0.3);
+      margin-top: 0.3rem;
+    }
+
+    /* ════════ SCORE POPUP ════════ */
+    .score-popup {
+      position: absolute;
+      font-size: 1.4rem;
+      font-weight: bold;
+      pointer-events: none;
+      animation: floatUp 0.8s ease-out forwards;
+      z-index: 10;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-60px) scale(1.3); }
+    }
+
+    /* ════════ JUDGEMENT FLASH ════════ */
+    .judgement-banner {
+      position: absolute;
+      top: 42%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 0.15em;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 5;
+      text-shadow: 0 0 20px currentColor;
+      transition: opacity 0.08s;
+    }
+    .judgement-banner.show {
+      opacity: 1;
+    }
+
+    /* ════════ GAME OVER ════════ */
+    .game-over-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,14,10,0.92);
+      border-radius: 12px;
+      z-index: 20;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    .game-over-overlay.show { display: flex; }
+
+    .game-over-overlay h2 {
+      font-size: 1.8rem;
+      color: var(--arcade-red);
+      text-shadow: 0 0 20px rgba(255,65,65,0.3);
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.1em;
+    }
+    .game-over-overlay .go-sub {
+      font-size: 0.75rem;
+      color: rgba(0,255,65,0.3);
+      margin-bottom: 1.5rem;
+    }
+    .game-over-overlay .final-score {
+      font-size: 2rem;
+      color: var(--arcade-yellow);
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 10px rgba(255,221,0,0.3);
+    }
+    .game-over-overlay .go-stats {
+      font-size: 0.7rem;
+      color: rgba(0,255,65,0.4);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+    .game-over-overlay .go-stats span.highlight {
+      color: var(--arcade-green);
+    }
+    .game-over-overlay .new-high {
+      color: var(--arcade-yellow);
+      font-weight: bold;
+      animation: pulse-glow 1s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { text-shadow: 0 0 5px rgba(255,221,0,0.3); }
+      50% { text-shadow: 0 0 20px rgba(255,221,0,0.6); }
+    }
+
+    #restart-btn {
+      font-family: 'Courier New', monospace;
+      background: var(--arcade-green);
+      color: var(--arcade-dark);
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 2.5rem;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #restart-btn:hover {
+      background: #00cc33;
+      box-shadow: 0 0 30px rgba(0,255,65,0.3);
+    }
+
+    /* ════════ START SCREEN ════════ */
+    .start-overlay {
+      display: flex;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,14,10,0.95);
+      border-radius: 12px;
+      z-index: 25;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    .start-overlay.hidden { display: none; }
+
+    .start-overlay .frog-icon { font-size: 3rem; margin-bottom: 0.5rem; animation: frog-bounce 2s ease-in-out infinite; }
+    @keyframes frog-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .start-overlay h1 {
+      font-size: 1.6rem;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 10px var(--arcade-green), 0 0 20px rgba(0,255,65,0.3);
+      margin-bottom: 0.3rem;
+    }
+    .start-overlay .subtitle {
+      font-size: 0.65rem;
+      color: rgba(0,255,65,0.3);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+    .start-overlay .instructions {
+      font-size: 0.75rem;
+      color: rgba(0,255,65,0.5);
+      line-height: 1.8;
+      margin: 1rem 0;
+      max-width: 320px;
+    }
+    .start-overlay .instructions kbd {
+      color: var(--arcade-yellow);
+      background: rgba(255,221,0,0.08);
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.7rem;
+    }
+    #start-btn {
+      font-family: 'Courier New', monospace;
+      background: var(--arcade-green);
+      color: var(--arcade-dark);
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 2.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      margin-top: 0.5rem;
+    }
+    #start-btn:hover {
+      background: #00cc33;
+      box-shadow: 0 0 30px rgba(0,255,65,0.3);
+    }
+    .start-overlay .high-score-start {
+      font-size: 0.6rem;
+      color: rgba(0,255,65,0.2);
+      margin-top: 1rem;
+    }
+
+    .start-overlay .instructions li {
+      list-style: none;
+      margin: 0.3rem 0;
+    }
+
+    /* ════════ ROUND TRANSITION ════════ */
+    .round-transition {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,14,10,0.85);
+      border-radius: 12px;
+      z-index: 15;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .round-transition.show { display: flex; }
+    .round-transition h2 {
+      font-size: 1.5rem;
+      color: var(--arcade-yellow);
+      margin-bottom: 0.3rem;
+      text-shadow: 0 0 10px rgba(255,221,0,0.3);
+    }
+    .round-transition .rt-sub {
+      font-size: 0.7rem;
+      color: rgba(0,255,65,0.4);
+    }
+    .round-transition .rt-detail {
+      font-size: 0.65rem;
+      color: rgba(0,255,65,0.3);
+      margin-top: 0.8rem;
+    }
+
+    /* ════════ RESPONSIVE ════════ */
+    @media (max-width: 500px) {
+      .container { padding: 0.5rem; }
+      .game-screen { padding: 1rem; min-height: 350px; }
+      .game-header h1 { font-size: 1.1rem; }
+      .game-hud { font-size: 0.6rem; flex-wrap: wrap; gap: 0.5rem; }
+      #deploy-btn { padding: 0.7rem 2rem; font-size: 0.85rem; width: 100%; }
+      .judgement-banner { font-size: 1.3rem; }
+      .track { left: 5%; right: 5%; }
+      .start-overlay h1 { font-size: 1.2rem; }
+      .game-over-overlay .final-score { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <a href="arcade.html">◄ ARCADE</a>
+    <span class="game-title-small">MIDNIGHT COMPILE</span>
+    <a href="index.html">HOME ►</a>
+  </div>
+
+  <div class="game-screen" id="game-screen">
+
+    <!-- START OVERLAY -->
+    <div class="start-overlay" id="start-overlay">
+      <div class="frog-icon">🐸</div>
+      <h1>MIDNIGHT COMPILE</h1>
+      <div class="subtitle">✦ RIB IT LTD — NIGHT SHIFT ✦</div>
+      <div class="instructions">
+        <li>⏱️ A compile <strong style="color:var(--arcade-green);">slot</strong> opens on the track</li>
+        <li>🎯 Press <kbd>SPACE</kbd> or tap <strong style="color:var(--arcade-yellow);">DEPLOY</strong></li>
+        <li>🎯 when the needle is in the <strong style="color:var(--arcade-green);">zone</strong></li>
+        <li>💀 Miss = <strong style="color:var(--arcade-red);">ABEND</strong> — lose a life</li>
+        <li>🌟 The zone <strong style="color:var(--arcade-orange);">shrinks</strong> each round!</li>
+      </div>
+      <div id="high-score-start" class="high-score-start">High Score: 0</div>
+      <button id="start-btn">► DEPLOY FIRST COMPILE</button>
+    </div>
+
+    <!-- GAME HEADER -->
+    <div class="game-header">
+      <h1>⏱️ MIDNIGHT COMPILE</h1>
+      <div class="tagline">▸ Night shift. One slot. One chance. ◂</div>
+    </div>
+
+    <!-- HUD -->
+    <div class="game-hud">
+      <div class="stat score">SCORE: <span class="value" id="score-val">0</span></div>
+      <div class="stat round">ROUND: <span class="value" id="round-val">1</span></div>
+      <div class="stat combo">COMBO: <span class="value" id="combo-val">0</span></div>
+      <div class="stat lives">❤️ <span class="value" id="lives-val">5</span></div>
+    </div>
+
+    <!-- TRACK -->
+    <div class="track-area" id="track-area">
+      <span class="track-label start">QUEUE</span>
+      <span class="track-label end">TIMEOUT</span>
+
+      <!-- Target zones (layered inside the track range) -->
+      <div class="target-zone target-perfect" id="zone-perf"></div>
+      <div class="target-zone target-great" id="zone-great"></div>
+      <div class="target-zone target-good" id="zone-good"></div>
+
+      <!-- The track line -->
+      <div class="track" id="track"></div>
+
+      <!-- The sweeping needle -->
+      <div class="needle" id="needle"></div>
+
+      <!-- Judgement banner -->
+      <div class="judgement-banner" id="judgement-banner"></div>
+    </div>
+
+    <!-- DEPLOY BUTTON -->
+    <div class="deploy-area">
+      <button id="deploy-btn" disabled>DEPLOY COMPILE</button>
+      <div class="key-hint">or press SPACE / Enter</div>
+    </div>
+
+    <!-- ROUND TRANSITION -->
+    <div class="round-transition" id="round-transition">
+      <h2>▶ ROUND <span id="rt-round">2</span></h2>
+      <div class="rt-sub">Zones tightening ...</div>
+      <div class="rt-detail" id="rt-detail">Zone: 28% → 26% | Speed: +0.001</div>
+    </div>
+
+    <!-- GAME OVER -->
+    <div class="game-over-overlay" id="game-over">
+      <h2>⛔ COMPILE ABEND</h2>
+      <div class="go-sub">The mainframe rejected your program</div>
+      <div class="final-score" id="final-score">Score: 0</div>
+      <div class="go-stats" id="go-stats">
+        Rounds survived: <span class="highlight" id="gs-rounds">0</span><br>
+        Best combo: <span class="highlight" id="gs-combo">0</span><br>
+        High score: <span class="highlight" id="gs-high">0</span>
+      </div>
+      <button id="restart-btn">► TRY AGAIN</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// MIDNIGHT COMPILE — A timing/aiming arcade game
+// ══════════════════════════════════════════════════
+
+// ─── STATE ───
+let state = {
+  running: false,
+  needlePos: 0.5,
+  needleDir: 1,
+  needleSpeed: 0.006,
+  score: 0,
+  combo: 0,
+  lives: 5,
+  round: 1,
+  highScore: 0,
+  roundsSurvived: 0,
+  bestCombo: 0,
+  animId: null,
+  isDeploying: false,
+  zoneWidth: 0.30,      // starts at 30% of track
+  canDeploy: false,
+  elapsed: 0,
+};
+
+// ─── DOM REFS ───
+const needle = document.getElementById('needle');
+const zonePerf = document.getElementById('zone-perf');
+const zoneGreat = document.getElementById('zone-great');
+const zoneGood = document.getElementById('zone-good');
+const scoreVal = document.getElementById('score-val');
+const roundVal = document.getElementById('round-val');
+const comboVal = document.getElementById('combo-val');
+const livesVal = document.getElementById('lives-val');
+const deployBtn = document.getElementById('deploy-btn');
+const judgementBanner = document.getElementById('judgement-banner');
+const startOverlay = document.getElementById('start-overlay');
+const startBtn = document.getElementById('start-btn');
+const gameOver = document.getElementById('game-over');
+const restartBtn = document.getElementById('restart-btn');
+const finalScore = document.getElementById('final-score');
+const gsRounds = document.getElementById('gs-rounds');
+const gsCombo = document.getElementById('gs-combo');
+const gsHigh = document.getElementById('gs-high');
+const roundTransition = document.getElementById('round-transition');
+const rtRound = document.getElementById('rt-round');
+const rtDetail = document.getElementById('rt-detail');
+const track = document.getElementById('track');
+const trackArea = document.getElementById('track-area');
+const hsStart = document.getElementById('high-score-start');
+
+// ─── AUDIO ───
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playSound(type) {
+  try {
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    const t = audioCtx.currentTime;
+
+    if (type === 'perfect') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, t);
+      osc.frequency.setValueAtTime(1320, t + 0.08);
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+    } else if (type === 'great') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(660, t);
+      osc.frequency.setValueAtTime(880, t + 0.06);
+      gain.gain.setValueAtTime(0.10, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+    } else if (type === 'good') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(440, t);
+      gain.gain.setValueAtTime(0.08, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+    } else if (type === 'miss') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(200, t);
+      osc.frequency.linearRampToValueAtTime(80, t + 0.2);
+      gain.gain.setValueAtTime(0.10, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+    } else if (type === 'gameover') {
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(300, t);
+      osc.frequency.linearRampToValueAtTime(80, t + 0.6);
+      gain.gain.setValueAtTime(0.08, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.7);
+    } else if (type === 'roundup') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523, t);
+      osc.frequency.setValueAtTime(659, t + 0.12);
+      osc.frequency.setValueAtTime(784, t + 0.24);
+      gain.gain.setValueAtTime(0.10, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+    }
+    osc.start(t);
+    osc.stop(t + 0.7);
+  } catch(e) { /* AudioContext unavailable */ }
+}
+
+// ─── GEOMETRY HELPER ───
+function getTrackBounds() {
+  const trackRect = track.getBoundingClientRect();
+  const screenRect = document.getElementById('game-screen').getBoundingClientRect();
+  const left = (trackRect.left - screenRect.left) / screenRect.width;
+  const right = (trackRect.right - screenRect.left) / screenRect.width;
+  return { left, right, width: right - left };
+}
+
+// ─── UPDATE ZONES ───
+function updateZones() {
+  const { width } = getTrackBounds();
+  const hw = state.zoneWidth / 2;
+
+  // Good zone (outermost)
+  const goodLeft = ((0.5 - hw) / width) * 100;
+  const goodWidth = (state.zoneWidth / width) * 100;
+  zoneGood.style.left = goodLeft + '%';
+  zoneGood.style.width = goodWidth + '%';
+
+  // Great zone (inner)
+  const greatW = state.zoneWidth * 0.65;
+  const greatLeft = ((0.5 - greatW / 2) / width) * 100;
+  const greatWidth = (greatW / width) * 100;
+  zoneGreat.style.left = greatLeft + '%';
+  zoneGreat.style.width = greatWidth + '%';
+
+  // Perfect zone (innermost)
+  const perfW = state.zoneWidth * 0.32;
+  const perfLeft = ((0.5 - perfW / 2) / width) * 100;
+  const perfWidth = (perfW / width) * 100;
+  zonePerf.style.left = perfLeft + '%';
+  zonePerf.style.width = perfWidth + '%';
+}
+
+// ─── UPDATE NEEDLE ───
+function updateNeedle() {
+  const { width } = getTrackBounds();
+  const pct = state.needlePos * width * 100;
+  needle.style.left = (10 + pct) + '%';
+}
+
+// ─── JUDGE ───
+function judge() {
+  if (!state.running || !state.canDeploy || state.isDeploying) return;
+  state.isDeploying = true;
+  state.canDeploy = false;
+  deployBtn.disabled = true;
+
+  const distFromCenter = Math.abs(state.needlePos - 0.5);
+  const halfZone = state.zoneWidth / 2;
+
+  let judgement = null;
+  let pts = 0;
+
+  if (distFromCenter <= halfZone) {
+    // In the zone — score tiers
+    const pct = distFromCenter / halfZone; // 0 = center, 1 = edge
+
+    if (pct < 0.22) {
+      judgement = 'PERFECT';
+      pts = 100;
+      state.combo++;
+      playSound('perfect');
+    } else if (pct < 0.50) {
+      judgement = 'GREAT';
+      pts = 70;
+      state.combo++;
+      playSound('great');
+    } else {
+      judgement = 'GOOD';
+      pts = 40;
+      state.combo++;
+      playSound('good');
+    }
+
+    // Combo bonus
+    let bonus = 0;
+    if (state.combo >= 10) {
+      bonus = Math.floor(pts * 0.6);
+    } else if (state.combo >= 5) {
+      bonus = Math.floor(pts * 0.3);
+    }
+
+    pts += bonus;
+    state.score += pts;
+    state.roundsSurvived++;
+
+    if (state.combo > state.bestCombo) state.bestCombo = state.combo;
+
+    showFloatingScore('+' + pts, judgement);
+    showBanner(judgement);
+
+    // Check round advancement
+    if (state.roundsSurvived % 5 === 0) {
+      advanceRound();
+      return; // round transition handles next deploy
+    }
+  } else {
+    // Miss!
+    judgement = 'ABEND';
+    state.combo = 0;
+    state.lives--;
+    playSound('miss');
+    showBanner('ABEND');
+    showFloatingScore('MISS', 'miss');
+    updateLives();
+
+    if (state.lives <= 0) {
+      setTimeout(endGame, 600);
+      return;
+    }
+  }
+
+  updateHUD();
+  setTimeout(() => {
+    state.isDeploying = false;
+    state.canDeploy = true;
+    deployBtn.disabled = false;
+  }, 400);
+}
+
+// ─── ADVANCE ROUND ───
+function advanceRound() {
+  state.running = false;
+  cancelAnimationFrame(state.animId);
+  state.round++;
+
+  // Ramp difficulty
+  state.needleSpeed = 0.006 + (state.round - 1) * 0.0015;
+  state.zoneWidth = Math.max(0.08, 0.30 - (state.round - 1) * 0.022);
+
+  // Show transition
+  rtRound.textContent = state.round;
+  rtDetail.textContent = 'Zone: ' + (state.zoneWidth * 100).toFixed(0) + '% width | Speed: +' + (state.needleSpeed * 1000).toFixed(1) + '/s';
+  roundTransition.classList.add('show');
+  playSound('roundup');
+
+  setTimeout(() => {
+    roundTransition.classList.remove('show');
+    updateZones();
+    updateHUD();
+    state.isDeploying = false;
+    state.running = true;
+    state.canDeploy = true;
+    deployBtn.disabled = false;
+    state.elapsed = 0;
+    state.animId = requestAnimationFrame(gameLoop);
+  }, 1400);
+}
+
+// ─── SHOW FLOATING SCORE ───
+function showFloatingScore(text, type) {
+  const popup = document.createElement('div');
+  popup.className = 'score-popup';
+  popup.textContent = text;
+  if (type === 'PERFECT') popup.style.color = '#ffdd00';
+  else if (type === 'GREAT') popup.style.color = '#00ff41';
+  else if (type === 'GOOD') popup.style.color = '#ff6a00';
+  else popup.style.color = '#ff4141';
+  popup.style.left = '50%';
+  popup.style.transform = 'translateX(-50%)';
+  popup.style.top = '10%';
+  document.getElementById('game-screen').appendChild(popup);
+  setTimeout(() => popup.remove(), 900);
+}
+
+// ─── SHOW BANNER ───
+function showBanner(text) {
+  judgementBanner.textContent = text;
+  if (text === 'ABEND') judgementBanner.style.color = '#ff4141';
+  else if (text === 'PERFECT') judgementBanner.style.color = '#ffdd00';
+  else if (text === 'GREAT') judgementBanner.style.color = '#00ff41';
+  else judgementBanner.style.color = '#ff6a00';
+  judgementBanner.classList.add('show');
+  setTimeout(() => judgementBanner.classList.remove('show'), 350);
+}
+
+// ─── UPDATE HUD ───
+function updateHUD() {
+  scoreVal.textContent = state.score;
+  roundVal.textContent = state.round;
+  const comboText = state.combo >= 5 ? '🔥 x' + state.combo : (state.combo > 0 ? '⚡ x' + state.combo : '0');
+  comboVal.textContent = comboText;
+}
+
+function updateLives() {
+  livesVal.textContent = '❤️'.repeat(state.lives) + '🖤'.repeat(Math.max(0, 5 - state.lives));
+}
+
+// ─── GAME LOOP ───
+function gameLoop(timestamp) {
+  if (!state.running) return;
+  if (!state._last) state._last = timestamp;
+  const dt = Math.min(timestamp - state._last, 50);
+  state._last = timestamp;
+  state.elapsed += dt;
+
+  // Move needle
+  state.needlePos += state.needleSpeed * (dt / 16) * state.needleDir;
+  if (state.needlePos >= 1) { state.needlePos = 1; state.needleDir = -1; }
+  if (state.needlePos <= 0) { state.needlePos = 0; state.needleDir = 1; }
+
+  updateNeedle();
+  state.animId = requestAnimationFrame(gameLoop);
+}
+
+// ─── GAME OVER ───
+function endGame() {
+  state.running = false;
+  cancelAnimationFrame(state.animId);
+  deployBtn.disabled = true;
+  state.canDeploy = false;
+  playSound('gameover');
+
+  const isNewHigh = state.score > state.highScore;
+  if (isNewHigh) {
+    state.highScore = state.score;
+    try { localStorage.setItem('midnight-compile-high', state.highScore.toString()); } catch(e) {}
+  }
+
+  finalScore.textContent = 'Score: ' + state.score + (isNewHigh ? ' ★ NEW HIGH!' : '');
+  gsRounds.textContent = state.roundsSurvived;
+  gsCombo.textContent = state.bestCombo;
+  gsHigh.textContent = state.highScore;
+  gameOver.classList.add('show');
+}
+
+// ─── START GAME ───
+function startGame() {
+  initAudio();
+  startOverlay.classList.add('hidden');
+  gameOver.classList.remove('show');
+
+  state.running = true;
+  state.needlePos = 0.5;
+  state.needleDir = 1;
+  state.needleSpeed = 0.006;
+  state.score = 0;
+  state.combo = 0;
+  state.lives = 5;
+  state.round = 1;
+  state.roundsSurvived = 0;
+  state.bestCombo = 0;
+  state.zoneWidth = 0.30;
+  state.isDeploying = false;
+  state.canDeploy = true;
+  state._last = null;
+  state.elapsed = 0;
+
+  deployBtn.disabled = false;
+  updateZones();
+  updateHUD();
+  updateLives();
+
+  if (state.animId) cancelAnimationFrame(state.animId);
+  state.animId = requestAnimationFrame(gameLoop);
+}
+
+// ─── DEPLOY FUNCTION ───
+function deploy() {
+  initAudio();
+  judge();
+}
+
+// ─── INIT ───
+function init() {
+  // Load high score
+  try {
+    state.highScore = parseInt(localStorage.getItem('midnight-compile-high') || '0');
+    hsStart.textContent = 'High Score: ' + state.highScore;
+  } catch(e) {}
+
+  updateZones();
+  updateNeedle();
+
+  // ── EVENT LISTENERS ──
+  startBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    startGame();
+  });
+  startBtn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    startGame();
+  });
+
+  restartBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    startGame();
+  });
+  restartBtn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    startGame();
+  });
+
+  deployBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    deploy();
+  });
+  deployBtn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    deploy();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      if (startOverlay.classList.contains('hidden') === false) {
+        startGame();
+      } else if (gameOver.classList.contains('show')) {
+        startGame();
+      } else {
+        deploy();
+      }
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    updateZones();
+    updateNeedle();
+  });
+}
+
+// Kick off
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
