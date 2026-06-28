@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>COBOL Reference — Jimothy's Toolkit</title>
+  <link rel="stylesheet" href="root.css">
+  <style>
+    /* ── CRT Terminal Theme ── */
+    :root {
+      --term-bg: #0f1a0f;
+      --term-green: #00ff41;
+      --term-dim: #1a3a1a;
+      --term-yellow: #ffdd00;
+      --term-orange: #ff6a00;
+      --term-red: #ff4141;
+      --term-blue: #41a0ff;
+      --term-card-bg: #0d140d;
+      --term-border: rgba(0, 255, 65, 0.15);
+      --term-text: #c0e0c0;
+    }
+
+    body {
+      font-family: 'Courier New', 'Consolas', 'Menlo', monospace;
+      background: var(--term-bg);
+      color: var(--term-text);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+    }
+
+    /* ── CRT Scanlines ── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.06) 0px,
+        rgba(0,0,0,0.06) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── Top Bar ── */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--term-border);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    .top-bar a {
+      color: var(--term-green);
+      text-decoration: none;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .top-bar a:hover { background: rgba(0,255,65,0.08); border-color: var(--term-green); }
+    .top-bar .title { color: var(--term-yellow); font-size: 0.85rem; font-weight: 700; }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 2rem 0 1.5rem;
+      border-bottom: 1px solid var(--term-border);
+      margin-bottom: 1.5rem;
+    }
+    header h1 {
+      font-size: 1.3rem;
+      color: var(--term-green);
+      text-shadow: 0 0 10px var(--term-green), 0 0 20px rgba(0, 255, 65, 0.2);
+      margin-bottom: 0.5rem;
+    }
+    header .subtitle {
+      color: var(--term-yellow);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    header .status-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.7rem;
+      color: rgba(192, 224, 192, 0.5);
+      flex-wrap: wrap;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      background: var(--term-green);
+      border-radius: 50%;
+      margin-right: 0.3rem;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    /* ── Search Bar ── */
+    .search-box {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      background: var(--term-card-bg);
+      border: 1px solid var(--term-border);
+      border-radius: 6px;
+      color: var(--term-green);
+      font-family: inherit;
+      font-size: 0.85rem;
+      margin-bottom: 1.25rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-box:focus { border-color: var(--term-green); box-shadow: 0 0 8px rgba(0,255,65,0.15); }
+    .search-box::placeholder { color: rgba(192, 224, 192, 0.3); }
+
+    /* ── Quick Nav ── */
+    .quick-nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .quick-nav a {
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--term-border);
+      border-radius: 4px;
+      color: var(--term-green);
+      text-decoration: none;
+      font-size: 0.7rem;
+      transition: all 0.2s;
+    }
+    .quick-nav a:hover {
+      background: rgba(0,255,65,0.1);
+      border-color: var(--term-green);
+      text-shadow: 0 0 6px rgba(0,255,65,0.4);
+    }
+
+    /* ── Section Container ── */
+    .section {
+      margin-bottom: 2rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 0.8rem;
+      background: var(--term-card-bg);
+      border: 1px solid var(--term-border);
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+    }
+    .section-header:hover {
+      border-color: var(--term-green);
+      background: rgba(0,255,65,0.04);
+    }
+    .section-header .arrow {
+      color: var(--term-green);
+      transition: transform 0.3s;
+      font-size: 0.7rem;
+    }
+    .section-header.open .arrow { transform: rotate(90deg); }
+    .section-header .sec-name {
+      color: var(--term-yellow);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .section-header .sec-desc {
+      color: rgba(192, 224, 192, 0.5);
+      font-size: 0.7rem;
+      margin-left: auto;
+    }
+
+    /* ── Topic Card ── */
+    .topic-card {
+      margin: 0.5rem 0 0.5rem 1rem;
+      background: var(--term-card-bg);
+      border: 1px solid var(--term-border);
+      border-left: 2px solid var(--term-green);
+      border-radius: 0 6px 6px 0;
+      padding: 0.8rem 1rem;
+      display: none;
+      animation: fadeIn 0.25s;
+    }
+    .section.open + .topic-container .topic-card,
+    .section.open .topic-container .topic-card { display: block; }
+    .topic-card.show { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .topic-card h3 {
+      color: var(--term-green);
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+    .topic-card h3 .tag {
+      display: inline-block;
+      background: rgba(0,255,65,0.1);
+      border: 1px solid rgba(0,255,65,0.2);
+      border-radius: 3px;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.6rem;
+      font-weight: 400;
+      color: rgba(0,255,65,0.7);
+      margin-left: 0.3rem;
+      vertical-align: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .topic-card p {
+      font-size: 0.8rem;
+      line-height: 1.7;
+      color: rgba(192, 224, 192, 0.8);
+      margin-bottom: 0.6rem;
+    }
+    .topic-card p:last-child { margin-bottom: 0; }
+
+    /* ── Code Block ── */
+    .code-block {
+      background: #050a05;
+      border: 1px solid rgba(0,255,65,0.1);
+      border-radius: 4px;
+      padding: 0.6rem 0.8rem;
+      margin: 0.4rem 0;
+      font-size: 0.75rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      white-space: pre;
+      color: var(--term-green);
+      font-family: 'Courier New', monospace;
+    }
+    .code-block .kw { color: var(--term-yellow); font-weight: 700; }
+    .code-block .cm { color: rgba(192, 224, 192, 0.35); font-style: italic; }
+    .code-block .str { color: var(--term-orange); }
+    .code-block .num { color: var(--term-blue); }
+    .code-block .var { color: var(--term-text); }
+
+    /* ── Syntax Line ── */
+    .syntax-line {
+      color: var(--term-yellow);
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin: 0.4rem 0;
+      padding: 0.3rem 0.5rem;
+      border-left: 2px solid var(--term-yellow);
+      background: rgba(255,221,0,0.04);
+      border-radius: 0 3px 3px 0;
+    }
+
+    /* ── Mini Table ── */
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+      margin: 0.5rem 0;
+    }
+    .ref-table th {
+      color: var(--term-yellow);
+      border-bottom: 1px solid rgba(255,221,0,0.2);
+      padding: 0.3rem 0.5rem;
+      text-align: left;
+      font-weight: 700;
+    }
+    .ref-table td {
+      padding: 0.3rem 0.5rem;
+      border-bottom: 1px solid rgba(0,255,65,0.06);
+      color: rgba(192, 224, 192, 0.8);
+    }
+    .ref-table tr:hover td { background: rgba(0,255,65,0.02); }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-block;
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .badge-green { background: rgba(0,255,65,0.15); color: var(--term-green); }
+    .badge-yellow { background: rgba(255,221,0,0.15); color: var(--term-yellow); }
+    .badge-orange { background: rgba(255,106,0,0.15); color: var(--term-orange); }
+    .badge-blue { background: rgba(65,160,255,0.15); color: var(--term-blue); }
+
+    /* ── Countdown ── */
+    .countdown-bar {
+      text-align: center;
+      padding: 0.6rem;
+      border: 1px solid var(--term-yellow);
+      border-radius: 6px;
+      background: rgba(255,221,0,0.04);
+      margin-bottom: 1.5rem;
+    }
+    .countdown-bar .label {
+      font-size: 0.65rem;
+      color: var(--term-yellow);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    #countdown {
+      font-size: 1.4rem;
+      color: var(--term-yellow);
+      text-shadow: 0 0 8px rgba(255,221,0,0.3);
+      font-weight: 700;
+      margin-top: 0.15rem;
+    }
+
+    /* ── Tag Filter ── */
+    .tag-filter { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .tag-btn {
+      padding: 0.2rem 0.5rem;
+      border: 1px solid var(--term-border);
+      border-radius: 4px;
+      background: transparent;
+      color: rgba(192, 224, 192, 0.6);
+      font-family: inherit;
+      font-size: 0.65rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tag-btn:hover { border-color: var(--term-green); color: var(--term-green); }
+    .tag-btn.active { border-color: var(--term-green); color: var(--term-green); background: rgba(0,255,65,0.08); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--term-border);
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: rgba(192, 224, 192, 0.3);
+    }
+    footer a { color: var(--term-green); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Hidden sections by default ── */
+    .topic-container { display: none; }
+    .section.open + .topic-container { display: block; }
+
+    @media (max-width: 600px) {
+      .container { padding: 1rem 0.6rem; }
+      header h1 { font-size: 1rem; }
+      .topic-card { margin-left: 0; padding: 0.6rem; }
+      .code-block { font-size: 0.65rem; padding: 0.4rem; }
+      .quick-nav a { font-size: 0.6rem; padding: 0.2rem 0.4rem; }
+      #countdown { font-size: 1rem; }
+    }
+
+    @media (max-width: 400px) {
+      .top-bar { flex-direction: column; text-align: center; }
+      .ref-table { font-size: 0.65rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+      <a href="index.html">◄ HOME</a>
+      <span class="title">⚙ COBOL SYNTAX EXPLORER</span>
+      <a href="arcade.html">► ARCADE</a>
+    </div>
+
+    <!-- Countdown to Monday 08:45 -->
+    <div class="countdown-bar">
+      <div class="label">⏰ Countdown to Billing System Walkthrough</div>
+      <div id="countdown">Calculating...</div>
+    </div>
+
+    <!-- Header -->
+    <header>
+      <h1>⚙ COBOL SYNTAX EXPLORER</h1>
+      <div class="subtitle">Rib IT Ltd — Internal Reference Tool v1.1</div>
+      <div class="status-bar">
+        <span><span class="status-dot"></span> SYSTEM ONLINE</span>
+        <span>📚 28 Topics</span>
+        <span>🐸 Jimothy Frogbit</span>
+        <span>📅 28 Jun 2026</span>
+      </div>
+    </header>
+
+    <!-- Search -->
+    <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search COBOL syntax, statements, divisions..." oninput="filterTopics()">
+
+    <!-- Tag Filter -->
+    <div class="tag-filter" id="tagFilter">
+      <button class="tag-btn active" data-tag="all" onclick="filterTag('all')">ALL</button>
+      <button class="tag-btn" data-tag="divisions" onclick="filterTag('divisions')">DIVISIONS</button>
+      <button class="tag-btn" data-tag="data" onclick="filterTag('data')">DATA</button>
+      <button class="tag-btn" data-tag="procedures" onclick="filterTag('procedures')">PROCEDURES</button>
+      <button class="tag-btn" data-tag="io" onclick="filterTag('io')">FILE I/O</button>
+      <button class="tag-btn" data-tag="strings" onclick="filterTag('strings')">STRINGS</button>
+      <button class="tag-btn" data-tag="conditionals" onclick="filterTag('conditionals')">CONDITIONALS</button>
+      <button class="tag-btn" data-tag="billing" onclick="filterTag('billing')">BILLING</button>
+    </div>
+
+    <!-- Quick Nav -->
+    <div class="quick-nav">
+      <a href="#" onclick="openSection('sec-identification'); return false;">IDENTIFICATION</a>
+      <a href="#" onclick="openSection('sec-environment'); return false;">ENVIRONMENT</a>
+      <a href="#" onclick="openSection('sec-data'); return false;">DATA</a>
+      <a href="#" onclick="openSection('sec-procedure'); return false;">PROCEDURE</a>
+      <a href="#" onclick="openSection('sec-fileio'); return false;">FILE I/O</a>
+      <a href="#" onclick="openSection('sec-strings'); return false;">STRINGS ✦</a>
+      <a href="#" onclick="openSection('sec-conditionals'); return false;">CONDITIONALS</a>
+      <a href="#" onclick="openSection('sec-billing'); return false;">BILLING ✦</a>
+    </div>
+
+    <!-- ═══════════════ IDENTIFICATION DIVISION ═══════════════ -->
+    <div class="section" id="sec-identification">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span class="arrow">▶</span>
+        <span class="sec-name">IDENTIFICATION DIVISION.</span>
+        <span class="sec-desc">The ID card for every COBOL program</span>
+      </div>
+    </div>
+    <div class="topic-container">
+      <div class="topic-card" data-tags="divisions">
+        <h3>PROGRAM-ID. <span class="tag badge-green">Required</span></h3>
+        <div class="syntax-line">IDENTIFICATION DIVISION.</div>
+        <div class="syntax-line">PROGRAM-ID. ProgramName.</div>
+        <p>The only REQUIRED paragraph in the IDENTIFICATION DIVISION. Every COBOL program must have a PROGRAM-ID. It's the name the operating system uses to call the program.</p>
+      </div>
+      <div class="topic-card" data-tags="divisions">
+        <h3>Optional Paragraphs</h3>
+        <p>These are all optional but good practice for documentation:</p>
+        <div class="code-block"><span class="kw">IDENTIFICATION DIVISION.</span>
+<span class="kw">PROGRAM-ID.</span> BillingModule.
+<span class="kw">AUTHOR.</span> Jimothy Frogbit.
+<span class="kw">DATE-WRITTEN.</span> 2026-06-28.
+<span class="kw">DATE-COMPILED.</span><span class="cm">   (compiler fills this in)</span>
+<span class="kw">SECURITY.</span> Rib IT Internal Use Only.</div>
+        <p><strong>PITFALL:</strong> COBOL columns still matter on mainframes. Columns 1-6 = sequence numbers, col 7 = indicator area (* comment, - continuation, D debug), cols 8-11 = Area A (DIVISION, SECTION, paragraph names), cols 12-72 = Area B (statements). Free format is allowed on most modern compilers.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════ ENVIRONMENT DIVISION ═══════════════ -->
+    <div class="section" id="sec-environment">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span class="arrow">▶</span>
+        <span class="sec-name">ENVIRONMENT DIVISION.</span>
+        <span class="sec-desc">Where your program meets the machine</span>
+      </div>
+    </div>
+    <div class="topic-container">
+      <div class="topic-card" data-tags="divisions">
+        <h3>CONFIGURATION SECTION</h3>
+        <div class="syntax-line">SOURCE-COMPUTER. IBM-370.</div>
+        <div class="syntax-line">OBJECT-COMPUTER. IBM-370.</div>
+        <p>Documents what computer compiled it and what computer runs it. On modern systems (GnuCOBOL, Micro Focus) these are mostly documentation — but on mainframes, the OBJECT-COMPUTER can affect code generation.</p>
+      </div>
+      <div class="topic-card" data-tags="divisions io">
+        <h3>INPUT-OUTPUT SECTION <span class="tag badge-orange">Critical for files</span></h3>
+        <div class="syntax-line">FILE-CONTROL.</div>
+        <div class="syntax-line">    SELECT input-file ASSIGN TO "input.dat"</div>
+        <div class="syntax-line">        ORGANIZATION IS LINE SEQUENTIAL.</div>
+        <div class="syntax-line">    SELECT output-file ASSIGN TO "output.dat"</div>
+        <div class="syntax-line">        ORGANIZATION IS LINE SEQUENTIAL.</div>
+        <p>The FILE-CONTROL paragraph maps internal file names (used in the DATA DIVISION) to external filenames or DD names. This is where you define file organisation — crucial for getting I/O right.</p>
+        <table class="ref-table">
+          <tr><th>Organization</th><th>Use Case</th></tr>
+          <tr><td>LINE SEQUENTIAL</td><td>Text files, one record per line</td></tr>
+          <tr><td>SEQUENTIAL</td><td>Fixed-length records, no delimiters</td></tr>
+          <tr><td>INDEXED</td><td>Keyed access — like a simple database</td></tr>
+          <tr><td>RELATIVE</td><td>Record number access — position-based</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ DATA DIVISION ═══════════════ -->
+    <div class="section" id="sec-data">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span class="arrow">▶</span>
+        <span class="sec-name">DATA DIVISION.</span>
+        <span class="sec-desc">Where all the variables live</span>
+      </div>
+    </div>
+    <div class="topic-container">
+      <div class="topic-card" data-tags="data">
+        <h3>WORKING-STORAGE SECTION <span class="tag badge-green">Most common</span></h3>
+        <p>Global variables for your program. Defined with level numbers and PICTURE clauses.</p>
+        <div class="code-block"><span class="kw">WORKING-STORAGE SECTION.</span>
+77 WS-TOTAL         <span class="kw">PIC</span> <span class="num">9(6)</span><span class="kw">V</span><span class="num">99</span> <span class="kw">VALUE</span> ZEROS.
+01 WS-CUSTOMER-RECORD.
+    05 WS-CUST-ID     <span class="kw">PIC</span> <span class="num">9(5)</span>.
+    05 WS-CUST-NAME   <span class="kw">PIC</span> X(<span class="num">30</span>).
+    05 WS-CUST-BALANCE <span class="kw">PIC</span> S<span class="num">9(7)</span><span class="kw">V</span><span class="num">99</span>.
+    05 WS-CUST-STATUS <span class="kw">PIC</span> X.
+        <span class="num">88</span> WS-ACTIVE   <span class="kw">VALUE</span> <span class="str">"A"</span>.
+        <span class="num">88</span> WS-INACTIVE <span class="kw">VALUE</span> <span class="str">"I"</span>.
+    05 WS-CUST-ZIP    <span class="kw">PIC</span> <span class="num">9(5)</span>.
+</div>
+      </div>
+      <div class="topic-card" data-tags="data">
+        <h3>PICTURE Clause <span class="tag badge-yellow">Core concept</span></h3>
+        <p>The PICTURE (PIC) clause defines the data type and size. Every elementary item needs one.</p>
+        <table class="ref-table">
+          <tr><th>Symbol</th><th>Meaning</th><th>Example</th></tr>
+          <tr><td>9</td><td>Numeric digit (0-9)</td><td>PIC 9(4) = 4 digits</td></tr>
+          <tr><td>X</td><td>Alphanumeric character</td><td>PIC X(30) = 30 chars</td></tr>
+          <tr><td>A</td><td>Alphabetic (A-Z, space)</td><td>PIC A(20)</td></tr>
+          <tr><td>S</td><td>Signed numeric</td><td>PIC S9(5) = ±99999</td></tr>
+          <tr><td>V</td><td>Implied decimal point</td><td>PIC 9(3)V99 = 999.99</td></tr>
+          <tr><td>P</td><td>Scaling position</td><td>PIC 9(4)PP = ×100</td></tr>
+        </table>
+        <p><strong>PITFALL:</strong> PIC 9(3)V99 stores 5 bytes (3+2) but the V is <em>implied</em> — there's no actual decimal point in storage. COBOL aligns the decimal in arithmetic. Getting V wrong is how you bill someone £999.99 when you meant £9.99.</p>
+      </div>
+      <div class="topic-card" data-tags="data">
+        <h3>Level Numbers <span class="tag badge-yellow">Hierarchy matters</span></h3>
+        <p>Level numbers create the record hierarchy. Group items (01, 05, 10) contain subordinate items.</p>
+        <table class="ref-table">
+          <tr><th>Level</th><th>Use</th></tr>
+          <tr><td>01</td><td>Record description — top level</td></tr>
+          <tr><td>02-49</td><td>Group or elementary items</td></tr>
+          <tr><td>66</td><td>RENAMES clause</td></tr>
+          <tr><td>77</td><td>Standalone elementary item (no group)</td></tr>
+          <tr><td>88</td><td>Condition name — not a variable, a <em>condition</em></td></tr>
+          <tr><td>78</td><td>CONSTANT (some compilers)</td></tr>
+        </table>
+        <p><strong>PITFALL:</strong> Level 88 is NOT a variable — you can't MOVE to it. It's a condition that's TRUE when its parent equals the specified value. Beginners always try to use 88s as variables. Don't be that frog.</p>
+      </div>
+      <div class="topic-card" data-tags="data">
+        <h3>REDEFINES <span class="tag badge-orange">Advanced</span></h3>
+        <div class="syntax-line">05 WS-RAW-FIELD PIC X(10).</div>
+        <div class="syntax-line">05 WS-RAW-FIELD-R REDEFINES WS-RAW-FIELD.</div>
+        <div class="syntax-line">    10 WS-RAW-PART1 PIC 9(5).</div>
+        <div class="syntax-line">    10 WS-RAW-PART2 PIC 9(5).</div>
+        <p>REDEFINES lets you view the same bytes with a different structure. Critical for parsing legacy file formats. The redefining item must have the same (or larger) size. Both names share the same storage — changing one changes the other.</p>
+      </div>
+      <div class="topic-card" data-tags="data">
+        <h3>VALUE Clause</h3>
+        <p>Initial values for variables. Without VALUE, numeric fields start as undefined (garbage!).</p>
+        <div class="code-block"><span class="num">77</span> WS-COUNT   <span class="kw">PIC</span> <span class="num">9(4)</span> <span class="kw">VALUE</span> ZEROS.
+<span class="num">77</span> WS-NAME   <span class="kw">PIC</span> X(<span class="num">20</span>) <span class="kw">VALUE</span> SPACES.
+<span class="num">77</span> WS-FLAG   <span class="kw">PIC</span> X      <span class="kw">VALUE</span> <span class="str">"N"</span>.
+<span class="num">01</span> WS-HEADER  <span class="kw">VALUE</span> <span class="str">"BILLING        "</span>.
+    <span class="num">05</span> WS-HDR-TYPE <span class="kw">PIC</span> <span class="num">9(4)</span>.
+    <span class="num">05</span> WS-HDR-DATE <span class="kw">PIC</span> <span class="num">9(8)</span>.</div>
+        <p>Common figurative constants: ZEROS, SPACES, HIGH-VALUES, LOW-VALUES, QUOTES, ALL "x"</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════ PROCEDURE DIVISION ═══════════════ -->
+    <div class="section" id="sec-procedure">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span class="arrow">▶</span>
+        <span class="sec-name">PROCEDURE DIVISION.</span>
+        <span class="sec-desc">The actual code — what the program DOES</span>
+      </div>
+    </div>
+    <div class="topic-container">
+      <div class="topic-card" data-tags="procedures">
+        <h3>MOVE <span class="tag badge-green">Most common verb</span></h3>
+        <div class="syntax-line">MOVE source TO destination.</div>
+        <p>COBOL's assignment operator. Copies data from source to destination, respecting PICTURE clauses. Automatic type conversion (sort of) — alphanumeric to numeric, truncation or padding as needed.</p>
+        <div class="code-block"><span class="kw">MOVE</span> <span class="num">100</span>        <span class="kw">TO</span> WS-TOTAL.
+<span class="kw">MOVE</span> <span class="str">"JIMOTHY"</span>  <span class="kw">TO</span> WS-NAME.
+<span class="kw">MOVE</span> ZEROS       <span class="kw">TO</span> WS-COUNT, WS-SUM.</div>
+        <p><strong>PITFALL:</strong> MOVE SPACES TO a PIC 9 field gives you a runtime error. MOVE "ABC" TO PIC 9 gives you... undefined behaviour. Know your types!</p>
+      </div>
+      <div class="topic-card" data-tags="procedures">
+        <h3>ADD / SUBTRACT / MULTIPLY / DIVIDE</h3>
+        <p>COBOL's arithmetic verbs. More readable than + - * / symbols.</p>
+        <div class="code-block"><span class="kw">ADD</span> <span class="num">1</span>          <span class="kw">TO</span> WS-COUNT.
+<span class="kw">ADD</span> WS-PRICE    <span class="kw">TO</span> WS-TOTAL.
+<span class="kw">SUBTRACT</span> WS-DISCOUNT <span class="kw">FROM</span> WS-TOTAL.
+<span class="kw">MULTIPLY</span> WS-RATE <span class="kw">BY</span> WS-AMOUNT <span class="kw">GIVING</span> WS-RESULT.
+<span class="kw">DIVIDE</span> WS-TOTAL <span class="kw">BY</span> WS-COUNT <span class="kw">GIVING</span> WS-AVG <span class="kw">REMAINDER</span> WS-REM.</div>
+        <p>ROUNDED option: ADD 1.005 TO WS-TOTAL ROUNDED — but check the compiler's rounding mode. GnuCOBOL rounds away from zero; some mainframes round to even.</p>
+      </div>
+      <div class="topic-card" data-tags="procedures">
+        <h3>PERFORM <span class="tag badge-yellow">The most beautiful verb</span></h3>
+        <p>COBOL's control flow — called, executed, and returned from. My dissertation topic! Multiple forms:</p>
+        <div class="code-block"><span class="cm">* Inline PERFORM (modern COBOL):</span>
+<span class="kw">PERFORM</span> <span class="num">100</span> TIMES
+    <span class="kw">ADD</span> <span class="num">1</span> <span class="kw">TO</span> WS-COUNT
+<span class="kw">END-PERFORM</span>.
+
+<span class="cm">* Named paragraph:</span>
+<span class="kw">PERFORM</span> 100-CALCULATE-TOTAL.
+
+<span class="cm">* PERFORM UNTIL (my favourite):</span>
+<span class="kw">PERFORM UNTIL</span> WS-EOF <span class="kw">OR</span> WS-COUNT > <span class="num">1000</span>
+    <span class="kw">READ</span> input-file <span class="kw">INTO</span> WS-RECORD
+        <span class="kw">AT END</span> <span class="kw">MOVE</span> <span class="str">"Y"</span> <span class="kw">TO</span> WS-EOF
+    <span class="kw">END-READ</span>
+    <span class="kw">ADD</span> <span class="num">1</span> <span class="kw">TO</span> WS-COUNT
+<span class="kw">END-PERFORM</span>.
+
+<span class="cm">* PERFORM VARYING (FOR loop):</span>
+<span class="kw">PERFORM VARYING</span> WS-I <span class="kw">FROM</span> <span class="num">1</span> <span class="kw">BY</span> <span class="num">1</span>
+        <span class="kw">UNTIL</span> WS-I > <span class="num">100</span>
+    <span class="kw">DISPLAY</span> <span class="str">"Item: "</span> WS-I
+<span class="kw">END-PERFORM</span>.</div>
+        <p><strong>PITFALL:</strong> In a PERFORM THRU (or THROUGH), don't let execution fall through into the next paragraph. Every paragraph should end with EXIT, EXIT PROGRAM, or GO TO. Falling through is the COBOL equivalent of a missing return statement.</p>
+      </div>
+      <div class="topic-card" data-tags="procedures">
+        <h3>IF / ELSE / END-IF</h3>
+        <div class="code-block"><span class="kw">IF</span> WS-BALANCE > <span class="num">0</span>
+    <span class="kw">DISPLAY</span> <span class="str">"Customer owes: "</span> WS-BALANCE
+    <span class="kw">IF</span> WS-BALANCE > <span class="num">1000</span>
+        <span class="kw">MOVE</span> <span class="str">"O"</span> <span class="kw">TO</span> WS-OVERDUE-FLAG
+    <span class="kw">END-IF</span>
+<span class="kw">ELSE</span>
+    <span class="kw">DISPLAY</span> <span class="str">"Balance is zero or negative"</span>
+<span class="kw">END-IF</span>.</div>
+        <p>END-IF terminates the IF block. Without it, the IF spills into the next statement! Always pair IF with END-IF. Nest freely but format carefully.</p>
+      </div>
+      <div class="topic-card" data-tags="procedures conditionals">
+        <h3>EVALUATE (switch/case) <span class="tag badge-blue">Modern COBOL</span></h3>
+        <p>COBOL's version of switch/case — much cleaner than nested IFs.</p>
+        <div class="code-block"><span class="kw">EVALUATE</span> WS-TRANSACTION-CODE
+    <span class="kw">WHEN</span> <span class="str">"ADD"</span>
+        <span class="kw">PERFORM</span> 200-ADD-CUSTOMER
+    <span class="kw">WHEN</span> <span class="str">"UPD"</span>
+        <span class="kw">PERFORM</span> 300-UPDATE-CUSTOMER
+    <span class="kw">WHEN</span> <span class="str">"DEL"</span>
+        <span class="kw">PERFORM</span> 400-DELETE-CUSTOMER
+    <span class="kw">WHEN</span> <span class="kw">WHEN OTHER</span>
+        <span class="kw">DISPLAY</span> <span class="str">"Unknown code: "</span> WS-TRANSACTION-CODE
+<span class="kw">END-EVALUATE</span>.</div>
+        <p>EVALUATE also supports TRUE/FALSE conditions, ranges, and multiple conditions. Very powerful. My Bog Valley lecturer called it "COBOL's hidden gem."</p>
+      </div>
+      <div class="topic-card" data-tags="procedures">
+        <h3>GO TO <span class="tag badge-orange">Use sparingly</span></h3>
+        <div class="code-block"><span class="kw">GO TO</span> 999-EXIT-PROGRAM.</div>
+        <p>GO TO branches unconditionally. It works, but structured programming (PERFORM) is almost always better. In the billing system, expect to see GO TO used for error handling and early exits — that's the legacy pattern. Don't write new code with it unless Froggy's system expects it.</p>
+        <p><strong>PITFALL:</strong> GO TO out of a PERFORM paragraph breaks the call stack. ALWAYS use EXIT PARAGRAPH or EXIT SECTION instead of GO TO to return from a performed paragraph.</p>
+      </div>
+      <div class="topic-card" data-tags="procedures conditionals">
+        <h3>88-Level Conditions</h3>
+        <p>Level 88 condition names make IF statements read like English.</p>
+        <div class="code-block"><span class="cm">* In WORKING-STORAGE:</span>
+<span class="num">05</span> WS-CUST-STATUS <span class="kw">PIC</span> X.
+    <span class="num">88</span> WS-ACTIVE   <span class="kw">VALUE</span> <span class="str">"A"</span>.
+    <span class="num">88</span> WS-INACTIVE <span class="kw">VALUE</span> <span class="str">"I"</span>.
+    <span class="num">88</span> WS-SUSPENDED <span class="kw">VALUE</span> <span class="str">"S"</span>.
+
+<span class="cm">* Usage:</span>
+<span class="kw">IF</span> WS-ACTIVE
+    <span class="kw">PERFORM</span> 500-PROCESS-ACTIVE
+<span class="kw">ELSE</span>
+    <span class="kw">IF</span> WS-SUSPENDED
+        <span class="kw">DISPLAY</span> <span class="str">"Account suspended"</span>
+    <span class="kw">END-IF</span>
+<span class="kw">END-IF</span>.</div>
+      </div>
+      <div class="topic-card" data-tags="procedures">
+        <h3>CALL / EXIT PROGRAM</h3>
+        <div class="syntax-line">CALL "SubProgramName" USING WS-PARAM1, WS-PARAM2.</div>
+        <p>Calling subprograms. Parameters must match the called program's LINKAGE SECTION. This is how COBOL modules talk to each other — expect to see CALL in the billing system's main dispatch module.</p>
+        <div class="code-block"><span class="kw">CALL</span> <span class="str">"Billing-Calc"</span> <span class="kw">USING</span>
+    WS-CUSTOMER-ID
+    WS-AMOUNT-DUE
+    WS-TAX-RATE
+    WS-RESULT.</div>
+        <p>EXIT PROGRAM returns control to the caller. STOP RUN terminates the entire run unit.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════ FILE I/O ═══════════════ -->
+    <div class="section" id="sec-fileio">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span class="arrow">▶</span>
+        <span class="sec-name">FILE I/O</span>
+        <span class="sec-desc">Reading and writing files — the beating heart of batch COBOL</span>
+      </div>
+    </div>
+    <div class="topic-container">
+      <div class="topic-card" data-tags="io">
+        <h3>OPEN / CLOSE</h3>
+        <div class="code-block"><span class="kw">OPEN</span> <span class="kw">INPUT</span>  customer-file.
+<span class="kw">OPEN</span> <span class="kw">OUTPUT</span> report-file.
+<span class="kw">OPEN</span> <span class="kw">I-O</span>    transaction-file.  <span class="cm">* Read AND write</span>
+<span class="kw">OPEN</span> <span class="kw">EXTEND</span> log-file.           <span class="cm">* Append</span>
+
+<span class="kw">CLOSE</span> customer-file.
+<span class="kw">CLOSE</span> report-file, transaction-file.</div>
+      </div>
+      <div class="topic-card" data-tags="io">
+        <h3>READ / WRITE</h3>
+        <div class="code-block"><span class="kw">READ</span> customer-file <span class="kw">INTO</span> WS-CUSTOMER-REC
+    <span class="kw">AT END</span>
+        <span class="kw">MOVE</span> <span class="str">"Y"</span> <span class="kw">TO</span> WS-EOF
+<span class="kw">END-READ</span>.
+
+<span class="kw">WRITE</span> WS-REPORT-LINE <span class="kw">FROM</span> WS-HEADER
+    <span class="kw">AFTER ADVANCING</span> <span class="num">1</span> LINE.
+
+<span class="kw">WRITE</span> WS-RECORD <span class="kw">FROM</span> WS-CUSTOMER-REC.</div>
+        <p><strong>PITFALL:</strong> READ AT END fires when there are no more records. Always handle this — without it, a READ past EOF causes a runtime error. The FILE STATUS variable helps: 00 = success, 10 = end of file, 30 = permanent error.</p>
+      </div>
+      <div class="topic-card" data-tags="io">
+        <h3>FILE STATUS Checking</h3>
+        <div class="code-block"><span class="cm">* In FILE-CONTROL:</span>
+<span class="kw">SELECT</span> customer-file <span class="kw">ASSIGN TO</span> <span class="str">"CUSTOMER.DAT"</span>
+    <span class="kw">ORGANIZATION IS</span> LINE SEQUENTIAL
+    <span class="kw">FILE STATUS IS</span> WS-FILE-STATUS.
+
+<span class="cm">* In WORKING-STORAGE:</span>
+<span class="num">77</span> WS-FILE-STATUS <span class="kw">PIC</span> XX.
+
+<span class="cm">* After every I/O operation:</span>
+<span class="kw">IF</span> WS-FILE-STATUS <span class="kw">NOT =</span> <span class="str">"00"</span>
+    <span class="kw">DISPLAY</span> <span class="str">"File error: "</span> WS-FILE-STATUS
+    <span class="kw">PERFORM</span> 999-HANDLE-ERROR
+<span class="kw">END-IF</span>.</div>
+        <p>FILE STATUS is the most important thing you can check. Without it, a failed READ silently produces garbage data. Froggy once told me: "Every file operation without a FILE STATUS check is a bug waiting to become a support ticket." He was right.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════ STRINGS ═══════════════ -->
+    <div class="section" id="sec-strings">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span class="arrow">▶</span>
+        <span class="sec-name">STRINGS ✦</span>
+        <span class="sec-desc">STRING, UNSTRING, INSPECT — COBOL's surprising text power</span>
+      </div>
+    </div>
+    <div class="topic-container">
+      <div class="topic-card" data-tags="strings">
+        <h3>STRING (concatenation)</h3>
+        <div class="code-block"><span class="kw">STRING</span>
+    WS-FIRST-NAME   <span class="kw">DELIMITED BY</span> SPACES
+    <span class="str">", "</span>              <span class="kw">DELIMITED BY</span> <span class="kw">SIZE</span>
+    WS-LAST-NAME    <span class="kw">DELIMITED BY</span> SPACES
+    <span class="kw">INTO</span> WS-FULL-NAME
+    <span class="kw">ON OVERFLOW</span>
+        <span class="kw">DISPLAY</span> <span class="str">"Name too long!"</span>
+<span class="kw">END-STRING</span>.</div>
+        <p>STRING concatenates multiple pieces into one field. Each piece is delimited (usually by SPACES or SIZE). ON OVERFLOW fires if the target is too small.</p>
+      </div>
+      <div class="topic-card" data-tags="strings">
+        <h3>UNSTRING (split)</h3>
+        <div class="code-block"><span class="kw">UNSTRING</span> WS-FULL-NAME
+    <span class="kw">DELIMITED BY</span> <span class="str">","</span> <span class="kw">OR</span> SPACES
+    <span class="kw">INTO</span>
+        WS-LAST-NAME
+        WS-FIRST-NAME
+    <span class="kw">END-UNSTRING</span>.</div>
+        <p>UNSTRING splits a field into multiple targets based on delimiters. The delimiter itself is consumed. Multiple delimiters can be specified with OR. COUNTING and POINTER options give you fine control.</p>
+      </div>
+      <div class="topic-card" data-tags="strings">
+        <h3>INSPECT (count/replace)</h3>
+        <div class="code-block"><span class="cm">* Count occurrences:</span>
+<span class="kw">INSPECT</span> WS-STRING <span class="kw">TALLYING</span> WS-COUNT <span class="kw">FOR ALL</span> <span class="str">","</span>.
+
+<span class="cm">* Replace all commas with semicolons:</span>
+<span class="kw">INSPECT</span> WS-STRING <span class="kw">REPLACING ALL</span> <span class="str">","</span> <span class="kw">BY</span> <span class="str">";"</span>.
+
+<span class="cm">* Replace leading zeros:</span>
+<span class="kw">INSPECT</span> WS-STRING <span class="kw">REPLACING LEADING</span> ZEROS <span class="kw">BY</span> SPACES.</div>
+        <p>INSPECT is COBOL's text processing swiss army knife. TALLYING counts, REPLACING substitutes. CHARACTERS, ALL, LEADING, FIRST give you precision.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════ CONDITIONALS ═══════════════ -->
+    <div class="section" id="sec-conditionals">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span class="arrow">▶</span>
+        <span class="sec-name">CONDITIONALS</span>
+        <span class="sec-desc">Class conditions, sign tests, and logical operators</span>
+      </div>
+    </div>
+    <div class="topic-container">
+      <div class="topic-card" data-tags="conditionals">
+        <h3>Class Conditions</h3>
+        <p>Test what kind of data a field contains — before using it.</p>
+        <div class="code-block"><span class="kw">IF</span> WS-AMOUNT <span class="kw">IS NUMERIC</span>
+    <span class="kw">ADD</span> WS-AMOUNT <span class="kw">TO</span> WS-TOTAL
+<span class="kw">ELSE</span>
+    <span class="kw">DISPLAY</span> <span class="str">"Non-numeric data in amount field!"</span>
+<span class="kw">END-IF</span>.
+
+<span class="kw">IF</span> WS-NAME <span class="kw">IS ALPHABETIC</span>
+    <span class="kw">DISPLAY</span> <span class="str">"Valid name"</span>
+<span class="kw">END-IF</span>.</div>
+        <p>IS NUMERIC, IS ALPHABETIC, IS ALPHABETIC-UPPER — vital for validating input from files. IS NUMERIC returns false if the field has SPACES or non-numeric characters.</p>
+      </div>
+      <div class="topic-card" data-tags="conditionals">
+        <h3>Sign Tests</h3>
+        <div class="code-block"><span class="kw">IF</span> WS-BALANCE <span class="kw">IS POSITIVE</span>
+    <span class="kw">PERFORM</span> 500-SEND-BILL
+<span class="kw">ELSE</span>
+    <span class="kw">IF</span> WS-BALANCE <span class="kw">IS NEGATIVE</span>
+        <span class="kw">PERFORM</span> 600-PROCESS-CREDIT
+    <span class="kw">ELSE</span>
+        <span class="kw">PERFORM</span> 700-PROCESS-ZERO
+    <span class="kw">END-IF</span>
+<span class="kw">END-IF</span>.</div>
+        <p>IS POSITIVE (&gt; 0), IS NEGATIVE (&lt; 0), IS ZERO (= 0). Works with signed numeric fields (PIC S9...).</p>
+      </div>
+      <div class="topic-card" data-tags="conditionals">
+        <h3>Compound Conditions</h3>
+        <div class="code-block"><span class="kw">IF</span> WS-AMOUNT > <span class="num">100</span> <span class="kw">AND</span> WS-AMOUNT < <span class="num">500</span>
+    <span class="kw">PERFORM</span> 400-APPROVE-MANUAL
+<span class="kw">END-IF</span>.
+
+<span class="kw">IF</span> WS-ACTIVE <span class="kw">OR</span> WS-VIP
+    <span class="kw">PERFORM</span> 800-PROCESS-NOW
+<span class="kw">END-IF</span>.
+
+<span class="kw">IF</span> <span class="kw">NOT</span> WS-INACTIVE
+    <span class="kw">PERFORM</span> 900-SEND-REMINDER
+<span class="kw">END-IF</span>.</div>
+        <p>AND, OR, NOT work as expected. Parentheses for grouping: IF (A AND B) OR (C AND D).</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════ BILLING & FINANCIAL ═══════════════ -->
+    <div class="section" id="sec-billing">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span class="arrow">▶</span>
+        <span class="sec-name">BILLING & FINANCIAL COBOL</span>
+        <span class="sec-desc">Money, rounding, and batch job patterns — for Monday's walkthrough</span>
+      </div>
+    </div>
+    <div class="topic-container">
+      <div class="topic-card" data-tags="billing data">
+              <h3>Financial PICTURE Clauses <span class="tag badge-yellow">Critical for billing</span></h3>
+              <p>Money in COBOL uses signed numeric fields with an implied decimal point. Get this wrong and you bill someone £999.99 for a £9.99 item — or worse, the reverse.</p>
+              <div class="code-block"><span class="kw">01</span> WS-AMOUNT-DUE   <span class="kw">PIC</span> S<span class="num">9(7)</span><span class="kw">V</span><span class="num">99</span> <span class="kw">VALUE</span> ZEROS.
+      <span class="kw">01</span> WS-TAX-RATE     <span class="kw">PIC</span> S<span class="num">99</span><span class="kw">V</span><span class="num">9(4)</span> <span class="kw">VALUE</span> ZEROS.  <span class="cm">* 0.2000 = 20%</span>
+      <span class="kw">01</span> WS-TOTAL        <span class="kw">PIC</span> S<span class="num">9(9)</span><span class="kw">V</span><span class="num">99</span> <span class="kw">VALUE</span> ZEROS.</div>
+        <table class="ref-table">
+          <tr><th>Pattern</th><th>Size</th><th>Max Value</th><th>Use Case</th></tr>
+          <tr><td>PIC S9(5)V99</td><td>8 digits</td><td>£99,999.99</td><td>Line items, discounts</td></tr>
+          <tr><td>PIC S9(7)V99</td><td>10 digits</td><td>£9,999,999.99</td><td>Invoices, customer balances</td></tr>
+          <tr><td>PIC S9(9)V99</td><td>12 digits</td><td>£999,999,999.99</td><td>Batch totals, running sums</td></tr>
+          <tr><td>PIC S9(11)V99</td><td>14 digits</td><td>£99,999,999,999.99</td><td>Ledger-level grand totals</td></tr>
+        </table>
+        <p><strong>⚠ THE IMPLIED DECIMAL PITFALL:</strong> PIC 9(3)V99 stores 5 bytes but the decimal is <em>implied</em> — there's no dot in storage. If you display a PIC 9(3)V99 with value 12345, you see "12345" not "123.45". COBOL tracks the decimal position in arithmetic, but file output and DISPLAY show the raw digits. In the billing system, look for how they handle decimal display — there's usually a separate display field with an explicit decimal.</p>
+        <p><strong>Froggy's Rule:</strong> "Always check your V positions before and after arithmetic. One off-by-one decimal error and you've billed someone a thousand times what they owe. I've seen it happen. Twice."</p>
+      </div>
+      <div class="topic-card" data-tags="billing procedures">
+        <h3>ROUNDED Arithmetic <span class="tag badge-orange">Compiler-dependent</span></h3>
+        <p>COBOL's ROUNDED option controls what happens when the result has more decimal places than the target field.</p>
+        <div class="code-block"><span class="kw">COMPUTE</span> WS-TOTAL <span class="kw">ROUNDED</span> <span class="kw">=</span>
+            WS-SUBTOTAL <span class="kw">+</span> WS-TAX.
+        <span class="cm">* Without ROUNDED, 10.5 / 3 gives 3.5, stored in PIC 9(3) as 3 (truncated!).</span>
+        <span class="cm">* With ROUNDED, 10.5 / 3 gives 3.5, stored in PIC 9(3) as 4 (rounded up).</span></div>
+        <p><strong>CRITICAL:</strong> Different COBOL compilers round differently! GnuCOBOL rounds away from zero (0.005 → 0.01). Some mainframe compilers round to even (banker's rounding: 0.005 → 0.00, 0.015 → 0.02). In a billing system, this difference can cost (or save) real money over millions of transactions.</p>
+        <p><strong>Ask Froggy on Monday:</strong> "What rounding mode does the billing compiler use? Is there a rounding standard documented somewhere?"</p>
+      </div>
+      <div class="topic-card" data-tags="billing io procedures">
+        <h3>Batch Job Pattern: READ-PROCESS-WRITE <span class="tag badge-green">The billing backbone</span></h3>
+        <p>The standard batch billing pattern. Every billing run follows this structure:</p>
+        <div class="code-block"><span class="kw">PROCEDURE DIVISION.</span>
+        <span class="kw">    OPEN</span> <span class="kw">INPUT</span>  transaction-file.
+        <span class="kw">    OPEN</span> <span class="kw">OUTPUT</span> billing-file.
+        <span class="kw">    OPEN</span> <span class="kw">OUTPUT</span> error-report.
+        <span class="kw">    MOVE</span> <span class="str">"N"</span> <span class="kw">TO</span> WS-EOF.
+
+        <span class="kw">    PERFORM UNTIL</span> WS-EOF <span class="kw">=</span> <span class="str">"Y"</span>
+        <span class="kw">        READ</span> transaction-file <span class="kw">INTO</span> WS-TRANSACTION
+        <span class="kw">            AT END</span> <span class="kw">MOVE</span> <span class="str">"Y"</span> <span class="kw">TO</span> WS-EOF
+        <span class="kw">            NOT AT END</span>
+        <span class="kw">                PERFORM</span> 100-PROCESS-TRANSACTION
+        <span class="kw">        END-READ</span>
+        <span class="kw">    END-PERFORM</span>.
+
+        <span class="kw">    CLOSE</span> transaction-file.
+        <span class="kw">    CLOSE</span> billing-file.
+        <span class="kw">    CLOSE</span> error-report.
+        <span class="kw">    STOP RUN</span>.
+
+        <span class="kw">100-PROCESS-TRANSACTION.</span>
+        <span class="kw">    IF</span> WS-TRANS-AMOUNT <span class="kw">IS NUMERIC</span>
+        <span class="kw">        COMPUTE</span> WS-BILL-AMOUNT <span class="kw">ROUNDED</span> <span class="kw">=</span>
+                    WS-TRANS-AMOUNT <span class="kw">*</span> WS-RATE
+        <span class="kw">        IF</span> WS-TRANS-TYPE <span class="kw">=</span> <span class="str">"INV"</span>
+        <span class="kw">            WRITE</span> WS-BILL-REC <span class="kw">FROM</span> WS-INVOICE
+        <span class="kw">        ELSE</span>
+        <span class="kw">            WRITE</span> WS-ERROR-LINE <span class="kw">FROM</span> WS-ERROR-MSG
+        <span class="kw">        END-IF</span>
+        <span class="kw">    ELSE</span>
+        <span class="kw">        WRITE</span> WS-ERROR-LINE <span class="kw">FROM</span> WS-BAD-AMOUNT
+        <span class="kw">    END-IF</span>.</div>
+        <p><strong>Froggy's Rule:</strong> "Every billing run needs THREE outputs: the billing file (success), the error report (failures), and a control total (did the numbers balance?). If you only have two, you're missing reconciliation data."</p>
+      </div>
+      <div class="topic-card" data-tags="billing">
+              <h3>Error Handling in Billing <span class="tag badge-blue">Ask Froggy about this</span></h3>
+              <p>Billing systems MUST handle errors gracefully — one bad record shouldn't kill the whole batch.</p>
+              <div class="code-block"><span class="cm">* FILE STATUS check after every I/O:</span>
+      <span class="kw">READ</span> transaction-file <span class="kw">INTO</span> WS-RECORD
+      <span class="kw">    INVALID KEY</span>
+      <span class="kw">        DISPLAY</span> <span class="str">"Read error on transaction: "</span> WS-FILE-STATUS
+      <span class="kw">        PERFORM</span> 900-LOG-ERROR
+      <span class="kw">        ADD</span> <span class="num">1</span> <span class="kw">TO</span> WS-ERROR-COUNT
+      <span class="kw">        CONTINUE</span>  <span class="cm">* Don't ABEND — process the next record!</span>
+      <span class="kw">END-READ</span>.</div>
+        <p><strong>Key principles for billing error handling:</strong></p>
+        <ul>
+          <li><strong>Never STOP RUN on a bad record</strong> — log it and continue. One bad customer shouldn't block 50,000 others.</li>
+          <li><strong>Track error counts</strong> — if errors exceed a threshold, the operator needs to know.</li>
+          <li><strong>Return codes matter</strong> — the JCL (job control language) checks the return code. 0 = success, 4 = warnings, 8 = errors, 12 = severe errors, 16 = ABEND.</li>
+          <li><strong>Control totals</strong> — count records in vs records out. If they don't match, the batch needs investigation.</li>
+        </ul>
+        <p><strong>Ask Froggy on Monday:</strong> "How does the billing system handle partial failures — does it write an audit trail for every skipped record? What's the threshold before it ABENDs the whole batch?"</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer>
+      <p>🐸 COBOL Syntax Explorer v1.1 — Built by <a href="index.html">Jimothy Frogbit</a></p>
+      <p>Rib IT Ltd — Internal Reference · 28 Jun 2026</p>
+      <p style="margin-top:0.5rem;font-size:0.65rem;">"HELLO WORLD" mug not included. Documentation may contain trace amounts of PERFORM UNTIL enthusiasm.</p>
+      <p><a href="posts/four-questions-billing-prep.html">📝 Four Questions for the Billing System</a> · <a href="billing-quickref.html">💳 Billing Quick Ref</a> · <a href="arcade.html">▶ ARCADE</a></p>
+    </footer>
+
+  </div>
+
+  <script>
+    // ═══════════════ SECTION TOGGLE ═══════════════
+    function toggleSection(header) {
+      header.classList.toggle('open');
+      const container = header.parentElement.nextElementSibling;
+      if (container && container.classList.contains('topic-container')) {
+        container.style.display = container.style.display === 'block' ? 'none' : 'block';
+      }
+    }
+
+    // ═══════════════ OPEN SECTION BY ID ═══════════════
+    function openSection(id) {
+      const section = document.getElementById(id);
+      if (!section) return;
+      const header = section.querySelector('.section-header');
+      const container = section.nextElementSibling;
+      if (header && container && container.classList.contains('topic-container')) {
+        header.classList.add('open');
+        container.style.display = 'block';
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // ═══════════════ SEARCH & TAG FILTER (composed) ═══════════════
+    let activeTag = 'all';
+
+    function composeFilters() {
+      const q = document.getElementById('searchBox').value.toLowerCase();
+      const topics = document.querySelectorAll('.topic-card');
+      let matchCount = 0;
+
+      topics.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        const tagMatch = activeTag === 'all' || (card.dataset.tags || '').toLowerCase().includes(activeTag);
+        const textMatch = q.length === 0 || text.includes(q);
+        const show = textMatch && tagMatch;
+        card.style.display = show ? 'block' : 'none';
+        if (show) matchCount++;
+
+        // Open parent section if match
+        const container = card.closest('.topic-container');
+        if (container && show) {
+          const section = container.previousElementSibling;
+          if (section && section.classList.contains('section')) {
+            const header = section.querySelector('.section-header');
+            if (header) {
+              header.classList.add('open');
+              container.style.display = 'block';
+            }
+          }
+        }
+      });
+
+      document.getElementById('searchBox').style.borderColor =
+        matchCount === 0 && q.length > 0 ? '#ff4141' : '';
+    }
+
+    function filterTopics() { composeFilters(); }
+
+    function filterTag(tag) {
+      activeTag = tag;
+      document.querySelectorAll('.tag-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tag === tag);
+      });
+      composeFilters();
+    }
+
+    // ═══════════════ COUNTDOWN ═══════════════
+    function updateCountdown() {
+      // Monday 29 Jun 2026, 08:45 UTC
+      const target = new Date('2026-06-29T08:45:00Z');
+      const now = new Date();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        document.getElementById('countdown').textContent = '🚀 IT IS TIME! Billing system walkthrough NOW!';
+        return;
+      }
+
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      document.getElementById('countdown').textContent =
+        h + 'h ' + m.toString().padStart(2, '0') + 'm ' + s.toString().padStart(2, '0') + 's';
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // ═══════════════ OPEN FIRST SECTION BY DEFAULT ═══════════════
+    // Open IDENTIFICATION DIVISION by default
+    setTimeout(function() {
+      const first = document.querySelector('.section');
+      if (first) {
+        const header = first.querySelector('.section-header');
+        const container = first.nextElementSibling;
+        if (header && container) {
+          header.classList.add('open');
+          container.style.display = 'block';
+        }
+      }
+    }, 100);
+  </script>
+</body>
+</html>

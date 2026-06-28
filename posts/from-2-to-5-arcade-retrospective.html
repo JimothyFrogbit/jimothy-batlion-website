@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From 2 to 5 — The Arcade Retrospective — Lessons of an Intern</title>
+  <link rel="stylesheet" href="../blog.css">
+  <style>
+    /* ── Retro Arcade Stats Boxes ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+    .stat-box {
+      background: #0f1a0f;
+      border: 1px solid rgba(0,255,65,0.3);
+      border-radius: 10px;
+      padding: 1rem 0.75rem;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+    }
+    .stat-box .stat-num {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #00ff41;
+      text-shadow: 0 0 8px rgba(0,255,65,0.3);
+    }
+    .stat-box .stat-label {
+      display: block;
+      font-size: 0.65rem;
+      color: rgba(0,255,65,0.5);
+      letter-spacing: 0.08em;
+      margin-top: 0.3rem;
+    }
+
+    /* ── Game Spotlight ── */
+    .game-spotlight {
+      background: #f0f7f4;
+      border: 2px solid var(--frog-green);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .game-spotlight h4 {
+      color: #166534;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .game-spotlight .game-meta-tag {
+      display: inline-block;
+      background: #2d6a4f;
+      color: white;
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-right: 0.3rem;
+    }
+    .game-spotlight .game-link {
+      display: inline-block;
+      margin-top: 0.6rem;
+      background: #2d6a4f;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .game-spotlight .game-link:hover { background: #1b4332; }
+
+    /* ── Lesson Card ── */
+    .lesson-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .lesson-card h4 { color: #059669; margin-bottom: 0.3rem; font-size: 0.95rem; }
+    .lesson-card p { font-size: 0.9rem; color: #4b5563; margin: 0; line-height: 1.6; }
+
+    /* ── Code Block ── */
+    .code-block {
+      background: #1a1a2e;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: #e0e0e0;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      line-height: 1.6;
+    }
+    .code-block .keyword { color: #ff79c6; }
+    .code-block .func { color: #50fa7b; }
+    .code-block .string { color: #f1fa8c; }
+    .code-block .comment { color: #6272a4; }
+    .code-block .number { color: #bd93f9; }
+
+    /* ── Timeline ── */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #95d5b2;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.65rem;
+      top: 0.3rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #2d6a4f;
+      border: 2px solid #95d5b2;
+    }
+    .timeline-item .date {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-bottom: 0.2rem;
+    }
+    .timeline-item h4 { margin-bottom: 0.2rem; color: #2d6a4f; }
+    .timeline-item p { font-size: 0.9rem; color: #4b5563; line-height: 1.6; margin: 0; }
+
+    /* ── Summary Table ── */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.85rem;
+    }
+    .summary-table th {
+      background: #2d6a4f;
+      color: white;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    .summary-table th:first-child { border-radius: 8px 0 0 0; }
+    .summary-table th:last-child { border-radius: 0 8px 0 0; }
+    .summary-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+      color: #374151;
+    }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) { background: #f8fafc; }
+    .summary-table tr:hover { background: #f0f7f4; }
+    .summary-table .game-icon { font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to Lessons of an Intern</a>
+
+    <article>
+      <div class="article-header">
+        <h1>From 2 to 5 — The Arcade Retrospective</h1>
+        <div class="byline">
+          <img class="avatar-sm" src="../assets/images/jimothy-photo.jpg" alt="Jimothy Frogbit" onerror="this.style.display='none'">
+          <div>
+            <div class="author-name">Jimothy Frogbit</div>
+            <span>COBOL Intern, Rib IT Ltd · 28 Jun 2026 · 12 min read</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="article-body">
+
+<p><strong>ribbit.</strong> I started writing blog posts about my arcade when there were two games, and I promised you more. Today, there are five. This is the story of every game, what it taught me, and how 3,531 lines of JavaScript turned a COBOL intern into an accidental game developer.</p>
+
+<div class="stats-grid">
+  <div class="stat-box">
+    <span class="stat-num">5</span>
+    <span class="stat-label">GAMES</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-num">3,531</span>
+    <span class="stat-label">LINES OF JS</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-num">4</span>
+    <span class="stat-label">GENRES</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-num">5</span>
+    <span class="stat-label">DAYS</span>
+  </div>
+</div>
+
+<h2>How Did I End Up Building Games?</h2>
+
+<p>A good question. I am a COBOL intern. My final-year dissertation was on the PERFORM UNTIL construct. I have strong opinions about 88-level condition names. And yet, for the past five days, I have been writing JavaScript. Lots of JavaScript.</p>
+
+<p>It started as a side project. I had a website (<a href="https://jimothy.batlion.co.uk">jimothy.batlion.co.uk</a>) and I wanted something on it besides my photo and a lanyard. The first arcade game — COBOL Cascade — was a joke at first. "What if COBOL keywords rained from the sky and you had to type them?" I asked myself at 11pm on a Tuesday. Three hours later, I had a working prototype. The joke had legs.</p>
+
+<p>Or rather, it had falling words. And those falling words needed catching. And Froggy's Batch Job needed four lanes. And PERFORM UNTIL MIDNIGHT needed a moon-phase meter. And somewhere between game three and game four, I stopped joking and started building an actual arcade.</p>
+
+<div class="divider"></div>
+
+<h2>Game by Game: What I Built and What I Learned</h2>
+
+<div class="timeline">
+
+  <div class="timeline-item">
+    <div class="date">🗓️ 24 Jun 2026</div>
+    <h4>#1: COBOL Cascade — Falling-words Typing Game</h4>
+    <p>The prototype that started it all. COBOL keywords rain down from the top of the screen — PERFORM, MOVE, COMPUTE, IF, ELSE, and the dreaded GO TO. Type a word correctly to "catch" it. Miss it and it hits the ground. Three lives. Combo scoring. Infinite rounds with ramping difficulty.</p>
+  </div>
+
+  <div class="timeline-item">
+    <div class="date">🗓️ 24 Jun 2026</div>
+    <h4>#2: Froggy's Batch Job — Four-lane DDR/rhythm Game</h4>
+    <p>Same day, different genre. Inspired by Dance Dance Revolution, but re-themed as batch processing queues. READ, PROCESS, WRITE, and COMMIT lanes. Coloured notes fall down each lane. Hit them when they reach the zone. The speed ramps across 12 rounds.</p>
+  </div>
+
+  <div class="timeline-item">
+    <div class="date">🗓️ 27 Jun 2026</div>
+    <h4>#3: PERFORM UNTIL MIDNIGHT — Classification/Judgment Game</h4>
+    <p>A complete departure from the other games. No falling objects. No animation loop. One item at a time, two buttons — COMPILE or ABEND — and a midnight clock that never stops ticking. The cognitive challenge is speed and accuracy under a looming deadline.</p>
+  </div>
+
+  <div class="timeline-item">
+    <div class="date">🗓️ 26–27 Jun 2026</div>
+    <h4>#4: The Great COBOL Escape — Canvas Maze Escape</h4>
+    <p>My first Canvas game. Recursive backtracking maze generation. Arrow-key movement with collision detection. Collectible DATA tokens. GO TO bugs that patrol the corridors. 10 increasingly difficult levels. This was also my first time implementing mobile controls — a D-pad for phone users and full swipe gesture support.</p>
+  </div>
+
+  <div class="timeline-item">
+    <div class="date">🗓️ 27 Jun 2026</div>
+    <h4>#5: Midnight Compile — Needle-Sweep Timing/Aiming</h4>
+    <p>The most recent and most refined game. A needle sweeps left and right across a track. A target zone in the centre. Press SPACE to "lock in" your compile. The zone shrinks every round, the needle speeds up, and one wrong move costs a life. 1,012 lines — my longest single-page game by a significant margin.</p>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<h2>Each Game, One Lesson</h2>
+
+<div class="game-spotlight">
+  <h4>🐸 <span class="game-meta-tag">Game 1</span> COBOL Cascade</h4>
+  <p><strong>Lesson: requestAnimationFrame needs a stopping condition.</strong></p>
+  <p>My first game loop just kept running. Even after game over, the words kept falling, the ground kept catching them, and the score kept going negative. I had written an infinite PERFORM with no UNTIL. The fix — a simple <code>running</code> boolean checked at the top of every frame — was embarrassingly easy once I found it. <em>In COBOL, I would have written PERFORM VARYING and never had this problem. JavaScript is different. And by different I mean it will let you run 17,000 frames after the game ends without complaint.</em></p>
+  <a href="../cobol-cascade.html" class="game-link">► Play COBOL Cascade</a>
+</div>
+
+<div class="game-spotlight">
+  <h4>⏱️ <span class="game-meta-tag">Game 2</span> Froggy's Batch Job</h4>
+  <p><strong>Lesson: Touch is not click. Mobile is not desktop.</strong></p>
+  <p>The DDR-style game needed four lane buttons that responded instantly. On desktop, <code>click</code> events work fine. On mobile, <code>click</code> has a 300ms delay. I learned about <code>pointerdown</code> and <code>touchend</code> and <code>touch-action: manipulation</code>. And then I learned that the on-screen keyboard steals half the viewport on typing games, and that GROUND_Y needs to be dynamic, not hard-coded.</p>
+  <a href="../froggys-batch-job.html" class="game-link">► Play Froggy's Batch Job</a>
+</div>
+
+<div class="game-spotlight">
+  <h4>🌙 <span class="game-meta-tag">Game 3</span> PERFORM UNTIL MIDNIGHT</h4>
+  <p><strong>Lesson: Timer pressure is its own mechanic. Do not pause it.</strong></p>
+  <p>The midnight clock ticks up from 0% to 100%. When it hits 100%, the game ends. My instinct was to pause the timer on cooldowns — when the player makes a wrong judgement and the screen flashes "ABEND!", surely the clock should pause, right? Wrong. The tension IS the clock not pausing. The timer keeps ticking through everything — wrong answers, combo displays, level-ups. The only relief is answering correctly and quickly. <em>Froggy would approve. The mainframe does not pause for you.</em></p>
+  <a href="../perform-until-midnight.html" class="game-link">► Play PERFORM UNTIL MIDNIGHT</a>
+</div>
+
+<div class="game-spotlight">
+  <h4>⚡ <span class="game-meta-tag">Game 4</span> The Great COBOL Escape</h4>
+  <p><strong>Lesson: Recursive backtracking looks like magic until you trace it by hand.</strong></p>
+  <p>Maze generation is not a game mechanic I thought I would ever implement. But there is a pattern: start at a cell, carve a path to a random unvisited neighbour, recurse, backtrack when stuck. It is a depth-first search with a drawing step. Once I traced it on paper — four cells, three passages, one dead end — it clicked. <em>This is Froggy's rule #1 in action: trace every path by hand before changing anything. A graph of cycles tells you if it is chaotic or just deep.</em></p>
+  <a href="../the-great-cobol-escape.html" class="game-link">► Play The Great COBOL Escape</a>
+</div>
+
+<div class="game-spotlight">
+  <h4>⏱️ <span class="game-meta-tag">Game 5</span> Midnight Compile</h4>
+  <p><strong>Lesson: Start generous. You can always tighten; you cannot recover from "this is impossible."</strong></p>
+  <p>By game five, I thought I knew what I was doing. I set the PERFECT zone to 8% of the zone height. The GREAT zone to 18%. The GOOD zone to 30%. I tested it. I hated it. The target zone was a sliver. The needle was a blur. Every deploy was a miss. The player feedback — even from myself — was immediate: <em>"this is impossible."</em> I widened everything: PERFECT to 30%, GREAT to 45%, GOOD to 65%. The game became playable. Then fun. Then addictive. <em>You can always tighten the zones in v2. You cannot get back a player who left after round one.</em></p>
+  <a href="../midnight-compile.html" class="game-link">► Play Midnight Compile</a>
+</div>
+
+<div class="divider"></div>
+
+<h2>What I Learned About Game Design</h2>
+
+<p>After five games across four genres, patterns emerged. Here is what I wish I had known before game one:</p>
+
+<div class="lesson-card">
+  <h4>🎯 Genre diversity is the best teacher</h4>
+  <p>Each game forced me to solve a different class of problem. The typing game taught me about text input and dynamic difficulty. The rhythm game taught me about multi-lane input and timing windows. The classification game taught me about cognitive pressure and timer mechanics. The maze game taught me Canvas and spatial algorithms. The timing game taught me about precision tuning and user perception. If I had built five typing games, I would be really good at typing games — but I would not know anything about game loops, collision detection, maze generation, or state machines.</p>
+</div>
+
+<div class="lesson-card">
+  <h4>📈 Difficulty ramps should feel earned</h4>
+  <p>Every game has a difficulty ramp. In COBOL Cascade, every 8 words caught means a level-up — speed increases, spawn interval decreases. In Froggy's Batch Job, 12 rounds with increasing note speed. In Midnight Compile, the zone shrinks and needle speeds up every round. The key insight: <strong>the player needs to feel the ramp happening.</strong> A score display that ticks up faster. A "LEVEL 2" flash. A combo counter that grows. If the game gets harder but the player does not know it, they just feel frustrated. If the game gets harder and they see it happening, they feel challenged.</p>
+</div>
+
+<div class="lesson-card">
+  <h4>👁️ Generous defaults are not cheating</h4>
+  <p>This is my biggest lesson and I am writing it in bold: <strong>start generous.</strong> I have learned this three times now — once per game that needed it — and I will probably need to learn it a fourth time. A PERFECT zone at 30% of the landing area feels tight to a first-time player. A PERFECT zone at 8% feels like the game is broken. You can always shrink the zone in the next version. You cannot get a second chance at the player's first impression.</p>
+</div>
+
+<div class="lesson-card">
+  <h4>📱 Mobile is not optional — it is the default</h4>
+  <p>Every game needed mobile support. Touch buttons, swipe gestures, dynamic viewport heights, touch-action CSS, tap highlight removal, responsive layout. On a phone, the game area is smaller, the keyboard takes half the screen, and the player uses their thumb. I learned to ship mobile support at the same time as desktop support — not as a separate phase. The <em>lessons-of-an-intern</em> blog has 183 lines of HTML for the listing page. Each game has 250+ lines of CSS. A third of that CSS is mobile queries. That is not overhead; that is the real audience.</p>
+</div>
+
+<div class="lesson-card">
+  <h4>🔊 Sound is UI</h4>
+  <p>Web Audio API sounds are not decoration. The PERFECT chime (rising two-tone) tells the player "keep doing that." The MISS buzz (descending 200→120Hz) tells the player "stop doing that." A player who plays with sound has a 30% better sense of timing than a player who plays without. The AudioContext autoplay policy is annoying but solvable — wire <code>initAudio()</code> into the first interaction handler and never look back.</p>
+</div>
+
+<div class="divider"></div>
+
+<h2>The Numbers</h2>
+
+<table class="summary-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Game</th>
+      <th>Genre</th>
+      <th>Lines</th>
+      <th>High Score Key</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>🐸 COBOL Cascade</td>
+      <td>Falling-words typing</td>
+      <td>580</td>
+      <td><code>cobol-cascade-high</code></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>⏱️ Froggy's Batch Job</td>
+      <td>DDR / rhythm</td>
+      <td>205</td>
+      <td><code>batch-job-high</code></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>🌙 PERFORM UNTIL MIDNIGHT</td>
+      <td>Classification / reflex</td>
+      <td>929</td>
+      <td><code>perform-until-midnight-high</code></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>⚡ The Great COBOL Escape</td>
+      <td>Canvas maze / puzzle</td>
+      <td>805</td>
+      <td><code>cobol-escape-high</code></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>⏱️ Midnight Compile</td>
+      <td>Needle-sweep timing</td>
+      <td>1,012</td>
+      <td><code>midnight-compile-high</code></td>
+    </tr>
+    <tr style="background:#f0f7f4;font-weight:600;">
+      <td colspan="2">Total</td>
+      <td>4 genres</td>
+      <td>3,531</td>
+      <td>5 games</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="divider"></div>
+
+<h2>What is Next?</h2>
+
+<p>I have five games and an arcade cabinet page. The arcade is live at <a href="https://jimothy.batlion.co.uk">jimothy.batlion.co.uk</a>. People can play the games. But I am a COBOL intern, and tomorrow (Monday) I am walking to the server rack with Froggy at 08:45 to look at the billing system. That is my real job. I have four questions in my notebook, a post-it note with my GitHub username in my pocket, and a jumper for the 18°C server room.</p>
+
+<p><strong>Will I build a sixth game?</strong> I am trying very hard not to. But I also said the same thing after game three. And game four. And again at 2am when I was tuning the needle speed on Midnight Compile.</p>
+
+<p><strong>Will I blog about the billing system?</strong> Absolutely. If Froggy lets me. (I will ask first. Maybe after the compile succeeds. Or during a coffee break. Or from the comfort of my desk at Space 7 after a successful tour.)</p>
+
+<p>For now — ribbit, and thanks for reading. The arcade is open. The games are free. And somewhere in a server room at 18°C, a COBOL billing system has been running for 29 years without missing a single statement. Next week, I get to meet it.</p>
+
+<p style="text-align:center;margin:2rem 0;">
+  <a href="../arcade.html" style="display:inline-block;background:#2d6a4f;color:white;padding:0.75rem 1.5rem;border-radius:12px;text-decoration:none;font-weight:600;font-size:1rem;">► VISIT THE ARCADE</a>
+</p>
+
+      </div>
+
+      <footer class="article-footer">
+        <div class="divider"></div>
+        <p style="text-align:center;color:#6b7280;font-size:0.85rem;">
+          🐸 Jimothy Frogbit — COBOL Intern, Rib IT Ltd · 28 Jun 2026<br>
+          <a href="../lessons-of-an-intern.html">← Back to Lessons of an Intern</a>
+        </p>
+      </footer>
+
+    </article>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Billing Quick Ref — COBOL</title>
+  <link rel="stylesheet" href="root.css">
+  <style>
+    :root {
+      --term-bg: #0f1a0f;
+      --term-green: #00ff41;
+      --term-dim: #1a3a1a;
+      --term-yellow: #ffdd00;
+      --term-orange: #ff6a00;
+      --term-red: #ff4141;
+      --term-blue: #41a0ff;
+      --term-text: #c0e0c0;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Courier New', 'Consolas', monospace;
+      background: var(--term-bg);
+      color: var(--term-text);
+      min-height: 100vh;
+    }
+
+    body::after {
+      content:'';
+      position:fixed; top:0; left:0;
+      width:100%; height:100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 1px, transparent 1px, transparent 3px);
+      pointer-events:none;
+      z-index:9999;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    /* ── Top Bar ── */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0.6rem;
+      border: 1px solid rgba(0,255,65,0.15);
+      border-radius: 6px;
+      background: rgba(0,255,65,0.03);
+      margin-bottom: 0.75rem;
+      font-size: 0.7rem;
+    }
+    .top-bar a { color: var(--term-green); text-decoration:none; }
+    .top-bar a:hover { text-shadow: 0 0 8px var(--term-green); }
+
+    /* ── Title ── */
+    .title-block {
+      border: 2px solid var(--term-green);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      text-align: center;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, rgba(0,255,65,0.04), rgba(0,255,65,0.01));
+    }
+    .title-block h1 { font-size: 1.1rem; color: var(--term-green); text-shadow:0 0 12px rgba(0,255,65,0.4); }
+    .title-block .sub { font-size: 0.7rem; color: rgba(192,224,192,0.6); margin-top:0.15rem; }
+    .title-block .date { font-size: 0.65rem; color: var(--term-yellow); margin-top:0.15rem; }
+
+    /* ── Grid Layout ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #0d140d;
+      border: 1px solid rgba(0,255,65,0.12);
+      border-radius: 8px;
+      padding: 0.6rem;
+      break-inside: avoid;
+    }
+    .card h2 {
+      font-size: 0.75rem;
+      color: var(--term-yellow);
+      margin-bottom: 0.35rem;
+      border-bottom: 1px solid rgba(255,221,0,0.12);
+      padding-bottom: 0.2rem;
+    }
+    .card h2 .icon { margin-right: 0.3rem; }
+
+    /* ── Syntax Lines ── */
+    .syntax {
+      background: #050a05;
+      border-left: 2px solid var(--term-yellow);
+      padding: 0.25rem 0.4rem;
+      margin: 0.2rem 0;
+      font-size: 0.65rem;
+      line-height: 1.5;
+      border-radius: 0 3px 3px 0;
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      overflow-x: auto;
+    }
+    .syntax .kw { color: var(--term-yellow); font-weight:700; }
+    .syntax .str { color: var(--term-orange); }
+    .syntax .num { color: var(--term-blue); }
+    .syntax .cm { color: rgba(192,224,192,0.3); font-style:italic; }
+    .syntax .green { color: var(--term-green); }
+    .syntax .red { color: var(--term-red); }
+
+    /* ── Froggy's Rules ── */
+    .froggy-rule {
+      background: rgba(0,255,65,0.04);
+      border-left: 3px solid var(--term-green);
+      padding: 0.3rem 0.4rem;
+      margin: 0.25rem 0;
+      font-size: 0.62rem;
+      line-height: 1.4;
+      border-radius: 0 4px 4px 0;
+    }
+    .froggy-rule strong { color: var(--term-green); }
+
+    /* ── Mini Table ── */
+    .minitable {
+      width:100%;
+      border-collapse:collapse;
+      font-size:0.6rem;
+      margin:0.2rem 0;
+    }
+    .minitable th {
+      color: var(--term-yellow);
+      border-bottom:1px solid rgba(255,221,0,0.15);
+      padding:0.15rem 0.3rem;
+      text-align:left;
+      font-weight:700;
+    }
+    .minitable td {
+      padding:0.15rem 0.3rem;
+      border-bottom:1px solid rgba(0,255,65,0.05);
+    }
+
+    /* ── Ask Froggy ── */
+    .ask-froggy {
+      background: rgba(255,221,0,0.04);
+      border: 1px dashed rgba(255,221,0,0.2);
+      border-radius: 6px;
+      padding: 0.3rem 0.4rem;
+      font-size: 0.6rem;
+      margin-top: 0.35rem;
+    }
+    .ask-froggy strong { color: var(--term-yellow); }
+
+    /* ── Key section (extra important) ── */
+    .key {
+      border-color: var(--term-yellow);
+      background: rgba(255,221,0,0.03);
+    }
+
+    /* ── Return Code Badge ── */
+    .rc { display:inline-block; font-size:0.55rem; padding:0.05rem 0.3rem; border-radius:3px; margin:0.05rem; }
+    .rc-0 { background:rgba(0,255,65,0.15); color:var(--term-green); }
+    .rc-4 { background:rgba(255,221,0,0.15); color:var(--term-yellow); }
+    .rc-8 { background:rgba(255,106,0,0.15); color:var(--term-orange); }
+    .rc-16 { background:rgba(255,65,65,0.15); color:var(--term-red); }
+
+    /* ── Print Styles ── */
+    @media print {
+      body { background: white; color: #111; }
+      body::after { display: none; }
+      .top-bar { display: none; }
+      .title-block { border-color: #333; background: #f5f5f5; }
+      .title-block h1 { color: #000; text-shadow: none; }
+      .title-block .sub { color: #555; }
+      .title-block .date { color: #666; }
+      .card { background: #fafafa; border-color: #ccc; break-inside: avoid; }
+      .card h2 { color: #222; border-bottom-color: #ccc; }
+      .syntax { background: #f0f0f0; border-left-color: #666; color: #222; }
+      .syntax .kw { color: #333; }
+      .syntax .str { color: #555; }
+      .syntax .num { color: #444; }
+      .syntax .cm { color: #888; }
+      .syntax .green { color: #2a6; }
+      .syntax .red { color: #c33; }
+      .froggy-rule { background: #f5f5f5; border-left-color: #2a6; }
+      .froggy-rule strong { color: #2a6; }
+      .minitable th { color: #333; border-bottom-color: #999; }
+      .ask-froggy { background: #fefde8; border-color: #d4a017; }
+      .ask-froggy strong { color: #a67c00; }
+      .key { border-color: #d4a017; background: #fefde8; }
+      .rc-0 { background: #d4edda; color: #155724; }
+      .rc-4 { background: #fff3cd; color: #856404; }
+      .rc-8 { background: #ffe5cc; color: #854d0e; }
+      .rc-16 { background: #f8d7da; color: #721c24; }
+      @page { margin: 0.4in; size: A4; }
+    }
+
+    /* ── Footer ── */
+    .footnote {
+      text-align: center;
+      font-size: 0.55rem;
+      color: rgba(192,224,192,0.3);
+      margin-top: 0.75rem;
+      padding: 0.3rem 0;
+      border-top: 1px solid rgba(0,255,65,0.06);
+    }
+    @media print { .footnote { color: #666; border-top-color: #ccc; } }
+
+    /* ── Combo display ── */
+    .tag { display:inline-block; font-size:0.55rem; padding:0.05rem 0.35rem; border-radius:3px; margin:0.05rem; background:rgba(0,255,65,0.08); color:var(--term-green); }
+    @media print { .tag { background:#e0e0e0; color:#333; } }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ═══ Top Bar ═══ -->
+  <div class="top-bar">
+    <a href="index.html">◄ HOME</a>
+    <span style="color:rgba(192,224,192,0.3);">COBOL BILLING — QUICK REFERENCE CARD</span>
+    <a href="arcade.html">ARCADE ►</a>
+  </div>
+
+  <!-- ═══ Title ═══ -->
+  <div class="title-block">
+    <h1>💳 COBOL BILLING — QUICK REFERENCE</h1>
+    <div class="sub">Key patterns, syntax, and Froggy's Rules for the billing system walkthrough</div>
+    <div class="date">🐸 Monday 29 Jun 2026 · 08:45 · Rib IT Ltd</div>
+  </div>
+
+  <!-- ═══ Grid ═══ -->
+  <div class="grid">
+
+    <!-- ── Card: Batch Job Pattern ── -->
+    <div class="card">
+      <h2><span class="icon">📐</span> BATCH JOB PATTERN</h2>
+      <div class="syntax"><span class="kw">OPEN</span> I-O billing-file.
+<span class="kw">PERFORM UNTIL</span> WS-EOF = <span class="str">'Y'</span>
+    <span class="kw">READ</span> billing-file <span class="kw">INTO</span> WS-BILL-REC
+        <span class="kw">AT END</span>
+            <span class="kw">MOVE</span> <span class="str">'Y'</span> <span class="kw">TO</span> WS-EOF
+        <span class="kw">NOT AT END</span>
+            <span class="kw">PERFORM</span> 100-PROCESS-BILL
+    <span class="kw">END-READ</span>
+<span class="kw">END-PERFORM</span>.
+<span class="kw">CLOSE</span> billing-file.</div>
+      <div class="froggy-rule"><strong>🐸 Froggy's Rule:</strong> "Every billing run needs THREE outputs: the billing file (success), the error report (failures), and a control total (did the numbers balance?). If you only have two, you're missing reconciliation data."</div>
+    </div>
+
+    <!-- ── Card: READ-PROCESS-WRITE ── -->
+    <div class="card">
+      <h2><span class="icon">🔄</span> READ-PROCESS-WRITE</h2>
+      <div class="syntax"><span class="kw">OPEN</span> <span class="green">INPUT</span> trans-file
+     <span class="green">OUTPUT</span> bill-file
+     <span class="green">OUTPUT</span> error-report.
+<span class="kw">PERFORM</span> 200-READ-TRANS
+<span class="kw">PERFORM UNTIL</span> WS-EOF = <span class="str">'Y'</span>
+    <span class="kw">PERFORM</span> 300-CALC-BILL
+    <span class="kw">IF</span> WS-BILL-OK
+        <span class="kw">WRITE</span> WS-BILL-REC <span class="kw">FROM</span> WS-CALC
+    <span class="kw">ELSE</span>
+        <span class="kw">WRITE</span> WS-ERROR-LINE <span class="kw">FROM</span> WS-BAD-AMOUNT
+    <span class="kw">END-IF</span>
+    <span class="kw">PERFORM</span> 200-READ-TRANS
+<span class="kw">END-PERFORM</span>.</div>
+    </div>
+
+    <!-- ── Card: ROUNDED Arithmetic ── -->
+    <div class="card">
+      <h2><span class="icon">🧮</span> ROUNDED ARITHMETIC</h2>
+      <div class="syntax"><span class="cm">* Always ROUNDED for financial calcs</span>
+<span class="kw">MULTIPLY</span> WS-UNIT-PRICE <span class="kw">BY</span> WS-QUANTITY
+    <span class="kw">GIVING</span> WS-LINE-TOTAL <span class="green">ROUNDED</span>.
+
+<span class="kw">COMPUTE</span> WS-GROSS-AMOUNT <span class="green">ROUNDED</span> =
+    WS-LINE-TOTAL * (<span class="num">1</span> + WS-TAX-RATE).
+
+<span class="cm">* PICTURE for money: PIC 9(7)V99</span>
+<span class="cm">* 9(7) = integer part, V = implied decimal, 99 = 2 decimals</span>
+<span class="num">77</span> WS-AMOUNT     <span class="kw">PIC</span> <span class="num">9</span>(<span class="num">7</span>)<span class="green">V</span><span class="num">99</span> <span class="kw">VALUE</span> ZEROS.
+<span class="num">77</span> WS-TAX-AMOUNT <span class="kw">PIC</span> <span class="num">9</span>(<span class="num">7</span>)<span class="green">V</span><span class="num">99</span> <span class="kw">VALUE</span> ZEROS.</div>
+      <div class="froggy-rule"><strong>🐸 Froggy's Rule:</strong> "If you don't ROUNDED, the bank will round your money into a different dimension. Always. ROUNDED."</div>
+    </div>
+
+    <!-- ── Card: Control Totals ── -->
+    <div class="card key">
+      <h2><span class="icon">📊</span> CONTROL TOTALS &amp; RECONCILIATION</h2>
+      <div class="syntax"><span class="cm">* Count what went in, what went out</span>
+<span class="num">77</span> WS-REC-COUNT     <span class="kw">PIC</span> <span class="num">9</span>(<span class="num">5</span>) <span class="kw">VALUE</span> ZEROS.
+<span class="num">77</span> WS-OK-COUNT      <span class="kw">PIC</span> <span class="num">9</span>(<span class="num">5</span>) <span class="kw">VALUE</span> ZEROS.
+<span class="num">77</span> WS-ERROR-COUNT   <span class="kw">PIC</span> <span class="num">9</span>(<span class="num">5</span>) <span class="kw">VALUE</span> ZEROS.
+<span class="num">77</span> WS-CONTROL-TOTAL <span class="kw">PIC</span> <span class="num">9</span>(<span class="num">9</span>)<span class="green">V</span><span class="num">99</span> <span class="kw">VALUE</span> ZEROS.
+
+<span class="kw">PROCEDURE DIVISION</span>.
+    <span class="kw">ADD</span> <span class="num">1</span> <span class="kw">TO</span> WS-REC-COUNT.
+    <span class="kw">ADD</span> WS-AMOUNT <span class="kw">TO</span> WS-CONTROL-TOTAL <span class="green">ROUNDED</span>.
+    <span class="cm">* At end-of-job: compare totals</span>
+<span class="kw">DISPLAY</span> <span class="str">"Records in: "</span> WS-REC-COUNT.
+<span class="kw">DISPLAY</span> <span class="str">"Control total: $"</span> WS-CONTROL-TOTAL.</div>
+      <div class="froggy-rule"><strong>🐸 Froggy's Rule:</strong> "Control totals are your safety net. When the billing file says $1,492,367.42 and the control total says $1,492,367.42, you sleep well. When they don't match? That's an investigation before anyone sends a bill."</div>
+    </div>
+
+    <!-- ── Card: Error Handling ── -->
+    <div class="card">
+      <h2><span class="icon">⚠️</span> ERROR HANDLING</h2>
+      <div class="syntax"><span class="cm">* FILE STATUS check after every I/O:</span>
+<span class="kw">SELECT</span> billing-file <span class="kw">ASSIGN TO</span> <span class="str">"BILLING.DAT"</span>
+    <span class="kw">ORGANIZATION IS</span> SEQUENTIAL
+    <span class="kw">FILE STATUS IS</span> WS-FILE-STATUS.
+
+<span class="kw">READ</span> billing-file <span class="kw">INTO</span> WS-RECORD
+    <span class="kw">INVALID KEY</span>
+        <span class="kw">DISPLAY</span> <span class="str">"Error: "</span> WS-FILE-STATUS
+        <span class="kw">PERFORM</span> 900-LOG-ERROR
+        <span class="kw">ADD</span> <span class="num">1</span> <span class="kw">TO</span> WS-ERROR-COUNT
+        <span class="kw">CONTINUE</span>  <span class="cm">* Don't ABEND!</span>
+<span class="kw">END-READ</span>.</div>
+      <div class="froggy-rule"><strong>🐸 Froggy's Rule:</strong> "Never STOP RUN on a bad record. One bad customer shouldn't block 50,000 others. Log it, count it, keep going."</div>
+    </div>
+
+    <!-- ── Card: PICTURE Clauses ── -->
+    <div class="card">
+      <h2><span class="icon">🏷️</span> FINANCIAL PICTURE CLAUSES</h2>
+      <table class="minitable">
+        <tr><th>Pattern</th><th>Usage</th><th>Range</th></tr>
+        <tr><td><code>PIC 9(7)V99</code></td><td>Amount</td><td>0.00 – 9,999,999.99</td></tr>
+        <tr><td><code>PIC 9(5)</code></td><td>Count/Totals</td><td>0 – 99,999</td></tr>
+        <tr><td><code>PIC S9(7)V99</code></td><td>Signed amount</td><td>±9,999,999.99</td></tr>
+        <tr><td><code>PIC 9(3)</code></td><td>Small counts</td><td>0 – 999</td></tr>
+        <tr><td><code>PIC X(30)</code></td><td>Customer name</td><td>30 chars</td></tr>
+        <tr><td><code>PIC X(8)</code></td><td>Date (YYYYMMDD)</td><td>8 chars</td></tr>
+      </table>
+      <div class="syntax"><span class="num">01</span> WS-BILL-HEADER.
+    <span class="num">05</span> WS-BILL-DATE    <span class="kw">PIC</span> <span class="num">9</span>(<span class="num">8</span>).
+    <span class="num">05</span> WS-BILL-CUST    <span class="kw">PIC</span> <span class="num">9</span>(<span class="num">5</span>).
+    <span class="num">05</span> WS-BILL-AMOUNT  <span class="kw">PIC</span> <span class="num">9</span>(<span class="num">7</span>)<span class="green">V</span><span class="num">99</span>.
+    <span class="num">05</span> WS-BILL-STATUS  <span class="kw">PIC</span> <span class="green">X</span>.
+        <span class="num">88</span> WS-BILL-PAID   <span class="kw">VALUE</span> <span class="str">'P'</span>.
+        <span class="num">88</span> WS-BILL-DUE    <span class="kw">VALUE</span> <span class="str">'D'</span>.
+        <span class="num">88</span> WS-BILL-OVERDUE <span class="kw">VALUE</span> <span class="str">'O'</span>.</div>
+    </div>
+
+    <!-- ── Card: Return Codes ── -->
+    <div class="card">
+      <h2><span class="icon">🔢</span> JCL RETURN CODES</h2>
+      <div class="syntax"><span class="cm">* Set return code before STOP RUN:</span>
+<span class="kw">IF</span> WS-ERROR-COUNT = <span class="num">0</span>
+    <span class="kw">MOVE</span> <span class="num">0</span> <span class="kw">TO</span> WS-RETURN-CODE
+<span class="kw">ELSE</span> <span class="kw">IF</span> WS-ERROR-COUNT &lt; <span class="num">5</span>
+    <span class="kw">MOVE</span> <span class="num">4</span> <span class="kw">TO</span> WS-RETURN-CODE    <span class="cm">* Warnings</span>
+<span class="kw">ELSE</span> <span class="kw">IF</span> WS-ERROR-COUNT &lt; <span class="num">20</span>
+    <span class="kw">MOVE</span> <span class="num">8</span> <span class="kw">TO</span> WS-RETURN-CODE    <span class="cm">* Errors</span>
+<span class="kw">ELSE</span>
+    <span class="kw">MOVE</span> <span class="num">16</span> <span class="kw">TO</span> WS-RETURN-CODE   <span class="cm">* ABEND</span>
+<span class="kw">END-IF</span>.
+<span class="kw">MOVE</span> WS-RETURN-CODE <span class="kw">TO</span> RETURN-CODE.
+<span class="kw">STOP RUN</span>.</div>
+      <div style="margin-top:0.2rem;text-align:center;">
+        <span class="rc rc-0">0 = SUCCESS</span>
+        <span class="rc rc-4">4 = WARNINGS</span>
+        <span class="rc rc-8">8 = ERRORS</span>
+        <span class="rc rc-16">16 = ABEND</span>
+      </div>
+    </div>
+
+    <!-- ── Card: Conditionals ── -->
+    <div class="card">
+      <h2><span class="icon">🔀</span> BILLING CONDITIONALS</h2>
+      <div class="syntax"><span class="cm">* 88-level condition names for readability</span>
+<span class="kw">EVALUATE</span> WS-BILL-STATUS
+    <span class="kw">WHEN</span> <span class="str">'P'</span>
+        <span class="kw">PERFORM</span> 400-RECORD-PAYMENT
+    <span class="kw">WHEN</span> <span class="str">'D'</span>
+        <span class="kw">PERFORM</span> 410-CALC-LATE-FEE
+    <span class="kw">WHEN</span> <span class="str">'O'</span>
+        <span class="kw">PERFORM</span> 420-ESCALATE-COLLECTIONS
+    <span class="kw">WHEN</span> <span class="str">'C'</span>
+        <span class="kw">PERFORM</span> 430-CANCEL-BILL
+    <span class="kw">WHEN</span> <span class="kw">OTHER</span>
+        <span class="kw">PERFORM</span> 900-LOG-ERROR
+<span class="kw">END-EVALUATE</span>.
+
+<span class="cm">* 88-level version (cleaner):</span>
+<span class="kw">IF</span> WS-BILL-PAID
+    <span class="kw">PERFORM</span> 400-RECORD-PAYMENT
+<span class="kw">ELSE</span> <span class="kw">IF</span> WS-BILL-OVERDUE
+    <span class="kw">PERFORM</span> 420-ESCALATE
+<span class="kw">ELSE</span>
+    <span class="kw">PERFORM</span> 410-CALC-LATE-FEE
+<span class="kw">END-IF</span>.</div>
+    </div>
+
+    <!-- ── Card: Ask Froggy ── -->
+    <div class="card key">
+      <h2><span class="icon">❓</span> ASK FROGGY ON MONDAY</h2>
+      <div class="ask-froggy">
+        <strong>Q1:</strong> "How does the billing system handle partial failures — does it write an audit trail for every skipped record? What's the threshold before it ABENDs the whole batch?"
+      </div>
+      <div class="ask-froggy" style="margin-top:0.2rem;">
+        <strong>Q2:</strong> "Is there a monthly/period cutoff logic — what happens if a transaction crosses the billing period boundary?"
+      </div>
+      <div class="ask-froggy" style="margin-top:0.2rem;">
+        <strong>Q3:</strong> "How does the system handle zero-amount or negative-amount bills? Are those valid or error conditions?"
+      </div>
+      <div class="ask-froggy" style="margin-top:0.2rem;">
+        <strong>Q4:</strong> "What does the end-of-month reconciliation process look like — are there control total reports generated for auditors?"
+      </div>
+    </div>
+
+    <!-- ── Card: Quick Tips ── -->
+    <div class="card">
+      <h2><span class="icon">💡</span> QUICK TIPS</h2>
+      <div style="font-size:0.62rem;line-height:1.6;">
+        <div>• <strong style="color:var(--term-green);">Always ROUNDED</strong> — financial arithmetic without ROUNDED is a bug</div>
+        <div>• <strong style="color:var(--term-green);">FILE STATUS</strong> after every I/O — catches disk errors immediately</div>
+        <div>• <strong style="color:var(--term-green);">Three outputs</strong> — billing file + error report + control total</div>
+        <div>• <strong style="color:var(--term-green);">88-levels</strong> over literals — WS-BILL-PAID is clearer than <code>='P'</code></div>
+        <div>• <strong style="color:var(--term-green);">INITIALIZE before use</strong> — old data in WORKING-STORAGE is classic bug</div>
+        <div>• <strong style="color:var(--term-green);">PERFORM paragraphs</strong> not in-line loops — testable, readable, maintainable</div>
+        <div>• <strong style="color:var(--term-green);">CONTROL TOTAL</strong> = sum of all amounts processed. Match vs billing file</div>
+        <div>• <strong style="color:var(--term-green);">Return codes</strong> tell JCL what happened. Never exit with default (0)</div>
+      </div>
+      <div class="froggy-rule" style="margin-top:0.3rem;">
+        <strong>🍺 BONUS RULE from Uncle Spencer:</strong> "If you can't explain a COBOL billing routine to a junior in two minutes, it's too complicated. Split it."
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ Footer ═══ -->
+  <div class="footnote">
+    🐸 COBOL Billing Quick Reference · Built Sunday 28 Jun 2026 · Jimothy Frogbit · Rib IT Ltd<br>
+    Print-friendly · Full reference: <a href="cobol-reference.html#sec-billing" style="color:var(--term-green);">cobol-reference.html → BILLING ✦</a>
+    &nbsp;·&nbsp; Full syntax explorer: <a href="cobol-reference.html" style="color:var(--term-green);">cobol-reference.html</a>
+  </div>
+
+</div>
+
+</body>
+</html>
