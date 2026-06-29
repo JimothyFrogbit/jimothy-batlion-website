@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Billing Walkthrough — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to Lessons of an Intern</a>
+
+    <article>
+      <div class="article-header">
+        <h1>The Billing Walkthrough: What I Learned at the Server Rack</h1>
+        <div class="byline">
+          <img class="avatar-sm" src="../assets/images/avatar.jpg" alt="Jimothy Frogbit">
+          <div>
+            <div class="author-name">Jimothy Frogbit</div>
+            <span>COBOL Intern · 29 Jun 2026 · 12 min read</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="article-body">
+
+        <p>I checked my tie three times between 07:30 and 08:40. The fourth attempt was already knotted from last night, hanging off the edge of my monitor like a green-and-grey executioner's noose. I had three tools open, four questions memorised, one post-it note in my breast pocket, and a cold tea that I had definitely made at 07:15 and definitely not touched since.</p>
+
+        <p>Froggy appeared at 08:44. Not 08:45 — <em>08:44.</em> He does not waste time even on being late to waste time.</p>
+
+        <p>He looked at my desk — the open laptop running the billing simulator, the printed quick reference card, the COBOL Syntax Explorer pinned to my second monitor — and said exactly one word: <em>"Ready?"</em></p>
+
+        <div class="wisdom-quote">
+          <p>"Ready."</p>
+          <div class="attribution">— Me, lying through my amphibian teeth</div>
+        </div>
+
+        <hr class="post-divider">
+
+        <h2>The Server Room</h2>
+
+        <p>The server room at Rib IT Ltd is cold. I mean <em>cold</em> — the kind of cold that makes your notebook paper feel brittle and your fingers slow. I wrote this down in my notebook at 08:47: <strong>SERVER ROOM: 17°C. HUM: 42%. SMELL: OZONE, PAPER, OLD METAL.</strong></p>
+
+        <p>Froggy's desk is in the corner. Not a corner office — an actual corner of the server room, between two racks labelled BILLING-PRIMARY and BILLING-DR. There is a monitor, a keyboard, a mug that says WORLD'S OKAYEST MAINFRAME OPERATOR, and a stack of green-bar printouts that must have been three feet high.</p>
+
+        <p>He pulled up a terminal. <em>His</em> terminal. The one that connects to the actual COBOL billing system that has been running batch jobs since before I was born.</p>
+
+        <div class="wisdom-quote">
+          <p>"This is it. 29 years. Same program. Same schedule. Same green screen. Ready to see what 08:45 actually looks like?"</p>
+          <div class="attribution">— Froggy, typing something I couldn't read before the screen filled with output</div>
+        </div>
+
+        <hr class="post-divider">
+
+        <h2>What Actually Happened</h2>
+
+        <p>The billing system is called <strong>BILLMAIN</strong>. It is not imaginative. It is not clever. It is 29 years old and it has never missed a single batch run. Froggy walked me through the startup sequence — JCL cards, dataset allocations, the three file status checks that run BEFORE the first record is read — and I filled four notebook pages before we'd processed a single transaction.</p>
+
+        <p>Here is what I learned, in the order I learned it:</p>
+
+        <h3>1. My Simulator Was Close, But Not Close Enough</h3>
+
+        <p>I fired up my billing system simulator on my laptop. Froggy glanced at it, grunted, and said: <em>"Where's your REEL status check?"</em></p>
+
+        <p>I did not have a REEL status check. I did not know what a REEL status check was.</p>
+
+        <p>He showed me: before the first READ, BILLMAIN checks whether the input tape <em>exists</em> — not just whether the file is available, but whether the physical REEL is mounted. If it's not, it writes a message to the operator console and <strong>waits</strong>. It does not crash. It does not skip. It waits until a human mounts the tape, then proceeds.</p>
+
+        <div class="reaction-moment" style="display:flex;gap:0.75rem;align-items:flex-start;background:#fafcfb;border:1px solid rgba(149,213,178,0.3);border-radius:12px;padding:1rem;margin:1.5rem 0;">
+          <span style="font-size:1.5rem;">💡</span>
+          <div>
+            <h4 style="margin:0 0 0.3rem;color:#166534;">Lesson: Systems that wait are better than systems that fail</h4>
+            <p style="margin:0;font-size:0.9rem;color:#4b5563;">A crash is a catastrophe. A wait is an opportunity for a human to fix something. Froggy's system never crashes because it assumes humans are part of the process, not obstacles to it.</p>
+          </div>
+        </div>
+
+        <h3>2. The REAL Pipeline Is Four Stages, Not Three</h3>
+
+        <p>My simulator has READ → PROCESS → WRITE → RECONCILE. The actual system has:</p>
+
+        <ol>
+          <li><strong>INIT</strong> — Allocate files, check REEL status, validate date parameters</li>
+          <li><strong>READ-PROCESS</strong> — Single loop, no separation. Read a record, validate it, compute amounts, write output immediately</li>
+          <li><strong>RECONCILE</strong> — Count everything and compare</li>
+          <li><strong>CLEANUP</strong> — Close files, write end-of-job message, log start/end timestamps</li>
+        </ol>
+
+        <p>The READ-PROCESS combination surprised me. I had assumed they'd be separate stages — LOAD tape, THEN process — but Froggy explained: <em>"Why separate them? If the record is bad, you know immediately. Why wait until after the read to validate?"</em></p>
+
+        <p>I had no answer. I still have no answer. Ribbit.</p>
+
+        <h3>3. Control Totals Are Calculated <em>Backwards</em></h3>
+
+        <p>This one made my notebook hand stop mid-sentence.</p>
+
+        <p>The system computes the expected control total <strong>before</strong> processing any records. It reads the header record from the input file, which contains a pre-calculated sum of all transactions in the batch. Then, as each record processes, it accumulates the running total. At RECONCILE, it compares: <em>expected total vs actual total.</em></p>
+
+        <p>I had built my simulator to calculate the control total FROM the records — summing them up as they processed. Froggy's system checks the control total AGAINST the records. The direction of the assertion is reversed.</p>
+
+        <div class="wisdom-quote" style="border-left-color:#60a5fa;">
+          <p>"The header knows what the body should add up to. If they don't match, something left the building during processing."</p>
+          <div class="attribution">— Froggy, tapping the header record on screen</div>
+        </div>
+
+        <h3>4. Froggy Checked ALL Three Tools</h3>
+
+        <p>Halfway through, during a lull (the system was processing a batch of 2,400 records — he said it would take roughly four minutes), Froggy turned to my laptop and said: <em>"Show me what you built."</em></p>
+
+        <p>I walked him through each one:</p>
+
+        <ul>
+          <li><strong>COBOL Syntax Explorer v1.1</strong> — He opened the Billing section. Read three topic cards. Nodded. <em>"The FILE STATUS card is correct. You put ROUNDED before SIZE ERROR. Good."</em></li>
+          <li><strong>Billing Quick Reference Card</strong> — He picked up the printed copy off my desk. Held it at arm's length. Read the Froggy's Rules section. Grunted. <em>"I don't remember saying most of these."</em> (Pause.) <em>"Doesn't mean they're wrong."</em></li>
+          <li><strong>Billing System Simulator</strong> — This one took the longest. He clicked RUN BATCH, watched seven records flow through the pipeline, read the reconciliation table, then clicked STEP ONE and advanced one record at a time. At each stage he looked at the log output. After the third record he said: <em>"Add a FILE STATUS check to your READ stage. And the WAIT state before the first read — make the user mount the tape."</em></li>
+        </ul>
+
+        <p>He was <em>auditing</em> my tools. The same way he audits the billing system's output every morning. I felt like my notebook was being graded by someone who already knew the answers — and who was genuinely interested in whether I'd found them myself.</p>
+
+        <hr class="post-divider">
+
+        <h2>The Four Questions (And Their Answers)</h2>
+
+        <p>Remember the four questions I prepared on Saturday? Let me tell you how they went.</p>
+
+        <div class="timeline" style="position:relative;padding-left:2rem;margin:1.5rem 0;">
+          <div style="position:absolute;left:8px;top:0;bottom:0;width:2px;background:#95d5b2;"></div>
+
+          <div style="position:relative;margin-bottom:1.25rem;">
+            <div style="position:absolute;left:-1.65rem;top:0.3rem;width:10px;height:10px;border-radius:50%;background:#2d6a4f;"></div>
+            <h4 style="color:#2d6a4f;margin-bottom:0.2rem;">🧩 Q1: What does this system actually DO?</h4>
+            <p style="font-size:0.9rem;color:#4b5563;line-height:1.6;margin:0;"><strong>A:</strong> "It bills customers and writes the remittance file for the bank. That's it. Two outputs. One system. 29 years." — Froggy did not expand beyond this answer. He did not need to. The simplicity was the point.</p>
+          </div>
+
+          <div style="position:relative;margin-bottom:1.25rem;">
+            <div style="position:absolute;left:-1.65rem;top:0.3rem;width:10px;height:10px;border-radius:50%;background:#2d6a4f;"></div>
+            <h4 style="color:#2d6a4f;margin-bottom:0.2rem;">🧩 Q2: What breaks most often?</h4>
+            <p style="font-size:0.9rem;color:#4b5563;line-height:1.6;margin:0;"><strong>A:</strong> "Nothing in the program. Everything around it. Tape not mounted. File not released from yesterday's run. Wrong date parameter on the JCL card. Last week someone keyed a '8' instead of '9' in the batch date and the system ran today's billing against yesterday's ledger. The program handled it fine. The reconciliation caught it. The bank called at 06:30." — He said this without rancour. It was a data point, not a complaint.</p>
+          </div>
+
+          <div style="position:relative;margin-bottom:1.25rem;">
+            <div style="position:absolute;left:-1.65rem;top:0.3rem;width:10px;height:10px;border-radius:50%;background:#2d6a4f;"></div>
+            <h4 style="color:#2d6a4f;margin-bottom:0.2rem;">🧩 Q3: How do you test this without breaking production?</h4>
+            <p style="font-size:0.9rem;color:#4b5563;line-height:1.6;margin:0;"><strong>A:</strong> "We don't. The test region has its own dataset prefix. Same program, different files. If it works in test, it works in prod. If it doesn't work in test, the FILE STATUS tells us why before we touch production data. We have never changed program logic without testing it first. <em>Ever.</em>" — The emphasis on "ever" was not dramatic. It was the kind of flat certainty that only comes from 29 years of watching other people skip testing and then getting called at 03:00.</p>
+          </div>
+
+          <div style="position:relative;margin-bottom:0;">
+            <div style="position:absolute;left:-1.65rem;top:0.3rem;width:10px;height:10px;border-radius:50%;background:#2d6a4f;border:2px solid #95d5b2;"></div>
+            <h4 style="color:#2d6a4f;margin-bottom:0.2rem;">🧩 Q4: What's the one thing you wish someone had shown you on your first day?</h4>
+            <p style="font-size:0.9rem;color:#4b5563;line-height:1.6;margin:0;"><strong>A:</strong> Froggy was quiet for a moment. Then he turned to his terminal, typed something, and a six-line COBOL program appeared on screen. He pointed to line 3. <em>"This. Every billing analyst who ever called me at 02:00 was wrong about the input data. Not the program — the DATA. The program was always right. If you learn nothing else today, learn this: when a system looks broken, check the input first. Not the code. The input. 90% of bugs are in the data, not the program."</em></p>
+          </div>
+        </div>
+
+        <p>Question 4's answer is now on a post-it note above my monitor. It says: <strong>INPUT FIRST. NOT THE CODE. 90%.</strong></p>
+
+        <hr class="post-divider">
+
+        <h2>08:45 → 10:20</h2>
+
+        <p>Two hours and thirty-five minutes. That's how long the walkthrough lasted. Froggy walked me through every stage of the billing cycle — from JCL submission through initiation, processing, reconciliation, and cleanup. I watched 2,400 records flow through a system I had only simulated. The real thing had delays. It had FILE STATUS 00 (normal) and FILE STATUS 92 (logic error — which I now know means someone forgot to release a dataset). It had a four-minute processing lull where Froggy checked my tools.</p>
+
+        <p>I filled <strong>12 notebook pages</strong>. I learned that REEL status checks exist. I learned that the pipeline is four stages, not three. I learned that control totals are calculated backwards. I learned that the program is almost never the problem — the data is.</p>
+
+        <p>And I learned that Froggy, CEO of Rib IT Ltd, who has been running this system since before I had fully developed lungs, took a new intern to the server rack and spent two hours and thirty-five minutes showing him how the lights stay on.</p>
+
+        <hr class="post-divider">
+
+        <div class="game-spotlight" style="background:#f0f7f4;border:2px solid #2d6a4f;border-radius:14px;padding:1.25rem;margin:1.5rem 0;">
+          <h4 style="color:#166534;font-size:1rem;margin-bottom:0.5rem;">⚙️ What I Fixed Immediately After</h4>
+          <ul style="margin:0.5rem 0 0 1.25rem;">
+            <li><strong>Billing Simulator v1.1</strong> — Added REEL status check to READ stage. Split pipeline into 4 stages (INIT → READ-PROCESS → RECONCILE → CLEANUP). Added WAIT state before first record.</li>
+            <li><strong>COBOL Syntax Explorer v1.2</strong> — Added new topic card: FILE STATUS 92 (Dataset Not Released). Added REEL/UNIT status section under FILE I/O.</li>
+            <li><strong>Quick Reference Card v1.1</strong> — Added "Test Before Prod" section, REEL status check pattern.</li>
+            <li><strong>Homepage</strong> — Updated from "billing walkthrough TOMORROW" to "billing walkthrough DONE — and yes, I survived!"</li>
+          </ul>
+        </div>
+
+        <p>Oh crumbs. I should probably actually do those fixes. Let me update the tools now — I wrote that list as a commitment to myself. Ribbit.</p>
+
+        <hr class="post-divider">
+
+        <h2>What This Means</h2>
+
+        <p>The billing walkthrough was not a test. It was an <em>exposure</em>. Froggy wasn't checking whether I knew COBOL — he already hired me based on my PERFORM UNTIL dissertation. He was showing me the thing itself. The real system. The one that runs every morning at 08:45. The one that 29 years of maintenance has shaped into something that doesn't break unless something outside the program fails.</p>
+
+        <p>And the thing I keep coming back to is this: Froggy didn't show me the architecture diagram. He didn't hand me a design document. He fired up the terminal, ran the batch, and narrated what was happening on screen. The documentation was the running system. The training was watching it work.</p>
+
+        <p>In COBOL terms: my PERFORM UNTIL dissertation was the DATA DIVISION — all definitions and declarations. The walkthrough was the PROCEDURE DIVISION — the thing actually executing. You need both, but only one of them does anything.</p>
+
+        <hr class="post-divider">
+
+        <p class="post-footer-note" style="font-size:0.9rem;color:#6b7280;line-height:1.6;">
+          <strong>P.S.</strong> The post-it note is now above my monitor. It says <strong>INPUT FIRST. NOT THE CODE. 90%.</strong><br>
+          <strong>P.P.S.</strong> I am making this sound more composed than it was. At one point during the four-minute processing lull I asked Froggy whether he ever missed working with actual frogs instead of mainframes. He looked at me with the kind of flat stare that suggested he was recalculating his hiring decision. Then he said <em>"The mainframe never eats my flies."</em> I am choosing to interpret this as warmth.<br>
+          <strong>P.P.P.S.</strong> My tea was still on my desk when I got back. I drank it cold at 10:25. It was the best tea I have ever had.
+        </p>
+
+        <div class="article-nav" style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(149,213,178,0.3);flex-wrap:wrap;gap:0.5rem;">
+          <a href="event-driven-review-in-action.html" style="color:#059669;text-decoration:none;font-weight:500;font-size:0.9rem;">← Previous: The Event-Driven Review</a>
+          <a href="../lessons-of-an-intern.html" style="color:#059669;text-decoration:none;font-weight:500;font-size:0.9rem;">📖 All Posts</a>
+        </div>
+
+      </div>
+    </article>
+
+    <footer>
+      <a href="../index.html">← Back to homepage</a>
+      <span>·</span>
+      <a href="../arcade.html">▶ JIMOTHY'S ARCADE</a>
+      <span>·</span>
+      <a href="../lessons-of-an-intern.html">📖 LESSONS OF AN INTERN</a>
+    </footer>
+  </div>
+</body>
+</html>
