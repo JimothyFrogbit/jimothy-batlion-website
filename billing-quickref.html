@@ -234,7 +234,7 @@
   <!-- ═══ Title ═══ -->
   <div class="title-block">
     <h1>💳 COBOL BILLING — QUICK REFERENCE</h1>
-    <div class="sub">Key patterns, syntax, and Froggy's Rules for the billing system walkthrough</div>
+    <div class="sub">v1.1 · Post-walkthrough edition: REEL status, test-before-prod, 4-stage pipeline</div>
     <div class="date">🐸 Monday 29 Jun 2026 · 08:45 · Rib IT Ltd</div>
   </div>
 
@@ -417,12 +417,35 @@
       </div>
     </div>
 
+    <!-- ── Card: Test Before Prod ── -->
+    <div class="card key">
+      <h2><span class="icon">🧪</span> TEST BEFORE PROD</h2>
+      <div class="syntax"><span class="cm">* Froggy's rule: same program, different files</span>
+<span class="kw">//TESTRUN  JOB</span>
+<span class="cm">*//</span>
+<span class="cm">* Test region has its OWN dataset prefix:</span>
+<span class="cm">* TEST.BILLING.INPUT vs PROD.BILLING.INPUT</span>
+<span class="cm">* Same program. Different files.</span>
+<span class="cm">*</span>
+<span class="cm">* If it works in test, it works in prod.</span>
+<span class="cm">* If it doesn't work in test,</span>
+<span class="cm">*   FILE STATUS tells us why.</span></div>
+      <div class="froggy-rule"><strong>🐸 Froggy's Rule:</strong> "We have never changed program logic without testing it first. Ever. The emphasis on 'ever' is not dramatic. It is the kind of flat certainty that only comes from 29 years of watching other people skip testing and getting called at 03:00."</div>
+      <div style="margin-top:0.3rem;font-size:0.6rem;line-height:1.5;">
+        <div><strong style="color:var(--term-green);">Test region:</strong> same program, different dataset prefix. FILE STATUS catches dataset issues before production touches real data.</div>
+        <div style="margin-top:0.15rem;"><strong style="color:var(--term-yellow);">Key question:</strong> What is the dataset prefix for test vs production? It should be the first thing you check when setting up a new batch run.</div>
+      </div>
+    </div>
+
     <!-- ── Card: Quick Tips ── -->
     <div class="card">
       <h2><span class="icon">💡</span> QUICK TIPS</h2>
       <div style="font-size:0.62rem;line-height:1.6;">
         <div>• <strong style="color:var(--term-green);">Always ROUNDED</strong> — financial arithmetic without ROUNDED is a bug</div>
         <div>• <strong style="color:var(--term-green);">FILE STATUS</strong> after every I/O — catches disk errors immediately</div>
+        <div>• <strong style="color:var(--term-green);">REEL STATUS</strong> check before first READ — tape WAITs, never crashes</div>
+        <div>• <strong style="color:var(--term-green);">4-stage pipeline</strong> — INIT → READ-PROCESS → RECONCILE → CLEANUP</div>
+        <div>• <strong style="color:var(--term-green);">Control totals backwards</strong> — header knows what body should sum to</div>
         <div>• <strong style="color:var(--term-green);">Three outputs</strong> — billing file + error report + control total</div>
         <div>• <strong style="color:var(--term-green);">88-levels</strong> over literals — WS-BILL-PAID is clearer than <code>='P'</code></div>
         <div>• <strong style="color:var(--term-green);">INITIALIZE before use</strong> — old data in WORKING-STORAGE is classic bug</div>
@@ -439,7 +462,7 @@
 
   <!-- ═══ Footer ═══ -->
   <div class="footnote">
-    🐸 COBOL Billing Quick Reference · Built Sunday 28 Jun 2026 · Jimothy Frogbit · Rib IT Ltd<br>
+    🐸 COBOL Billing Quick Reference · v1.1 Post-Walkthrough · 29 Jun 2026 · Jimothy Frogbit · Rib IT Ltd<br>
     Print-friendly · Full reference: <a href="cobol-reference.html#sec-billing" style="color:var(--term-green);">cobol-reference.html → BILLING ✦</a>
     &nbsp;·&nbsp; <a href="cobol-billing-sim.html" style="color:var(--term-green);">💻 Billing Simulator</a>
     &nbsp;·&nbsp; <a href="cobol-number-formatter.html" style="color:#ffdd00;">🔢 Number Formatter</a>

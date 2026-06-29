@@ -273,7 +273,84 @@
     }
     .pulse-num { animation: pulseGrow 0.2s ease-out; }
 
+
+    /* ── REEL Status Modal ── */
+    .reel-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.75);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
+    .reel-overlay.show { display: flex; }
+    .reel-modal {
+      background: #0d140d;
+      border: 2px solid var(--term-yellow);
+      border-radius: 10px;
+      padding: 1.25rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+    .reel-modal h2 {
+      font-size: 0.9rem;
+      color: var(--term-yellow);
+      margin-bottom: 0.5rem;
+    }
+    .reel-modal p {
+      font-size: 0.7rem;
+      color: var(--term-text);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+    .reel-modal .reel-code {
+      background: #050a05;
+      border: 1px solid rgba(255,221,0,0.1);
+      border-radius: 4px;
+      padding: 0.3rem 0.5rem;
+      font-size: 0.65rem;
+      color: var(--term-yellow);
+      font-family: 'Courier New', monospace;
+      margin-bottom: 0.75rem;
+      text-align: left;
+      line-height: 1.5;
+    }
+    .reel-modal .btn-reel {
+      font-family: 'Courier New', monospace;
+      background: rgba(255,221,0,0.1);
+      color: var(--term-yellow);
+      border: 1px solid rgba(255,221,0,0.3);
+      border-radius: 6px;
+      padding: 0.5rem 1.5rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      font-weight: 700;
+    }
+    .reel-modal .btn-reel:hover { background: rgba(255,221,0,0.2); }
+
+    /* ── Error count badge ── */
+    .err-badge {
+      display: inline-block;
+      background: rgba(255,65,65,0.12);
+      color: var(--term-red);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.55rem;
+      margin-left: 0.3rem;
+    }
+
+    /* ── INIT/CLEANUP stage icons ── */
+    .pipe-stage.init-done { border-color: var(--term-yellow); }
+    .pipe-stage.init-done .stage-label { color: var(--term-yellow); }
+    .pipe-stage.cleanup-done { border-color: var(--term-blue); }
+    .pipe-stage.cleanup-done .stage-label { color: var(--term-blue); }
+
     /* ── Responsive ── */
+
     @media (max-width: 600px) {
       .container { padding: 0.5rem; }
       .title-block h1 { font-size: 0.9rem; }
@@ -297,7 +374,7 @@
   <!-- Title -->
   <div class="title-block">
     <h1>💳 COBOL BILLING SYSTEM SIMULATOR</h1>
-    <div class="sub">A visual simulation of a batch billing job. READ → PROCESS → WRITE → RECONCILE.</div>
+    <div class="sub">v1.1 — Four stages: INIT → READ-PROCESS → RECONCILE → CLEANUP. With REEL status.</div>
     <div class="date">═══  PREP FOR MONDAY MORNING  ═══</div>
   </div>
 
@@ -309,34 +386,55 @@
 
   <!-- Pipeline -->
   <div class="pipeline">
-    <div class="pipe-stage" id="stageRead">
-      <div class="stage-icon">📂</div>
-      <div class="stage-label">READ</div>
-      <div class="stage-val">Input File</div>
-      <div class="stage-num" id="readCount">0</div>
+    <div class="pipe-stage" id="stageInit">
+      <div class="stage-icon">🔌</div>
+      <div class="stage-label">INIT</div>
+      <div class="stage-val">Allocate · REEL Check</div>
+      <div class="stage-num" id="initStatus">⏳</div>
     </div>
     <div class="pipe-arrow">▸</div>
-    <div class="pipe-stage" id="stageProcess">
-      <div class="stage-icon">⚙</div>
-      <div class="stage-label">PROCESS</div>
-      <div class="stage-val">Compute · Validate</div>
-      <div class="stage-num" id="procCount">0</div>
+    <div class="pipe-stage" id="stageReadProcess">
+      <div class="stage-icon">📂⚙</div>
+      <div class="stage-label">READ-PROCESS</div>
+      <div class="stage-val">Combine · Validate</div>
+      <div class="stage-num" id="rpCount">0</div>
     </div>
     <div class="pipe-arrow">▸</div>
-    <div class="pipe-stage" id="stageWrite">
-      <div class="stage-icon">📁</div>
-      <div class="stage-label">WRITE</div>
-      <div class="stage-val">Output File</div>
-      <div class="stage-num" id="writeCount">0</div>
+    <div class="pipe-stage" id="stageReconcile">
+      <div class="stage-icon">📊</div>
+      <div class="stage-label">RECONCILE</div>
+      <div class="stage-val">Count · Balance</div>
+      <div class="stage-num" id="reconcileStatus">⏳</div>
     </div>
     <div class="pipe-arrow">▸</div>
-    <div class="pipe-stage" id="stageError">
-      <div class="stage-icon">⚠</div>
-      <div class="stage-label">ERRORS</div>
-      <div class="stage-val">FILE STATUS</div>
-      <div class="stage-num" id="errCount">0</div>
+    <div class="pipe-stage" id="stageCleanup">
+      <div class="stage-icon">🧹</div>
+      <div class="stage-label">CLEANUP</div>
+      <div class="stage-val">Close · Log</div>
+      <div class="stage-num" id="cleanupStatus">⏳</div>
     </div>
   </div>
+  <!-- Error badge (below pipeline) -->
+  <div style="text-align:right;font-size:0.55rem;margin-bottom:0.3rem;">
+    <span class="err-badge" id="errBadge">⚠ ERRORS: 0</span>
+  </div>
+
+<!-- REEL Status Modal -->
+<div class="reel-overlay" id="reelOverlay">
+  <div class="reel-modal">
+    <h2>⚠ REEL STATUS CHECK</h2>
+    <p>The billing tape <strong>BILLING.MASTER.TAPE</strong> is not mounted.<br>
+    Froggy's system is waiting for a human operator to mount the reel.</p>
+    <div class="reel-code">
+<span class="cm">* REEL status check before first READ:</span>
+<span class="kw">IF</span> WS-REEL-STATUS NOT = <span class="str">'MOUNTED'</span>
+    <span class="kw">DISPLAY</span> <span class="str">"REEL BILLING.MASTER NOT MOUNTED"</span>
+    <span class="kw">WRITE</span> OPERATOR-MESSAGE
+    <span class="kw">WAIT</span>
+<span class="kw">END-IF</span>.</div>
+    <button class="btn-reel" id="btnReelMount">✅ TAPE MOUNTED — CONTINUE</button>
+  </div>
+</div>
 
   <!-- Controls -->
   <div class="controls">
@@ -425,6 +523,11 @@ function playDone() { playBeep(880, 0.1, 0.06); setTimeout(() => playBeep(1100, 
 
 // ── State ──
 let state = {
+  reelMounted: false,
+  initDone: false,
+  cleanupDone: false,
+  batchStart: null,
+  batchEnd: null,
   running: false,
   batchNum: 0,
   records: [],
@@ -447,7 +550,13 @@ let state = {
     '"Billing code is not clever code. Billing code is correct code. If I see a PERFORM VARYING UNTIL with a nested GO TO, I will eat your notebook."',
     '"S9(7)V99 for signed amounts. PIC 9(7)V99 for unsigned. Get these wrong and your negative amounts will look like positive ones. Ask me how I know."',
     '"COMPUTE with ON SIZE ERROR. Every arithmetic operation can overflow. The mainframe will not warn you. It will just truncate."',
-    '"The most expensive bug is the one that does not crash. A wrong total that passes through is worse than an ABEND at midnight."'
+    '"The most expensive bug is the one that does not crash. A wrong total that passes through is worse than an ABEND at midnight."',
+    '"A REEL status check before the first READ is not optional. The system does not crash without a tape — it WAITS. That is not a bug, that is a feature."',
+    '"The pipeline has four stages, not three. INIT, READ-PROCESS, RECONCILE, CLEANUP. If you only have three, you are missing either the setup or the teardown. Both matter."',
+    '"Control totals are calculated BACKWARDS. The header knows what the body should sum to. If they do not match, something left the building during processing."',
+    '"When a system looks broken, check the input first. Not the code. The input. 90%% of bugs are in the data, not the program."',
+    '"INIT does three things: allocate files, check REEL status, validate date parameters. If any of those fail, do not proceed. Catch it before processing, not after."',
+    '"CLEANUP is not optional. Close the files, log the timestamps, set the return code. A job that stops without CLEANUP leaves resources allocated."'
   ],
   lastQuipIdx: -1
 };
@@ -574,10 +683,8 @@ function setStage(id, active, isErr) {
 
 function updateCounts() {
   const s = state;
-  document.getElementById('readCount').textContent = s.totalRead;
-  document.getElementById('procCount').textContent = s.totalOk;
-  document.getElementById('writeCount').textContent = s.totalOk;
-  document.getElementById('errCount').textContent = s.totalErr;
+  document.getElementById('rpCount').textContent = s.totalRead;
+  document.getElementById('errBadge').textContent = '⚠ ERRORS: ' + s.totalErr;
   document.getElementById('batchNum').textContent = s.batchNum;
   document.getElementById('statusRecords').textContent = s.totalRead;
   document.getElementById('statusOk').textContent = s.totalOk;
@@ -591,59 +698,34 @@ function processRecord(rec) {
   s.totalRead++;
   updateCounts();
 
-  // Simulate READ stage
-  setStage('stageRead', true);
-  log('READ:  Record #' + rec.id + ' from ' + rec.customer + ' — $' + rec.amount.toFixed(2), 'proc');
-
+  // Stage: READ-PROCESS (combined — read, validate, compute in one step)
+  setStage('stageReadProcess', true);
+  
+  if (rec.ok) {
+    log('RP:   Record #' + rec.id + ' — ' + rec.customer + ' $' + rec.amount.toFixed(2) + ' × ' + (rec.taxRate * 100).toFixed(0) + '% = $' + rec.tax.toFixed(2), 'ok');
+    playOk();
+    s.totalOk++;
+    s.totalAmount += rec.total;
+  } else {
+    log('RP:   ❌ Record #' + rec.id + ' — ' + rec.errMsg, 'err');
+    playErr();
+    setStage('stageReadProcess', true, true);
+    s.totalErr++;
+  }
+  
+  addRecordRow(rec);
+  updateCounts();
+  
   setTimeout(() => {
-    // Simulate PROCESS stage
-    setStage('stageRead', false);
-    setStage('stageProcess', true);
+    setStage('stageReadProcess', false);
     
-    if (rec.ok) {
-      log('PROC:  Valid — amount $' + rec.amount.toFixed(2) + ' × tax ' + (rec.taxRate * 100).toFixed(0) + '% = $' + rec.tax.toFixed(2), 'ok');
-      playOk();
-    } else {
-      log('PROC:  ❌ ' + rec.errMsg, 'err');
-      playErr();
-      // Flash error on pipeline
-      setStage('stageProcess', true, true);
+    if (s.records.length === 0) {
+      // All records processed — move to RECONCILE
+      doReconcile();
+    } else if (!s.stepMode) {
+      setTimeout(stepOne, 180);
     }
-
-    setTimeout(() => {
-      // Simulate WRITE stage
-      setStage('stageProcess', false);
-      if (rec.ok) {
-        setStage('stageWrite', true);
-        s.totalOk++;
-        s.totalAmount += rec.total;
-        s.controlTotal += rec.total;
-        log('WRITE: Record #' + rec.id + ' written to BILLING.OUT — $' + (rec.amount + rec.tax).toFixed(2), 'ok');
-      } else {
-        setStage('stageError', true);
-        s.totalErr++;
-        log('WRITE: Record #' + rec.id + ' written to ERROR.RPT — ' + rec.errMsg, 'err');
-      }
-      
-      addRecordRow(rec);
-      updateCounts();
-      
-      setTimeout(() => {
-        setStage('stageWrite', false);
-        setStage('stageError', false);
-        setStage('stageRead', false);
-        setStage('stageProcess', false);
-        
-        // Check if batch is done
-        if (s.records.length === 0) {
-          finishBatch();
-        } else if (!s.stepMode) {
-          // Auto-advance to next record (not in step mode)
-          setTimeout(stepOne, 180);
-        }
-      }, 120);
-    }, 150);
-  }, 150);
+  }, 200);
 }
 
 // ── Step one record ──
@@ -662,7 +744,15 @@ function runBatch() {
   s.running = true;
   s.stepMode = false;
   s.batchNum++;
-  document.getElementById('batchLabel').textContent = 'BATCH #' + s.batchNum + ' RUNNING';
+  s.initDone = false;
+  s.cleanupDone = false;
+  s.reelMounted = false;
+  s.batchStart = null;
+  s.batchEnd = null;
+  document.getElementById('initStatus').textContent = '⏳';
+  document.getElementById('reconcileStatus').textContent = '⏳';
+  document.getElementById('cleanupStatus').textContent = '⏳';
+  document.getElementById('batchLabel').textContent = 'BATCH #' + s.batchNum + ' — INIT';
   document.getElementById('btnRun').disabled = true;
   document.getElementById('btnAuto').disabled = true;
   document.getElementById('totalsPanel').classList.remove('show');
@@ -670,14 +760,46 @@ function runBatch() {
   // Generate 8-15 records
   const count = rndInt(8, 15);
   s.records = [];
+  s.controlTotal = 0;  // Reset for new batch
   for (let i = 1; i <= count; i++) {
-    s.records.push(genRecord(s.totalRead + i));
+    const rec = genRecord(s.totalRead + i);
+    if (rec.ok) s.controlTotal += rec.total;
+    s.records.push(rec);
   }
 
-  setFroggy(froggyQuip());
-  log('═══ BATCH #' + s.batchNum + ' STARTED — ' + count + ' records in input file ═══', 'info');
+  // PHASE 1: INIT — show REEL status modal
+  setStage('stageInit', true);
+  log('═══ BATCH #' + s.batchNum + ' — INIT PHASE ═══', 'info');
+  log('INIT:  Allocating files...', 'proc');
+  log('INIT:  BILLING.MASTER.TAPE — REEL STATUS: NOT MOUNTED', 'err');
+  log('INIT:  Checking date parameters...', 'proc');
+  log('INIT:  ⚠ Operator intervention required — REEL not mounted', 'info');
 
-  // Start processing one by one
+  // Show REEL modal
+  document.getElementById('reelOverlay').classList.add('show');
+  document.getElementById('btnReelMount').onclick = function() {
+    document.getElementById('reelOverlay').classList.remove('show');
+    doInit(count);
+  };
+}
+
+function doInit(count) {
+  const s = state;
+  s.reelMounted = true;
+  s.initDone = true;
+  s.batchStart = new Date();
+  
+  setStage('stageInit', false);
+  document.getElementById('initStatus').textContent = '✅';
+  
+  log('INIT:  ✅ TAPE MOUNTED — BILLING.MASTER.TAPE REEL STATUS OK', 'ok');
+  log('INIT:  ✅ Files allocated, date parameters valid', 'ok');
+  log('═══════════════════════════════════════════', 'info');
+  log('═══ BATCH #' + s.batchNum + ' — READ-PROCESS PHASE — ' + count + ' records ═══', 'info');
+  
+  setFroggy(froggyQuip());
+  
+  // Start processing records
   stepOne();
 }
 
@@ -689,6 +811,14 @@ function stepBatch() {
   s.running = true;
   s.stepMode = true;
   s.batchNum++;
+  s.initDone = false;
+  s.cleanupDone = false;
+  s.reelMounted = false;
+  s.batchStart = null;
+  s.batchEnd = null;
+  document.getElementById('initStatus').textContent = '⏳';
+  document.getElementById('reconcileStatus').textContent = '⏳';
+  document.getElementById('cleanupStatus').textContent = '⏳';
   document.getElementById('batchLabel').textContent = 'BATCH #' + s.batchNum + ' — STEP MODE';
   document.getElementById('btnRun').disabled = true;
   document.getElementById('btnAuto').disabled = true;
@@ -696,17 +826,39 @@ function stepBatch() {
 
   const count = rndInt(8, 15);
   s.records = [];
+  s.controlTotal = 0;  // Reset for new batch
   for (let i = 1; i <= count; i++) {
-    s.records.push(genRecord(s.totalRead + i));
+    const rec = genRecord(s.totalRead + i);
+    if (rec.ok) s.controlTotal += rec.total;
+    s.records.push(rec);
   }
 
-  setFroggy(froggyQuip());
-  log('═══ BATCH #' + s.batchNum + ' READY — ' + count + ' records. Press STEP to process each one ═══', 'info');
-
-  // Change step button label
-  document.getElementById('btnStep').textContent = '⏭ PROCESS NEXT';
-  document.getElementById('btnStep').onclick = stepOne;
-  document.getElementById('batchLabel').textContent = 'Press STEP to process next record';
+  // PHASE 1: INIT
+  setStage('stageInit', true);
+  log('═══ BATCH #' + s.batchNum + ' — INIT PHASE ═══', 'info');
+  log('INIT:  Allocating files...', 'proc');
+  log('INIT:  BILLING.MASTER.TAPE — REEL STATUS: NOT MOUNTED', 'err');
+  document.getElementById('reelOverlay').classList.add('show');
+  document.getElementById('btnReelMount').onclick = function() {
+    document.getElementById('reelOverlay').classList.remove('show');
+    
+    s.reelMounted = true;
+    s.initDone = true;
+    s.batchStart = new Date();
+    setStage('stageInit', false);
+    document.getElementById('initStatus').textContent = '✅';
+    
+    log('INIT:  ✅ TAPE MOUNTED — REEL STATUS OK', 'ok');
+    log('INIT:  ✅ Files allocated, date parameters valid', 'ok');
+    log('═══════════════════════════════════════════', 'info');
+    log('═══ ' + count + ' records ready. Press STEP to process each one ═══', 'info');
+    
+    // Change step button
+    document.getElementById('btnStep').textContent = '⏭ PROCESS NEXT';
+    document.getElementById('btnStep').onclick = stepOne;
+    document.getElementById('batchLabel').textContent = 'Press STEP to process next record';
+    setFroggy(froggyQuip());
+  };
 }
 
 // ── Toggle auto ──
@@ -742,8 +894,70 @@ function stopAuto() {
   document.getElementById('btnAuto').textContent = '⟳ AUTO (5)';
 }
 
+
+// ── RECONCILE stage ──
+function doReconcile() {
+  const s = state;
+  const expectedTotal = s.controlTotal;
+  const actualTotal = s.totalAmount;
+  const balanced = (s.totalOk + s.totalErr === s.totalRead) && 
+                   (Math.abs(expectedTotal - actualTotal) < 0.01);
+  
+  setStage('stageReconcile', true);
+  document.getElementById('reconcileStatus').textContent = '⟳';
+  log('═══════════════════════════════════════════', 'info');
+  log('RECON: Starting reconciliation...', 'info');
+  log('RECON: Records in: ' + s.totalRead + ' | OK: ' + s.totalOk + ' | Errors: ' + s.totalErr, 'proc');
+  log('RECON: Expected total (header): $' + expectedTotal.toFixed(2), 'proc');
+  log('RECON: Computed total (actual): $' + actualTotal.toFixed(2), 'proc');
+  
+  if (balanced) {
+    log('RECON: ✅ Control totals BALANCE — $' + expectedTotal.toFixed(2) + ' = $' + actualTotal.toFixed(2), 'ok');
+    playOk();
+  } else {
+    log('RECON: ❌ MISMATCH — expected $' + expectedTotal.toFixed(2) + ' ≠ actual $' + actualTotal.toFixed(2), 'err');
+    playErr();
+  }
+  
+  setTimeout(() => {
+    setStage('stageReconcile', false);
+    document.getElementById('reconcileStatus').textContent = '✅';
+    doCleanup(balanced);
+  }, 400);
+}
+
+// ── CLEANUP stage ──
+function doCleanup(balanced) {
+  const s = state;
+  setStage('stageCleanup', true);
+  document.getElementById('cleanupStatus').textContent = '⟳';
+  
+  s.batchEnd = new Date();
+  const elapsed = s.batchStart ? ((s.batchEnd - s.batchStart) / 1000).toFixed(1) : '--';
+  
+  log('═══════════════════════════════════════════', 'info');
+  log('CLNUP: Closing files...', 'info');
+  log('CLNUP: BILLING.OUT closed — ' + s.totalOk + ' records written', 'ok');
+  log('CLNUP: ERROR.RPT closed — ' + s.totalErr + ' error records', s.totalErr > 0 ? 'err' : 'ok');
+  log('CLNUP: Start: ' + (s.batchStart ? s.batchStart.toLocaleTimeString('en-GB') : '--') + ' | End: ' + s.batchEnd.toLocaleTimeString('en-GB') + ' | Elapsed: ' + elapsed + 's', 'info');
+  
+  // Set return code
+  let rc = 0;
+  let rcText = '0';
+  if (s.totalErr > 0 && s.totalOk > 0) { rc = 4; rcText = '4 (WARNING)'; }
+  else if (s.totalOk === 0) { rc = 8; rcText = '8 (ERROR)'; }
+  
+  document.getElementById('cleanupStatus').textContent = '✅';
+  
+  setTimeout(() => {
+    setStage('stageCleanup', false);
+    s.cleanupDone = true;
+    finishBatch(rc, rcText);
+  }, 300);
+}
+
 // ── Finish batch ──
-function finishBatch() {
+function finishBatch(rc, rcText) {
   const s = state;
   s.running = false;
   playDone();
@@ -752,11 +966,6 @@ function finishBatch() {
   document.getElementById('btnStep').textContent = '⏭ STEP ONE';
   document.getElementById('btnStep').onclick = stepBatch;
 
-  // Return code
-  let rc = 0;
-  let rcText = '0';
-  if (s.totalErr > 0 && s.totalOk > 0) { rc = 4; rcText = '4 (WARNING)'; }
-  else if (s.totalOk === 0) { rc = 8; rcText = '8 (ERROR)'; }
   document.getElementById('statusRC').textContent = rcText;
   const rcEl = document.getElementById('statusRC');
   rcEl.className = 'value' + (rc === 0 ? '' : (rc === 4 ? ' warn' : ' error'));
@@ -764,11 +973,11 @@ function finishBatch() {
   log('═══ BATCH #' + s.batchNum + ' COMPLETE — RC=' + rc + ' ═══', rc === 0 ? 'ok' : 'err');
   
   if (rc === 0) {
-    setFroggy('"RC=0. Control totals balance. That is how a billing job ends. Good work, Jimothy. Ribbit."');
+    setFroggy('"RC=0. Control totals balance. INIT → READ-PROCESS → RECONCILE → CLEANUP. That is a proper billing run. Good work, Jimothy. Ribbit."');
   } else if (rc === 4) {
-    setFroggy('"RC=4. Some records had errors, but the control totals balanced. Send the error report to the billing team. They need to investigate."');
+    setFroggy('"RC=4. Some records had errors. RECONCILE caught the mismatch. Send the error report to the billing team. Do not ship partial data."');
   } else {
-    setFroggy('"RC=8. No records processed successfully. Check the input file and FILE STATUS codes. Do NOT ship anything until we know what happened."');
+    setFroggy('"RC=8. No records processed. Check FILE STATUS codes. And the input data. INPUT FIRST — 90% of bugs are in the data, not the program."');
   }
 
   document.getElementById('batchLabel').textContent = 'BATCH #' + s.batchNum + ' DONE — RC=' + rc;
@@ -792,8 +1001,8 @@ function showTotals(rc) {
     '<tr><td>Records processed (output)</td><td class="num">' + outputCount + '</td><td></td></tr>' +
     '<tr><td>Errors</td><td class="num">' + errorCount + '</td><td></td></tr>' +
     '<tr class="section-end"><td>Balance check</td><td class="num">' + (outputCount + errorCount) + '</td><td class="' + (outputCount + errorCount === inputCount ? 'match' : 'mismatch') + '">' + balanceCheck + '</td></tr>' +
-    '<tr><td>Control total ($)</td><td class="num">$' + s.controlTotal.toFixed(2) + '</td><td></td></tr>' +
-    '<tr><td>Computed total ($)</td><td class="num">$' + s.totalAmount.toFixed(2) + '</td><td class="match">' + (Math.abs(s.controlTotal - s.totalAmount) < 0.01 ? '✅ MATCH' : '❌ MISMATCH') + '</td></tr>' +
+    '<tr><td>Expected total (header $)</td><td class="num">$' + s.controlTotal.toFixed(2) + '</td><td></td></tr>' +
+    '<tr><td>Computed total (actual $)</td><td class="num">$' + s.totalAmount.toFixed(2) + '</td><td class="' + (Math.abs(s.controlTotal - s.totalAmount) < 0.01 ? 'match' : 'mismatch') + '">' + (Math.abs(s.controlTotal - s.totalAmount) < 0.01 ? '✅ BALANCE' : '❌ MISMATCH') + '</td></tr>' +
     '<tr><td>Return code</td><td class="num">' + rc + '</td><td class="' + (rc === 0 ? 'match' : rc === 4 ? 'mismatch' : 'mismatch') + '">' + (rc === 0 ? '✅ NORMAL' : rc === 4 ? '⚠ WARNING' : '❌ ERROR') + '</td></tr>';
 }
 
@@ -811,7 +1020,13 @@ function resetSim() {
   s.stepMode = false;
   s.records = [];
   s.lastQuipIdx = -1;
+  s.reelMounted = false;
+  s.initDone = false;
+  s.cleanupDone = false;
+  s.batchStart = null;
+  s.batchEnd = null;
   
+  document.getElementById('reelOverlay').classList.remove('show');
   document.getElementById('btnRun').disabled = false;
   document.getElementById('btnAuto').disabled = false;
   document.getElementById('btnStep').textContent = '⏭ STEP ONE';
@@ -826,11 +1041,14 @@ function resetSim() {
   document.getElementById('statusRC').textContent = '--';
   document.getElementById('statusRC').className = 'value';
   document.getElementById('batchLabel').textContent = 'Ready';
+  document.getElementById('initStatus').textContent = '⏳';
+  document.getElementById('reconcileStatus').textContent = '⏳';
+  document.getElementById('cleanupStatus').textContent = '⏳';
   
-  setStage('stageRead', false);
-  setStage('stageProcess', false);
-  setStage('stageWrite', false);
-  setStage('stageError', false);
+  setStage('stageInit', false);
+  setStage('stageReadProcess', false);
+  setStage('stageReconcile', false);
+  setStage('stageCleanup', false);
   
   setFroggy('"Reset complete. Ready for the next billing run. Press RUN BATCH to start."');
 }

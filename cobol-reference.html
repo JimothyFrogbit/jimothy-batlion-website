@@ -731,6 +731,35 @@
 <span class="kw">END-IF</span>.</div>
         <p>FILE STATUS is the most important thing you can check. Without it, a failed READ silently produces garbage data. Froggy once told me: "Every file operation without a FILE STATUS check is a bug waiting to become a support ticket." He was right.</p>
       </div>
+      <div class="topic-card" data-tags="io billing">
+        <h3>FILE STATUS 92 — Dataset Not Released</h3>
+        <div class="code-block"><span class="cm">* Most common billing system error:</span>
+<span class="kw">IF</span> WS-FILE-STATUS = <span class="str">"92"</span>
+    <span class="kw">DISPLAY</span> <span class="str">"Dataset not released from yesterday's run"</span>
+    <span class="kw">DISPLAY</span> <span class="str">"Release dataset and resubmit job"</span>
+    <span class="kw">MOVE</span> <span class="num">16</span> <span class="kw">TO</span> RETURN-CODE
+    <span class="kw">STOP RUN</span>
+<span class="kw">END-IF</span>.</div>
+        <p><strong>FILE STATUS 92</strong> means the dataset is still allocated from a previous job run that didn't properly CLOSE or release it. This is NOT a program bug — it's an operational issue. The fix: release the dataset (via the operator console or JCL) and resubmit. Froggy told me: "The most common 'program error' I see is actually FILE STATUS 92. The program is fine. The tape wasn't released." Common causes: job ABEND'd without cleanup, operator forgot to dismount overnight tape, or two jobs share the same dataset name.</p>
+        <div class="froggy-rule"><strong>🐸 Froggy's Rule:</strong> "FILE STATUS 92 is not a code problem. It is a tape problem. Check the operator console before you check the program. 90% of my early-morning calls were FILE STATUS 92. 10% were actual bugs. Guess which one I checked first."</div>
+      </div>
+      <div class="topic-card" data-tags="io">
+        <h3>REEL/UNIT Status — Tape Mounting</h3>
+        <div class="code-block"><span class="cm">* REEL status check before first READ:</span>
+<span class="kw">SELECT</span> BILLING-TAPE <span class="kw">ASSIGN TO</span> <span class="str">"BILLING.MASTER.TAPE"</span>
+    <span class="kw">ORGANIZATION IS</span> SEQUENTIAL
+    <span class="kw">FILE STATUS IS</span> WS-TAPE-STATUS.
+<span class="cm">* Check REEL is mounted:</span>
+<span class="kw">OPEN</span> <span class="kw">INPUT</span> BILLING-TAPE.
+<span class="kw">IF</span> WS-TAPE-STATUS <span class="kw">NOT =</span> <span class="str">"00"</span>
+    <span class="kw">DISPLAY</span> <span class="str">"REEL BILLING.MASTER NOT MOUNTED"</span>
+    <span class="kw">WRITE</span> OPERATOR-MESSAGE <span class="kw">FROM</span> WS-WAIT-MSG
+    <span class="cm">* System WAITs — does NOT crash</span>
+    <span class="kw">WAIT</span>
+<span class="kw">END-IF</span>.</div>
+        <p><strong>REEL status</strong> is a tape-specific check that verifies the physical tape is mounted before any I/O begins. Unlike a DISK file, a tape drive requires human intervention to mount the reel. A well-designed system does NOT crash if the tape is missing — it <strong>waits</strong> for a human operator to mount it, then proceeds. The WAIT statement is COBOL's way of saying "pause until a human fixes this." The INIT phase of a billing pipeline always includes: (1) allocate files, (2) check REEL status, (3) validate date parameters. If any of those fail, do not proceed.</p>
+        <div class="froggy-rule"><strong>🐸 Froggy's Rule:</strong> "A system that waits for a tape is better than a system that crashes without one. The WAIT gives the operator time to mount the reel. A crash gives everyone a phone call at 02:00. Choose the WAIT."</div>
+      </div>
     </div>
 
     <!-- ═══════════════ STRINGS ═══════════════ -->
