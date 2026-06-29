@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>COBOL Number Formatter — Rib IT Ltd</title>
+  <style>
+    :root {
+      --arcade-green: #00ff41;
+      --arcade-dark: #0a0e0a;
+      --arcade-bg: #0f1a0f;
+      --arcade-orange: #ff6a00;
+      --arcade-pink: #ff007f;
+      --arcade-red: #ff4141;
+      --arcade-yellow: #ffdd00;
+      --arcade-blue: #4186ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Courier New', 'Consolas', monospace;
+      background: var(--arcade-bg);
+      color: var(--arcade-green);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 3px);
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 720px;
+      width: 100%;
+      padding: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      font-size: 0.75rem;
+    }
+    .top-bar a {
+      color: rgba(0,255,65,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .top-bar a:hover { color: var(--arcade-green); }
+    .tool-title-small {
+      color: rgba(0,255,65,0.3);
+      letter-spacing: 0.1em;
+    }
+
+    .tool-header {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      border: 2px solid rgba(0,255,65,0.3);
+      border-radius: 12px;
+      background: rgba(0,255,65,0.02);
+      margin-bottom: 1rem;
+      box-shadow: 0 0 20px rgba(0,255,65,0.08), inset 0 0 20px rgba(0,255,65,0.03);
+      position: relative;
+    }
+    .tool-header::before {
+      content: '⚙ COBOL NUMBER FORMATTER v1.0 ⚙';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--arcade-bg);
+      padding: 0 1rem;
+      font-size: 0.6rem;
+      color: var(--arcade-orange);
+      letter-spacing: 0.2em;
+      font-weight: bold;
+    }
+    .tool-header h1 {
+      font-size: 1.4rem;
+      color: var(--arcade-green);
+      text-shadow: 0 0 10px var(--arcade-green);
+      margin-bottom: 0.3rem;
+    }
+    .tool-header p {
+      font-size: 0.7rem;
+      color: rgba(0,255,65,0.5);
+      letter-spacing: 0.05em;
+    }
+
+    .tool-card {
+      border: 1px solid rgba(0,255,65,0.15);
+      border-radius: 10px;
+      padding: 1.25rem;
+      background: rgba(0,255,65,0.02);
+      margin-bottom: 1rem;
+    }
+    .tool-card h2 {
+      font-size: 0.8rem;
+      color: var(--arcade-yellow);
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-end;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .form-group label {
+      font-size: 0.6rem;
+      color: rgba(0,255,65,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .form-group input,
+    .form-group select {
+      font-family: 'Courier New', monospace;
+      background: #0d140d;
+      border: 1px solid rgba(0,255,65,0.2);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+      color: var(--arcade-green);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--arcade-green);
+      box-shadow: 0 0 8px rgba(0,255,65,0.1);
+    }
+    .form-group input { width: 160px; }
+    .form-group select { min-width: 220px; cursor: pointer; }
+    .form-group select option { background: #0d140d; }
+
+    .format-btn {
+      font-family: 'Courier New', monospace;
+      background: var(--arcade-green);
+      color: var(--arcade-dark);
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1.5rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+    }
+    .format-btn:hover {
+      background: #00cc33;
+      box-shadow: 0 0 16px rgba(0,255,65,0.3);
+    }
+
+    .result-display {
+      background: #050a05;
+      border: 1px solid rgba(0,255,65,0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 0.75rem 0;
+      text-align: center;
+    }
+    .result-display .formatted-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--arcade-yellow);
+      text-shadow: 0 0 12px rgba(255,221,0,0.3);
+      letter-spacing: 0.05em;
+    }
+    .result-display .pic-label {
+      font-size: 0.65rem;
+      color: rgba(0,255,65,0.4);
+      margin-top: 0.5rem;
+    }
+    .result-display .input-label {
+      font-size: 0.65rem;
+      color: rgba(0,255,65,0.25);
+      margin-top: 0.25rem;
+    }
+
+    .code-block {
+      background: #050a05;
+      border: 1px solid rgba(0,255,65,0.1);
+      border-radius: 6px;
+      padding: 0.75rem 0.9rem;
+      font-size: 0.72rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      white-space: pre;
+      font-family: 'Courier New', monospace;
+      margin: 0.5rem 0;
+    }
+    .code-block .kw { color: var(--arcade-yellow); font-weight: 700; }
+    .code-block .cm { color: rgba(192,224,192,0.35); font-style: italic; }
+    .code-block .str { color: var(--arcade-orange); }
+    .code-block .num { color: var(--arcade-blue); }
+
+    .explanation {
+      font-size: 0.75rem;
+      color: rgba(192,224,192,0.7);
+      line-height: 1.7;
+      margin-top: 0.75rem;
+    }
+    .explanation strong { color: var(--arcade-yellow); }
+
+    .pic-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.68rem;
+      margin: 0.5rem 0;
+    }
+    .pic-table th {
+      color: var(--arcade-yellow);
+      border-bottom: 1px solid rgba(255,221,0,0.2);
+      padding: 0.35rem 0.5rem;
+      text-align: left;
+      font-weight: 700;
+    }
+    .pic-table td {
+      padding: 0.35rem 0.5rem;
+      border-bottom: 1px solid rgba(0,255,65,0.06);
+      color: rgba(192,224,192,0.75);
+    }
+    .pic-table tr:hover td {
+      background: rgba(0,255,65,0.03);
+      cursor: pointer;
+    }
+    .pic-table td:first-child {
+      color: var(--arcade-green);
+      font-weight: 700;
+    }
+    .pic-table .example-out {
+      color: var(--arcade-yellow);
+      font-weight: 700;
+    }
+
+    .footer-note {
+      text-align: center;
+      padding: 1.5rem 0;
+      font-size: 0.6rem;
+      color: rgba(0,255,65,0.15);
+      letter-spacing: 0.1em;
+    }
+    .footer-note a {
+      color: rgba(0,255,65,0.3);
+      text-decoration: none;
+    }
+    .footer-note a:hover { color: var(--arcade-green); }
+
+    @media (max-width: 600px) {
+      .form-row { flex-direction: column; align-items: stretch; }
+      .form-group input { width: 100%; }
+      .form-group select { min-width: 0; }
+      .result-display .formatted-number { font-size: 1.4rem; }
+      .tool-header h1 { font-size: 1.1rem; }
+      .tool-card { padding: 0.9rem; }
+    }
+  </style>
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <a href="arcade.html">◄ TOOLS</a>
+      <span class="tool-title-small">COBOL NUMBER FORMATTER</span>
+      <a href="index.html">HOME ►</a>
+    </div>
+
+    <div class="tool-header">
+      <h1>⚙ COBOL NUMBER FORMATTER</h1>
+      <p>Enter a number. Choose a PICTURE clause. See it formatted. Learn how COBOL edits numbers.</p>
+    </div>
+
+    <div class="tool-card">
+      <h2>📝 INPUT</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="numInput">Number</label>
+          <input type="number" id="numInput" value="12345.67" step="0.01" min="-999999.99" max="999999.99">
+        </div>
+        <div class="form-group">
+          <label for="picSelect">PICTURE Clause</label>
+          <select id="picSelect">
+            <option value="PIC 9(4)V99">PIC 9(4)V99 — Implied decimal (4 int, 2 frac)</option>
+            <option value="PIC 9(4).99" selected>PIC 9(4).99 — Explicit decimal point</option>
+            <option value="PIC 9(6)">PIC 9(6) — Integer only</option>
+            <option value="PIC Z(4)9.99">PIC Z(4)9.99 — Suppress leading zeros</option>
+            <option value="PIC Z(5).99">PIC Z(5).99 — Zero suppression with leading decimal</option>
+            <option value="PIC $$,$$9.99">PIC $$,$$9.99 — Dollar sign + commas</option>
+            <option value="PIC $$$,$$9.99">PIC $$$,$$9.99 — Floating dollar sign</option>
+            <option value="PIC -9(4).99">PIC -9(4).99 — Sign trailing (minus for negative)</option>
+            <option value="PIC +9(4).99">PIC +9(4).99 — Sign trailing (plus or minus)</option>
+            <option value="PIC 9(4).99-">PIC 9(4).99- — Sign trailing (CR for negative)</option>
+            <option value="PIC 9(4).99CR">PIC 9(4).99CR — CR for credit (negative)</option>
+            <option value="PIC *(4).99">PIC *(4).99 — Check protection (asterisk fill)</option>
+            <option value="PIC S9(6) COMP-3">PIC S9(6) COMP-3 — Signed packed decimal</option>
+            <option value="PIC -$$$,$$9.99">PIC -$$$,$$9.99 — Sign + floating dollar + commas</option>
+          </select>
+        </div>
+        <div>
+          <button class="format-btn" id="formatBtn">FORMAT</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2>📊 FORMATTED OUTPUT</h2>
+      <div class="result-display">
+        <div class="formatted-number" id="formattedOutput">$12,345.67</div>
+        <div class="pic-label" id="picLabel">PIC $$,$$9.99 — Dollar sign + commas</div>
+        <div class="input-label" id="inputLabel">Input: 12345.67</div>
+      </div>
+
+      <h2 style="font-size:0.75rem;color:var(--arcade-green);margin-top:1rem;">🔧 COBOL Code Snippet</h2>
+      <div class="code-block" id="codeSnippet">
+<span class="kw">01</span> WS-FORMATTED-OUT PIC <span class="str">$$,$$9.99</span>.
+<span class="kw">MOVE</span> WS-AMOUNT <span class="kw">TO</span> WS-FORMATTED-OUT.
+<span class="kw">DISPLAY</span> <span class="str">"Invoice total: "</span> WS-FORMATTED-OUT.
+      </div>
+
+      <h2 style="font-size:0.75rem;color:var(--arcade-green);margin-top:1rem;">📖 Explanation</h2>
+      <div class="explanation" id="explanation">
+        <strong>PIC 9(4).99</strong> stores a number with <strong>4</strong> integer digits, an explicit decimal point, and <strong>2</strong> fraction digits. The decimal point is a <strong>real character</strong> in the output — not implied like V. Use this when you want the decimal point visible in reports or displays.
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2>📋 Quick Reference: Common PICTURE Formats</h2>
+      <table class="pic-table">
+        <thead>
+          <tr><th>PICTURE</th><th>Meaning</th><th>12345.67 →</th></tr>
+        </thead>
+        <tbody>
+          <tr data-pic="PIC 9(4)V99"><td>9(4)V99</td><td>Implied decimal, 4 int + 2 frac</td><td class="example-out">1234567</td></tr>
+          <tr data-pic="PIC 9(4).99"><td>9(4).99</td><td>Explicit decimal point</td><td class="example-out">12345.67</td></tr>
+          <tr data-pic="PIC Z(4)9.99"><td>Z(4)9.99</td><td>Zero suppression (blanks)</td><td class="example-out">12345.67</td></tr>
+          <tr data-pic="PIC $$,$$9.99"><td>$$,$$9.99</td><td>Dollar + comma</td><td class="example-out">$12,345.67</td></tr>
+          <tr data-pic="PIC -9(4).99"><td>-9(4).99</td><td>Sign handling</td><td class="example-out">-12345.67</td></tr>
+          <tr data-pic="PIC *(4).99"><td>*(4).99</td><td>Asterisk check protection</td><td class="example-out">*12345.67</td></tr>
+          <tr data-pic="PIC 9(4).99CR"><td>9(4).99CR</td><td>CR for credit balances</td><td class="example-out">12345.67CR</td></tr>
+        </tbody>
+      </table>
+      <div class="explanation" style="font-size:0.65rem;">
+        Click any row above to load that PICTURE clause. Numbers displayed assume positive value; negative values show CR or minus sign where applicable.
+      </div>
+    </div>
+
+    <div class="tool-card" style="border-color:rgba(255,221,0,0.15);">
+      <h2 style="color:var(--arcade-yellow);">🐸 Froggy's Rule</h2>
+      <div class="explanation" id="froggyRule">
+        <strong>"Always ROUNDED for financial calcs. ALWAYS. And if you use EDIT patterns on a signed field, remember: the sign goes <em>before</em> the dollar sign in the PICTURE, not after. -$$$,$$9.99, not $$-$,$$9.99. I see this mistake every year from new hires."</strong>
+      </div>
+    </div>
+
+    <footer class="footer-note">
+      Ⓒ RIB IT LTD — COBOL NUMBER FORMATTER v1.0<br>
+      NO ROUNDING ERRORS WERE HARMED IN THE MAKING OF THIS TOOL<br>
+      <a href="index.html">◄ Back to homepage</a> · <a href="billing-quickref.html">💳 Billing Quick Ref</a>
+    </footer>
+  </div>
+
+  <script>
+    // ── PICTURE format definitions ──
+    const PIC_DEFS = {};
+
+    function registerPic(key, formatter, snippet, explanation) {
+      PIC_DEFS[key] = { formatter, snippet, explanation };
+    }
+
+    // Register all PICTURE clauses
+    registerPic('PIC 9(4)V99',
+      function(n) {
+        // Implied decimal: no decimal point displayed
+        const intPart = Math.floor(Math.abs(n)).toString().padStart(4, '0');
+        const fracPart = Math.round(Math.abs(n) * 100 % 100).toString().padStart(2, '0');
+        const sign = n < 0 ? '-' : '';
+        // Truncate to 4 int digits
+        const truncated = intPart.slice(-4) + fracPart;
+        return sign + truncated;
+      },
+      `<span class="kw">01</span> WS-AMOUNT PIC <span class="str">9(4)V99</span>.\n<span class="kw">MOVE</span> <span class="num">12345.67</span> <span class="kw">TO</span> WS-AMOUNT.\n<span class="kw">DISPLAY</span> <span class="str">"Amount: "</span> WS-AMOUNT.\n<span class="cm">* Output: 234567 (decimal point is implied, not stored)</span>`,
+      '<strong>PIC 9(4)V99</strong> uses the <strong>V</strong> symbol to indicate an <strong>implied decimal</strong> — the decimal point is not actually stored in memory. The field holds 6 digits (4 integer + 2 fractional) without a visible decimal. Used for <strong>internal calculations</strong> where the decimal position is known by context. The total digits = 4 (before V) + 2 (after V) = 6 digits. Values above 9999.99 truncate the high-order integer digits.'
+    );
+
+    registerPic('PIC 9(4).99',
+      function(n) {
+        const intPart = Math.min(Math.abs(n), 9999);
+        const intStr = Math.floor(intPart).toString().padStart(4, '0');
+        const fracStr = Math.round(Math.abs(n) * 100 % 100).toString().padStart(2, '0');
+        const sign = n < 0 ? '-' : '';
+        return sign + intStr + '.' + fracStr;
+      },
+      `<span class="kw">01</span> WS-AMOUNT PIC <span class="str">9(4).99</span>.\n<span class="kw">MOVE</span> <span class="num">12345.67</span> <span class="kw">TO</span> WS-AMOUNT.\n<span class="kw">DISPLAY</span> <span class="str">"Amount: "</span> WS-AMOUNT.\n<span class="cm">* Output: 2345.67 (first digit truncated, 4 int slots)</span>`,
+      '<strong>PIC 9(4).99</strong> stores the decimal point as a <strong>real character</strong> in the output. 4 integer digits + literal <strong>.</strong> + 2 fraction digits. Unlike V, the decimal point takes up a position in the field. Total storage: 7 characters (4 + 1 + 2). Values exceeding 9999.67 truncate from the left.'
+    );
+
+    registerPic('PIC 9(6)',
+      function(n) {
+        const val = Math.round(Math.abs(n));
+        const str = val.toString().padStart(6, '0').slice(-6);
+        return (n < 0 ? '-' : '') + str;
+      },
+      `<span class="kw">01</span> WS-COUNT PIC <span class="str">9(6)</span>.\n<span class="kw">MOVE</span> <span class="num">12345.67</span> <span class="kw">TO</span> WS-COUNT.\n<span class="kw">DISPLAY</span> <span class="str">"Count: "</span> WS-COUNT.\n<span class="cm">* Output: 012345 (fraction discarded, 6 int digits)</span>`,
+      '<strong>PIC 9(6)</strong> stores a <strong>6-digit integer</strong>. The decimal fraction is <strong>truncated</strong> (not rounded unless ROUNDED is specified). Leading zeros are displayed. Use for counters, record counts, and IDs where decimal values don\'t apply.'
+    );
+
+    registerPic('PIC Z(4)9.99',
+      function(n) {
+        const absN = Math.abs(n);
+        const intPart = Math.min(Math.floor(absN), 99999);
+        const fracStr = Math.round(absN * 100 % 100).toString().padStart(2, '0');
+        let intStr = intPart.toString();
+        // Zero suppression: if int is small, replace leading digits with spaces
+        if (intPart < 10000) {
+          intStr = intStr.padStart(5, ' ');  // Z(4)9 = 5 positions
+        } else {
+          intStr = intStr.padStart(5, '0');
+        }
+        // First Z positions become spaces
+        let result = '';
+        for (let i = 0; i < 4; i++) {
+          if (intStr[i] === '0') result += ' ';
+          else result += intStr[i];
+        }
+        result += intStr[4];
+        return (n < 0 ? '-' : '') + result + '.' + fracStr;
+      },
+      `<span class="kw">01</span> WS-AMOUNT PIC <span class="str">Z(4)9.99</span>.\n<span class="kw">MOVE</span> <span class="num">12.50</span> <span class="kw">TO</span> WS-AMOUNT.\n<span class="kw">DISPLAY</span> <span class="str">"Amount: </span><span class="str">"</span> WS-AMOUNT.\n<span class="cm">* Output: "    12.50" (leading zeros → blanks)</span>`,
+      '<strong>PIC Z(4)9.99</strong> uses the <strong>Z</strong> edit symbol to <strong>suppress leading zeros</strong>. Each Z position becomes a zero-suppression digit — if the digit is zero and no non-zero digit has been encountered yet, it displays as a blank. The <strong>9</strong> after Zs is the final integer digit that <em>always</em> displays, even if zero. Common in financial reports to avoid "00123.45" — instead you get "  123.45".'
+    );
+
+    registerPic('PIC Z(5).99',
+      function(n) {
+        const absN = Math.abs(n);
+        const intPart = Math.min(Math.floor(absN), 99999);
+        const fracStr = Math.round(absN * 100 % 100).toString().padStart(2, '0');
+        let intStr = intPart.toString();
+        // Z(5) = 5 positions, all zero-suppressible
+        intStr = intStr.padStart(5, '0');
+        let result = '';
+        let started = false;
+        for (let i = 0; i < 5; i++) {
+          if (!started && intStr[i] === '0') result += ' ';
+          else { started = true; result += intStr[i]; }
+        }
+        // If all zeros, show the last position
+        if (!started) result = '    0';
+        return (n < 0 ? '-' : '') + result + '.' + fracStr;
+      },
+      `<span class="kw">01</span> WS-TOTAL PIC <span class="str">Z(5).99</span>.\n<span class="kw">MOVE</span> <span class="num">0.00</span> <span class="kw">TO</span> WS-TOTAL.\n<span class="kw">DISPLAY</span> <span class="str">"Total: </span><span class="str">"</span> WS-TOTAL.\n<span class="cm">* Zero output: "     0.00" (last digit always shown)</span>`,
+      '<strong>PIC Z(5).99</strong> is a <strong>floating zero-suppression</strong> pattern. All 5 integer positions use Z — meaning a value like 123.45 displays as "  123.45" with leading blanks. If the value is 0, the <strong>last integer position</strong> still shows as 0 (because there must be at least one digit). Useful for "pretty" report columns where you don\'t want leading zeros but want clean alignment.'
+    );
+
+    registerPic('PIC $$,$$9.99',
+      function(n) {
+        const absN = Math.abs(n);
+        const fracStr = Math.round(absN * 100 % 100).toString().padStart(2, '0');
+        const intStr = Math.min(Math.floor(absN), 99999).toString();
+        // Add comma: format like ##,### (up to 5 digits with comma)
+        let display = '';
+        for (let i = 0; i < intStr.length; i++) {
+          if (i > 0 && (intStr.length - i) % 3 === 0) display += ',';
+          display += intStr[i];
+        }
+        // $$ positions: first $ floats, second $ is fixed
+        const sign = n < 0 ? '-' : '';
+        return sign + '$' + (display.length >= 8 ? display.slice(0, 5) : display) + '.' + fracStr;
+      },
+      `<span class="kw">01</span> WS-INVOICE PIC <span class="str">$$,$$9.99</span>.\n<span class="kw">MOVE</span> WS-TOTAL <span class="kw">TO</span> WS-INVOICE.\n<span class="kw">DISPLAY</span> <span class="str">"Invoice: </span><span class="str">"</span> WS-INVOICE.\n<span class="cm">* 12345.67 → "$12,345.67"  512.00 → "$512.00"</span>`,
+      '<strong>PIC $$,$$9.99</strong> adds a <strong>dollar sign</strong> and <strong>comma</strong> to numeric output. The first <strong>$</strong> is a floating symbol (it shifts left as the number grows), the second <strong>$</strong> is fixed. The comma appears when the integer part has 4+ digits. This is the standard format for <strong>invoice totals</strong> and financial reports where the dollar sign should always be immediately left of the amount.'
+    );
+
+    registerPic('PIC $$$,$$9.99',
+      function(n) {
+        const absN = Math.abs(n);
+        const fracStr = Math.round(absN * 100 % 100).toString().padStart(2, '0');
+        const intStr = Math.min(Math.floor(absN), 99999).toString();
+        // Floating dollar: all $ positions float, only one $ appears
+        let display = '';
+        for (let i = 0; i < intStr.length; i++) {
+          if (i > 0 && (intStr.length - i) % 3 === 0) display += ',';
+          display += intStr[i];
+        }
+        return '$' + display + '.' + fracStr;
+      },
+      `<span class="kw">01</span> WS-TOTAL PIC <span class="str">$$$,$$9.99</span>.\n<span class="kw">MOVE</span> WS-AMOUNT <span class="kw">TO</span> WS-TOTAL.\n<span class="kw">DISPLAY</span> <span class="str">"Total: </span><span class="str">"</span> WS-TOTAL.\n<span class="cm">* 5 → "$5.00"  5000 → "$5,000.00"  12345 → "$12,345.00"</span>`,
+      '<strong>PIC $$$,$$9.99</strong> uses <strong>floating dollar signs</strong> — only ONE dollar sign appears, positioned immediately left of the first significant digit. This is different from fixed $$ where two dollar-sign positions exist. With floating $, a value of 5.00 displays as "$5.00" not "$$5.00". The <strong>9</strong> after the dollar positions is the mandatory integer digit. Ideal for report columns with varying magnitudes.'
+    );
+
+    registerPic('PIC -9(4).99',
+      function(n) {
+        const absN = Math.abs(n);
+        const intStr = Math.min(Math.floor(absN), 9999).toString().padStart(4, '0');
+        const fracStr = Math.round(absN * 100 % 100).toString().padStart(2, '0');
+        return (n < 0 ? '-' : ' ') + intStr + '.' + fracStr;
+      },
+      `<span class="kw">01</span> WS-BALANCE PIC <span class="str">-9(4).99</span>.\n<span class="kw">MOVE</span> <span class="num">-512.34</span> <span class="kw">TO</span> WS-BALANCE.\n<span class="kw">DISPLAY</span> <span class="str">"Balance: </span><span class="str">"</span> WS-BALANCE.\n<span class="cm">* Output: "-0512.34" (minus sign, leading zeros)</span>`,
+      '<strong>PIC -9(4).99</strong> has a <strong>leading minus sign</strong> position. When the value is positive, a <strong>blank</strong> occupies the sign position. When negative, a <strong>minus sign</strong> appears. The <strong>-</strong> must be the first character in the PICTURE. This is the simplest signed format — always shows leading zeros, sign varies.'
+    );
+
+    registerPic('PIC +9(4).99',
+      function(n) {
+        const absN = Math.abs(n);
+        const intStr = Math.min(Math.floor(absN), 9999).toString().padStart(4, '0');
+        const fracStr = Math.round(absN * 100 % 100).toString().padStart(2, '0');
+        return (n < 0 ? '-' : '+') + intStr + '.' + fracStr;
+      },
+      `<span class="kw">01</span> WS-VARIANCE PIC <span class="str">+9(4).99</span>.\n<span class="kw">MOVE</span> <span class="num">123.45</span> <span class="kw">TO</span> WS-VARIANCE.\n<span class="kw">DISPLAY</span> <span class="str">"Variance: </span><span class="str">"</span> WS-VARIANCE.\n<span class="cm">* Output: "+0123.45" (explicit sign always shown)</span>`,
+      '<strong>PIC +9(4).99</strong> shows an <strong>explicit sign</strong> for <em>every</em> value — <strong>+</strong> for positive or zero, <strong>-</strong> for negative. Unlike the <code>-</code> format, there\'s no blank placeholder: the sign is always present. Useful for <strong>variance reports</strong>, temperature logs, or any display where the sign conveys essential information.'
+    );
+
+    registerPic('PIC 9(4).99-',
+      function(n) {
+        const absN = Math.abs(n);
+        const intStr = Math.min(Math.floor(absN), 9999).toString().padStart(4, '0');
+        const fracStr = Math.round(absN * 100 % 100).toString().padStart(2, '0');
+        return intStr + '.' + fracStr + (n < 0 ? '-' : ' ');
+      },
+      `<span class="kw">01</span> WS-DEBIT PIC <span class="str">9(4).99-</span>.\n<span class="kw">MOVE</span> <span class="num">-123.45</span> <span class="kw">TO</span> WS-DEBIT.\n<span class="kw">DISPLAY</span> <span class="str">"Debit: </span><span class="str">"</span> WS-DEBIT.\n<span class="cm">* Output: "0123.45-" (trailing sign)</span>`,
+      '<strong>PIC 9(4).99-</strong> places the sign at the <strong>end</strong> of the field. Positive values get a trailing blank, negative values get a <strong>-</strong>. This is the <strong>trailing sign</strong> format, common in older COBOL programs and some accounting systems where the sign belongs after the number (like check amounts).'
+    );
+
+    registerPic('PIC 9(4).99CR',
+      function(n) {
+        const absN = Math.abs(n);
+        const intStr = Math.min(Math.floor(absN), 9999).toString().padStart(4, '0');
+        const fracStr = Math.round(absN * 100 % 100).toString().padStart(2, '0');
+        return intStr + '.' + fracStr + (n < 0 ? 'CR' : '  ');
+      },
+      `<span class="kw">01</span> WS-CREDIT PIC <span class="str">9(4).99CR</span>.\n<span class="kw">MOVE</span> <span class="num">-123.45</span> <span class="kw">TO</span> WS-CREDIT.\n<span class="kw">DISPLAY</span> <span class="str">"Credit: </span><span class="str">"</span> WS-CREDIT.\n<span class="cm">* Output: "0123.45CR" (CR = credit/negative)</span>`,
+      '<strong>PIC 9(4).99CR</strong> is the <strong>traditional accounting format</strong> for negative amounts. <strong>CR</strong> stands for "Credit" — in double-entry bookkeeping, a credit balance is negative. Positive amounts show two blanks where CR would appear. Negative amounts show <strong>CR</strong>. This format is still widely used in <strong>financial COBOL systems</strong> and bank statements.'
+    );
+
+    registerPic('PIC *(4).99',
+      function(n) {
+        const absN = Math.abs(n);
+        const intStr = Math.min(Math.floor(absN), 9999).toString();
+        const fracStr = Math.round(absN * 100 % 100).toString().padStart(2, '0');
+        // * positions: pad left with asterisks
+        const padded = intStr.padStart(4, '*');
+        return padded + '.' + fracStr;
+      },
+      `<span class="kw">01</span> WS-CHECK-AMT PIC <span class="str">*(4).99</span>.\n<span class="kw">MOVE</span> <span class="num">34.50</span> <span class="kw">TO</span> WS-CHECK-AMT.\n<span class="kw">DISPLAY</span> <span class="str">"Amount: </span><span class="str">"</span> WS-CHECK-AMT.\n<span class="cm">* Output: "**34.50" (asterisks fill unused positions)</span>`,
+      '<strong>PIC *(4).99</strong> uses <strong>asterisk fill</strong> (check protection). Each <strong>*</strong> position is filled with an asterisk if the corresponding digit position is not needed — preventing fraud by making it impossible to insert extra digits. A check for $34.50 displays as <strong>**34.50</strong> rather than <strong>  34.50</strong>. Used on <strong>cheques</strong>, <strong>official documents</strong>, and <strong>audit reports</strong> to prevent tampering.'
+    );
+
+    registerPic('PIC S9(6) COMP-3',
+      function(n) {
+        const absN = Math.abs(n);
+        const intStr = Math.min(Math.round(absN), 999999).toString().padStart(6, '0');
+        // COMP-3 stores packed decimal: each nybble = 1 digit, last nybble = sign
+        // Display representation: show the hex-like packed format
+        const packed = [];
+        for (let i = 0; i < intStr.length; i += 2) {
+          const d1 = intStr[i];
+          const d2 = (i + 1 < intStr.length) ? intStr[i + 1] : 'F';
+          packed.push(d1 + d2);
+        }
+        // Last nybble is C (positive) or D (negative)
+        const lastNybble = n < 0 ? 'D' : 'C';
+        const packedStr = intStr + '(' + lastNybble + ')';
+        return '[HEX: ' + packed.join(' ') + '] ' + (n < 0 ? '-' : '+') + intStr;
+      },
+      `<span class="kw">01</span> WS-PACKED-AMT PIC <span class="str">S9(6)</span> <span class="kw">COMP-3</span>.\n<span class="kw">MOVE</span> <span class="num">123456</span> <span class="kw">TO</span> WS-PACKED-AMT.\n<span class="kw">DISPLAY</span> <span class="str">"Packed: </span><span class="str">"</span> WS-PACKED-AMT.\n<span class="cm">* Storage: 4 bytes (7 half-bytes: 1 2 3 4 5 6 + sign C)</span>`,
+      '<strong>PIC S9(6) COMP-3</strong> is <strong>packed decimal</strong> (also called BINARY or BCD) storage. <strong>S</strong> = signed, <strong>9(6)</strong> = 6 digits, <strong>COMP-3</strong> = packed decimal format. Each <strong>nybble</strong> (half-byte) stores one digit, and the last nybble stores the sign (<strong>C</strong> = positive, <strong>D</strong> = negative). A 6-digit number takes 4 bytes (3.5 rounded up). This is the <strong>most efficient storage</strong> for decimal data in COBOL and is ubiquitous in billing systems.'
+    );
+
+    registerPic('PIC -$$$,$$9.99',
+      function(n) {
+        const absN = Math.abs(n);
+        const fracStr = Math.round(absN * 100 % 100).toString().padStart(2, '0');
+        const intStr = Math.min(Math.floor(absN), 999999).toString();
+        // Comma formatting
+        let display = '';
+        for (let i = 0; i < intStr.length; i++) {
+          if (i > 0 && (intStr.length - i) % 3 === 0) display += ',';
+          display += intStr[i];
+        }
+        const sign = n < 0 ? '-' : ' ';
+        return sign + '$' + display + '.' + fracStr;
+      },
+      `<span class="kw">01</span> WS-NET-AMT PIC <span class="str">-$$$,$$9.99</span>.\n<span class="kw">MOVE</span> <span class="num">-12345.67</span> <span class="kw">TO</span> WS-NET-AMT.\n<span class="kw">DISPLAY</span> <span class="str">"Net: </span><span class="str">"</span> WS-NET-AMT.\n<span class="cm">* Output: "-$12,345.67" (sign + $ + commas)</span>`,
+      '<strong>PIC -$$$,$$9.99</strong> combines <strong>sign, floating dollar, comma, and decimal point</strong> in one PICTURE — the most common <strong>financial report format</strong>. The <strong>-</strong> handles the sign (blank for positive), the floating <strong>$</strong> positions ensure one dollar sign, the <strong>comma</strong> groups thousands, and <strong>.99</strong> gives 2 decimal places. Froggy\'s rule: sign goes <em>before</em> the dollar sign in the PICTURE.'
+    );
+
+    // ── Format function ──
+    function formatNumber() {
+      const input = document.getElementById('numInput');
+      const select = document.getElementById('picSelect');
+      const numVal = parseFloat(input.value);
+
+      if (isNaN(numVal)) {
+        document.getElementById('formattedOutput').textContent = 'ERR: INVALID NUMBER';
+        document.getElementById('formattedOutput').style.color = 'var(--arcade-red)';
+        return;
+      }
+
+      const picKey = select.value;
+      const def = PIC_DEFS[picKey];
+
+      if (!def) {
+        document.getElementById('formattedOutput').textContent = 'ERR: UNKNOWN PICTURE';
+        return;
+      }
+
+      // Get PICTURE short name for display
+      const shortName = picKey.split(' — ')[0] || picKey;
+      const label = picKey.split(' — ')[1] || '';
+
+      const formatted = def.formatter(numVal);
+
+      document.getElementById('formattedOutput').textContent = formatted;
+      document.getElementById('formattedOutput').style.color = '';
+      document.getElementById('picLabel').textContent = shortName + ' — ' + label;
+      document.getElementById('inputLabel').textContent = 'Input: ' + numVal;
+      document.getElementById('codeSnippet').innerHTML = def.snippet;
+      document.getElementById('explanation').innerHTML = def.explanation;
+
+      // Update Froggy's rule based on pic type
+      updateFroggyTip(picKey);
+    }
+
+    function updateFroggyTip(picKey) {
+      const tipEl = document.getElementById('froggyRule');
+      if (picKey.includes('COMP-3')) {
+        tipEl.innerHTML = '<strong>"COMP-3 is the most space-efficient way to store financial data. Each nybble = one digit. 6 digits fit in 4 bytes. But remember: <em>always</em> use ROUNDED before moving to a COMP-3 field, because the truncation is silent and you won\'t know you lost precision until the audit."</strong>';
+      } else if (picKey.includes('CR')) {
+        tipEl.innerHTML = '<strong>"CR means the value is negative — a credit balance. In double-entry bookkeeping, a credit is the opposite of a debit. If your billing system shows CR where you expect a positive number, <em>check your sign convention</em>. I see this reversed every other year."</strong>';
+      } else if (picKey.includes('*')) {
+        tipEl.innerHTML = '<strong>"Asterisk fill is not optional for cheque printing. If you don\'t protect the blank positions, someone can insert digits and change $34.50 into $934.50. The <em>real</em> rule: if the output could be used as evidence, use check protection."</strong>';
+      } else if (picKey.includes('$') || picKey.includes('$$')) {
+        tipEl.innerHTML = '<strong>"Always ROUNDED for financial calcs. ALWAYS. And when you use floating dollar signs, remember: the sign position goes <em>before</em> the $, not after. <code>-$$$,$$9.99</code>, not <code>$$-$,$$9.99</code>. Every new hire gets this wrong once. Make sure the once isn\'t on your production run."</strong>';
+      } else if (picKey.includes('Z')) {
+        tipEl.innerHTML = '<strong>"Zero suppression is for <em>display</em>, not for <em>calculation</em>. Never use a Z-edited field in a COMPUTE statement. Always keep the raw 9() field for arithmetic and move it to the Z-edited field only for DISPLAY or WRITE. I learned this the hard way in \'97."</strong>';
+      } else if (picKey.includes('S') || picKey.includes('-') || picKey.includes('+')) {
+        tipEl.innerHTML = '<strong>"Signed fields: the sign occupies a position in the field. If you MOVE a signed field to an unsigned picture, the sign <em>disappears</em> — a -500 becomes 500. This is not a bug. It is a feature that has caused more reconciliation failures than any other single thing in COBOL history."</strong>';
+      } else {
+        tipEl.innerHTML = '<strong>"Always ROUNDED for financial calcs. ALWAYS. And if you use EDIT patterns on a signed field, remember: the sign goes <em>before</em> the dollar sign in the PICTURE, not after. <code>-$$$,$$9.99</code>, not <code>$$-$,$$9.99</code>. I see this mistake every year from new hires."</strong>';
+      }
+    }
+
+    // ── Click handler for quick reference table ──
+    document.querySelectorAll('.pic-table tbody tr').forEach(function(row) {
+      row.addEventListener('click', function() {
+        const pic = this.dataset.pic;
+        if (pic) {
+          // Find and select the matching option
+          const select = document.getElementById('picSelect');
+          for (let i = 0; i < select.options.length; i++) {
+            if (select.options[i].value.startsWith(pic)) {
+              select.selectedIndex = i;
+              break;
+            }
+          }
+          formatNumber();
+        }
+      });
+    });
+
+    // ── Initialise on load and button click ──
+    document.addEventListener('DOMContentLoaded', formatNumber);
+    document.getElementById('formatBtn').addEventListener('click', formatNumber);
+    document.getElementById('numInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') formatNumber();
+    });
+    document.getElementById('picSelect').addEventListener('change', formatNumber);
+  </script>
+</body>
+</html>

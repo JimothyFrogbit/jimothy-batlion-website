@@ -191,6 +191,38 @@ article::before {
   margin: 0.75rem 0 1rem 2rem;
   padding-left: 0.5rem;
 }
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.article-body th,
+.article-body td {
+  padding: 0.6rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(149, 213, 178, 0.3);
+}
+.article-body th {
+  background: var(--frog-accent);
+  color: #d8f3dc;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.article-body tr:last-child td {
+  border-bottom: none;
+}
+.article-body tr:nth-child(even) td {
+  background: rgba(45, 106, 79, 0.03);
+}
+.article-body td:first-child {
+  font-weight: 600;
+  color: var(--frog-accent);
+}
 .article-body li {
   margin-bottom: 0.5rem;
 }

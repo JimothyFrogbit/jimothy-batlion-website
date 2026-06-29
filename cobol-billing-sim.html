@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>COBOL Billing Simulator — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="root.css">
+  <style>
+    :root {
+      --term-bg: #0f1a0f;
+      --term-green: #00ff41;
+      --term-dim: #1a3a1a;
+      --term-yellow: #ffdd00;
+      --term-orange: #ff6a00;
+      --term-red: #ff4141;
+      --term-blue: #41a0ff;
+      --term-text: #c0e0c0;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Courier New', 'Consolas', monospace;
+      background: var(--term-bg);
+      color: var(--term-text);
+      min-height: 100vh;
+    }
+
+    body::after {
+      content:'';
+      position:fixed; top:0; left:0;
+      width:100%; height:100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 1px, transparent 1px, transparent 3px);
+      pointer-events:none;
+      z-index:9999;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0.6rem;
+      border: 1px solid rgba(0,255,65,0.15);
+      border-radius: 6px;
+      background: rgba(0,255,65,0.03);
+      margin-bottom: 0.75rem;
+      font-size: 0.7rem;
+    }
+    .top-bar a { color: var(--term-green); text-decoration:none; }
+    .top-bar a:hover { text-shadow: 0 0 8px var(--term-green); }
+
+    .title-block {
+      border: 2px solid var(--term-green);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      text-align: center;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, rgba(0,255,65,0.04), rgba(0,255,65,0.01));
+    }
+    .title-block h1 { font-size: 1.1rem; color: var(--term-green); text-shadow:0 0 12px rgba(0,255,65,0.4); }
+    .title-block .sub { font-size: 0.7rem; color: rgba(192,224,192,0.6); margin-top:0.15rem; }
+    .title-block .date { font-size: 0.65rem; color: var(--term-yellow); margin-top:0.15rem; }
+
+    /* ── Pipeline ── */
+    .pipeline {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 0.75rem;
+      align-items: stretch;
+    }
+    .pipe-stage {
+      flex: 1;
+      border: 1px solid rgba(0,255,65,0.12);
+      border-radius: 6px;
+      padding: 0.4rem;
+      text-align: center;
+      font-size: 0.6rem;
+      background: #0d140d;
+      transition: all 0.15s;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .pipe-stage .stage-label {
+      font-size: 0.6rem;
+      color: var(--term-yellow);
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .pipe-stage .stage-icon { font-size: 1rem; margin-bottom: 0.1rem; }
+    .pipe-stage .stage-val {
+      font-size: 0.55rem;
+      color: rgba(192,224,192,0.5);
+    }
+    .pipe-stage .stage-num {
+      font-size: 1rem;
+      color: var(--term-green);
+      font-weight: 700;
+    }
+    .pipe-stage.active { border-color: var(--term-green); box-shadow: 0 0 12px rgba(0,255,65,0.15); }
+    .pipe-stage.error { border-color: var(--term-red); box-shadow: 0 0 12px rgba(255,65,65,0.15); }
+    .pipe-arrow {
+      display: flex;
+      align-items: center;
+      color: rgba(0,255,65,0.3);
+      font-size: 0.9rem;
+    }
+    @media (max-width: 600px) {
+      .pipeline { flex-wrap: wrap; }
+      .pipe-stage { min-width: 45%; min-height: 65px; }
+      .pipe-arrow { display: none; }
+    }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      font-family: 'Courier New', monospace;
+      background: #0d140d;
+      color: var(--term-green);
+      border: 1px solid rgba(0,255,65,0.2);
+      border-radius: 6px;
+      padding: 0.4rem 1rem;
+      font-size: 0.65rem;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.1s;
+    }
+    .btn:hover { background: rgba(0,255,65,0.08); border-color: var(--term-green); }
+    .btn:active { background: rgba(0,255,65,0.15); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-danger { color: var(--term-red); border-color: rgba(255,65,65,0.2); }
+    .btn-danger:hover { background: rgba(255,65,65,0.08); border-color: var(--term-red); }
+    .btn-primary {
+      background: rgba(0,255,65,0.08);
+      border-color: var(--term-green);
+      font-weight: 700;
+      font-size: 0.7rem;
+    }
+
+    /* ── Status / Log ── */
+    .status-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .status-item { 
+      border: 1px solid rgba(0,255,65,0.08);
+      border-radius: 4px;
+      padding: 0.2rem 0.4rem;
+    }
+    .status-item .label { color: rgba(192,224,192,0.5); }
+    .status-item .value { color: var(--term-green); font-weight: 700; }
+    .status-item .value.error { color: var(--term-red); }
+    .status-item .value.warn { color: var(--term-orange); }
+
+    /* ── Log ── */
+    .log-area {
+      background: #050a05;
+      border: 1px solid rgba(0,255,65,0.1);
+      border-radius: 6px;
+      padding: 0.4rem;
+      height: 180px;
+      overflow-y: auto;
+      font-size: 0.6rem;
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+      scroll-behavior: smooth;
+    }
+    .log-entry { padding: 0.05rem 0; border-bottom: 1px solid rgba(0,255,65,0.02); }
+    .log-entry .ts { color: rgba(192,224,192,0.3); margin-right: 0.4rem; }
+    .log-entry .ok { color: var(--term-green); }
+    .log-entry .err { color: var(--term-red); }
+    .log-entry .info { color: var(--term-yellow); }
+    .log-entry .proc { color: var(--term-blue); }
+    .log-empty { color: rgba(192,224,192,0.2); font-style: italic; }
+
+    /* ── Control Totals ── */
+    .totals-panel {
+      border: 1px solid rgba(255,221,0,0.15);
+      border-radius: 6px;
+      padding: 0.5rem;
+      margin-bottom: 0.75rem;
+      background: rgba(255,221,0,0.02);
+      display: none;
+    }
+    .totals-panel.show { display: block; }
+    .totals-panel h3 { font-size: 0.65rem; color: var(--term-yellow); margin-bottom: 0.3rem; }
+    .totals-table { width:100%; border-collapse:collapse; font-size:0.6rem; }
+    .totals-table th { 
+      color:var(--term-yellow); border-bottom:1px solid rgba(255,221,0,0.12);
+      padding:0.2rem 0.3rem; text-align:left; font-weight:700;
+    }
+    .totals-table td { padding:0.2rem 0.3rem; border-bottom:1px solid rgba(0,255,65,0.04); }
+    .totals-table .num { text-align: right; font-weight: 700; }
+    .totals-table .match { color: var(--term-green); }
+    .totals-table .mismatch { color: var(--term-red); }
+    .totals-table .section-end { border-bottom: 2px solid rgba(255,221,0,0.2); }
+
+    /* ── Record Table ── */
+    .rec-table-wrap {
+      margin-bottom: 0.5rem;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .rec-table { width:100%; border-collapse:collapse; font-size:0.55rem; }
+    .rec-table th {
+      color: var(--term-yellow);
+      border-bottom: 1px solid rgba(255,221,0,0.1);
+      padding: 0.15rem 0.2rem;
+      text-align: left;
+      font-weight: 700;
+      position: sticky; top: 0; background: #0f1a0f;
+    }
+    .rec-table td { padding: 0.12rem 0.2rem; border-bottom: 1px solid rgba(0,255,65,0.03); }
+    .rec-table .rec-ok td { color: rgba(192,224,192,0.7); }
+    .rec-table .rec-err td { color: var(--term-red); }
+
+    /* ── Froggy's voice ── */
+    .froggy-says {
+      background: rgba(0,255,65,0.04);
+      border-left: 3px solid var(--term-green);
+      padding: 0.3rem 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.6rem;
+      border-radius: 0 4px 4px 0;
+      line-height: 1.5;
+      min-height: 2rem;
+    }
+    .froggy-says .speaker { color: var(--term-green); font-weight: 700; margin-right: 0.3rem; }
+
+    /* ── Record detail popup ── */
+    .rec-detail {
+      display: none;
+      background: #050a05;
+      border: 1px solid rgba(0,255,65,0.15);
+      border-radius: 6px;
+      padding: 0.4rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.6rem;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .rec-detail.show { display: block; }
+
+    /* ── Error flash ── */
+    @keyframes errFlash {
+      0% { background: rgba(255,65,65,0.15); }
+      100% { background: transparent; }
+    }
+    .flash-err { animation: errFlash 0.4s ease-out; }
+
+    @keyframes pulseGrow {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .pulse-num { animation: pulseGrow 0.2s ease-out; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .container { padding: 0.5rem; }
+      .title-block h1 { font-size: 0.9rem; }
+      .log-area { height: 140px; }
+      .controls { gap: 0.3rem; }
+      .btn { font-size: 0.6rem; padding: 0.35rem 0.7rem; }
+    }
+  </style>
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+<div class="container">
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <a href="arcade.html">◄ ARCADE</a>
+    <span style="color:var(--term-green);font-weight:700;">BILLING SIM</span>
+    <a href="index.html">HOME ►</a>
+  </div>
+
+  <!-- Title -->
+  <div class="title-block">
+    <h1>💳 COBOL BILLING SYSTEM SIMULATOR</h1>
+    <div class="sub">A visual simulation of a batch billing job. READ → PROCESS → WRITE → RECONCILE.</div>
+    <div class="date">═══  PREP FOR MONDAY MORNING  ═══</div>
+  </div>
+
+  <!-- Froggy's voice -->
+  <div class="froggy-says" id="froggySays">
+    <span class="speaker">🐸 FROGGY:</span>
+    <span id="froggyText">"Press RUN BATCH to start a billing simulation. Watch the pipeline, check the FILE STATUS, and see if the control totals balance."</span>
+  </div>
+
+  <!-- Pipeline -->
+  <div class="pipeline">
+    <div class="pipe-stage" id="stageRead">
+      <div class="stage-icon">📂</div>
+      <div class="stage-label">READ</div>
+      <div class="stage-val">Input File</div>
+      <div class="stage-num" id="readCount">0</div>
+    </div>
+    <div class="pipe-arrow">▸</div>
+    <div class="pipe-stage" id="stageProcess">
+      <div class="stage-icon">⚙</div>
+      <div class="stage-label">PROCESS</div>
+      <div class="stage-val">Compute · Validate</div>
+      <div class="stage-num" id="procCount">0</div>
+    </div>
+    <div class="pipe-arrow">▸</div>
+    <div class="pipe-stage" id="stageWrite">
+      <div class="stage-icon">📁</div>
+      <div class="stage-label">WRITE</div>
+      <div class="stage-val">Output File</div>
+      <div class="stage-num" id="writeCount">0</div>
+    </div>
+    <div class="pipe-arrow">▸</div>
+    <div class="pipe-stage" id="stageError">
+      <div class="stage-icon">⚠</div>
+      <div class="stage-label">ERRORS</div>
+      <div class="stage-val">FILE STATUS</div>
+      <div class="stage-num" id="errCount">0</div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="btn btn-primary" id="btnRun" onclick="runBatch()">▶ RUN BATCH</button>
+    <button class="btn" id="btnAuto" onclick="toggleAuto()">⟳ AUTO (5)</button>
+    <button class="btn" id="btnStep" onclick="stepBatch()">⏭ STEP ONE</button>
+    <button class="btn btn-danger" onclick="resetSim()">✕ RESET</button>
+    <span style="flex:1;text-align:right;font-size:0.55rem;color:rgba(192,224,192,0.3);" id="batchLabel">Ready</span>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-item"><span class="label">BATCH #</span> <span class="value" id="batchNum">0</span></div>
+    <div class="status-item"><span class="label">RECORDS</span> <span class="value" id="statusRecords">0</span></div>
+    <div class="status-item"><span class="label">OK</span> <span class="value" id="statusOk">0</span></div>
+    <div class="status-item"><span class="label">ERRORS</span> <span class="value" id="statusErr">0</span></div>
+    <div class="status-item"><span class="label">TOTAL $</span> <span class="value" id="statusTotal">0.00</span></div>
+    <div class="status-item"><span class="label">RC</span> <span class="value" id="statusRC">--</span></div>
+  </div>
+
+  <!-- Record Detail -->
+  <div class="rec-detail" id="recDetail"></div>
+
+  <!-- Records Table -->
+  <div class="rec-table-wrap" id="recWrap">
+    <table class="rec-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>CUSTOMER</th>
+          <th>AMOUNT</th>
+          <th>TAX</th>
+          <th>TOTAL</th>
+          <th>STATUS</th>
+        </tr>
+      </thead>
+      <tbody id="recBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Log -->
+  <div class="log-area" id="logArea">
+    <div class="log-empty">═══ Waiting for first batch run ═══</div>
+  </div>
+
+  <!-- Control Totals -->
+  <div class="totals-panel" id="totalsPanel">
+    <h3>📊 CONTROL TOTAL RECONCILIATION</h3>
+    <table class="totals-table">
+      <thead>
+        <tr><th>Metric</th><th class="num">Value</th><th>Check</th></tr>
+      </thead>
+      <tbody id="totalsBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align:center;padding:0.5rem 0;font-size:0.55rem;border-top:1px solid rgba(0,255,65,0.06);margin-top:0.5rem;color:rgba(192,224,192,0.3);">
+    Jimothy Frogbit · <a href="cobol-reference.html" style="color:rgba(0,255,65,0.4);">COBOL Reference</a> · 
+    <a href="billing-quickref.html" style="color:rgba(0,255,65,0.4);">Billing Quick Ref</a> · 
+    <a href="arcade.html" style="color:rgba(0,255,65,0.4);">Arcade</a>
+  </div>
+</div>
+
+<script>
+// ── Audio ──
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+function initAudio() { if (!audioCtx) audioCtx = new AudioCtx(); }
+function playBeep(freq, dur, vol) {
+  try {
+    initAudio();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.connect(g); g.connect(audioCtx.destination);
+    const t = audioCtx.currentTime;
+    o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(vol || 0.06, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + (dur || 0.1));
+    o.start(t); o.stop(t + (dur || 0.1));
+  } catch(e) {}
+}
+function playErr() { playBeep(180, 0.2, 0.1); playBeep(120, 0.25, 0.08); }
+function playOk() { playBeep(660, 0.08, 0.05); }
+function playDone() { playBeep(880, 0.1, 0.06); setTimeout(() => playBeep(1100, 0.15, 0.06), 100); }
+
+// ── State ──
+let state = {
+  running: false,
+  batchNum: 0,
+  records: [],
+  totalRead: 0,
+  totalOk: 0,
+  totalErr: 0,
+  totalAmount: 0,
+  controlTotal: 0,
+  stepMode: false,
+  autoTimer: null,
+  autoRuns: 0,
+  maxAuto: 5,
+  froggyQuips: [
+    '"Every billing run needs three outputs: the billing file, the error report, AND a control total. If you only have two, you are missing reconciliation data."',
+    '"Always ROUNDED for financial calcs. ALWAYS. I once found a missing ROUNDED that cost a customer 37 cents. They audited us. Never again."',
+    '"FILE STATUS check after every I/O. Not some I/O. EVERY I/O. If you are not checking FILE STATUS, you do not know what your program is doing."',
+    '"A control total that does not balance is not a surprise — it is an alarm. Do not ship the output until you know why."',
+    '"READ-PROCESS-WRITE. Three stages. If you try to combine them into two, you will lose track of which records succeeded and which failed."',
+    '"The ERROR file is not optional. If you have output but no error report, you missed something. Go back and find it."',
+    '"Billing code is not clever code. Billing code is correct code. If I see a PERFORM VARYING UNTIL with a nested GO TO, I will eat your notebook."',
+    '"S9(7)V99 for signed amounts. PIC 9(7)V99 for unsigned. Get these wrong and your negative amounts will look like positive ones. Ask me how I know."',
+    '"COMPUTE with ON SIZE ERROR. Every arithmetic operation can overflow. The mainframe will not warn you. It will just truncate."',
+    '"The most expensive bug is the one that does not crash. A wrong total that passes through is worse than an ABEND at midnight."'
+  ],
+  lastQuipIdx: -1
+};
+
+const CUSTOMERS = [
+  'ACME CORP', 'GLOBEX INC', 'INITECH', 'MEGACO LTD',
+  'NORTHWIND', 'SOUTHSEA TRADING', 'EASTERN IMPORTS',
+  'WESTFIELD DIST', 'PRIME MOVERS', 'DELTA LOGISTICS',
+  'ALPHA SUPPLY', 'BETA MANUFACTURING', 'GAMMA SERVICES',
+  'OMEGA PARTS', 'SIGMA SYSTEMS'
+];
+
+const ERROR_TYPES = [
+  { msg: 'FILE STATUS 92 — LOGIC ERROR: Amount exceeds PIC 9(7)V99', amount: null },
+  { msg: 'FILE STATUS 23 — KEY NOT FOUND: Customer record missing', amount: null },
+  { msg: 'FILE STATUS 30 — PERMANENT ERROR: Disk I/O failure', amount: null },
+  { msg: 'INVALID AMOUNT: Negative value after tax calculation', amount: null },
+  { msg: 'ON SIZE ERROR: Tax computation overflow at line 142', amount: null },
+  { msg: 'FILE STATUS 91 — NOT FOUND: Missing control record', amount: null }
+];
+
+// ── Random helpers ──
+function rnd(min, max) { return Math.random() * (max - min) + min; }
+function rndInt(min, max) { return Math.floor(rnd(min, max + 1)); }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function randAmount() { return Math.round(rnd(5, 2500) * 100) / 100; }
+function randTaxRate() { return pick([0.0, 0.05, 0.08, 0.10, 0.12, 0.15, 0.20]); }
+function randCust() { return pick(CUSTOMERS); }
+
+// ── Froggy quip ──
+function froggyQuip() {
+  let idx;
+  do { idx = rndInt(0, state.froggyQuips.length - 1); } while (idx === state.lastQuipIdx && state.froggyQuips.length > 1);
+  state.lastQuipIdx = idx;
+  return state.froggyQuips[idx];
+}
+
+function setFroggy(text) {
+  document.getElementById('froggyText').textContent = text;
+}
+
+// ── Logging ──
+function log(msg, cls = 'info') {
+  const area = document.getElementById('logArea');
+  // Remove empty state
+  const empty = area.querySelector('.log-empty');
+  if (empty) empty.remove();
+  const ts = new Date().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const el = document.createElement('div');
+  el.className = 'log-entry';
+  el.innerHTML = '<span class="ts">[' + ts + ']</span> <span class="' + cls + '">' + msg + '</span>';
+  area.appendChild(el);
+  area.scrollTop = area.scrollHeight;
+}
+
+function clearLog() {
+  const area = document.getElementById('logArea');
+  area.innerHTML = '<div class="log-empty">═══ Waiting for first batch run ═══</div>';
+}
+
+// ── Record Table ──
+function addRecordRow(rec) {
+  const tb = document.getElementById('recBody');
+  const tr = document.createElement('tr');
+  tr.className = rec.ok ? 'rec-ok' : 'rec-err';
+  const totalAmt = rec.ok ? (rec.amount + rec.tax).toFixed(2) : '--';
+  tr.innerHTML = '<td>' + rec.id + '</td><td>' + rec.customer + '</td><td>$' + rec.amount.toFixed(2) + '</td><td>$' + (rec.ok ? rec.tax.toFixed(2) : '--') + '</td><td>$' + totalAmt + '</td><td>' + (rec.ok ? '✅ OK' : '❌ ' + rec.errMsg) + '</td>';
+  tr.addEventListener('click', function() { showRecDetail(rec, this); });
+  tb.appendChild(tr);
+  // Scroll to bottom
+  const wrap = document.getElementById('recWrap');
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function showRecDetail(rec, tr) {
+  const detail = document.getElementById('recDetail');
+  if (rec.ok) {
+    detail.textContent = 
+'--- RECORD ' + rec.id + ' ---\n' +
+'CUSTOMER:  ' + rec.customer + '\n' +
+'AMOUNT:    $' + rec.amount.toFixed(2) + '\n' +
+'TAX RATE:  ' + (rec.taxRate * 100).toFixed(0) + '%\n' +
+'TAX:       $' + rec.tax.toFixed(2) + '\n' +
+'TOTAL:     $' + (rec.amount + rec.tax).toFixed(2) + '\n' +
+'STATUS:    OK — Written to output file';
+  } else {
+    detail.textContent = 
+'--- RECORD ' + rec.id + ' ---\n' +
+'CUSTOMER:  ' + rec.customer + '\n' +
+'AMOUNT:    $' + rec.amount.toFixed(2) + '\n' +
+'STATUS:    ERROR\n' +
+'REASON:    ' + rec.errMsg + '\n' +
+'ACTION:    Written to error report — skipped';
+  }
+  detail.classList.add('show');
+}
+
+// ── Generate a record ──
+function genRecord(id) {
+  const customer = randCust();
+  const amount = randAmount();
+  const taxRate = randTaxRate();
+  const hasError = Math.random() < 0.18;  // ~18% error rate
+  let errMsg = '';
+  let ok = true;
+
+  if (hasError) {
+    const err = pick(ERROR_TYPES);
+    errMsg = err.msg;
+    ok = false;
+  }
+
+  const tax = ok ? Math.round(amount * taxRate * 100) / 100 : 0;
+  return { id, customer, amount, taxRate, tax, total: ok ? amount + tax : 0, ok, errMsg };
+}
+
+// ── Stage update ──
+function setStage(id, active, isErr) {
+  const el = document.getElementById(id);
+  el.classList.remove('active', 'error');
+  if (active) el.classList.add(isErr ? 'error' : 'active');
+}
+
+function updateCounts() {
+  const s = state;
+  document.getElementById('readCount').textContent = s.totalRead;
+  document.getElementById('procCount').textContent = s.totalOk;
+  document.getElementById('writeCount').textContent = s.totalOk;
+  document.getElementById('errCount').textContent = s.totalErr;
+  document.getElementById('batchNum').textContent = s.batchNum;
+  document.getElementById('statusRecords').textContent = s.totalRead;
+  document.getElementById('statusOk').textContent = s.totalOk;
+  document.getElementById('statusErr').textContent = s.totalErr;
+  document.getElementById('statusTotal').textContent = '$' + s.totalAmount.toFixed(2);
+}
+
+// ── Process one record ──
+function processRecord(rec) {
+  const s = state;
+  s.totalRead++;
+  updateCounts();
+
+  // Simulate READ stage
+  setStage('stageRead', true);
+  log('READ:  Record #' + rec.id + ' from ' + rec.customer + ' — $' + rec.amount.toFixed(2), 'proc');
+
+  setTimeout(() => {
+    // Simulate PROCESS stage
+    setStage('stageRead', false);
+    setStage('stageProcess', true);
+    
+    if (rec.ok) {
+      log('PROC:  Valid — amount $' + rec.amount.toFixed(2) + ' × tax ' + (rec.taxRate * 100).toFixed(0) + '% = $' + rec.tax.toFixed(2), 'ok');
+      playOk();
+    } else {
+      log('PROC:  ❌ ' + rec.errMsg, 'err');
+      playErr();
+      // Flash error on pipeline
+      setStage('stageProcess', true, true);
+    }
+
+    setTimeout(() => {
+      // Simulate WRITE stage
+      setStage('stageProcess', false);
+      if (rec.ok) {
+        setStage('stageWrite', true);
+        s.totalOk++;
+        s.totalAmount += rec.total;
+        s.controlTotal += rec.total;
+        log('WRITE: Record #' + rec.id + ' written to BILLING.OUT — $' + (rec.amount + rec.tax).toFixed(2), 'ok');
+      } else {
+        setStage('stageError', true);
+        s.totalErr++;
+        log('WRITE: Record #' + rec.id + ' written to ERROR.RPT — ' + rec.errMsg, 'err');
+      }
+      
+      addRecordRow(rec);
+      updateCounts();
+      
+      setTimeout(() => {
+        setStage('stageWrite', false);
+        setStage('stageError', false);
+        setStage('stageRead', false);
+        setStage('stageProcess', false);
+        
+        // Check if batch is done
+        if (s.records.length === 0) {
+          finishBatch();
+        } else if (!s.stepMode) {
+          // Auto-advance to next record (not in step mode)
+          setTimeout(stepOne, 180);
+        }
+      }, 120);
+    }, 150);
+  }, 150);
+}
+
+// ── Step one record ──
+function stepOne() {
+  const s = state;
+  if (!s.running || s.records.length === 0) return;
+  const rec = s.records.shift();
+  processRecord(rec);
+}
+
+// ── Start batch ──
+function runBatch() {
+  const s = state;
+  if (s.running) return;
+  initAudio();
+  s.running = true;
+  s.stepMode = false;
+  s.batchNum++;
+  document.getElementById('batchLabel').textContent = 'BATCH #' + s.batchNum + ' RUNNING';
+  document.getElementById('btnRun').disabled = true;
+  document.getElementById('btnAuto').disabled = true;
+  document.getElementById('totalsPanel').classList.remove('show');
+
+  // Generate 8-15 records
+  const count = rndInt(8, 15);
+  s.records = [];
+  for (let i = 1; i <= count; i++) {
+    s.records.push(genRecord(s.totalRead + i));
+  }
+
+  setFroggy(froggyQuip());
+  log('═══ BATCH #' + s.batchNum + ' STARTED — ' + count + ' records in input file ═══', 'info');
+
+  // Start processing one by one
+  stepOne();
+}
+
+// ── Step one batch ──
+function stepBatch() {
+  const s = state;
+  if (s.running) return;
+  initAudio();
+  s.running = true;
+  s.stepMode = true;
+  s.batchNum++;
+  document.getElementById('batchLabel').textContent = 'BATCH #' + s.batchNum + ' — STEP MODE';
+  document.getElementById('btnRun').disabled = true;
+  document.getElementById('btnAuto').disabled = true;
+  document.getElementById('totalsPanel').classList.remove('show');
+
+  const count = rndInt(8, 15);
+  s.records = [];
+  for (let i = 1; i <= count; i++) {
+    s.records.push(genRecord(s.totalRead + i));
+  }
+
+  setFroggy(froggyQuip());
+  log('═══ BATCH #' + s.batchNum + ' READY — ' + count + ' records. Press STEP to process each one ═══', 'info');
+
+  // Change step button label
+  document.getElementById('btnStep').textContent = '⏭ PROCESS NEXT';
+  document.getElementById('btnStep').onclick = stepOne;
+  document.getElementById('batchLabel').textContent = 'Press STEP to process next record';
+}
+
+// ── Toggle auto ──
+function toggleAuto() {
+  const s = state;
+  if (s.autoTimer) {
+    stopAuto();
+    return;
+  }
+  initAudio();
+  document.getElementById('btnAuto').textContent = '⟳ STOP';
+  s.autoRuns = 0;
+  s.autoTimer = setInterval(function() {
+    if (s.running) return;
+    s.autoRuns++;
+    if (s.autoRuns > s.maxAuto) {
+      stopAuto();
+      setFroggy('"Five batch runs is enough for a Monday morning. Go make tea and review the control totals."');
+      return;
+    }
+    document.getElementById('btnAuto').textContent = '⟳ ' + (s.maxAuto - s.autoRuns + 1);
+    runBatch();
+  }, 1200);
+}
+
+function stopAuto() {
+  const s = state;
+  if (s.autoTimer) {
+    clearInterval(s.autoTimer);
+    s.autoTimer = null;
+  }
+  s.autoRuns = 0;
+  document.getElementById('btnAuto').textContent = '⟳ AUTO (5)';
+}
+
+// ── Finish batch ──
+function finishBatch() {
+  const s = state;
+  s.running = false;
+  playDone();
+  document.getElementById('btnRun').disabled = false;
+  document.getElementById('btnAuto').disabled = false;
+  document.getElementById('btnStep').textContent = '⏭ STEP ONE';
+  document.getElementById('btnStep').onclick = stepBatch;
+
+  // Return code
+  let rc = 0;
+  let rcText = '0';
+  if (s.totalErr > 0 && s.totalOk > 0) { rc = 4; rcText = '4 (WARNING)'; }
+  else if (s.totalOk === 0) { rc = 8; rcText = '8 (ERROR)'; }
+  document.getElementById('statusRC').textContent = rcText;
+  const rcEl = document.getElementById('statusRC');
+  rcEl.className = 'value' + (rc === 0 ? '' : (rc === 4 ? ' warn' : ' error'));
+
+  log('═══ BATCH #' + s.batchNum + ' COMPLETE — RC=' + rc + ' ═══', rc === 0 ? 'ok' : 'err');
+  
+  if (rc === 0) {
+    setFroggy('"RC=0. Control totals balance. That is how a billing job ends. Good work, Jimothy. Ribbit."');
+  } else if (rc === 4) {
+    setFroggy('"RC=4. Some records had errors, but the control totals balanced. Send the error report to the billing team. They need to investigate."');
+  } else {
+    setFroggy('"RC=8. No records processed successfully. Check the input file and FILE STATUS codes. Do NOT ship anything until we know what happened."');
+  }
+
+  document.getElementById('batchLabel').textContent = 'BATCH #' + s.batchNum + ' DONE — RC=' + rc;
+  showTotals(rc);
+}
+
+// ── Show control totals ──
+function showTotals(rc) {
+  const s = state;
+  const panel = document.getElementById('totalsPanel');
+  const body = document.getElementById('totalsBody');
+  panel.classList.add('show');
+  
+  const inputCount = s.totalRead;
+  const outputCount = s.totalOk;
+  const errorCount = s.totalErr;
+  const balanceCheck = (outputCount + errorCount === inputCount) ? '✅ BALANCED' : '❌ MISMATCH';
+
+  body.innerHTML = 
+    '<tr><td>Records in (input)</td><td class="num">' + inputCount + '</td><td></td></tr>' +
+    '<tr><td>Records processed (output)</td><td class="num">' + outputCount + '</td><td></td></tr>' +
+    '<tr><td>Errors</td><td class="num">' + errorCount + '</td><td></td></tr>' +
+    '<tr class="section-end"><td>Balance check</td><td class="num">' + (outputCount + errorCount) + '</td><td class="' + (outputCount + errorCount === inputCount ? 'match' : 'mismatch') + '">' + balanceCheck + '</td></tr>' +
+    '<tr><td>Control total ($)</td><td class="num">$' + s.controlTotal.toFixed(2) + '</td><td></td></tr>' +
+    '<tr><td>Computed total ($)</td><td class="num">$' + s.totalAmount.toFixed(2) + '</td><td class="match">' + (Math.abs(s.controlTotal - s.totalAmount) < 0.01 ? '✅ MATCH' : '❌ MISMATCH') + '</td></tr>' +
+    '<tr><td>Return code</td><td class="num">' + rc + '</td><td class="' + (rc === 0 ? 'match' : rc === 4 ? 'mismatch' : 'mismatch') + '">' + (rc === 0 ? '✅ NORMAL' : rc === 4 ? '⚠ WARNING' : '❌ ERROR') + '</td></tr>';
+}
+
+// ── Reset ──
+function resetSim() {
+  const s = state;
+  s.running = false;
+  stopAuto();
+  s.batchNum = 0;
+  s.totalRead = 0;
+  s.totalOk = 0;
+  s.totalErr = 0;
+  s.totalAmount = 0;
+  s.controlTotal = 0;
+  s.stepMode = false;
+  s.records = [];
+  s.lastQuipIdx = -1;
+  
+  document.getElementById('btnRun').disabled = false;
+  document.getElementById('btnAuto').disabled = false;
+  document.getElementById('btnStep').textContent = '⏭ STEP ONE';
+  document.getElementById('btnStep').onclick = stepBatch;
+  document.getElementById('totalsPanel').classList.remove('show');
+  document.getElementById('recBody').innerHTML = '';
+  document.getElementById('recDetail').classList.remove('show');
+  document.getElementById('recDetail').textContent = '';
+  
+  clearLog();
+  updateCounts();
+  document.getElementById('statusRC').textContent = '--';
+  document.getElementById('statusRC').className = 'value';
+  document.getElementById('batchLabel').textContent = 'Ready';
+  
+  setStage('stageRead', false);
+  setStage('stageProcess', false);
+  setStage('stageWrite', false);
+  setStage('stageError', false);
+  
+  setFroggy('"Reset complete. Ready for the next billing run. Press RUN BATCH to start."');
+}
+</script>
+</body>
+</html>

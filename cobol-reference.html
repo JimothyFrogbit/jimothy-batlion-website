@@ -176,7 +176,7 @@
       transition: transform 0.3s;
       font-size: 0.7rem;
     }
-    .section-header.open .arrow { transform: rotate(90deg); }
+    .section.open .section-header .arrow { transform: rotate(90deg); }
     .section-header .sec-name {
       color: var(--term-yellow);
       font-weight: 700;
@@ -373,6 +373,7 @@
       .ref-table { font-size: 0.65rem; }
     }
   </style>
+  <link rel="icon" href="/assets/images/favicon.png">
 </head>
 <body>
   <div class="container">
@@ -928,7 +929,7 @@
       <p>🐸 COBOL Syntax Explorer v1.1 — Built by <a href="index.html">Jimothy Frogbit</a></p>
       <p>Rib IT Ltd — Internal Reference · 28 Jun 2026</p>
       <p style="margin-top:0.5rem;font-size:0.65rem;">"HELLO WORLD" mug not included. Documentation may contain trace amounts of PERFORM UNTIL enthusiasm.</p>
-      <p><a href="posts/four-questions-billing-prep.html">📝 Four Questions for the Billing System</a> · <a href="billing-quickref.html">💳 Billing Quick Ref</a> · <a href="arcade.html">▶ ARCADE</a></p>
+      <p><a href="posts/four-questions-billing-prep.html">📝 Four Questions</a> · <a href="billing-quickref.html">💳 Billing Quick Ref</a> · <a href="cobol-billing-sim.html">💻 Billing Simulator</a> · <a href="cobol-number-formatter.html">🔢 Number Formatter</a> · <a href="arcade.html">▶ ARCADE</a></p>
     </footer>
 
   </div>
@@ -936,23 +937,20 @@
   <script>
     // ═══════════════ SECTION TOGGLE ═══════════════
     function toggleSection(header) {
-      header.classList.toggle('open');
-      const container = header.parentElement.nextElementSibling;
-      if (container && container.classList.contains('topic-container')) {
-        container.style.display = container.style.display === 'block' ? 'none' : 'block';
-      }
+      const section = header.parentElement;
+      section.classList.toggle('open');
     }
 
     // ═══════════════ OPEN SECTION BY ID ═══════════════
     function openSection(id) {
       const section = document.getElementById(id);
       if (!section) return;
-      const header = section.querySelector('.section-header');
+      section.classList.add('open');
       const container = section.nextElementSibling;
-      if (header && container && container.classList.contains('topic-container')) {
-        header.classList.add('open');
-        container.style.display = 'block';
-        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (container) {
+        setTimeout(function() {
+          container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
       }
     }
 
@@ -977,11 +975,7 @@
         if (container && show) {
           const section = container.previousElementSibling;
           if (section && section.classList.contains('section')) {
-            const header = section.querySelector('.section-header');
-            if (header) {
-              header.classList.add('open');
-              container.style.display = 'block';
-            }
+            section.classList.add('open');
           }
         }
       });
@@ -1026,12 +1020,7 @@
     setTimeout(function() {
       const first = document.querySelector('.section');
       if (first) {
-        const header = first.querySelector('.section-header');
-        const container = first.nextElementSibling;
-        if (header && container) {
-          header.classList.add('open');
-          container.style.display = 'block';
-        }
+        first.classList.add('open');
       }
     }, 100);
   </script>
