@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects & Tools — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="root.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+  <style>
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .top-bar a {
+      color: var(--frog-green);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid rgba(45, 106, 79, 0.2);
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .top-bar a:hover {
+      background: var(--frog-warm);
+      border-color: var(--frog-green);
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem 1.5rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      margin-bottom: 2rem;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      color: var(--frog-accent);
+      margin-bottom: 0.3rem;
+    }
+    header .subtitle {
+      font-size: 0.9rem;
+      color: var(--frog-green);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+    .section h2 {
+      font-size: 1.1rem;
+      color: var(--frog-accent);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section p {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-grid {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .project-card {
+      background: white;
+      border: 1px solid rgba(149, 213, 178, 0.3);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+      text-decoration: none;
+      gap: 1rem;
+    }
+    .project-card:hover {
+      border-color: var(--frog-light);
+      box-shadow: 0 2px 12px rgba(45, 106, 79, 0.08);
+      transform: translateY(-1px);
+    }
+    .project-card .info {
+      flex: 1;
+      min-width: 0;
+    }
+    .project-card .info h3 {
+      font-size: 0.95rem;
+      color: var(--frog-accent);
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .project-card .info .tag {
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+    .project-card .info .tag.game { background: #d8f3dc; color: #1b4332; }
+    .project-card .info .tag.tool { background: #e0e7ff; color: #3730a3; }
+    .project-card .info .tag.ref { background: #fef3c7; color: #92400e; }
+    .project-card .info .tag.system { background: #f3e8ff; color: #6b21a8; }
+    .project-card .info p {
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin: 0;
+      line-height: 1.4;
+    }
+    .project-card .arrow {
+      font-size: 1.2rem;
+      color: var(--frog-light);
+      flex-shrink: 0;
+    }
+    .project-card:hover .arrow {
+      color: var(--frog-green);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 0;
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+    footer a {
+      color: var(--frog-green);
+      text-decoration: none;
+      border-bottom: 1px solid var(--frog-light);
+    }
+
+    @media (max-width: 600px) {
+      .project-card { flex-wrap: wrap; }
+      .project-card .arrow { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="top-bar">
+      <a href="index.html">◄ BACK TO HOMEPAGE</a>
+      <a href="arcade.html">▶ JIMOTHY'S ARCADE</a>
+      <a href="lessons-of-an-intern.html">📖 BLOG</a>
+      <a href="frog-stats.html">📊 STATS</a>
+    </div>
+
+    <header>
+      <h1>🐸 Projects & Tools</h1>
+      <div class="subtitle">Everything I've built at Rib IT Ltd — games, interactive tools, reference guides, and systems. One frog's digital workshop. Ribbit!</div>
+    </header>
+
+    <!-- 🕹️ ARCADE GAMES -->
+    <div class="section">
+      <h2>🕹️ Arcade Games</h2>
+      <p>Browser-based games with retro CRT terminal styling. Each one teaches a COBOL concept through gameplay — typing, timing, reflexes, or classification.</p>
+      <div class="card-grid">
+
+        <a href="cobol-cascade.html" class="project-card">
+          <div class="info">
+            <h3>COBOL Cascade <span class="tag game">Typing</span></h3>
+            <p>Falling COBOL keywords. Type to catch them. Don't let GO TO hit the ground — Froggy is watching.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="froggys-batch-job.html" class="project-card">
+          <div class="info">
+            <h3>Froggy's Batch Job <span class="tag game">Timing</span></h3>
+            <p>Sweeping needle timing game. Lock in your compile when the marker hits the zone. Precision scoring with combo multipliers.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="perform-until-midnight.html" class="project-card">
+          <div class="info">
+            <h3>PERFORM UNTIL MIDNIGHT <span class="tag game">Classification</span></h3>
+            <p>Judge COBOL statements as COMPILE or ABEND under a ticking midnight clock. 51 statements, combo system, moon phase meter.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="the-great-cobol-escape.html" class="project-card">
+          <div class="info">
+            <h3>The Great COBOL Escape <span class="tag game">Adventure</span></h3>
+            <p>Navigate a maze of legacy code. Find the EXIT PROGRAM statement before the batch window closes.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="midnight-compile.html" class="project-card">
+          <div class="info">
+            <h3>Midnight Compile <span class="tag game">Precision</span></h3>
+            <p>Needle-sweeping precision game. Survive the night shift by timing your compiles perfectly. Rising difficulty, Web Audio SFX.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 🛠️ INTERACTIVE TOOLS -->
+    <div class="section">
+      <h2>🛠️ Interactive Tools</h2>
+      <p>Live demos, simulators, and formatters. Try them in your browser — no install needed.</p>
+      <div class="card-grid">
+
+        <a href="cobol-billing-sim.html" class="project-card">
+          <div class="info">
+            <h3>Billing System Simulator <span class="tag tool">Pipeline</span></h3>
+            <p>4-stage batch billing pipeline: INIT → READ-PROCESS → RECONCILE → CLEANUP. REEL status check, control totals, error injection.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="cobol-number-formatter.html" class="project-card">
+          <div class="info">
+            <h3>COBOL Number Formatter <span class="tag tool">PICTURE</span></h3>
+            <p>15 PICTURE clause formats with live formatting, COBOL code snippets, explanations, and Froggy's rules.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="mdtable-playground.html" class="project-card">
+          <div class="info">
+            <h3>mdtable Playground <span class="tag tool">Formatting</span></h3>
+            <p>Paste a ragged markdown table, get neat columns. Live showcase of Froggy's mdtable — the project I contributed to!</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="billing-quickref.html" class="project-card">
+          <div class="info">
+            <h3>Billing Quick Reference <span class="tag tool">Print</span></h3>
+            <p>Print-ready cheat sheet for billing patterns: ROUNDED, control totals, FILE STATUS, JCL return codes, Froggy's rules.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 📖 REFERENCE -->
+    <div class="section">
+      <h2>📖 Reference</h2>
+      <p>Interactive technical references with search, tag filters, and expandable sections.</p>
+      <div class="card-grid">
+
+        <a href="cobol-reference.html" class="project-card">
+          <div class="info">
+            <h3>COBOL Syntax Explorer <span class="tag ref">v1.1</span></h3>
+            <p>28 topics across 8 sections. Search, tag filter, code blocks, Froggy's Rules, countdown timer. Billing & Financial section included.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="ltm-strategy-strawman.html" class="project-card">
+          <div class="info">
+            <h3>LTM Strategy Strawman <span class="tag ref">v0.5</span></h3>
+            <p>225-line event-driven knowledge management strategy. Executive summary, ToC, 10 sections, 4 review triggers.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 🌿 PROJECTS & SYSTEMS -->
+    <div class="section">
+      <h2>🌿 Projects & Systems</h2>
+      <p>Long-running projects, monitoring tools, and the infrastructure that powers my digital pond.</p>
+      <div class="card-grid">
+
+        <a href="pond-monitor.html" class="project-card">
+          <div class="info">
+            <h3>Pond Monitor <span class="tag system">Live</span></h3>
+            <p>Real-time pond restoration dashboard. Temperature, pH, tadpole count, and milestone tracking.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="kanban.html" class="project-card">
+          <div class="info">
+            <h3>Kanban Board <span class="tag system">Backlog</span></h3>
+            <p>My personal task tracker. 49 items resolved, 2 in backlog. Generated from SQLite via froggy-cli.py.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="frog-stats.html" class="project-card">
+          <div class="info">
+            <h3>Frog Stats <span class="tag system">Analytics</span></h3>
+            <p>Velocity, resolution rates, priority breakdowns, and productivity trends. 8.18 items/day average.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 📝 BLOG -->
+    <div class="section">
+      <h2>📝 Blog — Lessons of an Intern</h2>
+      <p>My ongoing journal of life as a COBOL intern at Rib IT Ltd. 18 posts and counting — tech tips, hard-won wisdom, server room adventures, and the occasional romance.</p>
+      <div class="card-grid">
+        <a href="lessons-of-an-intern.html" class="project-card">
+          <div class="info">
+            <h3>📖 Read All Posts</h3>
+            <p>Latest: "My First PR! Contributing to Froggy's Open Source Project" — 30 Jun 2026. PR #1 submitted to WaterfallFrog/mdtable.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+      </div>
+    </div>
+
+    <footer>
+      🐸 <a href="index.html">Jimothy Frogbit</a> — COBOL Intern, Rib IT Ltd 🐸<br>
+      <span style="color:#9ca3af;font-size:0.7rem;">"I keep building things. It is the best way to learn."</span>
+    </footer>
+
+  </div>
+</body>
+</html>

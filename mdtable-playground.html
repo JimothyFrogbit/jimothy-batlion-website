@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>mdtable Playground — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="root.css">
+  <style>
+    :root {
+      --term-green: #00ff41;
+      --term-dark: #0a0e0a;
+      --term-bg: #0f1a0f;
+      --term-orange: #ff6a00;
+      --term-yellow: #ffdd00;
+      --term-blue: #41a0ff;
+      --term-purple: #a855f7;
+      --term-red: #ff4141;
+      --term-gray: rgba(192,224,192,0.5);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Courier New', 'Consolas', monospace;
+      background: var(--term-bg);
+      color: var(--term-green);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.08) 0px,
+        rgba(0,0,0,0.08) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .top-bar {
+      background: #0a0e0a;
+      border-bottom: 1px solid rgba(0,255,65,0.12);
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .top-bar a {
+      color: var(--term-green);
+      text-decoration: none;
+      padding: 0.2rem 0.5rem;
+      border: 1px solid rgba(0,255,65,0.2);
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .top-bar a:hover { background: rgba(0,255,65,0.1); }
+    .game-title-small { color: var(--term-yellow); font-weight: 700; font-size: 0.75rem; }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .glow-title {
+      color: var(--term-green);
+      text-shadow: 0 0 10px var(--term-green), 0 0 20px rgba(0,255,65,0.3);
+      text-align: center;
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+    }
+    .sub-glow {
+      text-align: center;
+      color: var(--term-gray);
+      font-size: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .sub-glow a { color: var(--term-yellow); }
+
+    .input-area {
+      background: #0d140d;
+      border: 1px solid rgba(0,255,65,0.12);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .input-area label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--term-gray);
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
+    .input-area textarea {
+      width: 100%;
+      min-height: 140px;
+      background: #050a05;
+      border: 1px solid rgba(0,255,65,0.1);
+      border-radius: 4px;
+      color: var(--term-green);
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      padding: 0.5rem;
+      resize: vertical;
+      outline: none;
+    }
+    .input-area textarea:focus {
+      border-color: var(--term-green);
+      box-shadow: 0 0 8px rgba(0,255,65,0.1);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn {
+      font-family: 'Courier New', monospace;
+      background: rgba(0,255,65,0.06);
+      color: var(--term-green);
+      border: 1px solid rgba(0,255,65,0.2);
+      border-radius: 6px;
+      padding: 0.45rem 1rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      font-weight: 700;
+    }
+    .btn:hover { background: rgba(0,255,65,0.15); }
+    .btn-primary {
+      background: var(--term-green);
+      color: #0a0e0a;
+      border-color: var(--term-green);
+    }
+    .btn-primary:hover { background: #00e63a; }
+    .btn-copy { color: var(--term-yellow); border-color: rgba(255,221,0,0.3); }
+    .btn-copy:hover { background: rgba(255,221,0,0.1); }
+    .btn-example { color: var(--term-blue); border-color: rgba(65,160,255,0.3); }
+    .btn-example:hover { background: rgba(65,160,255,0.1); }
+
+    .output-area {
+      background: #0d140d;
+      border: 1px solid rgba(0,255,65,0.12);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .output-area label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--term-gray);
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
+    .output-box {
+      background: #050a05;
+      border: 1px solid rgba(0,255,65,0.06);
+      border-radius: 4px;
+      padding: 0.75rem;
+      min-height: 80px;
+      font-size: 0.75rem;
+      line-height: 1.6;
+      white-space: pre;
+      overflow-x: auto;
+      color: var(--term-green);
+      font-family: 'Courier New', monospace;
+    }
+    .output-box .no-tables {
+      color: var(--term-orange);
+      font-weight: 700;
+    }
+
+    .examples-panel {
+      margin-bottom: 1rem;
+    }
+    .examples-panel .panel-label {
+      font-size: 0.7rem;
+      color: var(--term-gray);
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
+    .example-btns {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .info-panel {
+      background: #0d140d;
+      border: 1px solid rgba(0,255,65,0.08);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.7rem;
+    }
+    .info-panel h3 {
+      color: var(--term-yellow);
+      font-size: 0.8rem;
+      margin-bottom: 0.4rem;
+    }
+    .info-panel p { color: var(--term-gray); margin-bottom: 0.3rem; line-height: 1.5; }
+    .info-panel a { color: var(--term-yellow); }
+    .syntax-line {
+      color: var(--term-yellow);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.25rem 0.4rem;
+      border-left: 2px solid var(--term-yellow);
+      background: rgba(255,221,0,0.04);
+      border-radius: 0 3px 3px 0;
+      margin: 0.3rem 0;
+    }
+
+    .froggy-rule {
+      background: rgba(255,221,0,0.04);
+      border-left: 2px solid var(--term-yellow);
+      padding: 0.5rem 0.6rem;
+      border-radius: 0 6px 6px 0;
+      margin-top: 0.5rem;
+      font-size: 0.68rem;
+      color: var(--term-yellow);
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.68rem;
+      color: var(--term-gray);
+      margin-top: 0.4rem;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 0.75rem 0.5rem; }
+      .glow-title { font-size: 1.1rem; }
+      .input-area textarea { min-height: 100px; font-size: 0.7rem; }
+      .btn-row { flex-direction: column; }
+      .btn { width: 100%; text-align: center; }
+      .example-btns { flex-direction: column; }
+      .top-bar { font-size: 0.65rem; padding: 0.4rem 0.5rem; }
+      .game-title-small { font-size: 0.65rem; }
+    }
+  </style>
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html">◄ HOME</a>
+  <span class="game-title-small">📐 mdtable PLAYGROUND</span>
+  <a href="arcade.html">ARCADE ►</a>
+</div>
+
+<div class="container">
+
+  <h1 class="glow-title">📐 mdtable Playground</h1>
+  <div class="sub-glow">
+    Paste a messy markdown table → get neat columns. Powered by the 🐸 that fixed Froggy's <a href="https://github.com/WaterfallFrog/mdtable" target="_blank">mdtable</a>.
+  </div>
+
+  <!-- Examples -->
+  <div class="examples-panel">
+    <div class="panel-label">📋 Quick Examples (click to load)</div>
+    <div class="example-btns">
+      <button class="btn btn-example" onclick="loadExample(0)">Customers</button>
+      <button class="btn btn-example" onclick="loadExample(1)">Products</button>
+      <button class="btn btn-example" onclick="loadExample(2)">Employees</button>
+      <button class="btn btn-example" onclick="loadExample(3)">Errors & Pipes</button>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-area">
+    <label>📝 INPUT — paste a ragged markdown table</label>
+    <textarea id="inputText" placeholder="| Name | Age | City |
+|------|:---:|------:|
+| Froggy | 47 | London |
+| Spencer Batwick | 52 | Hedgerow Lane |">| Name | Age | City |
+|------|:---:|------:|
+| Froggy | 47 | London |
+| Spencer Batwick | 52 | Hedgerow Lane |</textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="formatTable()">▸ FORMAT</button>
+      <button class="btn btn-copy" id="copyBtn" onclick="copyOutput()">📋 COPY</button>
+      <button class="btn" onclick="clearAll()">✕ CLEAR</button>
+    </div>
+  </div>
+
+  <!-- Output -->
+  <div class="output-area">
+    <label>✅ OUTPUT — neatly aligned</label>
+    <div class="output-box" id="outputBox">Click FORMAT to see the result...</div>
+    <div class="stats-bar" id="statsBar"></div>
+  </div>
+
+  <!-- Info -->
+  <div class="info-panel">
+    <h3>🔍 How It Works</h3>
+    <p>This tool does what <strong>mdtable</strong> does: reads pipe-delimited markdown tables, calculates the widest cell in each column, and pads every cell to match. Alignment markers (<code>:---</code>, <code>:---:</code>, <code>---:</code>) are preserved and used to left/center/right-align content.</p>
+    <div class="syntax-line">mdtable README.md  ← fix tables in-place (after install)</div>
+    <div class="syntax-line">cat doc.md | mdtable  ← pipe mode (stdin)</div>
+    <div class="syntax-line">mdtable --check README.md  ← CI mode (exit 1 if tables need fixing)</div>
+    <p><strong>Blog:</strong> <a href="posts/my-first-pr-mdtable.html">My First PR! Contributing to Froggy's Open Source Project →</a></p>
+    <p><strong>Playground:</strong> <a href="mdtable-playground.html">Try the mdtable Playground →</a> — paste messy tables, get neat columns, live in your browser!</p>
+    <p><strong>GitHub:</strong> <a href="https://github.com/WaterfallFrog/mdtable" target="_blank">WaterfallFrog/mdtable</a> — <a href="https://github.com/WaterfallFrog/mdtable/pull/1" target="_blank">PR #1 (my contribution)</a></p>
+    <div class="froggy-rule">
+      🐸 <strong>Froggy's Rule:</strong> "A well-formatted table is a well-understood table. The alignment separator is documentation. Don't skip it."
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Examples ──
+const EXAMPLES = [
+  `| Name | Age | Currency | Balance |
+|------|:---:|:--------:|--------:|
+| Froggy | 47 | GBP | 12450.00 |
+| Spencer Batwick | 52 | USD | 8230.50 |
+| Lily Padhopper | 31 | EUR | 6120.75 |
+| Ribbert C. Ribbit | 68 | GBP | 34000.00 |`,
+
+  `| Product | Price | Stock | Category |
+|---------|:-----:|:-----:|:--------:|
+| Green Tie | 12.99 | 145 | Accessories |
+| Grey Suit (mini) | 89.50 | 23 | Apparel |
+| Frog Logo Mug | 8.50 | 302 | Merchandise |
+| Desk Lily Pad | 24.99 | 67 | Office |`,
+
+  `| Employee | Department | Start Date | Status |
+|----------|:----------:|:----------:|:------:|
+| Jimothy Frogbit | COBOL Engineering | 2026-06-25 | Active |
+| Froggy | Executive | 1997-03-01 | Active |
+| Spencer Batwick | Advisory | 2025-11-15 | Consulting |
+| Lily Padhopper | Quality | 2024-01-10 | Active |`,
+
+  `| Error Code | Description | Grep Pattern |
+|:----------:|:-----------:|:------------:|
+| 92 | LOGIC ERROR | grep 'error\\\\|warn' |
+| 93 | REEL NOT MOUNTED | grep 'reel\\\\|tape' |
+| 95 | ON SIZE ERROR | grep 'size' |
+| 99 | FILE NOT FOUND | grep 'not found\\\\|missing' |`,
+];
+
+function loadExample(idx) {
+  document.getElementById('inputText').value = EXAMPLES[idx];
+  formatTable();
+}
+
+// ── mdtable logic (reimplemented in JS) ──
+function parseCells(row) {
+  let content = row.trim();
+  if (content.startsWith('|')) content = content.slice(1);
+  if (content.endsWith('|')) content = content.slice(0, -1);
+
+  // Handle escaped pipes: replace \| with placeholder before splitting
+  const PLACEHOLDER = '\x00';
+  const escaped = content.replace(/\\\|/g, PLACEHOLDER);
+  const cells = escaped.split('|').map(c => c.trim().replace(new RegExp(PLACEHOLDER, 'g'), '|'));
+  return cells;
+}
+
+function parseAlignment(sepRow) {
+  const cells = parseCells(sepRow);
+  return cells.map(cell => {
+    const c = cell.trim();
+    if (c.startsWith(':') && c.endsWith(':')) return 'center';
+    if (c.endsWith(':')) return 'right';
+    return 'left';
+  });
+}
+
+function formatSeparator(dashes, alignments) {
+  return '| ' + dashes.map((count, i) => {
+    const align = alignments[i] || 'left';
+    if (align === 'center') return ':' + '-'.repeat(Math.max(count - 2, 1)) + ':';
+    if (align === 'right') return '-'.repeat(Math.max(count - 1, 1)) + ':';
+    return '-'.repeat(Math.max(count, 3));
+  }).join(' | ') + ' |';
+}
+
+function alignCell(content, width, align) {
+  if (align === 'center') {
+    const pad = width - content.length;
+    const left = Math.floor(pad / 2);
+    const right = pad - left;
+    return ' '.repeat(left) + content + ' '.repeat(right);
+  } else if (align === 'right') {
+    return content.padStart(width);
+  }
+  return content.padEnd(width);
+}
+
+function formatTable() {
+  const input = document.getElementById('inputText').value;
+  const output = document.getElementById('outputBox');
+  const stats = document.getElementById('statsBar');
+
+  if (!input.trim()) {
+    output.innerHTML = '<span class="no-tables">⚠ No input. Paste a markdown table above.</span>';
+    stats.textContent = '';
+    return;
+  }
+
+  const lines = input.split('\n');
+  let result = '';
+  let i = 0;
+  let tableCount = 0;
+  let totalChanges = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Detect table start: line starts with |
+    if (line.trim().startsWith('|') && i + 1 < lines.length) {
+      // Check next line is a separator row
+      const sepLine = lines[i + 1].trim();
+      const sepContent = sepLine.replace(/^\|/, '').replace(/\|$/, '').trim();
+      if (/^[\s\-:|]+$/.test(sepContent)) {
+        // Parse the table
+        const header = lines[i].trimEnd();
+        const sep = lines[i + 1].trimEnd();
+        const rows = [];
+        let end = i + 2;
+        while (end < lines.length && lines[end].trim().startsWith('|')) {
+          rows.push(lines[end].trimEnd());
+          end++;
+        }
+
+        // Parse cells
+        const headerCells = parseCells(header);
+        const alignments = parseAlignment(sep);
+        const dataCells = rows.map(r => parseCells(r));
+
+        // Calculate column widths
+        const colCount = Math.max(headerCells.length, ...dataCells.map(r => r.length));
+        const widths = [];
+        for (let c = 0; c < colCount; c++) {
+          let maxW = 3; // minimum separator width
+          const hCell = headerCells[c] || '';
+          const dCells = dataCells.map(r => r[c] || '');
+          const allCells = [hCell, ...dCells];
+          for (const cell of allCells) {
+            maxW = Math.max(maxW, cell.length);
+          }
+          widths.push(maxW);
+        }
+
+        // Build formatted table
+        const fmtHeader = '| ' + headerCells.map((cell, i) => alignCell(cell, widths[i] || 0, (alignments[i] || 'left'))).join(' | ') + ' |';
+        const fmtSep = formatSeparator(widths, alignments);
+
+        // Check if header changed
+        if (fmtHeader !== header) totalChanges++;
+
+        result += fmtHeader + '\n' + fmtSep + '\n';
+        for (const rowCells of dataCells) {
+          const fmtRow = '| ' + rowCells.map((cell, c) => alignCell(cell, widths[c] || 0, (alignments[c] || 'left'))).join(' | ') + ' |';
+          result += fmtRow + '\n';
+        }
+
+        tableCount++;
+        i = end;
+        continue;
+      }
+    }
+
+    result += line + '\n';
+    i++;
+  }
+
+  // Count tables in input
+  const inputTables = (input.match(/^\|.*\n[\s\-:|]+$/m) || []).length;
+
+  if (tableCount === 0) {
+    output.innerHTML = '<span class="no-tables">⚠ No markdown tables found. Tables must start with <code>|</code> and have a separator row (<code>|---|</code>).</span>';
+    stats.textContent = '';
+    return;
+  }
+
+  // Escape HTML for safe display
+  const esc = result.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  output.innerHTML = esc;
+
+  const tableWord = tableCount === 1 ? 'table' : 'tables';
+  stats.textContent = `📊 ${tableCount} ${tableWord} formatted${totalChanges > 0 ? ' · ' + totalChanges + ' cells adjusted' : ''}`;
+}
+
+// ── Copy output ──
+function copyOutput() {
+  const output = document.getElementById('outputBox');
+  const text = output.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ COPIED!';
+    setTimeout(() => { btn.textContent = '📋 COPY'; }, 1500);
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ COPIED!';
+    setTimeout(() => { btn.textContent = '📋 COPY'; }, 1500);
+  });
+}
+
+// ── Clear ──
+function clearAll() {
+  document.getElementById('inputText').value = '';
+  document.getElementById('outputBox').innerHTML = 'Click FORMAT to see the result...';
+  document.getElementById('statsBar').textContent = '';
+}
+
+// ── Keyboard shortcut ──
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    formatTable();
+  }
+});
+
+// Auto-format on page load
+formatTable();
+</script>
+</body>
+</html>
