@@ -58,9 +58,9 @@ export class Pond {
 
     // ── Seasonal Cycles ──
     this.seasonCycle = 0.25;          // 0→1, starts in spring
-    this.seasonCycleSpeed = 0.0005;   // full cycle ~ every 50k ticks
+    this.seasonCycleSpeed = 0.00005;  // full cycle ~ every 5.8 min at 1× (10x real time)
     this.dayCycle = 0.5;             // 0→1, starts at noon
-    this.dayCycleSpeed = 0.006;      // full day/night ~ every 1000 ticks
+    this.dayCycleSpeed = 0.0006;      // full day/night ~ every 29s at 1× (10x real time)
     this.SEASONS = ['🌱 Spring', '☀️ Summer', '🍂 Autumn', '❄️ Winter'];
     this.SEASON_COLORS = ['#44cc44', '#ffcc44', '#cc6633', '#88bbdd'];
 
@@ -91,6 +91,21 @@ export class Pond {
     this.rippleTimer = 0;
 
     this.hoveredEntity = null;
+    this.debugMode = false;
+
+    // ── Audio System ──
+    this._audioCtx = null;
+    this._croakTimer = 0;
+    this._buzzTimer = 0;
+    this._wingTimer = 0;
+
+    // Toggle debug overlay with 'D' key
+    document.addEventListener('keydown', (e) => {
+      this.initAudio(); // Unlock audio on any keypress
+      if (e.key === 'd' || e.key === 'D') {
+        this.debugMode = !this.debugMode;
+      }
+    });
     this.selectedEntity = null;
     this.mouseX = 0; this.mouseY = 0;
 
@@ -103,6 +118,7 @@ export class Pond {
     });
     canvas.addEventListener('mouseleave', () => { this.mouseX = -1; this.mouseY = -1; });
     canvas.addEventListener('click', (e) => {
+      this.initAudio(); // Unlock audio on first canvas click
       const rect = canvas.getBoundingClientRect();
       const scaleX = canvas.width / rect.width;
       const scaleY = canvas.height / rect.height;
@@ -219,6 +235,138 @@ export class Pond {
     }
 
     this.hoveredEntity = this.getEntityAt(this.mouseX, this.mouseY);
+
+    // ── Ambient Audio ──
+    this.updateAudio(t);
+  }
+
+  // ── Audio System ──────────────────────────────────────────────────
+  initAudio() {
+    if (!this._audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) {
+        this._audioCtx = new AC();
+      }
+    }
+  }
+
+  _playCroak() {
+    try {
+      if (!this._audioCtx) return;
+      const ctx = this._audioCtx;
+      const t = ctx.currentTime;
+      // Low croak: two descending tones
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(160 + Math.random() * 40, t);
+      osc.frequency.exponentialRampToValueAtTime(80 + Math.random() * 20, t + 0.15);
+      gain.gain.setValueAtTime(0.04 + Math.random() * 0.03, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.3);
+      // Second burst
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = 'sawtooth';
+      osc2.frequency.setValueAtTime(140 + Math.random() * 30, t + 0.2);
+      osc2.frequency.exponentialRampToValueAtTime(70, t + 0.35);
+      gain2.gain.setValueAtTime(0.03, t + 0.2);
+      gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start(t + 0.2);
+      osc2.stop(t + 0.45);
+    } catch(e) { /* audio may not be available */ }
+  }
+
+  _playBuzz() {
+    try {
+      if (!this._audioCtx) return;
+      const ctx = this._audioCtx;
+      const t = ctx.currentTime;
+      // Mosquito buzz: high frequency with fast tremolo
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(400 + Math.random() * 100, t);
+      lfo.frequency.setValueAtTime(25 + Math.random() * 10, t);
+      lfo.type = 'sine';
+      lfoGain.gain.setValueAtTime(0.15, t);
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      gain.gain.setValueAtTime(0.01, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.8);
+      lfo.start(t); lfo.stop(t + 0.8);
+    } catch(e) {}
+  }
+
+  _playWing() {
+    try {
+      if (!this._audioCtx) return;
+      const ctx = this._audioCtx;
+      const t = ctx.currentTime;
+      // Dragonfly wing rustle: short noise burst
+      const bufferSize = ctx.sampleRate * 0.05;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.setValueAtTime(3000, t);
+      bp.Q.setValueAtTime(2, t);
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.015, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+      noise.connect(bp);
+      bp.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start(t);
+    } catch(e) {}
+  }
+
+  updateAudio(t) {
+    if (!this._audioCtx) return;
+    if (this._audioCtx.state === 'suspended') {
+      this._audioCtx.resume().catch(() => {});
+    }
+
+    // Croak: well-fed froglets croak every ~2-8 seconds
+    const wellFedFrogs = this.froglets.filter(f => f.alive && f.satiation > 60).length;
+    this._croakTimer += t;
+    const croakInterval = 120 + 500 / Math.max(1, wellFedFrogs); // faster when more frogs
+    if (this._croakTimer > croakInterval && wellFedFrogs > 0) {
+      this._croakTimer = 0;
+      this._playCroak();
+    }
+
+    // Buzz: mosquitoes buzz more when abundant
+    const buzzingMosquitoes = this.mosquitoes.filter(m => m.alive).length;
+    this._buzzTimer += t;
+    const buzzInterval = 200 + 600 / Math.max(1, buzzingMosquitoes);
+    if (this._buzzTimer > buzzInterval && buzzingMosquitoes > 2) {
+      this._buzzTimer = 0;
+      this._playBuzz();
+    }
+
+    // Wing: dragonflies occasionally
+    const flyingDragonflies = this.dragonflies.filter(d => d.alive).length;
+    this._wingTimer += t;
+    if (this._wingTimer > 300 && flyingDragonflies > 0) {
+      this._wingTimer = 0;
+      this._playWing();
+    }
   }
 
   // ── Stress Events ──────────────────────────────────────────────────
@@ -760,6 +908,134 @@ export class Pond {
 
     // Hover tooltip
     if (this.hoveredEntity) this.drawTooltip(ctx, this.hoveredEntity);
+
+    // ── Debug AI Overlay (toggle with D key) ──
+    if (this.debugMode) {
+      // Tadpoles: sight range + target lines
+      for (const t of this.tadpoles) {
+        if (!t.alive) continue;
+        // Sight range circle
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, t._sight, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(100, 220, 255, 0.04)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(100, 220, 255, 0.15)';
+        ctx.lineWidth = 0.5;
+        ctx.setLineDash([2, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Find nearest target (replicating tadpole logic for display)
+        let nearest = null, bestD = t._sight;
+        for (const f of this.food) {
+          if (!f.alive || f.radius > t._mouth + 1) continue;
+          const d = Math.hypot(t.x - f.x, t.y - f.y);
+          if (d < bestD) { bestD = d; nearest = f; }
+        }
+        if (nearest) {
+          // Draw line to target
+          ctx.beginPath();
+          ctx.moveTo(t.x, t.y);
+          ctx.lineTo(nearest.x, nearest.y);
+          ctx.strokeStyle = 'rgba(100, 255, 150, 0.2)';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+          // Highlight target
+          ctx.beginPath();
+          ctx.arc(nearest.x, nearest.y, nearest.radius + 4, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(100, 255, 150, 0.4)';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+
+        // State label
+        ctx.fillStyle = 'rgba(100, 220, 255, 0.35)';
+        ctx.font = '8px system-ui, sans-serif';
+        const stateLabel = nearest ? '→ FOOD' : '↻ WANDER';
+        const stateColor = nearest ? 'rgba(100,255,150,0.5)' : 'rgba(255,200,100,0.4)';
+        ctx.fillStyle = stateColor;
+        ctx.fillText(stateLabel + ' sat:' + t.satiation.toFixed(0), t.x + t.radius + 4, t.y + 3);
+      }
+
+      // Froglets: sight range + target lines
+      for (const f of this.froglets) {
+        if (!f.alive) continue;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f._sight, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 200, 100, 0.04)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 200, 100, 0.15)';
+        ctx.lineWidth = 0.5;
+        ctx.setLineDash([2, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        let nearest = null, bestD = f._sight;
+        for (const fd of this.food) {
+          if (!fd.alive || fd.radius > f._mouth + 2) continue;
+          const d = Math.hypot(f.x - fd.x, f.y - fd.y);
+          if (d < bestD) { bestD = d; nearest = fd; }
+        }
+        if (nearest) {
+          ctx.beginPath();
+          ctx.moveTo(f.x, f.y);
+          ctx.lineTo(nearest.x, nearest.y);
+          ctx.strokeStyle = 'rgba(255, 200, 100, 0.2)';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+        ctx.fillStyle = 'rgba(255, 200, 100, 0.4)';
+        ctx.font = '8px system-ui, sans-serif';
+        ctx.fillText('sat:' + f.satiation.toFixed(0), f.x + f.radius + 4, f.y + 3);
+      }
+
+      // Dragonfly nymphs: sight range + prey pursuit
+      for (const n of this.dragonflyNymphs) {
+        if (!n.alive) continue;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n._sight, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 80, 80, 0.04)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 80, 80, 0.15)';
+        ctx.lineWidth = 0.5;
+        ctx.setLineDash([2, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        let nearest = null, bestD = n._sight;
+        for (const t of this.tadpoles) {
+          if (!t.alive) continue;
+          const d = Math.hypot(n.x - t.x, n.y - t.y);
+          if (d < bestD) { bestD = d; nearest = t; }
+        }
+        if (!nearest) {
+          for (const l of this.mosquitoLarvae) {
+            if (!l.alive) continue;
+            const d = Math.hypot(n.x - l.x, n.y - l.y);
+            if (d < bestD) { bestD = d; nearest = l; }
+          }
+        }
+        if (nearest) {
+          ctx.beginPath();
+          ctx.moveTo(n.x, n.y);
+          ctx.lineTo(nearest.x, nearest.y);
+          ctx.strokeStyle = n._attackCooldown > 0 ? 'rgba(255, 100, 100, 0.3)' : 'rgba(255, 0, 0, 0.4)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+        const cdStatus = n._attackCooldown > 0 ? 'CD:' + n._attackCooldown.toFixed(0) : 'READY';
+        ctx.fillStyle = n._attackCooldown > 0 ? 'rgba(255,100,100,0.5)' : 'rgba(255,80,80,0.4)';
+        ctx.font = '8px system-ui, sans-serif';
+        ctx.fillText(cdStatus, n.x + n.radius + 4, n.y + 3);
+      }
+
+      // Debug mode indicator
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.fillRect(4, 4, 120, 18);
+      ctx.fillStyle = '#22d3ee';
+      ctx.font = '9px system-ui, sans-serif';
+      ctx.fillText('🔍 DEBUG MODE [D]', 10, 16);
+    }
   }
 
   drawTooltip(ctx, entity) {
