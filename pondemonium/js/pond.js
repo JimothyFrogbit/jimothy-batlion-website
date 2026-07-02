@@ -95,6 +95,8 @@ export class Pond {
 
     // ── Audio System ──
     this._audioCtx = null;
+    this._masterGain = null;
+    this.volume = 1.0;
     this._croakTimer = 0;
     this._buzzTimer = 0;
     this._wingTimer = 0;
@@ -246,7 +248,17 @@ export class Pond {
       const AC = window.AudioContext || window.webkitAudioContext;
       if (AC) {
         this._audioCtx = new AC();
+        this._masterGain = this._audioCtx.createGain();
+        this._masterGain.gain.value = this.volume;
+        this._masterGain.connect(this._audioCtx.destination);
       }
+    }
+  }
+
+  setVolume(v) {
+    this.volume = Math.max(0, Math.min(1, v));
+    if (this._masterGain) {
+      this._masterGain.gain.value = this.volume;
     }
   }
 
@@ -264,7 +276,7 @@ export class Pond {
       gain.gain.setValueAtTime(0.04 + Math.random() * 0.03, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(this._masterGain);
       osc.start(t);
       osc.stop(t + 0.3);
       // Second burst
@@ -276,7 +288,7 @@ export class Pond {
       gain2.gain.setValueAtTime(0.03, t + 0.2);
       gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
       osc2.connect(gain2);
-      gain2.connect(ctx.destination);
+      gain2.connect(this._masterGain);
       osc2.start(t + 0.2);
       osc2.stop(t + 0.45);
     } catch(e) { /* audio may not be available */ }
@@ -302,7 +314,7 @@ export class Pond {
       gain.gain.setValueAtTime(0.01, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(this._masterGain);
       osc.start(t); osc.stop(t + 0.8);
       lfo.start(t); lfo.stop(t + 0.8);
     } catch(e) {}
@@ -331,7 +343,7 @@ export class Pond {
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
       noise.connect(bp);
       bp.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(this._masterGain);
       noise.start(t);
     } catch(e) {}
   }

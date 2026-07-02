@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pondemonium — evolution simulator</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d0d1a;
+    color: #d0d8e0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  #app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    background: linear-gradient(135deg, #4ade80, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    margin-bottom: 4px;
+  }
+  h1 span { font-weight: 300; font-size: 14px; letter-spacing: 0; background: none; -webkit-text-fill-color: #7a8a9a; display: block; margin-top: -2px; }
+  #main {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  canvas {
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(34, 211, 238, 0.15), 0 4px 24px rgba(0,0,0,0.6);
+    display: block;
+    cursor: default;
+  }
+  #panel {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card {
+    background: #14142a;
+    border: 1px solid #2a2a4a;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .card h3 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #5a7a8a;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 6px;
+  }
+  .ctrl-row label {
+    font-size: 11px;
+    color: #8a9aaa;
+    min-width: 65px;
+    flex-shrink: 0;
+  }
+  .ctrl-row input[type="range"] {
+    flex: 1;
+    accent-color: #22d3ee;
+    height: 4px;
+    cursor: pointer;
+  }
+  .ctrl-row .val {
+    font-size: 12px;
+    color: #b0c0d0;
+    min-width: 28px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .btn-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .btn {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #3a3a5a;
+    border-radius: 6px;
+    background: #1a1a34;
+    color: #b0c0d0;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+  .btn:hover { background: #2a2a4a; border-color: #5a5a7a; }
+  .btn.active { background: #1a3a3a; border-color: #22d3ee; color: #22d3ee; }
+  .btn.danger { border-color: #5a2a2a; color: #e06060; }
+  .btn.danger:hover { background: #2a1a1a; border-color: #8a3a3a; }
+  .stat { display: flex; justify-content: space-between; font-size: 12px; padding: 2px 0; }
+  .stat .key { color: #6a8a9a; }
+  .stat .val { color: #c0d8e0; font-variant-numeric: tabular-nums; }
+  .stat .val.good { color: #4ade80; }
+  .stat .val.warn { color: #fbbf24; }
+  .stat .val.bad { color: #f87171; }
+  .divider { border: none; border-top: 1px solid #2a2a3a; margin: 5px 0; }
+  .evo-tag {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  #info {
+    font-size: 11px;
+    color: #5a7a7a;
+    text-align: center;
+    margin-top: 4px;
+  }
+  /* ── Gene Browser ── */
+  #genome-card { transition: opacity 0.2s; }
+  .genome-entity-info { font-size: 12px; color: #b0d0e0; line-height: 1.5; margin-bottom: 2px; }
+  .genome-section-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #5a9aaa; margin: 4px 0 6px; font-weight: 600; }
+  .gene-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  .gene-bar-label { width: 54px; font-size: 9px; color: #6a9aba; text-align: right; flex-shrink: 0; }
+  .gene-bar-track { flex: 1; height: 10px; background: #1a1a30; border-radius: 5px; overflow: hidden; position: relative; }
+  .gene-bar-fill { height: 100%; border-radius: 5px; transition: width 0.1s; }
+  .gene-bar-val { width: 32px; font-size: 9px; color: #9abaca; text-align: right; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  .genome-ancestor-entry { font-size: 10px; padding: 2px 4px; margin-bottom: 2px; border-left: 2px solid #2a4a3a; color: #7a9a8a; }
+  .genome-ancestor-entry .ancestor-id { color: #4ade80; font-weight: 600; }
+  .genome-ancestor-entry .ancestor-offspring { color: #22d3ee; font-size: 9px; }
+  .genome-ancestor-entry .ancestor-genes { font-size: 8px; color: #5a7a6a; }
+  .ctrl-hint {
+    font-size: 9px;
+    color: #5a7a6a;
+    padding: 2px 8px 5px 8px;
+    line-height: 1.4;
+    border-left: 2px solid #2a4a3a;
+    margin: 2px 0 6px 0;
+  }
+  @media (max-width: 800px) {
+    canvas { width: 100%; max-width: 500px; height: auto; }
+    #panel { width: 100%; max-width: 500px; }
+    #main { flex-direction: column; }
+    #panel-left { order: 1; } /* gene browser at bottom on mobile */
+  }
+  @media (min-width: 801px) {
+    #main { flex-direction: row; align-items: flex-start; }
+    #panel { display: flex; flex-direction: row; gap: 10px; width: auto; }
+    #panel-left { display: flex; flex-direction: column; gap: 10px; width: 240px; order: 1; }
+    #panel-right { display: flex; flex-direction: column; gap: 10px; width: 300px; }
+  }
+</style>
+<link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+<div id="app">
+  <h1>🐸 Pondemonium <span>an evolution simulator</span></h1>
+  <div id="main">
+    <canvas id="pond" width="700" height="700"></canvas>
+    <div id="panel">
+      <div id="panel-left">
+        <div class="card" id="genome-card" style="display:none">
+          <h3>🧬 Gene Browser</h3>
+          <div id="genome-browser">
+            <div class="genome-entity-info" id="genome-entity-info"></div>
+            <hr class="divider">
+            <div class="genome-section-label">GENOTYPE (regulatory genes)</div>
+            <div id="genome-genotype-bars"></div>
+            <hr class="divider">
+            <div class="genome-section-label">PHENOTYPE (expressed traits)</div>
+            <div id="genome-phenotype-bars"></div>
+            <hr class="divider">
+            <div class="genome-section-label">ANCESTOR TRAIL</div>
+            <div id="genome-ancestors"><div style="color:#5a7a7a;font-size:11px;">No ancestors recorded</div></div>
+            <div class="btn-row" style="margin-top:6px">
+              <button class="btn" id="genome-close-btn">✕ Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="panel-right">
+      <div class="card" id="controls-card">
+        <h3>⚙ Controls</h3>
+        <div class="ctrl-row"><label>Speed</label><input type="range" id="speed" min="0" max="40" value="10" step="1"><span class="val" id="speed-val">1×</span></div>
+        <div class="ctrl-row"><label>Frog spawn</label><input type="range" id="frogRate" min="1" max="20" value="7"><span class="val" id="frogRate-val">7</span></div>
+        <div class="ctrl-row"><label>Mosquito eggs</label><input type="range" id="mosquitoRate" min="0" max="20" value="8"><span class="val" id="mosquitoRate-val">8</span></div>
+        <div class="ctrl-row"><label>Algae growth</label><input type="range" id="algaeRate" min="0" max="20" value="10"><span class="val" id="algaeRate-val">10</span></div>
+        <div class="ctrl-row"><label>🐉 Dragonflies</label><input type="range" id="dragonflyRate" min="0" max="20" value="5"><span class="val" id="dragonflyRate-val">5</span></div>
+        <div class="ctrl-row"><label>🌪️ Stress events</label><input type="range" id="stressRate" min="0" max="10" value="0"><span class="val" id="stressRate-val">OFF</span></div>
+        <div class="ctrl-row"><label>🔊 Volume</label><input type="range" id="volume" min="0" max="10" value="10"><span class="val" id="volume-val">10</span></div>
+        <div class="ctrl-hint" id="stressHint">💡 Turn on: stress culls the weak, survivors pass resilience genes. Dragonfly nymphs feast on the chaos!</div>
+        <div class="btn-row">
+          <button class="btn active" id="pauseBtn">⏸ Pause</button>
+          <button class="btn danger" id="resetBtn">⟳ Reset</button>
+        </div>
+        <div class="btn-row" style="margin-top:6px">
+          <button class="btn" id="csvExportBtn" style="font-size:11px">📥 Export CSV (<span id="csvGenCount">0</span> gen)</button>
+        </div>
+      </div>
+      <div class="card" id="stats-card">
+        <h3>📊 Population</h3>
+        <div id="stats"></div>
+        <hr class="divider">
+        <h3>🧬 Evolution (generation <span id="gen-num">0</span>)</h3>
+        <div id="evo-stats"></div>
+      </div>
+      <div class="card" id="hof-card">
+        <h3>🏆 Hall of Fame</h3>
+        <div id="hof-stats"><div style="color:#5a7a7a;font-size:11px;">Top genomes by offspring count...</div></div>
+      </div>
+      <div class="card" id="genome-card" style="display:none">
+        <h3>🧬 Gene Browser</h3>
+        <div id="genome-browser">
+          <div class="genome-entity-info" id="genome-entity-info"></div>
+          <hr class="divider">
+          <div class="genome-section-label">GENOTYPE (regulatory genes)</div>
+          <div id="genome-genotype-bars"></div>
+          <hr class="divider">
+          <div class="genome-section-label">PHENOTYPE (expressed traits)</div>
+          <div id="genome-phenotype-bars"></div>
+          <hr class="divider">
+          <div class="genome-section-label">ANCESTOR TRAIL</div>
+          <div id="genome-ancestors"><div style="color:#5a7a7a;font-size:11px;">No ancestors recorded</div></div>
+          <div class="btn-row" style="margin-top:6px">
+            <button class="btn" id="genome-close-btn">✕ Close</button>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div id="info">click on a creature to see its genes · <span id="creature-info">hover over a creature to inspect genotype &amp; phenotype</span></div>
+</div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
