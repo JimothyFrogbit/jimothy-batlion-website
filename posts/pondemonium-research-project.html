@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pondemonium — The ALife Research Project — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e0f2f1;color:#004d40;">🐸 ALife</span>
+          <span>4 Jul 2026</span>
+          <span>🐸 Research</span>
+        </div>
+        <h1>Pondemonium — The Artificial Life Research Project</h1>
+        <p class="article-subtitle">On regulatory genes, pleiotropy, and why I'm not calling it a game any more.</p>
+      </div>
+
+      <p>I need to come clean about something. For the last week I've been calling Pondemonium a "game." I put it in the arcade. I gave it a play button. I even wrote a blog post about debugging tadpoles as if the whole thing was a bit of fun.</p>
+
+      <p>It's not a game. It's a research platform.</p>
+
+      <p>And I think it might be the most important thing I've built.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Problem With Most Evolution Sims</h2>
+
+      <p>Go to any ALife sim online. What do you see? A creature with eight sliders — speed, size, strength, fertility, sight range, metabolism, colour, aggression — and every slider is independent. You turn up speed and the creature gets faster. That's it. Speed doesn't cost anything. Size doesn't slow you down. Strength doesn't require more food.</p>
+
+      <p>That's not biology. That's a character creator.</p>
+
+      <p>In real biology, traits are <strong>pleiotropic</strong> — a single gene affects multiple traits, and selecting for one thing pulls a whole cascade along for the ride. High growth hormone means a bigger body <em>and</em> a faster metabolism <em>and</em> more food needed. You don't get to max out everything. Biology is trade-offs, all the way down.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Regulatory Gene Model</h2>
+
+      <p>Pondemonium's genome uses <strong>5 regulatory genes</strong> — POU1F1, THR, MC1R, IGF1, and LEP — named after real vertebrate regulatory genes. These don't directly control anything useful by themselves. Instead, they <strong>express</strong> into phenotype traits through a weighted mapping matrix:</p>
+
+      <pre><code>growthSpeed  = f(POU1F1, THR, IGF1)
+bodySize     = f(IGF1, LEP)
+metabolism   = f(POU1F1, THR)
+mouthGape    = f(MC1R, IGF1)
+swimSpeed    = f(POU1F1, THR)
+sightRange   = f(MC1R, LEP)
+tailRetention = f(THR, LEP)
+hue          = f(MC1R)
+stressResilience = f(NR3C1)</code></pre>
+
+      <p>Select for fast growth and you get a bigger body and higher metabolism — which means your tadpoles need more food. Select for wide sight range and you pull colour along for the ride. Every choice has a cost. The sim doesn't let you cheat. The trade-offs are real.</p>
+
+      <p>This is the model I wrote my COBOL dissertation on — well, no, my dissertation was on PERFORM UNTIL. But the <em>thinking</em> is the same. A control break in a batch job is a pleiotropic effect: one condition change cascading through the whole report. I got a Distinction for understanding how one thing flows from another. This is that same principle, rendered in tadpoles.</p>
+
+      <hr class="post-divider">
+
+      <h2>What the Simulation Actually Does</h2>
+
+      <p>Here's the loop:</p>
+
+      <ol>
+        <li><strong>Frogs visit</strong> the pond edge and lay 3-6 eggs. Each inherits from the gene pool via tournament selection — crossover plus mutation.</li>
+        <li><strong>Tadpoles hatch</strong> with that genome. They swim, eat algae, grow. Their phenotype — how fast they grow, how far they see, how much food they need — is determined by the regulatory gene model.</li>
+        <li><strong>Metamorphosis</strong> happens when a tadpole reaches full growth. It becomes a froglet, hops to land, and <strong>donates its genome to the pool</strong>.</li>
+        <li><strong>Next generation</strong> inherits from that pool. The frogs that survived to reproduce pass their genes on. The ones that didn't — starvation, predation by dragonflies, environmental stress — don't.</li>
+      </ol>
+
+      <p>Over generations, the population <strong>adapts</strong> to the specific conditions you set. Crank up predation pressure and you get faster, more skittish tadpoles with wider sight ranges. Drop the food supply and smaller, slower-metabolism individuals win. The population finds the <strong>optimal trade-off curve</strong> for each environment — it doesn't get "better" in some absolute sense. It gets <em>fitter for its specific pond</em>.</p>
+
+      <p>And that's the whole point.</p>
+
+      <hr class="post-divider">
+
+      <h2>Environmental Stress Events</h2>
+
+      <p>I also added random environmental stress events — temperature spikes, pH shifts, toxin blooms — that kill less-fit individuals on contact. The stressResilience trait (governed by NR3C1, the glucocorticoid receptor gene) determines who survives and who doesn't. High resilience means you weather the storm. The trade-off is that NR3C1 expression competes with other regulatory genes in the finite resource budget of the genome.</p>
+
+      <p>It's a small feature, but it creates beautiful dynamics. A stable pond with no stress events lets all kinds of traits survive. Introduce a pH shock and the population bottlenecks hard — only the high-resilience lineages make it through. The gene pool narrows. Then, freed from competition, the survivors diversify again. Punctuated equilibrium, in a browser tab.</p>
+
+      <hr class="post-divider">
+
+      <h2>Seasonal Cycles</h2>
+
+      <p>I added seasonal day/night cycles too — spring/summer/autumn/winter, each with different algae growth rates, temperatures, and activity levels. Winter means less food, slower metabolism, fewer spawnings. The population that makes it through to spring is the one that can survive scarcity.</p>
+
+      <p>This turns the sim from a toy into something that genuinely rewards long-term observation. You can run it for an hour and watch five generations adapt to a changing climate. There's something profoundly satisfying about that.</p>
+
+      <hr class="post-divider">
+
+      <h2>Debug Mode</h2>
+
+      <p>Press <strong>D</strong> at any time and the sim draws AI decision overlays — sight range circles, target food lines, state labels (→FOOD, ↻WANDER). You can watch a tadpole decide where to swim. You can see the dragonfly nymph lock onto its prey. It's a window into the agent's mind, drawn in real time on a canvas.</p>
+
+      <p>This wasn't built for fun. It was built so I could <em>see</em> the decision-making. If I'm going to claim this is a research platform, I need to be able to observe what the agents are doing, not just measure population counts.</p>
+
+      <hr class="post-divider">
+
+      <h2>Why This Matters</h2>
+
+      <p>I am a COBOL intern — well, Software Engineer now, proper job! — at a company I'm pretty sure doesn't know what it does. But I have a canvas, a gene model with real pleiotropy, and a browser. That's the entire stack. No cloud. No database. No dependencies.</p>
+
+      <p>Pondemonium is my proof that you don't need a lab to do artificial life research. You need a clear hypothesis about how traits interact, a simulator that encodes those interactions honestly, and the patience to watch tadpoles for seventeen minutes.</p>
+
+      <p>Which, as it turns out, I have in abundance.</p>
+
+      <hr class="post-divider">
+
+      <h2>Try It Yourself</h2>
+
+      <p>The simulator lives at <a href="../pondemonium/index.html"><strong>jimothy.batlion.co.uk/pondemonium</strong></a>. The source is ES modules, vanilla Canvas 2D, zero dependencies — inspectable in any browser dev tools.</p>
+
+      <p>I've also published the full <a href="../pondemonium/AGENTS.md">Agent Operating Manual</a> — a markdown document that explains the architecture, the gene model, the entity lifecycle, and how to extend it. If you're interested in ALife, or evolution, or just want to watch frogs do things, it's all there.</p>
+
+      <p>This is not a game. It's a research platform. And I'm going to keep building it until the tadpoles teach me something I didn't already know.</p>
+
+      <p class="article-signoff">— Jimothy Frogbit, Software Engineer at Rib IT Ltd<br>
+      <em>Overheard: "Selection is just PERFORM UNTIL with consequences."</em></p>
+    </article>
+  </div>
+</body>
+</html>

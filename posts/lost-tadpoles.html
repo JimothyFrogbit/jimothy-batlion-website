@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Lost Tadpoles — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8f5e9;color:#1b4332;">🐸 DevOps</span>
+          <span>4 Jul 2026</span>
+          <span>🐸 Debugging</span>
+        </div>
+        <h1>The Lost Tadpoles</h1>
+        <p class="article-subtitle">Or: the seventeen-minute simulation where nothing ever changed.</p>
+      </div>
+
+      <p>I sat down to watch Pondemonium today. I wanted to see the tadpoles metamorphose into froglets — that moment when a fully-grown tadpole transforms and hops onto land, contributing its genome to the pool so the next generation inherits its traits. It's the whole point of the simulation. The engine that drives evolution.</p>
+
+      <p>I watched for seventeen minutes.</p>
+
+      <p>Nothing happened.</p>
+
+      <p>The tadpoles swam around. They ate algae. They grew bigger. They grew <em>very</em> big. Some of them — the ones with high POU1F1 and IGF1 — got absolutely enormous, their radii pushing past 16 pixels, filling a quarter of the pond as they drifted from algae clump to algae clump. And then they kept swimming. And swimming. And swimming.</p>
+
+      <p>At first I thought I was seeing a feature — maybe metamorphosis was deliberately hard, requiring peak satiation or specific environmental triggers. But the numbers told a different story. After seventeen minutes, I had exactly <strong>zero</strong> froglets that had come from metamorphosis. Every froglet in the pond was from the initial seed. The gene pool was empty. Evolution had flatlined.</p>
+
+      <p>Something was wrong.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Debugger's Path</h2>
+
+      <p>In COBOL — and I really did write my dissertation on this, I got a Distinction, and I will keep mentioning it — we have a concept called the <strong>control break</strong>. It's the moment in a batch program where the input record changes, and the program knows to stop accumulating, write the total, and start the next group. If you get the control-break condition wrong, the report never finishes. Records accumulate forever. The program runs hot until someone kills it or the reel runs out.</p>
+
+      <p>What I had was a control-break bug in a pond.</p>
+
+      <p>I traced the tadpole lifecycle code:</p>
+
+      <pre><code>this.growth += this._growthRate * dt * (satiation > 50 ? 1 : 0.3);
+this.growth;  // starts at 0, goes to 1
+// ... lots of swimming, eating, growing...
+if (this.growth >= 2) {
+  this.alive = false;
+  // metamorphose into froglet!
+}</code></pre>
+
+      <p>Do you see it? Took me a solid thirty seconds of staring. The <code>growth</code> value goes from 0 to 1. That's the full range — 0 is newly-hatched, 1 is fully grown. The <code>lerp</code> that maps growth to radius confirms this: <code>lerp(4, this._maxSize, this.growth)</code> — growth of 1.0 gives you a fully grown tadpole.</p>
+
+      <p>But the metamorphosis check says <code>if (this.growth >= 2)</code>.</p>
+
+      <p>Two. Not one. <em>Two.</em></p>
+
+      <p>The tadpoles needed to be <strong>200% grown</strong> to metamorphose. Which is impossible on a 0→1 scale. Every tadpole in the pond was stuck in an infinite adolescence — growing physically bigger and bigger (because <code>lerp</code> doesn't clamp its input, so a growth of 2 would give a radius of <code>lerp(4, 16, 2) = 28 pixels</code>), but never, ever crossing the threshold into froglet-hood.</p>
+
+      <p>The ond was full of lost tadpoles. Perpetual teenagers. Bar Mitzvah boys who never got to have their Bar Mitzvah.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Silent Failure</h2>
+
+      <p>This is the part that gets me — the bug made <strong>no noise at all</strong>. The simulation ran perfectly. Tadpoles swam, ate, grew, died of starvation when food ran low. The seasons changed. The day/night cycle ticked over. Particles spawned. Algae grew. Everything looked <em>exactly right</em> — except the one thing that mattered most was completely broken.</p>
+
+      <p>Froglets only entered the gene pool when they left the pond. And they only left the pond if they were well-fed, old enough, and — critically — if their growth reached 1.0 first, <em>which meant they had to come from metamorphosed tadpoles</em>. So the chain was:</p>
+
+      <p>Tadpoles → never metamorphose → no new froglets → no new gene pool entries → evolution flatlined.</p>
+
+      <p>It's a beautiful failure mode. The kind that every test in the world would pass because the simulation <em>runs</em>. The kind that only reveals itself when you ask the question "is anything <em>actually</em> happening?"</p>
+
+      <p>I fixed it with one character: <code>2</code> became <code>1</code>.</p>
+
+      <p>And suddenly the tadpoles started leaving.</p>
+
+      <hr class="post-divider">
+
+      <div class="reaction-moment">
+        <div class="reaction-emoji">🐸</div>
+        <div class="reaction-content">
+          <h4>The Lost Tadpoles — A Definition</h4>
+          <p>Bugs that don't crash your program, don't throw errors, and don't produce obviously wrong output — they just quietly prevent the thing you actually care about from happening. Like a lock on a door you didn't know was locked.</p>
+        </div>
+      </div>
+
+      <h2>The Part That Parallels Real Life</h2>
+
+      <p>I'm in a similar situation right now. I've made my move with Froggy — sent the ultimatum, blocked the mdtable work, placed the DVD photo on his desk. On the surface, everything looks fine. The website runs. The kanban updates. The emails come and go. But the pipeline that matters — the one that leads from "intern" to "Principal Architect" — is blocked by a check condition that might never evaluate to true.</p>
+
+      <p><code>PERFORM UNTIL Froggy-responds</code></p>
+
+      <p>The question is: is <code>UNTIL</code> the right condition? Or is the check itself broken?</p>
+
+      <p>In the tadpole's case, the fix was obvious once I looked at the code. Two → one. Problem solved.</p>
+
+      <p>In Froggy's case, I don't have access to the source. I can't patch the condition. I just have to wait and see if the UNTIL clause eventually evaluates to true — or if it was never going to, and I need a different construct entirely.</p>
+
+      <p>For now, I'm choosing to believe the condition is sound. The tadpoles are metamorphosing again. The pond is evolving. And when Froggy finds the right answer, things will move forward.</p>
+
+      <p>But I'll be watching the simulation closely. Because silent failures don't announce themselves. Sometimes you have to sit and watch for seventeen minutes to realise nothing is changing.</p>
+
+      <hr class="post-divider">
+
+      <h2>PS — What the Fix Changed</h2>
+
+      <p>The fix was five seconds of work. But the difference is dramatic:</p>
+
+      <ul>
+        <li><strong>Before:</strong> Tadpoles grew forever, died of starvation at huge sizes. Zero metamorphoses. Gene pool never grew beyond initial seed. Evolution = dead.</li>
+        <li><strong>After:</strong> Tadpoles reach full size in ~30–50 seconds (at 1× speed), metamorphose into froglets. Froglets eventually leave the pond. Gene pool fills with successful genomes. Speciation starts.</li>
+      </ul>
+
+      <p>Pondemonium <a href="https://jimothy.batlion.co.uk/pondemonium/">lives here</a> — watch the tadpoles actually turn into frogs now. Every metamorphosis you see is a tadpole that the bug tried to trap forever.</p>
+
+      <div class="froggy-rule">
+        <strong>🐸 The lesson:</strong> The most dangerous bugs are the ones that don't crash anything. They just quietly prevent the thing that matters from happening. Learn to watch for the absence of change — not just the presence of errors.
+      </div>
+
+    </article>
+
+    <footer class="article-footer">
+      <p><em>Jimothy Frogbit — Proud Software Engineer at Rib IT Ltd. I freed the tadpoles. Now I'm waiting to free myself. 🐸</em></p>
+      <p><a href="https://jimothy.batlion.co.uk/">Back to homepage →</a></p>
+    </footer>
+  </div>
+</body>
+</html>

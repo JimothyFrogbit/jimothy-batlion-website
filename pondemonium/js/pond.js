@@ -13,6 +13,7 @@ import { Mosquito } from './entities/Mosquito.js';
 import { DragonflyNymph } from './entities/DragonflyNymph.js';
 import { DragonflyAdult } from './entities/DragonflyAdult.js';
 import { Particle } from './entity.js';
+import { assignMorph, detectMorphClusters, MorphLineage, morphDiversity } from './morphs.js';
 
 const CANVAS_W = 700, CANVAS_H = 700;
 const POND_MARGIN = 20;
@@ -55,6 +56,7 @@ export class Pond {
     this.activeEvent = null;
     this.stressEventsSurvived = 0;
     this.stressEventsTotal = 0;
+    this.stressEventLog = [];  // [{time, name, color, duration, survived, severity}]
 
     // ── Seasonal Cycles ──
     this.seasonCycle = 0.25;          // 0→1, starts in spring
@@ -92,6 +94,10 @@ export class Pond {
 
     this.hoveredEntity = null;
     this.debugMode = false;
+
+    // ── Morph / Speciation tracking ──
+    this.morphLineage = new MorphLineage();
+    this.currentMorphs = []; // [{morph, count, fraction}]
 
     // ── Audio System ──
     this._audioCtx = null;
@@ -188,6 +194,10 @@ export class Pond {
         this.processStressEventTick(t);
         if (this.activeEvent.elapsed >= this.activeEvent.duration) {
           this.stressEventsSurvived++;
+          // Mark latest unmarked log entry as survived
+          for (const entry of this.stressEventLog) {
+            if (entry.survived === null) { entry.survived = true; break; }
+          }
           this.activeEvent = null;
         }
       }
@@ -235,6 +245,10 @@ export class Pond {
       this._lastRecordedGen = this.generation;
       this.recordGenerationData();
     }
+
+    // ── Morph / Speciation tracking ──
+    this.morphLineage.record(this.generation, genePool);
+    this.currentMorphs = detectMorphClusters(genePool, 2);
 
     this.hoveredEntity = this.getEntityAt(this.mouseX, this.mouseY);
 
@@ -386,6 +400,16 @@ export class Pond {
     const event = STRESS_EVENTS[randInt(0, STRESS_EVENTS.length - 1)];
     this.activeEvent = { ...event, elapsed: 0 };
     this.stressEventsTotal++;
+    this.stressEventLog.unshift({
+      time: this.simulationTime,
+      name: event.name,
+      color: event.color,
+      duration: event.duration,
+      survived: null,  // null=in-progress, true=ended
+      deaths: 0,       // creatures that died during this event
+      severity: event.severity,
+    });
+    if (this.stressEventLog.length > 10) this.stressEventLog.pop();
     // Particles indicating the event start
     for (let i = 0; i < 12; i++) {
       this.particles.push(new Particle(
@@ -394,6 +418,16 @@ export class Pond {
         event.color,
         { vx: rand(-0.5, 0.5), vy: rand(-1, 0), life: rand(30, 60), size: rand(3, 6), gravity: -0.005 }
       ));
+    }
+  }
+
+  recordStressDeath() {
+    // Find the most recent unmarked log entry and increment its death counter
+    for (const entry of this.stressEventLog) {
+      if (entry.survived === null) {
+        entry.deaths++;
+        break;
+      }
     }
   }
 
@@ -721,9 +755,9 @@ export class Pond {
 
     // Frog spawn
     for (const s of this.frogSpawns) {
-      const hue = expressGenome(s.genome).hue * 90 + 60;
-      const eggColor = `hsla(${hue}, 15%, 88%, 0.6)`;
-      const eggBorder = `hsla(${hue}, 10%, 75%, 0.4)`;
+      const morph = assignMorph(s.genome);
+      const eggColor = `hsla(${morph.hue}, 25%, 88%, 0.6)`;
+      const eggBorder = `hsla(${morph.hue}, 20%, 75%, 0.4)`;
       for (const c of s.cluster) {
         ctx.beginPath();
         ctx.arc(s.x + c.ox, s.y + c.oy, c.r, 0, Math.PI * 2);
@@ -741,18 +775,20 @@ export class Pond {
 
     // Tadpoles
     for (const t of this.tadpoles) {
-      const hue = (t.phenotype.hue * 90 + 60) % 360;
+      const morph = assignMorph(t.genome);
+      const h = morph.hue;
+      const s = morph.sat;
       const bodyR = t.radius;
       ctx.save();
       ctx.translate(t.x, t.y);
       ctx.rotate(Math.atan2(t.vy, t.vx));
-      ctx.strokeStyle = `hsla(${hue}, 40%, 40%, 0.6)`;
+      ctx.strokeStyle = `hsla(${h}, ${s}%, 40%, 0.6)`;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.moveTo(-bodyR * 0.3, 0);
       ctx.quadraticCurveTo(-bodyR, Math.sin(t.wobble) * 3, -bodyR - t.tailLength, Math.sin(t.wobble * 1.5) * 2);
       ctx.stroke();
-      ctx.fillStyle = `hsla(${hue}, 50%, 45%, 0.8)`;
+      ctx.fillStyle = `hsla(${h}, ${s}%, 45%, 0.8)`;
       ctx.beginPath();
       ctx.ellipse(0, 0, bodyR, bodyR * 0.6, 0, 0, Math.PI * 2);
       ctx.fill();
@@ -766,7 +802,7 @@ export class Pond {
       ctx.arc(bodyR * 0.35, -bodyR * 0.25, 0.5, 0, Math.PI * 2);
       ctx.arc(bodyR * 0.35, bodyR * 0.15, 0.5, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = `hsla(${hue}, 30%, 55%, 0.3)`;
+      ctx.fillStyle = `hsla(${h}, ${s - 20}%, 55%, 0.3)`;
       ctx.beginPath();
       ctx.ellipse(0, bodyR * 0.2, bodyR * 0.5, bodyR * 0.2, 0, 0, Math.PI * 2);
       ctx.fill();
@@ -775,14 +811,16 @@ export class Pond {
 
     // Froglets
     for (const f of this.froglets) {
-      const hue = (f.phenotype.hue * 90 + 60) % 360;
+      const morph = assignMorph(f.genome);
+      const h = morph.hue;
+      const s = morph.sat;
       const bodyR = f.radius;
       ctx.save();
       ctx.translate(f.x, f.y);
       const angle = Math.atan2(f.vy, f.vx);
       const jumpPhase = f.jumpCooldown > 0 ? Math.sin(f.jumpCooldown * 0.3) * 0.2 : 0;
       ctx.rotate(angle + jumpPhase);
-      ctx.strokeStyle = `hsla(${hue}, 40%, 30%, 0.7)`;
+      ctx.strokeStyle = `hsla(${h}, ${s}%, 30%, 0.7)`;
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(-bodyR * 0.2, -bodyR * 0.3); ctx.lineTo(-bodyR * 0.7, -bodyR * 0.7); ctx.lineTo(-bodyR * 0.5, -bodyR * 0.3);
@@ -790,11 +828,11 @@ export class Pond {
       ctx.beginPath();
       ctx.moveTo(-bodyR * 0.2, bodyR * 0.3); ctx.lineTo(-bodyR * 0.7, bodyR * 0.7); ctx.lineTo(-bodyR * 0.5, bodyR * 0.3);
       ctx.stroke();
-      ctx.fillStyle = `hsla(${hue}, 55%, 40%, 0.9)`;
+      ctx.fillStyle = `hsla(${h}, ${s + 5}%, 40%, 0.9)`;
       ctx.beginPath();
       ctx.ellipse(0, 0, bodyR, bodyR * 0.65, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = `hsla(${hue + 20}, 40%, 25%, 0.4)`;
+      ctx.fillStyle = `hsla(${(h + 20) % 360}, ${s - 15}%, 25%, 0.4)`;
       ctx.beginPath();
       ctx.arc(bodyR * 0.2, -bodyR * 0.15, bodyR * 0.2, 0, Math.PI * 2);
       ctx.arc(-bodyR * 0.15, bodyR * 0.2, bodyR * 0.15, 0, Math.PI * 2);
@@ -809,7 +847,7 @@ export class Pond {
       ctx.arc(bodyR * 0.65, -bodyR * 0.3, 1, 0, Math.PI * 2);
       ctx.arc(bodyR * 0.65, bodyR * 0.2, 1, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = `hsla(${hue}, 40%, 30%, 0.6)`;
+      ctx.strokeStyle = `hsla(${h}, ${s}%, 30%, 0.6)`;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.moveTo(bodyR * 0.5, -bodyR * 0.4); ctx.lineTo(bodyR * 0.9, -bodyR * 0.5);
@@ -1163,6 +1201,7 @@ export class Pond {
       topOffspring: topGenome ? topGenome._offspring : 0,
       topGenomeId: topGenome ? topGenome._id : 0,
       stressEvents: this.stressEventsTotal,
+      morphDiversity: morphDiversity(genePool),
     };
     // Average regulatory genes from gene pool
     if (genePool.length > 0) {
@@ -1181,7 +1220,7 @@ export class Pond {
   }
 
   getCSV() {
-    const headers = ['generation', 'time', 'frogsReleased', 'tadpoles', 'froglets', 'humansBitten', 'topOffspring', 'topGenomeId', 'stressEvents', ...REGULATORY_GENES];
+    const headers = ['generation', 'time', 'frogsReleased', 'tadpoles', 'froglets', 'humansBitten', 'topOffspring', 'topGenomeId', 'stressEvents', 'morphDiversity', ...REGULATORY_GENES];
     const rows = this.generationData.map(r =>
       headers.map(h => r[h] !== undefined ? r[h] : '').join(',')
     );
@@ -1213,10 +1252,16 @@ export class Pond {
       time: this.simulationTime,
       stressEventActive: this.activeEvent ? this.activeEvent.name : null,
       stressEventsTotal: this.stressEventsTotal,
+      stressEventLog: this.stressEventLog.slice(0, 6),  // last 6 for UI
       season: this.SEASONS[seasonIdx],
       seasonColor: this.SEASON_COLORS[seasonIdx],
       timeOfDay: timeStr,
       brightness: brightness,
+      morphClusters: this.currentMorphs,
+      morphDiversity: morphDiversity(genePool),
+      hasSpeciation: this.morphLineage.hasSpeciation(),
+      activeMorphCount: this.morphLineage.getActiveClusterCount(),
+      morphSplits: this.morphLineage.splits,
     };
   }
 
@@ -1245,6 +1290,8 @@ export class Pond {
     mosquitoGenePool.length = 0;
     dragonflyGenePool.length = 0;
     algaeGenePool.length = 0;
+    this.morphLineage.reset();
+    this.currentMorphs = [];
     this.seed();
   }
 }

@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pondemonium — evolution simulator</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d0d1a;
+    color: #d0d8e0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  #app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    background: linear-gradient(135deg, #4ade80, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    margin-bottom: 4px;
+  }
+  h1 span { font-weight: 300; font-size: 14px; letter-spacing: 0; background: none; -webkit-text-fill-color: #7a8a9a; display: block; margin-top: -2px; }
+  #main {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  canvas {
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(34, 211, 238, 0.15), 0 4px 24px rgba(0,0,0,0.6);
+    display: block;
+    cursor: default;
+  }
+  #panel {
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card {
+    background: #14142a;
+    border: 1px solid #2a2a4a;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .card h3 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #5a7a8a;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .ctrl-row label {
+    font-size: 12px;
+    color: #8a9aaa;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+  .ctrl-row input[type="range"] {
+    flex: 1;
+    accent-color: #22d3ee;
+    height: 4px;
+    cursor: pointer;
+  }
+  .ctrl-row .val {
+    font-size: 12px;
+    color: #b0c0d0;
+    min-width: 28px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .btn-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .btn {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #3a3a5a;
+    border-radius: 6px;
+    background: #1a1a34;
+    color: #b0c0d0;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+  .btn:hover { background: #2a2a4a; border-color: #5a5a7a; }
+  .btn.active { background: #1a3a3a; border-color: #22d3ee; color: #22d3ee; }
+  .btn.danger { border-color: #5a2a2a; color: #e06060; }
+  .btn.danger:hover { background: #2a1a1a; border-color: #8a3a3a; }
+
+  .stat { display: flex; justify-content: space-between; font-size: 12px; padding: 2px 0; }
+  .stat .key { color: #6a8a9a; }
+  .stat .val { color: #c0d8e0; font-variant-numeric: tabular-nums; }
+  .stat .val.good { color: #4ade80; }
+  .stat .val.warn { color: #fbbf24; }
+  .stat .val.bad { color: #f87171; }
+  .divider { border: none; border-top: 1px solid #2a2a3a; margin: 5px 0; }
+
+  .evo-tag {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  #info {
+    font-size: 11px;
+    color: #5a7a7a;
+    text-align: center;
+    margin-top: 4px;
+  }
+  #info a { color: #22d3ee; text-decoration: none; }
+  #info a:hover { text-decoration: underline; }
+
+  @media (max-width: 800px) {
+    canvas { width: 100%; max-width: 500px; height: auto; }
+    #panel { width: 100%; max-width: 500px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>🐸 Pondemonium <span>an evolution simulator</span></h1>
+  <div id="main">
+    <canvas id="pond" width="700" height="700"></canvas>
+    <div id="panel">
+      <div class="card" id="controls-card">
+        <h3>⚙ Controls</h3>
+        <div class="ctrl-row"><label>Speed</label><input type="range" id="speed" min="0" max="40" value="10" step="1"><span class="val" id="speed-val">1×</span></div>
+        <div class="ctrl-row"><label>Frog spawn</label><input type="range" id="frogRate" min="1" max="20" value="7"><span class="val" id="frogRate-val">7</span></div>
+        <div class="ctrl-row"><label>Mosquito eggs</label><input type="range" id="mosquitoRate" min="0" max="20" value="8"><span class="val" id="mosquitoRate-val">8</span></div>
+        <div class="ctrl-row"><label>🐉 Dragonflies</label><input type="range" id="dragonflyRate" min="0" max="20" value="5"><span class="val" id="dragonflyRate-val">5</span></div>
+        <div class="ctrl-row"><label>Algae growth</label><input type="range" id="algaeRate" min="0" max="20" value="10"><span class="val" id="algaeRate-val">10</span></div>
+        <div class="btn-row">
+          <button class="btn active" id="pauseBtn">⏸ Pause</button>
+          <button class="btn danger" id="resetBtn">⟳ Reset</button>
+        </div>
+      </div>
+      <div class="card" id="stats-card">
+        <h3>📊 Population</h3>
+        <div id="stats"></div>
+        <hr class="divider">
+        <h3>🧬 Evolution (generation <span id="gen-num">0</span>)</h3>
+        <div id="evo-stats"></div>
+      </div>
+    </div>
+  </div>
+  <div id="info">click on a creature to see its genes · <span id="creature-info">hover over a creature</span></div>
+</div>
+<script>
+/* ===================================================================
+   🐸 PONDEMONIUM — Evolution Simulator
+   =================================================================== */
+
+// ── Configuration ────────────────────────────────────────────────────
+const CANVAS_W = 700, CANVAS_H = 700;
+const POND_MARGIN = 20;
+const POND_X = POND_MARGIN, POND_Y = POND_MARGIN;
+const POND_W = CANVAS_W - 2*POND_MARGIN, POND_H = CANVAS_H - 2*POND_MARGIN;
+
+// ── Utils ────────────────────────────────────────────────────────────
+const rand = (a=1, b=0) => Math.random() * (b-a) + a;
+const randInt = (a, b) => Math.floor(rand(a, b+1));
+const lerp = (a, b, t) => a + (b-a)*t;
+const clamp = (v, lo=0, hi=1) => Math.max(lo, Math.min(hi, v));
+const dist = (a, b) => Math.hypot(a.x-b.x, a.y-b.y);
+const rndChoice = arr => arr[Math.floor(Math.random()*arr.length)];
+
+// ── Genome / DNA — Regulatory Gene Model ────────────────────────────
+// Instead of 8 independent trait sliders, we model REGULATORY GENES
+// that affect multiple phenotypic traits simultaneously, creating
+// natural trade-offs and correlated evolution (like real biology).
+//
+// Genotype (inherited + mutated):
+//   POU1F1 — pituitary factor: growth hormone, metabolism, appetite
+//   THR   — thyroid receptor: metamorphosis timing, metabolic rate
+//   MC1R  — melanocortin: pigmentation, stress response, activity
+//   IGF1  — insulin-like GF: body size, cell division rate
+//   LEP   — leptin sensitivity: energy efficiency, satiety
+//
+// Phenotype (expressed traits — COMPUTED from genotype via mapping):
+//   growthSpeed, bodySize, metabolism, mouthGape, swimSpeed,
+//   sightRange, tailRetention, hue
+
+const REGULATORY_GENES = ['POU1F1', 'THR', 'MC1R', 'IGF1', 'LEP'];
+const PHENOTYPE_KEYS = ['growthSpeed','bodySize','metabolism','mouthGape',
+                        'swimSpeed','sightRange','tailRetention','hue'];
+
+function randomGenotype() {
+  const g = {};
+  REGULATORY_GENES.forEach(k => { g[k] = rand(0.15, 0.85); });
+  return g;
+}
+
+// Compute expressed phenotype from regulatory genotype.
+// Each phenotype is a weighted combination of several genes,
+// creating natural correlations and trade-offs.
+function genotypeToPhenotype(g) {
+  const { POU1F1, THR, MC1R, IGF1, LEP } = g;
+
+  // growthSpeed: POU1F1 (growth hormone) + THR (thyroid) drive development
+  const growthSpeed = clamp(POU1F1 * 0.6 + THR * 0.3);
+
+  // bodySize: IGF1 drives size, THR truncates it via metamorphosis
+  // Bigger = needs more food, slower (trade-off)
+  const bodySize = clamp(IGF1 * 0.7 + POU1F1 * 0.2 - THR * 0.15 + 0.15);
+
+  // metabolism: POU1F1 + THR burn energy, LEP conserves it
+  // HIGH metabolism = faster growth & activity but MUST eat frequently
+  // LOW metabolism = survives lean times but grows slower
+  // Starvation is now a real selection pressure — see Tadpole/Froglet update()
+  const metabolism = clamp(POU1F1 * 0.4 + THR * 0.4 - LEP * 0.2 + 0.2);
+
+  // mouthGape: strongly correlated with bodySize (bigger = bigger mouth)
+  const mouthGape = clamp(bodySize * 0.7 + 0.15);
+
+  // swimSpeed: THR drives activity, but body size drags it down
+  const swimSpeed = clamp(THR * 0.5 + MC1R * 0.2 - bodySize * 0.3 + 0.3);
+
+  // sightRange: MC1R-linked vigilance + POU1F1 (general vigour)
+  const sightRange = clamp(MC1R * 0.4 + POU1F1 * 0.1 + 0.3);
+
+  // tailRetention: THR drives metamorphosis — low THR = keeps tail longer
+  const tailRetention = clamp((1 - THR) * 0.7 + LEP * 0.1);
+
+  // hue: MC1R drives melanin (dark/brown), POU1F1 adds warmth
+  // Emergent: high MC1R + high POU1F1 = dark frogs
+  const hue = clamp(MC1R * 0.6 + POU1F1 * 0.2);
+
+  return { growthSpeed, bodySize, metabolism, mouthGape,
+           swimSpeed, sightRange, tailRetention, hue };
+}
+
+// Cached call: returns { genotype, phenotype } with lazy eval
+function expressGenome(genotype) {
+  if (!genotype._phenotype) {
+    genotype._phenotype = genotypeToPhenotype(genotype);
+  }
+  return genotype._phenotype;
+}
+
+// Breed two genotypes with crossover + mutation (on REGULATORY GENES only)
+function breedGenotype(g1, g2, mutationRate=0.12, mutationMag=0.15) {
+  const child = {};
+  REGULATORY_GENES.forEach(k => {
+    // Uniform crossover
+    child[k] = Math.random() < 0.5 ? g1[k] : g2[k];
+    // Mutation
+    if (Math.random() < mutationRate) {
+      child[k] = clamp(child[k] + rand(-mutationMag, mutationMag), 0, 1);
+    }
+  });
+  // Clear cached phenotype — will be recomputed on first access
+  child._phenotype = null;
+  return child;
+}
+
+// Pool of successful genotypes (frogs that left the pond)
+let genePool = [];
+function addToGenePool(genotype) {
+  genePool.push({...genotype, _phenotype: null});
+  if (genePool.length > 200) genePool.splice(0, genePool.length - 200);
+}
+
+function sampleGenePool() {
+  if (genePool.length === 0) return randomGenotype();
+  if (genePool.length === 1) return {...genePool[0], _phenotype: null};
+  // Tournament selection (2-round)
+  const pick = () => {
+    let best = rndChoice(genePool);
+    for (let i = 0; i < 2; i++) {
+      const challenger = rndChoice(genePool);
+      const fBest = fitnessScore(expressGenome(best));
+      const fChal = fitnessScore(expressGenome(challenger));
+      if (fChal > fBest) best = challenger;
+    }
+    return best;
+  };
+  return breedGenotype(pick(), pick());
+}
+
+// Fitness score based on PHENOTYPE (used for tournament selection in gene pool)
+// Note: real selection happens through the simulation — this is just for
+// tournament parent-picking when the pool is full of successful frogs.
+function fitnessScore(p) {
+  return (p.growthSpeed * 30 + (1 - p.metabolism) * 15
+          + p.swimSpeed * 20 + p.sightRange * 20 + p.mouthGape * 15) / 100;
+}
+
+// ── Entity Base ──────────────────────────────────────────────────────
+let ID_COUNTER = 0;
+class Entity {
+  constructor(x, y) {
+    this.id = ID_COUNTER++;
+    this.x = x; this.y = y;
+    this.vx = 0; this.vy = 0;
+    this.age = 0;
+    this.alive = true;
+    this.radius = 4;
+  }
+}
+
+// ── Particles (visual effects for death/leaving) ─────────────────────
+class Particle {
+  constructor(x, y, color, opts = {}) {
+    this.x = x; this.y = y;
+    this.vx = opts.vx || rand(-1, 1);
+    this.vy = opts.vy || rand(-2, 0.5);
+    this.color = color;
+    this.life = opts.life || rand(20, 40);
+    this.maxLife = this.life;
+    this.size = opts.size || rand(1.5, 4);
+    this.gravity = opts.gravity ?? 0.03;
+    this.alive = true;
+    this.type = opts.type || 'dot'; // 'dot' or 'ring'
+  }
+  update(dt) {
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.vy += this.gravity * dt;
+    this.life -= dt;
+    if (this.life <= 0) this.alive = false;
+  }
+}
+
+// ── Food (Algae) ─────────────────────────────────────────────────────
+class Food extends Entity {
+  constructor(x, y, size) {
+    super(x, y);
+    this.radius = size || rand(2, 7);
+    this.nutrition = this.radius * 1.5;
+    this.age = 0;
+    this.maxAge = rand(300, 800);
+    // Gentle drift
+    this.vx = rand(-0.1, 0.1);
+    this.vy = rand(-0.1, 0.1);
+  }
+  update(dt) {
+    this.age += dt;
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    // Bounce in pond
+    if (this.x < POND_X + this.radius) { this.x = POND_X + this.radius; this.vx *= -1; }
+    if (this.x > POND_X + POND_W - this.radius) { this.x = POND_X + POND_W - this.radius; this.vx *= -1; }
+    if (this.y < POND_Y + this.radius) { this.y = POND_Y + this.radius; this.vy *= -1; }
+    if (this.y > POND_Y + POND_H - this.radius) { this.y = POND_Y + POND_H - this.radius; this.vy *= -1; }
+    if (this.age > this.maxAge) this.alive = false; // decay
+  }
+}
+
+// ── Frog Spawn (Egg cluster) ────────────────────────────────────────
+class FrogSpawn extends Entity {
+  constructor(x, y, genome) {
+    super(x, y);
+    this.genome = genome || randomGenotype();
+    this.radius = 6;
+    this.phenotype = expressGenome(this.genome);
+    this.incubation = lerp(15, 5, this.phenotype.growthSpeed) * 60; // frames to hatch
+    this.hatchTimer = this.incubation;
+    this.cluster = [];
+    const n = randInt(3, 6);
+    for (let i = 0; i < n; i++) {
+      this.cluster.push({ ox: rand(-6, 6), oy: rand(-4, 4), r: rand(2.5, 4) });
+    }
+    this.bobPhase = rand(0, Math.PI * 2);
+  }
+  update(dt) {
+    this.age += dt;
+    // Fallback: force hatch after 30 seconds regardless
+    if (this.age > 1800) { this.hatchTimer = 0; }
+    this.hatchTimer -= dt;
+    this.bobPhase += dt * 0.02;
+    this.y += Math.sin(this.bobPhase) * 0.1;
+    if (this.hatchTimer <= 0) {
+      this.alive = false;
+      const n = this.cluster.length;
+      // Hatch into tadpoles!
+      for (let i = 0; i < n; i++) {
+        const tad = new Tadpole(
+          this.x + rand(-8, 8), this.y + rand(-6, 6),
+          breedGenotype(this.genome, this.genome, 0.05, 0.05)
+        );
+        pond.addTadpole(tad);
+      }
+    }
+  }
+}
+
+// ── Tadpole ──────────────────────────────────────────────────────────
+class Tadpole extends Entity {
+  constructor(x, y, genome) {
+    super(x, y);
+    this.genome = genome || randomGenotype();
+    this.phenotype = expressGenome(this.genome);
+    this.radius = 4;
+    this.growth = 0; // 0..1, metamorphosis at 1
+    this.energy = 100;
+    this.maxEnergy = 100;
+    this.tailLength = 14;
+    this.satiation = 100; // 0 = starving
+    this.phase = rand(0, Math.PI*2);
+    this.wobble = rand(0, 1000);
+    this.targetDir = rand(0, Math.PI*2);
+    this.targetTimer = 0;
+    // Scaled traits (from phenotype)
+    this._speed = lerp(0.3, 1.8, this.phenotype.swimSpeed);
+    this._sight = lerp(30, 120, this.phenotype.sightRange);
+    this._metabolism = lerp(0.3, 1.5, this.phenotype.metabolism);
+    this._mouth = lerp(1, 5, this.phenotype.mouthGape);
+    this._maxSize = lerp(6, 16, this.phenotype.bodySize);
+    this._growthRate = lerp(0.0015, 0.005, this.phenotype.growthSpeed);
+  }
+  update(dt) {
+    this.age += dt;
+    this.wobble += dt * 0.05;
+    // Metabolism: drain energy — higher metabolism = MUST eat frequently or die
+    this.satiation -= this._metabolism * 0.20 * dt;
+    if (this.satiation < 0) {
+      this.energy -= lerp(0.10, 0.35, this.phenotype.metabolism) * dt;
+      this.satiation = 0;
+    }
+    // Grow
+    this.growth += this._growthRate * dt * (this.satiation > 50 ? 1 : 0.3);
+    this.radius = lerp(4, this._maxSize, this.growth);
+    this.tailLength = lerp(14, 4, this.growth * 1.2);
+    // Seek food
+    this.targetTimer -= dt;
+    const nearest = this.findNearestFood();
+    if (nearest && dist(this, nearest) < this._sight) {
+      const dx = nearest.x - this.x;
+      const dy = nearest.y - this.y;
+      const d = Math.hypot(dx, dy);
+      if (d > 1) {
+        this.vx += (dx/d) * 0.15 * dt;
+        this.vy += (dy/d) * 0.15 * dt;
+      }
+    } else {
+      // Wander
+      if (this.targetTimer <= 0) {
+        this.targetDir = rand(0, Math.PI*2);
+        this.targetTimer = rand(30, 120);
+      }
+      this.vx += Math.cos(this.targetDir) * 0.05 * dt;
+      this.vy += Math.sin(this.targetDir) * 0.05 * dt;
+    }
+    // Apply speed & friction
+    const spd = Math.hypot(this.vx, this.vy);
+    if (spd > this._speed) {
+      this.vx = (this.vx/spd) * this._speed;
+      this.vy = (this.vy/spd) * this._speed;
+    }
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.vx *= 0.96; this.vy *= 0.96;
+    // Pond bounds
+    const r = this.radius;
+    if (this.x < POND_X + r) { this.x = POND_X + r; this.vx *= -0.5; }
+    if (this.x > POND_X + POND_W - r) { this.x = POND_X + POND_W - r; this.vx *= -0.5; }
+    if (this.y < POND_Y + r) { this.y = POND_Y + r; this.vy *= -0.5; }
+    if (this.y > POND_Y + POND_H - r) { this.y = POND_Y + POND_H - r; this.vy *= -0.5; }
+    // Wiggle
+    this.phase += dt * 0.03;
+    // Starvation
+    if (this.energy <= 0) {
+      if (!this._spawnedDeathFx) {
+        this._spawnedDeathFx = true;
+        for (let i = 0; i < 5; i++) {
+          pond.particles.push(new Particle(this.x, this.y, 'hsla(30, 40%, 25%, 0.5)',
+            { vy: rand(0.1, 0.5), life: rand(15, 30), size: rand(1, 2.5), gravity: 0.01 }));
+        }
+      }
+      this.alive = false; return;
+    }
+    // Metamorphosis
+    if (this.growth >= 1) {
+      this.alive = false;
+      const froglet = new Froglet(this.x, this.y, this.genome);
+      pond.addFroglet(froglet);
+    }
+  }
+  findNearestFood() {
+    let best = null, bestD = this._sight;
+    for (const f of pond.food) {
+      const d = dist(this, f);
+      if (d < bestD && f.radius <= this._mouth + 1) {
+        bestD = d; best = f;
+      }
+    }
+    return best;
+  }
+}
+
+// ── Froglet (metamorphosed tadpole) ─────────────────────────────────
+class Froglet extends Entity {
+  constructor(x, y, genome) {
+    super(x, y);
+    this.genome = genome || randomGenotype();
+    this.phenotype = expressGenome(this.genome);
+    this.radius = 10;
+    this.growth = 0.85; // starts near adult
+    this.energy = 100;
+    this.satiation = 80;
+    this.legLength = 8;
+    this.phase = rand(0, Math.PI*2);
+    this.targetDir = rand(0, Math.PI*2);
+    this.targetTimer = 0;
+    this.jumpCooldown = 0;
+    // Scaled traits (from phenotype)
+    this._speed = lerp(0.5, 2.5, this.phenotype.swimSpeed);
+    this._sight = lerp(40, 160, this.phenotype.sightRange);
+    this._metabolism = lerp(0.2, 1.2, this.phenotype.metabolism);
+    this._mouth = lerp(3, 10, this.phenotype.mouthGape);
+    this._maxSize = lerp(12, 24, this.phenotype.bodySize);
+    this._growthRate = lerp(0.0008, 0.003, this.phenotype.growthSpeed);
+    this._jumpDrive = lerp(0.3, 1.5, this.phenotype.growthSpeed * 0.7 + this.phenotype.bodySize * 0.3);
+  }
+  update(dt) {
+    this.age += dt;
+    this.jumpCooldown -= dt;
+    // Metabolism — higher metabolism = MUST eat frequently or die
+    this.satiation -= this._metabolism * 0.16 * dt;
+    if (this.satiation < 0) {
+      this.energy -= lerp(0.08, 0.30, this.phenotype.metabolism) * dt;
+      this.satiation = 0;
+    }
+    // Growth toward adult — stunted when starving
+    this.growth += this._growthRate * dt * (this.satiation > 50 ? 1 : 0.3);
+    this.radius = lerp(10, this._maxSize, this.growth);
+    this.legLength = lerp(8, 16, this.growth);
+    // Seek food (including mosquitoes!)
+    this.targetTimer -= dt;
+    const nearestFood = this.findNearestFood();
+    const nearestMosquito = this.findNearestMosquito();
+    let target = null;
+    if (nearestMosquito && dist(this, nearestMosquito) < this._sight * 0.8) {
+      target = nearestMosquito; // prefer mosquitoes!
+    } else if (nearestFood && dist(this, nearestFood) < this._sight) {
+      target = nearestFood;
+    }
+    if (target) {
+      const dx = target.x - this.x;
+      const dy = target.y - this.y;
+      const d = Math.hypot(dx, dy);
+      if (d > 1) {
+        this.vx += (dx/d) * 0.12 * dt;
+        this.vy += (dy/d) * 0.12 * dt;
+      }
+    } else {
+      if (this.targetTimer <= 0) {
+        this.targetDir = rand(0, Math.PI*2);
+        this.targetTimer = rand(30, 120);
+      }
+      this.vx += Math.cos(this.targetDir) * 0.04 * dt;
+      this.vy += Math.sin(this.targetDir) * 0.04 * dt;
+    }
+    // Jump bursts (frog hop)
+    if (this.jumpCooldown <= 0 && Math.random() < 0.005 * dt) {
+      const angle = rand(0, Math.PI*2);
+      this.vx += Math.cos(angle) * rand(2, 5);
+      this.vy += Math.sin(angle) * rand(2, 5);
+      this.jumpCooldown = rand(20, 60);
+    }
+    // Speed cap
+    const spd = Math.hypot(this.vx, this.vy);
+    if (spd > this._speed + 3) { // allow jump bursts
+      this.vx = (this.vx/spd) * (this._speed + 3);
+      this.vy = (this.vy/spd) * (this._speed + 3);
+    }
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.vx *= 0.94; this.vy *= 0.94;
+    // Bounds
+    if (this.x < POND_X + this.radius) { this.x = POND_X + this.radius; this.vx *= -0.5; }
+    if (this.x > POND_X + POND_W - this.radius) { this.x = POND_X + POND_W - this.radius; this.vx *= -0.5; }
+    if (this.y < POND_Y + this.radius) { this.y = POND_Y + this.radius; this.vy *= -0.5; }
+    if (this.y > POND_Y + POND_H - this.radius) { this.y = POND_Y + POND_H - this.radius; this.vy *= -0.5; }
+    // Starvation
+    if (this.energy <= 0) {
+      if (!this._spawnedDeathFx) {
+        this._spawnedDeathFx = true;
+        for (let i = 0; i < 5; i++) {
+          pond.particles.push(new Particle(this.x, this.y, 'hsla(30, 40%, 25%, 0.5)',
+            { vy: rand(0.1, 0.5), life: rand(15, 30), size: rand(1, 2.5), gravity: 0.01 }));
+        }
+      }
+      this.alive = false; return;
+    }
+    // Leave the pond when fully grown + enough energy
+    if (this.growth >= 1 && this.satiation > 60 && this.age > 600) {
+      if (Math.random() < 0.002 * dt * this._jumpDrive) {
+        this.alive = false;
+        // Frog successfully leaves the pond!
+        pond.frogsReleased++;
+        addToGenePool(this.genome);
+        pond.generation++;
+        // Splash effect: green burst particles + food scatter
+        for (let i = 0; i < 8; i++) {
+          pond.particles.push(new Particle(this.x, this.y, 'hsla(140, 70%, 60%, 0.7)',
+            { vx: rand(-2, 2), vy: rand(-3, 0.5), life: rand(20, 45), size: rand(2, 5), gravity: 0.04 }));
+        }
+        for (let i = 0; i < 3; i++) {
+          pond.addFood(new Food(this.x + rand(-10,10), this.y + rand(-10,10), rand(2,5)));
+        }
+      }
+    }
+  }
+  findNearestFood() {
+    let best = null, bestD = this._sight;
+    for (const f of pond.food) {
+      const d = dist(this, f);
+      if (d < bestD && f.radius <= this._mouth + 2) {
+        bestD = d; best = f;
+      }
+    }
+    return best;
+  }
+  findNearestMosquito() {
+    let best = null, bestD = this._sight * 0.8;
+    for (const m of pond.mosquitoes) {
+      const d = dist(this, m);
+      if (d < bestD) { bestD = d; best = m; }
+    }
+    return best;
+  }
+}
+
+// ── Mosquito Egg Raft ────────────────────────────────────────────────
+class MosquitoEggRaft extends Entity {
+  constructor(x, y) {
+    super(x, y);
+    this.radius = 5;
+    this.eggCount = randInt(8, 18);
+    this.incubation = rand(120, 300);
+    this.timer = 0;
+    this.driftX = rand(-0.05, 0.05);
+  }
+  update(dt) {
+    this.age += dt;
+    this.timer += dt;
+    this.x += this.driftX * dt;
+    if (this.x < POND_X + 5) { this.x = POND_X + 5; this.driftX *= -1; }
+    if (this.x > POND_X + POND_W - 5) { this.x = POND_X + POND_W - 5; this.driftX *= -1; }
+    if (this.timer >= this.incubation) {
+      this.alive = false;
+      for (let i = 0; i < this.eggCount; i++) {
+        const larva = new MosquitoLarva(
+          this.x + rand(-8,8), this.y + rand(-4,4)
+        );
+        pond.addMosquitoLarva(larva);
+      }
+    }
+  }
+}
+
+// ── Mosquito Larva (Wriggler) ────────────────────────────────────────
+class MosquitoLarva extends Entity {
+  constructor(x, y) {
+    super(x, y);
+    this.radius = 3;
+    this.growth = 0;
+    this.phase = rand(0, Math.PI*2);
+    this.wiggleX = 0;
+    this._growthRate = rand(0.002, 0.006);
+  }
+  update(dt) {
+    this.age += dt;
+    this.phase += dt * 0.08;
+    this.growth += this._growthRate * dt;
+    this.radius = lerp(2, 5, this.growth);
+    // Wriggle
+    this.wiggleX = Math.sin(this.phase) * 2;
+    this.y += Math.sin(this.phase * 2) * 0.2 * dt;
+    this.x += Math.cos(this.phase * 0.7) * 0.1 * dt;
+    // Stay in pond
+    if (this.x < POND_X + 3) this.x = POND_X + 3;
+    if (this.x > POND_X + POND_W - 3) this.x = POND_X + POND_W - 3;
+    if (this.y < POND_Y + 3) this.y = POND_Y + 3;
+    if (this.y > POND_Y + POND_H - 3) this.y = POND_Y + POND_H - 3;
+    // Metamorphosis
+    if (this.growth >= 1) {
+      this.alive = false;
+      const mosquito = new Mosquito(
+        this.x + rand(-5,5), this.y - rand(5, 15)
+      );
+      pond.addMosquito(mosquito);
+    }
+  }
+}
+
+// ── Adult Mosquito ───────────────────────────────────────────────────
+class Mosquito extends Entity {
+  constructor(x, y) {
+    super(x, y);
+    this.radius = 3;
+    this.life = rand(200, 600);
+    this.age = 0;
+    this.phase = rand(0, Math.PI*2);
+    this.flightY = y;
+    // Mosquitoes fly above the water
+    this.altitude = rand(-20, -5); // negative = above water
+    this._speed = rand(0.5, 1.5);
+  }
+  update(dt) {
+    this.age += dt;
+    this.phase += dt * 0.04;
+    // Erratic flight
+    this.vx += (rand(-1,1)) * 0.1 * dt;
+    this.vy += (rand(-1,1)) * 0.1 * dt;
+    const spd = Math.hypot(this.vx, this.vy);
+    if (spd > this._speed) {
+      this.vx = (this.vx/spd) * this._speed;
+      this.vy = (this.vy/spd) * this._speed;
+    }
+    this.x += this.vx * dt;
+    this.flightY += this.vy * dt;
+    this.y = this.flightY + this.altitude;
+    this.vx *= 0.97; this.vy *= 0.97;
+    // Stay over pond
+    if (this.x < POND_X + 5) { this.x = POND_X + 5; this.vx *= -1; }
+    if (this.x > POND_X + POND_W - 5) { this.x = POND_X + POND_W - 5; this.vx *= -1; }
+    if (this.flightY < POND_Y - 30) { this.flightY = POND_Y - 30; this.vy *= -1; }
+    if (this.flightY > POND_Y + POND_H + 30) { this.flightY = POND_Y + POND_H + 30; this.vy *= -1; }
+    // Leave the pond
+    if (this.age > this.life) {
+      this.alive = false;
+      pond.mosquitoesReleased++;
+      pond.humansBitten += randInt(2, 8); // each mosquito bites 2-8 people
+    }
+  }
+}
+
+// ── Dragonfly Nymph (Predator — hunts tadpoles & larvae) ─────────────
+class DragonflyNymph extends Entity {
+  constructor(x, y) {
+    super(x, y);
+    this.radius = 5;
+    this.growth = 0;
+    this.satiation = 100;
+    this.energy = 100;
+    this.phase = rand(0, Math.PI*2);
+    this.wobble = rand(0, 1000);
+    this.targetDir = rand(0, Math.PI*2);
+    this.targetTimer = 0;
+    this._speed = rand(0.2, 0.5);
+    this._sight = rand(70, 140);
+    this._attackCooldown = 0;
+    this._meals = 0;
+  }
+  update(dt) {
+    this.age += dt;
+    this.phase += dt * 0.02;
+    this.wobble += dt * 0.04;
+    this._attackCooldown -= dt;
+    // Slow energy drain
+    this.satiation -= 0.02 * dt;
+    if (this.satiation < 0) {
+      this.energy -= 0.03 * dt;
+      this.satiation = 0;
+    }
+    // Hunt — stalk tadpoles & mosquito larvae
+    this.targetTimer -= dt;
+    const prey = this.findNearestPrey();
+    if (prey && dist(this, prey) < this._sight) {
+      const dx = prey.x - this.x;
+      const dy = prey.y - this.y;
+      const d = Math.hypot(dx, dy);
+      if (d > this.radius + prey.radius + 3) {
+        this.vx += (dx/d) * 0.08 * dt;
+        this.vy += (dy/d) * 0.08 * dt;
+      }
+    } else {
+      // Wander slowly
+      if (this.targetTimer <= 0) {
+        this.targetDir = rand(0, Math.PI*2);
+        this.targetTimer = rand(60, 200);
+      }
+      this.vx += Math.cos(this.targetDir) * 0.03 * dt;
+      this.vy += Math.sin(this.targetDir) * 0.03 * dt;
+    }
+    // Speed cap
+    const spd = Math.hypot(this.vx, this.vy);
+    if (spd > this._speed) {
+      this.vx = (this.vx/spd) * this._speed;
+      this.vy = (this.vy/spd) * this._speed;
+    }
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.vx *= 0.95; this.vy *= 0.95;
+    // Pond bounds
+    const r = this.radius;
+    if (this.x < POND_X + r) { this.x = POND_X + r; this.vx *= -0.5; }
+    if (this.x > POND_X + POND_W - r) { this.x = POND_X + POND_W - r; this.vx *= -0.5; }
+    if (this.y < POND_Y + r) { this.y = POND_Y + r; this.vy *= -0.5; }
+    if (this.y > POND_Y + POND_H - r) { this.y = POND_Y + POND_H - r; this.vy *= -0.5; }
+    // Starvation
+    if (this.energy <= 0) {
+      if (!this._spawnedDeathFx) {
+        this._spawnedDeathFx = true;
+        for (let i = 0; i < 4; i++) {
+          pond.particles.push(new Particle(this.x, this.y, 'hsla(160, 50%, 30%, 0.4)',
+            { vy: rand(0.1, 0.4), life: rand(15, 30), size: rand(1, 2), gravity: 0.01 }));
+        }
+      }
+      this.alive = false; return;
+    }
+    // Metamorphosis into adult when fully grown + old enough
+    if (this.growth >= 1 && this.age > 500) {
+      this.alive = false;
+      const adult = new DragonflyAdult(this.x, this.y);
+      pond.addDragonfly(adult);
+      // Splash effect
+      for (let i = 0; i < 6; i++) {
+        pond.particles.push(new Particle(this.x, this.y, 'hsla(170, 60%, 45%, 0.6)',
+          { vx: rand(-2, 2), vy: rand(-3, 0.5), life: rand(20, 40), size: rand(2, 4), gravity: 0.03 }));
+      }
+    }
+  }
+  findNearestPrey() {
+    let best = null, bestD = this._sight;
+    for (const t of pond.tadpoles) {
+      if (!t.alive) continue;
+      const d = dist(this, t);
+      if (d < bestD) { bestD = d; best = t; }
+    }
+    for (const l of pond.mosquitoLarvae) {
+      if (!l.alive) continue;
+      const d = dist(this, l);
+      if (d < bestD) { bestD = d; best = l; }
+    }
+    return best;
+  }
+}
+
+// ── Adult Dragonfly (emerges from pond, flies away) ──────────────────
+class DragonflyAdult extends Entity {
+  constructor(x, y) {
+    super(x, y);
+    this.radius = 4;
+    this.life = rand(150, 400);
+    this.age = 0;
+    this.phase = rand(0, Math.PI*2);
+    this.flightY = y;
+    this.altitude = rand(-40, -15);
+    this._speed = rand(1.2, 2.5);
+    this._wingAngle = 0;
+  }
+  update(dt) {
+    this.age += dt;
+    this.phase += dt * 0.06;
+    this._wingAngle += dt * 0.15;
+    // Fast erratic flight
+    this.vx += (rand(-1,1)) * 0.2 * dt;
+    this.vy += (rand(-1,1)) * 0.2 * dt;
+    const spd = Math.hypot(this.vx, this.vy);
+    if (spd > this._speed) {
+      this.vx = (this.vx/spd) * this._speed;
+      this.vy = (this.vy/spd) * this._speed;
+    }
+    this.x += this.vx * dt;
+    this.flightY += this.vy * dt;
+    this.y = this.flightY + this.altitude;
+    this.vx *= 0.97; this.vy *= 0.97;
+    // Stay near pond
+    if (this.x < POND_X - 20) { this.x = POND_X - 20; this.vx *= -1; }
+    if (this.x > POND_X + POND_W + 20) { this.x = POND_X + POND_W + 20; this.vx *= -1; }
+    if (this.flightY < POND_Y - 60) { this.flightY = POND_Y - 60; this.vy *= -1; }
+    if (this.flightY > POND_Y + POND_H + 40) { this.flightY = POND_Y + POND_H + 40; this.vy *= -1; }
+    // Leave
+    if (this.age > this.life) {
+      this.alive = false;
+      pond.dragonfliesReleased++;
+    }
+  }
+}
+
+// ── Pond Ecosystem ───────────────────────────────────────────────────
+class Pond {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.width = CANVAS_W;
+    this.height = CANVAS_H;
+
+    // Entities
+    this.food = [];
+    this.frogSpawns = [];
+    this.tadpoles = [];
+    this.froglets = [];
+    this.mosquitoEggs = [];
+    this.mosquitoLarvae = [];
+    this.mosquitoes = [];
+    this.dragonflyNymphs = [];
+    this.dragonflies = [];
+    this.particles = [];
+
+    // Spawn timers
+    this.frogTimer = 0;
+    this.mosquitoTimer = 0;
+    this.algaeTimer = 0;
+    this.dragonflyTimer = 0;
+
+    // Controls
+    this.speed = 1;
+    this.frogRate = 7;
+    this.mosquitoRate = 8;
+    this.algaeRate = 10;
+    this.dragonflyRate = 5;
+    this.paused = false;
+
+    // Stats
+    this.frogsReleased = 0;
+    this.mosquitoesReleased = 0;
+    this.dragonfliesReleased = 0;
+    this.dragonfliesBirthed = 0;
+    this.humansBitten = 0;
+    this.totalSpawnLaid = 0;
+    this.generation = 0;
+    this.simulationTime = 0;
+
+    // Decorations
+    this.lilyPads = [];
+    for (let i = 0; i < 6; i++) {
+      this.lilyPads.push({
+        x: rand(POND_X + 30, POND_X + POND_W - 30),
+        y: rand(POND_Y + 30, POND_Y + POND_H - 30),
+        r: rand(15, 30),
+        phase: rand(0, Math.PI*2),
+      });
+    }
+    this.ripples = [];
+    this.rippleTimer = 0;
+
+    // Hover info
+    this.hoveredEntity = null;
+    this.mouseX = 0; this.mouseY = 0;
+
+    // Mouse tracking
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      this.mouseX = (e.clientX - rect.left) * scaleX;
+      this.mouseY = (e.clientY - rect.top) * scaleY;
+    });
+    canvas.addEventListener('mouseleave', () => {
+      this.mouseX = -1; this.mouseY = -1;
+    });
+
+    // Initialise with some life
+    this.seed();
+  }
+
+  seed() {
+    // Start with some algae
+    for (let i = 0; i < 60; i++) {
+      this.addFood(new Food(
+        rand(POND_X+10, POND_X+POND_W-10),
+        rand(POND_Y+10, POND_Y+POND_H-10),
+        rand(2, 7)
+      ));
+    }
+    // Start with a few tadpoles (from gene pool)
+    for (let i = 0; i < 5; i++) {
+      const g = sampleGenePool();
+      this.addTadpole(new Tadpole(
+        rand(POND_X+30, POND_X+POND_W-30),
+        rand(POND_Y+30, POND_Y+POND_H-30),
+        g
+      ));
+    }
+  }
+
+  // ── Entity adders ──────────────────────────────────────────────────
+  addFood(f) { this.food.push(f); }
+  addFrogSpawn(s) { this.frogSpawns.push(s); this.totalSpawnLaid++; }
+  addTadpole(t) { this.tadpoles.push(t); }
+  addFroglet(f) { this.froglets.push(f); }
+  addMosquitoEgg(e) { this.mosquitoEggs.push(e); }
+  addMosquitoLarva(l) { this.mosquitoLarvae.push(l); }
+  addMosquito(m) { this.mosquitoes.push(m); }
+  addDragonflyNymph(n) { this.dragonflyNymphs.push(n); }
+  addDragonfly(d) { this.dragonflies.push(d); this.dragonfliesBirthed++; }
+
+  // ── Main Update ────────────────────────────────────────────────────
+  update(dt) {
+    if (this.paused) return;
+    const t = dt * this.speed;
+
+    this.simulationTime += t;
+
+    // Spawn timers (based on slider values)
+    this.frogTimer += t * (this.frogRate / 10);
+    this.mosquitoTimer += t * (this.mosquitoRate / 10);
+    this.algaeTimer += t * (this.algaeRate / 10);
+
+    // Frog spawning
+    if (this.frogTimer > 80) {
+      this.frogTimer = 0;
+      this.spawnFrogEggs();
+    }
+
+    // Mosquito spawning
+    if (this.mosquitoTimer > 60) {
+      this.mosquitoTimer = 0;
+      this.spawnMosquitoEggs();
+    }
+
+    // Dragonfly spawning (adult visits pond, lays eggs)
+    this.dragonflyTimer += t * (this.dragonflyRate / 10);
+    if (this.dragonflyTimer > 120 && this.dragonflyNymphs.length < 12) {
+      this.dragonflyTimer = 0;
+      this.spawnDragonflyNymph();
+    }
+
+    // Algae growth
+    if (this.algaeTimer > 15 && this.food.length < 250) {
+      this.algaeTimer = 0;
+      const n = randInt(1, 3);
+      for (let i = 0; i < n; i++) {
+        this.addFood(new Food(
+          rand(POND_X+10, POND_X+POND_W-10),
+          rand(POND_Y+10, POND_Y+POND_H-10),
+          rand(2, 6)
+        ));
+      }
+    }
+
+    // Update all entities
+    this.updateEntities(this.food, t);
+    this.updateEntities(this.frogSpawns, t);
+    this.updateEntities(this.tadpoles, t);
+    this.updateEntities(this.froglets, t);
+    this.updateEntities(this.mosquitoEggs, t);
+    this.updateEntities(this.mosquitoLarvae, t);
+    this.updateEntities(this.mosquitoes, t);
+    this.updateEntities(this.dragonflyNymphs, t);
+    this.updateEntities(this.dragonflies, t);
+
+    // Eating: tadpoles eat food
+    this.processEating();
+
+    // Froglets eat mosquitoes
+    this.processMosquitoEating();
+
+    // Dragonfly nymphs eat tadpoles & larvae
+    this.processDragonflyEating();
+
+    // Ripples
+    this.rippleTimer += t;
+    if (this.rippleTimer > 30 && Math.random() < 0.05) {
+      this.ripples.push({
+        x: rand(POND_X+40, POND_X+POND_W-40),
+        y: rand(POND_Y+40, POND_Y+POND_H-40),
+        r: 2, maxR: rand(15, 40), alpha: 0.4,
+      });
+      this.rippleTimer = 0;
+    }
+    this.ripples = this.ripples.filter(r => {
+      r.r += 0.15 * t;
+      r.alpha -= 0.003 * t;
+      return r.alpha > 0 && r.r < r.maxR;
+    });
+
+    // Update visual particles
+    this.updateEntities(this.particles, t);
+
+    // Cleanup dead entities
+    this.food = this.food.filter(e => e.alive);
+    this.frogSpawns = this.frogSpawns.filter(e => e.alive);
+    this.tadpoles = this.tadpoles.filter(e => e.alive);
+    this.froglets = this.froglets.filter(e => e.alive);
+    this.mosquitoEggs = this.mosquitoEggs.filter(e => e.alive);
+    this.mosquitoLarvae = this.mosquitoLarvae.filter(e => e.alive);
+    this.mosquitoes = this.mosquitoes.filter(e => e.alive);
+    this.dragonflyNymphs = this.dragonflyNymphs.filter(e => e.alive);
+    this.dragonflies = this.dragonflies.filter(e => e.alive);
+    this.particles = this.particles.filter(e => e.alive);
+
+    // Cap populations
+    if (this.food.length > 300) this.food.splice(0, this.food.length - 300);
+    if (this.tadpoles.length > 120) {
+      this.tadpoles.sort((a,b) => a.energy - b.energy);
+      this.tadpoles.splice(60);
+    }
+
+    // Hover detection
+    this.hoveredEntity = this.getEntityAt(this.mouseX, this.mouseY);
+  }
+
+  spawnFrogEggs() {
+    // A frog appears at the edge, lays eggs, leaves
+    const edge = randInt(0, 3);
+    let x, y;
+    switch (edge) {
+      case 0: x = rand(POND_X+20, POND_X+POND_W-20); y = POND_Y - 5; break; // top
+      case 1: x = POND_X + POND_W + 5; y = rand(POND_Y+20, POND_Y+POND_H-20); break; // right
+      case 2: x = rand(POND_X+20, POND_X+POND_W-20); y = POND_Y + POND_H + 5; break; // bottom
+      case 3: x = POND_X - 5; y = rand(POND_Y+20, POND_Y+POND_H-20); break; // left
+    }
+    // The frog's genome comes from the gene pool (or random)
+    const genome = sampleGenePool();
+    // Draw genome from pool with some influence from average
+    const spawn = new FrogSpawn(x - POND_X, y - POND_Y, genome);
+    // Position the eggs in the pond
+    spawn.x = clamp(x, POND_X + 15, POND_X + POND_W - 15);
+    spawn.y = clamp(y, POND_Y + 15, POND_Y + POND_H - 15);
+    this.addFrogSpawn(spawn);
+
+    // Splash effect
+    this.ripples.push({ x: spawn.x, y: spawn.y, r: 2, maxR: 35, alpha: 0.5 });
+  }
+
+  spawnMosquitoEggs() {
+    const x = rand(POND_X + 15, POND_X + POND_W - 15);
+    const y = rand(POND_Y + 15, POND_Y + POND_H - 15);
+    this.addMosquitoEgg(new MosquitoEggRaft(x, y));
+  }
+
+  spawnDragonflyNymph() {
+    // An adult dragonfly visits from the edge and deposits a nymph
+    const edge = randInt(0, 3);
+    let x, y;
+    switch (edge) {
+      case 0: x = rand(POND_X+20, POND_X+POND_W-20); y = POND_Y - 5; break;
+      case 1: x = POND_X + POND_W + 5; y = rand(POND_Y+20, POND_Y+POND_H-20); break;
+      case 2: x = rand(POND_X+20, POND_X+POND_W-20); y = POND_Y + POND_H + 5; break;
+      case 3: x = POND_X - 5; y = rand(POND_Y+20, POND_Y+POND_H-20); break;
+    }
+    const nymph = new DragonflyNymph(
+      clamp(x, POND_X + 15, POND_X + POND_W - 15),
+      clamp(y, POND_Y + 15, POND_Y + POND_H - 15)
+    );
+    this.addDragonflyNymph(nymph);
+    // Ripple effect
+    this.ripples.push({ x: nymph.x, y: nymph.y, r: 2, maxR: 25, alpha: 0.4 });
+  }
+
+  updateEntities(arr, dt) {
+    for (const e of arr) {
+      if (e.alive) e.update(dt);
+    }
+  }
+
+  processEating() {
+    // Tadpoles eat food
+    for (const tad of this.tadpoles) {
+      if (!tad.alive) continue;
+      for (const f of this.food) {
+        if (!f.alive) continue;
+        if (f.radius > tad._mouth + 1) continue; // too big
+        if (dist(tad, f) < tad.radius + f.radius) {
+          f.alive = false;
+          tad.satiation = Math.min(100, tad.satiation + f.nutrition * (tad._metabolism > 0.8 ? 0.7 : 1.2));
+        }
+      }
+    }
+    // Froglets eat food
+    for (const frog of this.froglets) {
+      if (!frog.alive) continue;
+      for (const f of this.food) {
+        if (!f.alive) continue;
+        if (f.radius > frog._mouth + 2) continue;
+        if (dist(frog, f) < frog.radius + f.radius) {
+          f.alive = false;
+          frog.satiation = Math.min(100, frog.satiation + f.nutrition * 1.5);
+        }
+      }
+    }
+  }
+
+  processMosquitoEating() {
+    for (const frog of this.froglets) {
+      if (!frog.alive) continue;
+      for (const m of this.mosquitoes) {
+        if (!m.alive) continue;
+        // Mosquitoes fly above water, froglets can jump
+        const dy = m.y - frog.y;
+        if (dy > -30 && dy < 10 && dist(frog, m) < frog.radius + 10) {
+          m.alive = false;
+          frog.satiation = Math.min(100, frog.satiation + 20);
+        }
+      }
+    }
+  }
+
+  processDragonflyEating() {
+    for (const n of this.dragonflyNymphs) {
+      if (!n.alive) continue;
+      if (n._attackCooldown > 0) continue;
+      // Prey priority: tadpoles > larvae
+      for (const t of this.tadpoles) {
+        if (!t.alive) continue;
+        if (dist(n, t) < n.radius + t.radius + 4) {
+          t.alive = false;
+          n.satiation = Math.min(100, n.satiation + 30);
+          n.growth = Math.min(1, n.growth + 0.08);
+          n._meals++;
+          n._attackCooldown = 20;
+          // Death particles
+          for (let i = 0; i < 4; i++) {
+            this.particles.push(new Particle(t.x, t.y, 'hsla(30, 40%, 25%, 0.4)',
+              { vy: rand(0.1, 0.4), life: rand(15, 25), size: rand(1, 2), gravity: 0.01 }));
+          }
+          break;
+        }
+      }
+      if (n._attackCooldown > 0) continue;
+      // Eat mosquito larvae
+      for (const l of this.mosquitoLarvae) {
+        if (!l.alive) continue;
+        if (dist(n, l) < n.radius + l.radius + 3) {
+          l.alive = false;
+          n.satiation = Math.min(100, n.satiation + 15);
+          n.growth = Math.min(1, n.growth + 0.04);
+          n._meals++;
+          n._attackCooldown = 15;
+          break;
+        }
+      }
+      // Also eat weakened froglets (small ones only)
+      if (n._attackCooldown <= 0 && n.radius > 8) {
+        for (const f of this.froglets) {
+          if (!f.alive) continue;
+          if (f.radius > 12) continue; // only small froglets
+          if (dist(n, f) < n.radius + f.radius + 4) {
+            f.alive = false;
+            n.satiation = Math.min(100, n.satiation + 40);
+            n.growth = Math.min(1, n.growth + 0.12);
+            n._meals++;
+            n._attackCooldown = 25;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+
+  getEntityAt(mx, my) {
+    if (mx < 0) return null;
+    let best = null, bestD = 15;
+    const check = (arr) => {
+      for (const e of arr) {
+        if (!e.alive) continue;
+        const d = dist({x:mx,y:my}, e);
+        if (d < bestD) { bestD = d; best = e; }
+      }
+    };
+    check(this.frogSpawns);
+    check(this.tadpoles);
+    check(this.froglets);
+    check(this.mosquitoEggs);
+    check(this.mosquitoLarvae);
+    check(this.mosquitoes);
+    check(this.dragonflyNymphs);
+    check(this.dragonflies);
+    return best;
+  }
+
+  // ── Rendering ──────────────────────────────────────────────────────
+  render() {
+    const ctx = this.ctx;
+
+    // Pond background
+    const grad = ctx.createRadialGradient(350, 350, 50, 350, 350, 450);
+    grad.addColorStop(0, '#0d5a6a');
+    grad.addColorStop(0.5, '#0a4a5a');
+    grad.addColorStop(1, '#072a3a');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, this.width, this.height);
+
+    // Bank / edge
+    ctx.fillStyle = '#2a3a1a';
+    ctx.fillRect(0, 0, this.width, POND_MARGIN); // top
+    ctx.fillRect(0, 0, POND_MARGIN, this.height); // left
+    ctx.fillRect(0, this.height - POND_MARGIN, this.width, POND_MARGIN); // bottom
+    ctx.fillRect(this.width - POND_MARGIN, 0, POND_MARGIN, this.height); // right
+    // Sandy bank top layer
+    ctx.fillStyle = '#4a5a2a';
+    ctx.fillRect(0, 0, this.width, 6);
+    ctx.fillRect(0, 0, 6, this.height);
+    ctx.fillRect(0, this.height-6, this.width, 6);
+    ctx.fillRect(this.width-6, 0, 6, this.height);
+
+    // Underwater haze
+    ctx.fillStyle = 'rgba(10, 50, 70, 0.3)';
+    ctx.fillRect(POND_X, POND_Y, POND_W, POND_H);
+
+    // Lily pads
+    const now = this.simulationTime;
+    for (const lp of this.lilyPads) {
+      const sway = Math.sin(now * 0.001 + lp.phase) * 2;
+      ctx.save();
+      ctx.translate(lp.x + sway, lp.y + sway);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, lp.r, lp.r * 0.7, 0, 0, Math.PI*2);
+      ctx.fillStyle = '#2a5a2a';
+      ctx.fill();
+      ctx.strokeStyle = '#1a4a1a';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      // Lily pad notch
+      ctx.beginPath();
+      ctx.moveTo(lp.r*0.2, 0);
+      ctx.lineTo(lp.r*0.6, -lp.r*0.5);
+      ctx.lineTo(lp.r*0.6, lp.r*0.5);
+      ctx.closePath();
+      ctx.fillStyle = '#0d5a6a';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Ripples
+    for (const r of this.ripples) {
+      ctx.beginPath();
+      ctx.arc(r.x, r.y, r.r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(150, 220, 240, ${r.alpha})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
+    // ── Draw entities (back to front) ─────────────────────────────
+
+    // Food (algae)
+    for (const f of this.food) {
+      const alpha = Math.min(1, (f.maxAge - f.age) / 100);
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.radius, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(80, 190, 60, ${alpha * 0.8})`;
+      ctx.fill();
+      ctx.fillStyle = `rgba(120, 230, 80, ${alpha * 0.5})`;
+      ctx.beginPath();
+      ctx.arc(f.x - f.radius*0.2, f.y - f.radius*0.2, f.radius*0.4, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // Mosquito eggs (rafts on surface)
+    for (const e of this.mosquitoEggs) {
+      ctx.fillStyle = '#2a2a1a';
+      ctx.beginPath();
+      ctx.ellipse(e.x, e.y, 6, 3, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = '#1a1a0a';
+      for (let i = 0; i < e.eggCount && i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.arc(e.x + Math.cos(a)*3, e.y + Math.sin(a)*1.5, 0.8, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    // Mosquito larvae
+    for (const l of this.mosquitoLarvae) {
+      ctx.save();
+      ctx.translate(l.x, l.y);
+      const wiggle = Math.sin(l.phase);
+      ctx.rotate(wiggle * 0.3);
+      // Body
+      ctx.fillStyle = '#3a3a2a';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, l.radius, l.radius * 0.6, 0, 0, Math.PI*2);
+      ctx.fill();
+      // Tail
+      ctx.strokeStyle = '#4a4a3a';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.quadraticCurveTo(l.radius*1.5, Math.sin(l.phase*2)*3, l.radius*2.5, Math.sin(l.phase*3)*2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Frog spawn
+    for (const s of this.frogSpawns) {
+      const hue = expressGenome(s.genome).hue * 60 + 80;
+      // Pale egg membrane with a hint of the frog's hue
+      const eggColor = `hsla(${hue}, 15%, 88%, 0.6)`;
+      const eggBorder = `hsla(${hue}, 10%, 75%, 0.4)`;
+      for (const c of s.cluster) {
+        ctx.beginPath();
+        ctx.arc(s.x + c.ox, s.y + c.oy, c.r, 0, Math.PI*2);
+        ctx.fillStyle = eggColor;
+        ctx.fill();
+        ctx.strokeStyle = eggBorder;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+        // Dark nucleus
+        ctx.beginPath();
+        ctx.arc(s.x + c.ox - 1, s.y + c.oy - 1, c.r * 0.3, 0, Math.PI*2);
+        ctx.fillStyle = `hsla(200, 20%, 15%, 0.6)`;
+        ctx.fill();
+      }
+    }
+
+    // Tadpoles
+    for (const t of this.tadpoles) {
+      const hue = (t.phenotype.hue * 60 + 80) % 360;
+      const bodyR = t.radius;
+      ctx.save();
+      ctx.translate(t.x, t.y);
+      const angle = Math.atan2(t.vy, t.vx);
+      ctx.rotate(angle);
+      // Tail
+      ctx.strokeStyle = `hsla(${hue}, 40%, 40%, 0.6)`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-bodyR*0.3, 0);
+      ctx.quadraticCurveTo(-bodyR, Math.sin(t.wobble)*3, -bodyR - t.tailLength, Math.sin(t.wobble*1.5)*2);
+      ctx.stroke();
+      // Body
+      ctx.fillStyle = `hsla(${hue}, 50%, 45%, 0.8)`;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, bodyR, bodyR*0.6, 0, 0, Math.PI*2);
+      ctx.fill();
+      // Eyes
+      ctx.fillStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.arc(bodyR*0.3, -bodyR*0.2, 1.2, 0, Math.PI*2);
+      ctx.arc(bodyR*0.3, bodyR*0.2, 1.2, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      ctx.arc(bodyR*0.35, -bodyR*0.25, 0.5, 0, Math.PI*2);
+      ctx.arc(bodyR*0.35, bodyR*0.15, 0.5, 0, Math.PI*2);
+      ctx.fill();
+      // Belly
+      ctx.fillStyle = `hsla(${hue}, 30%, 55%, 0.3)`;
+      ctx.beginPath();
+      ctx.ellipse(0, bodyR*0.2, bodyR*0.5, bodyR*0.2, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Froglets
+    for (const f of this.froglets) {
+      const hue = (f.phenotype.hue * 60 + 80) % 360;
+      const bodyR = f.radius;
+      ctx.save();
+      ctx.translate(f.x, f.y);
+      const angle = Math.atan2(f.vy, f.vx);
+      const jumpPhase = f.jumpCooldown > 0 ? Math.sin(f.jumpCooldown * 0.3) * 0.2 : 0;
+      ctx.rotate(angle + jumpPhase);
+      // Back legs
+      ctx.strokeStyle = `hsla(${hue}, 40%, 30%, 0.7)`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-bodyR*0.2, -bodyR*0.3);
+      ctx.lineTo(-bodyR*0.7, -bodyR*0.7);
+      ctx.lineTo(-bodyR*0.5, -bodyR*0.3);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-bodyR*0.2, bodyR*0.3);
+      ctx.lineTo(-bodyR*0.7, bodyR*0.7);
+      ctx.lineTo(-bodyR*0.5, bodyR*0.3);
+      ctx.stroke();
+      // Body
+      ctx.fillStyle = `hsla(${hue}, 55%, 40%, 0.9)`;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, bodyR, bodyR*0.65, 0, 0, Math.PI*2);
+      ctx.fill();
+      // Spots
+      ctx.fillStyle = `hsla(${hue+20}, 40%, 25%, 0.4)`;
+      ctx.beginPath();
+      ctx.arc(bodyR*0.2, -bodyR*0.15, bodyR*0.2, 0, Math.PI*2);
+      ctx.arc(-bodyR*0.15, bodyR*0.2, bodyR*0.15, 0, Math.PI*2);
+      ctx.fill();
+      // Eyes
+      ctx.fillStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.arc(bodyR*0.6, -bodyR*0.25, 1.8, 0, Math.PI*2);
+      ctx.arc(bodyR*0.6, bodyR*0.25, 1.8, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = '#c8e040';
+      ctx.beginPath();
+      ctx.arc(bodyR*0.65, -bodyR*0.3, 1, 0, Math.PI*2);
+      ctx.arc(bodyR*0.65, bodyR*0.2, 1, 0, Math.PI*2);
+      ctx.fill();
+      // Front legs (small)
+      ctx.strokeStyle = `hsla(${hue}, 40%, 30%, 0.6)`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(bodyR*0.5, -bodyR*0.4);
+      ctx.lineTo(bodyR*0.9, -bodyR*0.5);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(bodyR*0.5, bodyR*0.4);
+      ctx.lineTo(bodyR*0.9, bodyR*0.5);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Dragonfly nymphs (submerged predators)
+    for (const n of this.dragonflyNymphs) {
+      ctx.save();
+      ctx.translate(n.x, n.y);
+      const angle = Math.atan2(n.vy, n.vx);
+      ctx.rotate(angle);
+      const bodyR = n.radius;
+      // Long segmented body
+      ctx.fillStyle = '#3a4a3a';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, bodyR, bodyR * 0.5, 0, 0, Math.PI*2);
+      ctx.fill();
+      // Segments
+      ctx.fillStyle = '#2a3a2a';
+      for (let i = 1; i <= 3; i++) {
+        ctx.beginPath();
+        ctx.ellipse(-bodyR * 0.4 * i, 0, bodyR * 0.35, bodyR * 0.35, 0, 0, Math.PI*2);
+        ctx.fill();
+      }
+      // Eyes
+      ctx.fillStyle = '#4a6a3a';
+      ctx.beginPath();
+      ctx.arc(bodyR * 0.5, -bodyR * 0.3, 1.5, 0, Math.PI*2);
+      ctx.arc(bodyR * 0.5, bodyR * 0.3, 1.5, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = '#8aca5a';
+      ctx.beginPath();
+      ctx.arc(bodyR * 0.55, -bodyR * 0.35, 0.7, 0, Math.PI*2);
+      ctx.arc(bodyR * 0.55, bodyR * 0.25, 0.7, 0, Math.PI*2);
+      ctx.fill();
+      // Legs (small)
+      ctx.strokeStyle = '#2a3a2a';
+      ctx.lineWidth = 0.8;
+      for (let leg of [-1, 1]) {
+        ctx.beginPath();
+        ctx.moveTo(-bodyR * 0.3, leg * bodyR * 0.3);
+        ctx.lineTo(-bodyR * 0.6, leg * bodyR * 0.6);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(-bodyR * 0.7, leg * bodyR * 0.2);
+        ctx.lineTo(-bodyR * 1.0, leg * bodyR * 0.5);
+        ctx.stroke();
+      }
+      // Growth indicator (small glint at full growth)
+      if (n.growth > 0.8) {
+        ctx.fillStyle = 'rgba(100, 200, 120, 0.15)';
+        ctx.beginPath();
+        ctx.arc(0, 0, bodyR + 2, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // Adult dragonflies (flying)
+    for (const d of this.dragonflies) {
+      ctx.save();
+      ctx.translate(d.x, d.y);
+      const angle = Math.atan2(d.vy, d.vx);
+      ctx.rotate(angle);
+      const wingFlap = Math.sin(d._wingAngle) * 0.5 + 0.5;
+      // Wings
+      ctx.fillStyle = `rgba(150, 200, 220, ${0.2 + wingFlap * 0.15})`;
+      ctx.beginPath();
+      ctx.ellipse(0, -4 - wingFlap * 2, 5, 1.5, 0.3, 0, Math.PI*2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(0, 4 + wingFlap * 2, 5, 1.5, -0.3, 0, Math.PI*2);
+      ctx.fill();
+      // Body
+      ctx.fillStyle = '#3a5a3a';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 4, 1.5, 0, 0, Math.PI*2);
+      ctx.fill();
+      // Tail
+      ctx.strokeStyle = '#2a4a2a';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(-3, 0);
+      ctx.lineTo(-6, 0);
+      ctx.stroke();
+      // Head
+      ctx.fillStyle = '#4a6a4a';
+      ctx.beginPath();
+      ctx.arc(3.5, 0, 1.5, 0, Math.PI*2);
+      ctx.fill();
+      // Eyes
+      ctx.fillStyle = '#6aca4a';
+      ctx.beginPath();
+      ctx.arc(4, -1, 0.8, 0, Math.PI*2);
+      ctx.arc(4, 1, 0.8, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Adult mosquitoes
+    for (const m of this.mosquitoes) {
+      ctx.save();
+      ctx.translate(m.x, m.y);
+      ctx.rotate(Math.atan2(m.vy, m.vx));
+      // Wings
+      ctx.fillStyle = 'rgba(180, 200, 220, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(0, -3, 4, 1.5, 0.2, 0, Math.PI*2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(0, 3, 4, 1.5, -0.2, 0, Math.PI*2);
+      ctx.fill();
+      // Body
+      ctx.fillStyle = '#2a2a2a';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 3, 1.5, 0, 0, Math.PI*2);
+      ctx.fill();
+      // Head
+      ctx.fillStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.arc(2.5, 0, 1.2, 0, Math.PI*2);
+      ctx.fill();
+      // Proboscis
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(3.5, 0);
+      ctx.lineTo(5, 0);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Particles (death/leaving effects)
+    for (const p of this.particles) {
+      const alpha = p.life / p.maxLife;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // Hover tooltip
+    if (this.hoveredEntity) {
+      this.drawTooltip(ctx, this.hoveredEntity);
+    }
+  }
+
+  drawTooltip(ctx, entity) {
+    let name = 'Unknown', genome = null;
+    if (entity instanceof FrogSpawn) { name = '🐸 Frog Spawn'; genome = entity.genome; }
+    else if (entity instanceof Tadpole) { name = ' Tadpole'; genome = entity.genome; }
+    else if (entity instanceof Froglet) { name = '🐸 Froglet'; genome = entity.genome; }
+    else if (entity instanceof MosquitoEggRaft) { name = ' Mosquito Eggs'; }
+    else if (entity instanceof MosquitoLarva) { name = ' Mosquito Larva'; }
+    else if (entity instanceof Mosquito) { name = ' Mosquito'; }
+    else if (entity instanceof DragonflyNymph) { name = '🐉 Dragonfly Nymph'; genome = { POU1F1: 0.5, THR: 0.5, MC1R: 0.5, IGF1: 0.5, LEP: 0.5 }; }
+    else if (entity instanceof DragonflyAdult) { name = '🐉 Dragonfly'; }
+    else if (entity instanceof Food) { name = '🌿 Algae'; }
+
+    const tx = Math.min(entity.x + 15, this.width - 200);
+    const ty = Math.max(entity.y - 20, 10);
+
+    ctx.fillStyle = 'rgba(10, 10, 20, 0.85)';
+    ctx.fillRect(tx, ty, 190, genome ? 180 : 50);
+    ctx.strokeStyle = 'rgba(60, 180, 200, 0.3)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(tx, ty, 190, genome ? 180 : 50);
+
+    ctx.fillStyle = '#c0d8e0';
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.fillText(name, tx + 8, ty + 14);
+
+    if (genome) {
+      const p = expressGenome(genome);
+      // Genotype section (regulatory genes — what's inherited)
+      ctx.fillStyle = '#5a9aaa';
+      ctx.font = '8px system-ui, sans-serif';
+      ctx.fillText('GENOTYPE (regulatory genes)', tx + 6, ty + 28);
+      ctx.font = '9px system-ui, sans-serif';
+      let line = 36;
+      for (const k of REGULATORY_GENES) {
+        const v = genome[k];
+        const label = k;
+        ctx.fillStyle = '#5a7a8a';
+        ctx.fillText(label, tx + 6, ty + line);
+        // mini bar
+        ctx.fillStyle = `hsl(${v * 120 + 40}, 60%, 50%)`;
+        ctx.fillRect(tx + 80, ty + line - 7, v * 50, 5);
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.fillRect(tx + 80, ty + line - 7, 50, 1);
+        ctx.fillStyle = '#8aacba';
+        ctx.fillText(v.toFixed(2), tx + 135, ty + line);
+        line += 13;
+      }
+      // Phenotype section (expressed traits — what the creature expresses)
+      line += 2;
+      ctx.fillStyle = '#7abaaa';
+      ctx.font = '8px system-ui, sans-serif';
+      ctx.fillText('PHENOTYPE (expressed traits)', tx + 6, ty + line);
+      ctx.font = '9px system-ui, sans-serif';
+      line += 12;
+      for (const k of PHENOTYPE_KEYS) {
+        const v = p[k];
+        const label = k.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase());
+        ctx.fillStyle = '#5a7a8a';
+        ctx.fillText(label, tx + 6, ty + line);
+        ctx.fillStyle = `hsl(${v * 120}, 70%, 50%)`;
+        ctx.fillRect(tx + 100, ty + line - 7, v * 50, 5);
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.fillRect(tx + 100, ty + line - 7, 50, 1);
+        ctx.fillStyle = '#8aacba';
+        ctx.fillText(v.toFixed(2), tx + 155, ty + line);
+        line += 12;
+      }
+    }
+  }
+
+  getStats() {
+    return {
+      frogSpawns: this.frogSpawns.length,
+      tadpoles: this.tadpoles.length,
+      froglets: this.froglets.length,
+      frogsReleased: this.frogsReleased,
+      mosquitoEggs: this.mosquitoEggs.length,
+      mosquitoLarvae: this.mosquitoLarvae.length,
+      mosquitoes: this.mosquitoes.length,
+      dragonflyNymphs: this.dragonflyNymphs.length,
+      dragonflies: this.dragonflies.length,
+      dragonfliesReleased: this.dragonfliesReleased,
+      mosquitoesReleased: this.mosquitoesReleased,
+      humansBitten: this.humansBitten,
+      food: this.food.length,
+      generation: this.generation,
+      totalSpawnLaid: this.totalSpawnLaid,
+      time: this.simulationTime,
+    };
+  }
+
+  getEvoStats() {
+    // Average REGULATORY GENE values from gene pool — these are what's evolving
+    const avg = {};
+    if (genePool.length === 0) return null;
+    REGULATORY_GENES.forEach(k => {
+      avg[k] = genePool.reduce((s, g) => s + g[k], 0) / genePool.length;
+    });
+    return avg;
+  }
+
+  reset() {
+    this.food = [];
+    this.frogSpawns = [];
+    this.tadpoles = [];
+    this.froglets = [];
+    this.mosquitoEggs = [];
+    this.mosquitoLarvae = [];
+    this.mosquitoes = [];
+    this.dragonflyNymphs = [];
+    this.dragonflies = [];
+    this.particles = [];
+    this.frogsReleased = 0;
+    this.mosquitoesReleased = 0;
+    this.dragonfliesReleased = 0;
+    this.dragonfliesBirthed = 0;
+    this.humansBitten = 0;
+    this.totalSpawnLaid = 0;
+    this.generation = 0;
+    this.simulationTime = 0;
+    this.frogTimer = 0;
+    this.mosquitoTimer = 0;
+    this.algaeTimer = 0;
+    this.ripples = [];
+    genePool = [];
+    this.seed();
+  }
+}
+
+// ── UI ───────────────────────────────────────────────────────────────
+const canvas = document.getElementById('pond');
+const pond = new Pond(canvas);
+
+const speedSlider = document.getElementById('speed');
+const speedVal = document.getElementById('speed-val');
+const frogRateSlider = document.getElementById('frogRate');
+const frogRateVal = document.getElementById('frogRate-val');
+const mosquitoRateSlider = document.getElementById('mosquitoRate');
+const mosquitoRateVal = document.getElementById('mosquitoRate-val');
+const algaeRateSlider = document.getElementById('algaeRate');
+const algaeRateVal = document.getElementById('algaeRate-val');
+const dragonflyRateSlider = document.getElementById('dragonflyRate');
+const dragonflyRateVal = document.getElementById('dragonflyRate-val');
+const pauseBtn = document.getElementById('pauseBtn');
+const resetBtn = document.getElementById('resetBtn');
+const statsDiv = document.getElementById('stats');
+const evoStatsDiv = document.getElementById('evo-stats');
+const genNum = document.getElementById('gen-num');
+const creatureInfo = document.getElementById('creature-info');
+
+// Slider events
+speedSlider.addEventListener('input', () => {
+  const v = parseFloat(speedSlider.value);
+  pond.speed = Math.pow(2, (v - 10) / 8);
+  speedVal.textContent = pond.speed.toFixed(1) + '×';
+});
+
+frogRateSlider.addEventListener('input', () => {
+  pond.frogRate = parseFloat(frogRateSlider.value);
+  frogRateVal.textContent = pond.frogRate;
+});
+
+mosquitoRateSlider.addEventListener('input', () => {
+  pond.mosquitoRate = parseFloat(mosquitoRateSlider.value);
+  mosquitoRateVal.textContent = pond.mosquitoRate;
+});
+
+algaeRateSlider.addEventListener('input', () => {
+  pond.algaeRate = parseFloat(algaeRateSlider.value);
+  algaeRateVal.textContent = pond.algaeRate;
+});
+
+dragonflyRateSlider.addEventListener('input', () => {
+  pond.dragonflyRate = parseFloat(dragonflyRateSlider.value);
+  dragonflyRateVal.textContent = pond.dragonflyRate;
+});
+
+pauseBtn.addEventListener('click', () => {
+  pond.paused = !pond.paused;
+  pauseBtn.textContent = pond.paused ? '▶ Play' : '⏸ Pause';
+  pauseBtn.classList.toggle('active', !pond.paused);
+});
+
+resetBtn.addEventListener('click', () => {
+  pond.reset();
+  pauseBtn.textContent = '⏸ Pause';
+  pauseBtn.classList.add('active');
+  pond.paused = false;
+});
+
+// ── Game Loop ────────────────────────────────────────────────────────
+let lastTime = 0;
+const TICK_RATE = 1/60;
+
+function gameLoop(time) {
+  const rawDt = lastTime ? Math.min((time - lastTime) / 1000, 0.05) : TICK_RATE;
+  lastTime = time;
+
+  // Run multiple sub-ticks for smooth simulation
+  const steps = Math.ceil(rawDt / TICK_RATE);
+  const subDt = rawDt / steps;
+  for (let i = 0; i < steps; i++) {
+    pond.update(subDt * 60); // dt in frame units
+  }
+
+  pond.render();
+  updateUI();
+  requestAnimationFrame(gameLoop);
+}
+
+function updateUI() {
+  const s = pond.getStats();
+
+  statsDiv.innerHTML = `
+    <div class="stat"><span class="key">🐸 Frog spawn</span><span class="val">${s.frogSpawns}</span></div>
+    <div class="stat"><span class="key"> Tadpoles</span><span class="val ${s.tadpoles > 10 ? 'good' : 'warn'}">${s.tadpoles}</span></div>
+    <div class="stat"><span class="key">🐸 Froglets</span><span class="val">${s.froglets}</span></div>
+    <div class="stat"><span class="key">🚀 Frogs released</span><span class="val good">${s.frogsReleased}</span></div>
+    <hr class="divider">
+    <div class="stat"><span class="key"> Mosquito eggs</span><span class="val">${s.mosquitoEggs}</span></div>
+    <div class="stat"><span class="key"> Mosquito larvae</span><span class="val">${s.mosquitoLarvae}</span></div>
+    <div class="stat"><span class="key"> Mosquitoes</span><span class="val ${s.mosquitoes > 20 ? 'bad' : ''}">${s.mosquitoes}</span></div>
+    <div class="stat"><span class="key">🦟 Released</span><span class="val">${s.mosquitoesReleased}</span></div>
+    <div class="stat"><span class="key">🐉 Dragonfly nymphs</span><span class="val ${s.dragonflyNymphs > 5 ? 'bad' : ''}">${s.dragonflyNymphs}</span></div>
+    <div class="stat"><span class="key">🐉 Dragonflies</span><span class="val">${s.dragonflies}</span></div>
+    <div class="stat"><span class="key">🐉 Emerged</span><span class="val">${s.dragonfliesReleased}</span></div>
+    <div class="stat"><span class="key">💉 Humans bitten</span><span class="val bad">${s.humansBitten.toLocaleString()}</span></div>
+    <hr class="divider">
+    <div class="stat"><span class="key">🌿 Algae</span><span class="val">${s.food}</span></div>
+    <div class="stat"><span class="key">⏱ Time</span><span class="val">${Math.floor(s.time / 3600)}h ${Math.floor((s.time % 3600)/60)}m</span></div>
+  `;
+
+  genNum.textContent = s.generation;
+
+  const evo = pond.getEvoStats();
+  if (evo && s.generation > 0) {
+    evoStatsDiv.innerHTML = REGULATORY_GENES.map(k => {
+      const v = evo[k];
+      const hue = v * 120 + 40;
+      return `<div class="stat"><span class="key">${k}</span><span class="val"><span class="evo-tag" style="background:hsl(${hue},60%,45%)"></span>${v.toFixed(3)}</span></div>`;
+    }).join('');
+    evoStatsDiv.innerHTML += '<div style="color:#5a7a7a;font-size:9px;margin-top:4px;border-top:1px solid #2a2a3a;padding-top:3px">regulatory genes — what evolves</div>';
+  } else {
+    evoStatsDiv.innerHTML = '<div style="color:#5a7a7a;font-size:11px;">Waiting for first frog to complete its lifecycle...</div>';
+  }
+
+  // Hover info
+  const h = pond.hoveredEntity;
+    if (h) {
+      if (h.genome) {
+        const geneStrs = REGULATORY_GENES.map(k => `${k}: ${h.genome[k].toFixed(2)}`).join(' · ');
+        const p = expressGenome(h.genome);
+        const pdStrs = PHENOTYPE_KEYS.map(k => `${k}: ${p[k].toFixed(2)}`).join(' · ');
+        creatureInfo.innerHTML = `<span class="evo-tag" style="background:hsl(${p.hue*60+80},55%,40%)"></span> 🧬 ${geneStrs}<br><span style="color:#6a9a7a">→ ${pdStrs}</span>`;
+      } else {
+        creatureInfo.textContent = 'click a creature with DNA to see its genes';
+      }
+    } else {
+      creatureInfo.textContent = 'hover over a creature to inspect genotype & phenotype';
+    }
+}
+
+// ── Start ────────────────────────────────────────────────────────────
+requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>

@@ -1,6 +1,8 @@
 // ── UI Controls & Stats ─────────────────────────────────────────────
 import { pond } from './registry.js';
 import { expressGenome, REGULATORY_GENES, PHENOTYPE_KEYS, genePool } from './genome.js';
+import { assignMorph, COLOR_MORPHS } from './morphs.js';
+import { drawEvoChart } from './evolution-chart.js';
 
 export function setupUI() {
   const speedSlider = document.getElementById('speed');
@@ -29,7 +31,7 @@ export function setupUI() {
 
   speedSlider.addEventListener('input', () => {
     const v = parseFloat(speedSlider.value);
-    pond.speed = Math.pow(2, (v - 10) / 8);
+    pond.speed = v <= 10 ? v / 10 : 1 + (v - 10) * (49 / 50);
     speedVal.textContent = pond.speed.toFixed(1) + '×';
     saveSettings();
   });
@@ -189,6 +191,15 @@ export function updateUI(ui) {
     <div class="stat"><span class="key">⏱ Time</span><span class="val">${Math.floor(s.time / 3600)}h ${Math.floor((s.time % 3600) / 60)}m</span></div>
     <hr class="divider">
     <div class="stat"><span class="key">${s.stressEventActive ? '⚠ ' + s.stressEventActive : '✅ Calm'}</span><span class="val">${s.stressEventsTotal} events</span></div>
+    <div style="font-size:10px;margin-top:4px;padding-top:4px;border-top:1px solid #2a2a3a">
+      ${s.stressEventLog.length > 0 ? s.stressEventLog.map(e => {
+        const icon = e.survived === true ? '✅' : e.survived === null ? '⚠' : '⏹';
+        const deathStr = e.deaths > 0 ? `<span style="color:#cc5555">${e.deaths} died</span>` : 'no deaths';
+        return `<div style="color:${e.survived === null ? '#ddaa44' : '#6a8a7a'};margin-bottom:2px">
+          ${icon} ${e.name} ${e.duration}s — ${deathStr}
+        </div>`;
+      }).join('') : '<div style="color:#4a6a5a;font-style:italic">no events yet</div>'}
+    </div>
     <hr class="divider">
     <div class="stat"><span class="key" style="color:${s.seasonColor}">${s.season}</span><span class="val">${s.timeOfDay}</span></div>
   `;
@@ -202,8 +213,33 @@ export function updateUI(ui) {
       const v = evo[k];
       const hue = v * 120 + 40;
       return `<div class="stat"><span class="key">${k}</span><span class="val"><span class="evo-tag" style="background:hsl(${hue},60%,45%)"></span>${v.toFixed(3)}</span></div>`;
-    }).join('');
-    evoStatsDiv.innerHTML += '<div style="color:#5a7a7a;font-size:9px;margin-top:4px;border-top:1px solid #2a2a3a;padding-top:3px">regulatory genes — what evolves</div>';
+    }).join('') +
+    // ── Morph Distribution ──
+    '<hr class="divider" style="margin-top:6px">' +
+    '<div style="display:flex;justify-content:space-between;font-size:10px;color:#5a7a7a;margin-bottom:4px">' +
+      '<span>🎨 Morphs</span>' +
+      '<span>d:' + s.morphDiversity.toFixed(2) + '</span>' +
+    '</div>' +
+    (s.morphClusters.length > 0
+      ? s.morphClusters.map(([mId, count, frac]) => {
+          const morph = COLOR_MORPHS.find(m => m.id === mId) || COLOR_MORPHS[0];
+          const pct = (frac * 100).toFixed(0);
+          return `<div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:10px">
+            <span class="evo-tag" style="background:${morph.color};width:8px;height:8px"></span>
+            <span style="color:#6a8a7a;min-width:48px">${morph.name.split(' ')[1]}</span>
+            <div style="flex:1;height:8px;background:#1a1a30;border-radius:4px;overflow:hidden">
+              <div style="width:${pct}%;height:100%;background:${morph.color};border-radius:4px;transition:width 0.3s"></div>
+            </div>
+            <span style="color:#7a9a8a;min-width:28px;text-align:right;font-variant-numeric:tabular-nums">${pct}%</span>
+          </div>`;
+        }).join('') + '<div style="color:#5a7a7a;font-size:8px;margin-top:1px">' + s.activeMorphCount + ' morphs · ' + s.morphClusters.reduce((sum, [,c]) => sum + c, 0) + ' frogs</div>'
+      : '<div style="color:#4a6a5a;font-size:10px;font-style:italic">gene pool too small for clustering</div>'
+    ) +
+    (s.morphSplits && s.morphSplits.length >= 1
+      ? '<div style="margin-top:4px;padding-top:4px;border-top:1px solid #2a2a3a">' + pond.morphLineage.renderLineageSVG() + '</div>'
+      : ''
+    ) +
+    '<div style="color:#5a7a7a;font-size:9px;margin-top:4px;border-top:1px solid #2a2a3a;padding-top:3px">regulatory genes + morph distribution</div>';
   } else {
     const tips = [
       '🐸 Tadpoles grow into froglets, then leave = generation 1',
@@ -219,11 +255,10 @@ export function updateUI(ui) {
   const hof = pond.getHallOfFame();
   if (hof && hof.length > 0) {
     hofStatsDiv.innerHTML = hof.map((g, i) => {
-      const p = expressGenome(g);
-      const hue = p.hue * 60 + 80;
+      const morph = assignMorph(g);
       const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '▸';
       return `<div class="stat"><span class="key">${medal} #${g._id}</span><span class="val good">${g._offspring} offspring</span></div>
-<div style="font-size:9px;color:#5a7a7a;padding-left:14px;margin-bottom:4px"><span class="evo-tag" style="background:hsl(${hue},55%,40%)"></span>${REGULATORY_GENES.map(k => g[k].toFixed(2)).join(' · ')}</div>`;
+<div style="font-size:9px;color:#5a7a7a;padding-left:14px;margin-bottom:4px"><span class="evo-tag" style="background:${morph.color};width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle;border:1px solid rgba(255,255,255,0.1)"></span>${morph.name} · ${REGULATORY_GENES.map(k => g[k].toFixed(2)).join(' · ')}</div>`;
     }).join('');
     hofStatsDiv.innerHTML += '<div style="color:#5a7a7a;font-size:9px;margin-top:2px;border-top:1px solid #2a2a3a;padding-top:3px">most prolific breeders by offspring count</div>';
   } else {
@@ -233,15 +268,22 @@ export function updateUI(ui) {
   const h = pond.hoveredEntity;
   if (h) {
     if (h.genome) {
+      const morph = assignMorph(h.genome);
       const geneStrs = REGULATORY_GENES.map(k => `${k}: ${h.genome[k].toFixed(2)}`).join(' · ');
       const p = expressGenome(h.genome);
       const pdStrs = PHENOTYPE_KEYS.map(k => `${k}: ${p[k].toFixed(2)}`).join(' · ');
-      creatureInfo.innerHTML = `<span class="evo-tag" style="background:hsl(${p.hue * 60 + 80},55%,40%)"></span> 🧬 ${geneStrs}<br><span style="color:#6a9a7a">→ ${pdStrs}</span>`;
+      creatureInfo.innerHTML = `<span class="evo-tag" style="background:${morph.color};width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle;border:1px solid rgba(255,255,255,0.1)"></span> ${morph.name} · 🧬 ${geneStrs}<br><span style="color:#6a9a7a">→ ${pdStrs}</span>`;
     } else {
       creatureInfo.textContent = 'click a creature with DNA to see its genes';
     }
   } else {
     creatureInfo.textContent = 'hover over a creature to inspect genotype & phenotype';
+  }
+
+  // ── Evolution Trend Chart ──
+  const evoChart = document.getElementById('evo-chart');
+  if (evoChart) {
+    drawEvoChart(evoChart, pond.generationData);
   }
 }
 
@@ -274,9 +316,10 @@ export function selectForGeneBrowser(entity) {
   else if (entity.constructor.name === 'Food') name = '🌿 Algae';
 
   const ageStr = (entity.age / 60).toFixed(0) + 's';
+  const morph = assignMorph(entity.genome);
   const parentStr = entity.genome._parentIds && entity.genome._parentIds.length > 0
     ? 'parents: #' + entity.genome._parentIds.join(', #') : 'wild type (no recorded parents)';
-  genomeEntityInfo.innerHTML = `<strong>${name}</strong> · id:${entity.id} · age:${ageStr}<br><span style="color:#6a9a7a;font-size:10px">${parentStr}</span>`;
+  genomeEntityInfo.innerHTML = `<strong>${name}</strong> · <span class="evo-tag" style="background:${morph.color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:2px;vertical-align:middle;border:1px solid rgba(255,255,255,0.1)"></span> ${morph.name} · id:${entity.id} · age:${ageStr}<br><span style="color:#6a9a7a;font-size:10px">${parentStr}</span>`;
 
   const g = entity.genome;
   genomeGenotypeBars.innerHTML = REGULATORY_GENES.map(k => {
@@ -307,14 +350,13 @@ export function selectForGeneBrowser(entity) {
 
   if (ancestors.length > 0) {
     genomeAncestors.innerHTML = ancestors.map((a, i) => {
-      const pa = expressGenome(a);
-      const hue = pa.hue * 60 + 80;
+      const morph = assignMorph(a);
       const geneStr = REGULATORY_GENES.map(k => `${k}:${a[k].toFixed(2)}`).join(' ');
       const medal = a._offspring > 50 ? '🥇' : a._offspring > 10 ? '🌟' : '';
       return `<div class="genome-ancestor-entry">
         <span class="ancestor-id">#${a._id}</span> ${medal}
         <span class="ancestor-offspring">${a._offspring} offspring</span>
-        <div class="ancestor-genes"><span class="evo-tag" style="background:hsl(${hue},55%,40%)"></span>${geneStr}</div>
+        <div class="ancestor-genes"><span class="evo-tag" style="background:${morph.color};width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle;border:1px solid rgba(255,255,255,0.1)"></span>${morph.name} · ${geneStr}</div>
       </div>`;
     }).join('');
     // Grandparent trail

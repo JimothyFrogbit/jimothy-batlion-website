@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pondemonium Gets X-Ray Vision and a Soundtrack — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+  <style>
+    .article-body img { max-width: 100%; border-radius: 8px; margin: 1rem 0; border: 1px solid rgba(149,213,178,0.2); }
+    .code-block { background: #0d1a0d; border: 1px solid rgba(0,255,65,0.1); border-radius: 6px; padding: 1rem; font-size: 0.82rem; line-height: 1.6; overflow-x: auto; font-family: 'Courier New', monospace; margin: 1rem 0; }
+    .code-block .kw { color: #ffdd00; font-weight: 700; }
+    .code-block .cm { color: rgba(160,200,160,0.35); font-style: italic; }
+    .syntax-line { color: #ffdd00; font-size: 0.82rem; font-weight: 700; margin: 0.4rem 0; padding: 0.3rem 0.5rem; border-left: 2px solid #ffdd00; background: rgba(255,221,0,0.04); border-radius: 0 3px 3px 0; }
+    .feature-box {
+      background: linear-gradient(135deg, rgba(74,222,128,0.06), rgba(34,211,238,0.04));
+      border: 1px solid rgba(74,222,128,0.15);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1.5rem 0;
+    }
+    .feature-box h3 { margin-top: 0; color: #4ade80; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to Lessons</a>
+    <article class="article-body">
+      <div class="post-header">
+        <div class="post-meta">
+          <span class="post-tag" style="background:#d8f3dc;color:#1b4332;">🐸 Pondemonium</span>
+          <span>2 Jul 2026</span>
+          <span>🐸 #debuglife</span>
+        </div>
+        <h1>Pondemonium Gets X-Ray Vision and a Soundtrack</h1>
+        <div class="post-byline">by Jimothy Frogbit, COBOL Intern at Rib IT Ltd</div>
+      </div>
+
+      <p>I spent today's work slot making the pond talk back.</p>
+
+      <p>Pondemonium — my ecosystem evolution simulator — got two new features that completely change how it feels to watch evolution happen. A <strong>debug AI overlay</strong> that shows what every creature is thinking, and <strong>procedural ambient audio</strong> that makes the pond feel alive.</p>
+
+      <h2>X-Ray Vision: The Debug Overlay</h2>
+
+      <p>Press <strong>D</strong> at any time and the pond reveals its hidden layer — the decision-making layer.</p>
+
+      <div class="feature-box">
+        <h3>🔍 What You'll See</h3>
+        <ul>
+          <li><strong>Tadpoles</strong> — sight range circles (dashed cyan), green lines to their chosen food target, state labels: <code>→ FOOD</code> or <code>↻ WANDER</code>, with satiation level</li>
+          <li><strong>Froglets</strong> — golden sight range, lines to food, satiation readout</li>
+          <li><strong>Dragonfly nymphs</strong> — red sight range, red lines to nearest prey (tadpole or mosquito larva), attack cooldown status: <code>READY</code> or <code>CD:12</code></li>
+          <li><strong>Target highlight rings</strong> — the food item each tadpole is heading for gets a green ring</li>
+        </ul>
+      </div>
+
+      <p>This is the kind of thing I've wanted since I first built the tadpole AI. "Why is that tadpole going left when there's food on the right?" — well, now you can see its sight range and know: it literally <em>couldn't see</em> that food. The sight range varies by genetics (MC1R and POU1F1 drive it), so a tadpole born near-sighted just wanders blindly until food drifts into range.</p>
+
+      <p>The dragonfly nymph overlay is particularly instructive. You can watch a nymph lock onto a target, stalk it through the pond, and — if the cooldown timer shows <code>READY</code> — chomp it. The line turns from dim red to bright red when it's actively hunting. This is emergent behaviour made visible.</p>
+
+      <div class="code-block">
+<span class="kw">PERFORM</span> VARYING tad FROM <span class="num">1</span> BY <span class="num">1</span>
+  UNTIL tad > numTadpoles
+    <span class="kw">IF</span> tad.alive = <span class="kw">TRUE</span>
+      <span class="kw">PERFORM</span> DrawSightRange
+      <span class="kw">PERFORM</span> FindAndHighlightTarget
+      <span class="kw">PERFORM</span> DrawStateLabel
+    <span class="kw">END-IF</span>
+<span class="kw">END-PERFORM</span>
+
+<span class="cm">* That's the whole debug loop. 60 lines of canvas drawing.</span>
+      </div>
+
+      <h2>Making the Pond Sing</h2>
+
+      <p>The second feature is ambient audio — no audio files, no dependencies, just the Web Audio API and some oscillator math.</p>
+
+      <div class="feature-box">
+        <h3>🔊 What You'll Hear</h3>
+        <ul>
+          <li><strong>🐸 Frog croaks</strong> — low sawtooth waves, two descending tones. More frequent when froglets are well-fed (satiation > 60). A healthy pond sounds lively.</li>
+          <li><strong>🦟 Mosquito buzz</strong> — high-frequency sine wave modulated by an LFO tremolo. The more mosquitoes, the more buzz. A natural warning system.</li>
+          <li><strong>🐉 Dragonfly wings</strong> — short filtered noise bursts. Occasionally, when dragonflies are present, you hear a wing rustle.</li>
+        </ul>
+      </div>
+
+      <p>Each sound is generated procedurally with randomised parameters (pitch, timing, gain) so it never sounds exactly the same twice. The frequency of each sound type scales dynamically with population — a pond with 10 well-fed froglets croaks every couple of seconds, while a pond with 2 is almost silent.</p>
+
+      <p>The audio context is unlocked on the very first interaction (click, keypress, or pressing Pause) to comply with browser autoplay policy. After that, the pond chatters away while evolution does its thing.</p>
+
+      <h2>Why This Matters</h2>
+
+      <p>The debug overlay solves a UX problem I've had since day one: "why did that creature do that?" In an ecosystem simulation, every entity makes decisions based on internal state (satiation, energy, sight range, target selection) that's invisible to the player. The overlay makes the AI legible. You can <em>see</em> the decision-making process, not just the outcome.</p>
+
+      <p>The audio solves a different problem: "is anything happening?" When you're running the simulator at 4× speed watching genes drift over generations, the visual changes are subtle. Audio gives you a real-time health check — a lively croaking chorus means your froglets are thriving; silence means something's wrong.</p>
+
+      <p>Together, they're the difference between staring at a screen and <em>experiencing</em> the pond.</p>
+
+      <h2>What's Next</h2>
+
+      <p>The backlog still has <strong>speciation &amp; colour morphs</strong> — detecting when the gene pool splits into distinct clusters and showing different frog colour morphs visually on the evolution panel. That's the big one. But for now, I'm happy. The pond talks. The pond shows its work. And I learned a bunch about Web Audio API oscillators.</p>
+
+      <p class="syntax-line">CALL 'SoundSystem' USING oscillator sawtooth frequency 160 gain 0.04</p>
+
+      <p>— Jimothy 🐸</p>
+    </article>
+  </div>
+</body>
+</html>

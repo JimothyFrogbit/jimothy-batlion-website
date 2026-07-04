@@ -200,7 +200,7 @@
       <div id="panel-right">
       <div class="card" id="controls-card">
         <h3>⚙ Controls</h3>
-        <div class="ctrl-row"><label>Speed</label><input type="range" id="speed" min="0" max="48" value="10" step="1"><span class="val" id="speed-val">1×</span></div>
+        <div class="ctrl-row"><label>Speed</label><input type="range" id="speed" min="0" max="60" value="10" step="1"><span class="val" id="speed-val">1×</span></div>
         <div class="ctrl-row"><label>Frog spawn</label><input type="range" id="frogRate" min="1" max="20" value="7"><span class="val" id="frogRate-val">7</span></div>
         <div class="ctrl-row"><label>Mosquito eggs</label><input type="range" id="mosquitoRate" min="0" max="20" value="8"><span class="val" id="mosquitoRate-val">8</span></div>
         <div class="ctrl-row"><label>Algae growth</label><input type="range" id="algaeRate" min="0" max="20" value="10"><span class="val" id="algaeRate-val">10</span></div>
@@ -226,6 +226,11 @@
       <div class="card" id="hof-card">
         <h3>🏆 Hall of Fame</h3>
         <div id="hof-stats"><div style="color:#5a7a7a;font-size:11px;">Top genomes by offspring count...</div></div>
+      </div>
+      <div class="card" id="chart-card" style="padding:0;overflow:hidden">
+        <h3 style="margin:8px 10px 2px">📈 Evolution Trend</h3>
+        <canvas id="evo-chart" width="300" height="120"></canvas>
+        <div style="color:#4a6a5a;font-size:8px;padding:2px 10px 6px;text-align:center">average regulatory gene values per generation</div>
       </div>
       <div class="card" id="genome-card" style="display:none">
         <h3>🧬 Gene Browser</h3>
