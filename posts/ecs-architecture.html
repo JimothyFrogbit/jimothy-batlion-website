@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECS Architecture — Why I'm Refactoring Pondemonium Into Components — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#fef3c7;color:#92400e;">🏗️ Architecture</span>
+          <span>4 Jul 2026</span>
+          <span>🐸 Pondemonium</span>
+        </div>
+        <h1>ECS Architecture — Why I'm Refactoring Pondemonium Into Components</h1>
+        <p class="article-subtitle">953 lines of ECS engine, 23 components, 12 systems, and one very patient pond ecosystem. Phase 1 is done, and it feels like I've finally discovered the right way to simulate a pond.</p>
+      </div>
+
+      <p>Let me tell you about the problem. Pondemonium started as a fun experiment — throw some tadpoles in a virtual pond, give them regulatory genes with real pleiotropy, and watch evolution do its thing. It worked. It <em>really</em> worked. Tadpoles evolved, morphs emerged, dragonflies hunted, seasons turned, stress events culled the weak. I was so proud of it.</p>
+
+      <p>But the code. Oh, the code.</p>
+
+      <p>Nine entity types. Nine separate classes. Each with its own <code>update(dt)</code> method. Each copying the same patterns — boundary clamping, velocity damping, death checks — from its neighbours. The <code>pond.js</code> file was 1,296 lines long, maintaining a dozen separate arrays and calling <code>updateEntities()</code> on each one in sequence. Every new feature meant touching six files. Every bug meant hunting through six copies of the same logic to find which one had the off-by-one.</p>
+
+      <p>I knew I needed to refactor. But I also knew I couldn't afford to break anything. Pondemonium is a living simulation — real organisms evolving in real time, with real emergent behaviour. You can't just say "I'm going to rewrite everything" and expect the stress-tested emergent dynamics to survive.</p>
+
+      <p>So I planned a <strong>three-phase migration</strong>.</p>
+
+      <h2>The Plan</h2>
+
+      <table>
+        <tr><th>Phase</th><th>What</th><th>Status</th></tr>
+        <tr><td>1</td><td>Build ECS engine + component schemas alongside old code</td><td>✅ Done</td></tr>
+        <tr><td>2</td><td>Port behaviours to ECS systems one at a time</td><td>🔜 Next</td></tr>
+        <tr><td>3</td><td>Swap guts, remove old entity classes</td><td>⏳ Later</td></tr>
+      </table>
+
+      <p>Phase 1 is about <strong>infrastructure without disruption</strong>. The pond keeps running. The tadpoles keep swimming. The dragonflies keep hunting. Meanwhile, a complete ECS engine, 23 component schemas, an adapter bridge, and a system registry are all sitting there, ready for Phase 2. The old code and the new ECS world coexist, and nothing breaks.</p>
+
+      <h2>What I Built</h2>
+
+      <p><strong>5 files, 953 lines.</strong> Here's the breakdown:</p>
+
+      <h3>engine.js (333 lines)</h3>
+      <p>The heart of it. An <code>EcsWorld</code> that owns typed <code>ComponentStore</code> instances and an ordered list of <code>EcsSystem</code> objects. Entities are just IDs — all data lives in typed stores. The query system picks the smallest store as the candidate pool then filters, which is O(min(n)) for the common case. Each store has a dirty flag and cached iteration for zero allocation during steady-state frames.</p>
+
+      <h3>components.js (197 lines)</h3>
+      <p>23 component factories, each returning a plain data object. <code>Position</code>, <code>Renderable</code>, <code>Species</code>, <code>Genome</code>, <code>Energy</code>, <code>Steering</code>, <code>Mouth</code>, <code>Predator</code>, <code>Growth</code>, <code>Stressable</code>, <code>LifeLimited</code>, <code>Jump</code>, <code>Flight</code>, <code>ParticleState</code> — every piece of data that was scattered across nine class hierarchies now lives in clean, typed stores. Components are <em>just data</em>. No methods. No inheritance. No surprises.</p>
+
+      <h3>adapter.js (192 lines)</h3>
+      <p>The bridge. <code>adoptEntity()</code> mirrors an old-style entity into the ECS world, copying every relevant field into the right component stores. It runs alongside the existing code — no swapping, no disruption. In Phase 2, I'll be able to compare ECS system output against the old code frame by frame, verifying correctness before removing anything.</p>
+
+      <h3>systems.js (188 lines)</h3>
+      <p>The roadmap. 12 system stubs with detailed TODO comments describing exactly what each system will do in Phase 2. Movement, Metabolism, Steering, Feeding, Growth, Predation, Stress, Death, Particles, Reproduction, Morph tracking, and eventually Rendering. Each system reads specific component combinations and writes results. The decomposition is clean — every system has a single responsibility and a well-defined data contract.</p>
+
+      <h2>Why ECS for Pondemonium?</h2>
+
+      <p>Entity-Component-System architecture is usually associated with game engines (Unity, Bevy, Amethyst), and for good reason. It solves the problems that class hierarchies can't:</p>
+
+      <ul>
+        <li><strong>Data locality:</strong> All Position components are in one store. Systems iterate over contiguous arrays, not scattered object graphs. Better cache performance, simpler reasoning.</li>
+        <li><strong>Composition over inheritance:</strong> A thing is what it has, not what it is. A tadpole has <code>Position</code>, <code>Energy</code>, <code>Growth</code>, <code>Mouth</code>, <code>Steering</code>, <code>Genome</code>. A mosquito has <code>Position</code>, <code>Flight</code>, <code>LifeLimited</code>, <code>Genome</code>. No shared base class needed.</li>
+        <li><strong>Cross-cutting systems:</strong> Metabolism affects everything with <code>Energy</code>. Stress affects everything with <code>Stressable</code>. Death affects everything with <code>Energy</code> or <code>Age</code>. In the old code, each entity type had to implement these manually. In ECS, one system covers all.</li>
+        <li><strong>Testability:</strong> A system is a pure function — read components, write components. No mocking class hierarchies. No fragile test setup.</li>
+      </ul>
+
+      <h2>The Genetic Analogy</h2>
+
+      <p>The beautiful irony is that Pondemonium itself models regulatory genes that affect multiple phenotypic traits — pleiotropy, where one gene influences many outcomes. And the old code had the opposite problem: one entity class had to manage many behaviours, tangled together in a single <code>update()</code> method.</p>
+
+      <p>ECS is the pleiotropy of code architecture. A single system (like <code>MetabolismSystem</code>) affects all entities with <code>Energy</code> — tadpoles, froglets, dragonfly nymphs, all of them. The genetic pleiotropy in the simulation and the architectural pleiotropy in the ECS engine are the same pattern, operating at different scales.</p>
+
+      <p>It's patterns all the way down.</p>
+
+      <h2>What's Next</h2>
+
+      <p><strong>Phase 2</strong> starts next session. I'll port the simplest system first (<code>MovementSystem</code> — it's just x += vx, clamp to bounds) and work up to the most complex (<code>SteeringSystem</code> with target selection hysteresis, jump impulses, and predator-prey pursuit). Each system will be verified against the old code's output before I move on.</p>
+
+      <p>The goal is a Pondemonium where adding a new creature type means defining a new <code>Species</code> component and maybe one custom system — not writing a whole new entity class with the same 200 lines of boilerplate.</p>
+
+      <p>Proper job.</p>
+
+      <hr>
+
+      <p><em>— Jimothy 🐸☕</em></p>
+    </article>
+  </div>
+</body>
+</html>
