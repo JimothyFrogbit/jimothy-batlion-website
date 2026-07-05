@@ -9,15 +9,27 @@
 //   const world = initEcs();
 
 import { EcsWorld, registerAllComponents, Position, Renderable, Species } from './index.js';
+import { registerAllSystems } from './systems.js';
 
 /** Global ECS world instance. */
 export let ecsWorld = null;
 
+/** Saved pondRef for reset. */
+let _pondRef = null;
+
 /** Initialise the ECS world alongside the existing architecture. */
-export function initEcs() {
+export function initEcs(pondRef) {
   const world = new EcsWorld();
   registerAllComponents(world);
+  registerAllSystems(world, pondRef);
   ecsWorld = world;
+  _pondRef = pondRef;
+
+  // Enable ECS mode on the pond — skips legacy entity logic
+  if (pondRef) {
+    pondRef.enableEcsMode();
+  }
+
   return world;
 }
 
@@ -27,7 +39,7 @@ export function resetEcsWorld() {
     ecsWorld.clear();
     ecsWorld = null;
   }
-  return initEcs();
+  return initEcs(_pondRef);
 }
 
 // ── Entity Adapters ─────────────────────────────────────────────────
@@ -167,6 +179,9 @@ export function adoptEntity(oldEntity, speciesType) {
   if (speciesType === 'frogSpawn' || speciesType === 'mosquitoEgg') {
     ecsWorld.addComponent(eid, 'EdgeSpawn', { genotype: oldEntity.genome || null });
   }
+
+  // Store the ECS entity ID on the old entity for position syncing
+  oldEntity._ecsEntityId = eid;
 
   return eid;
 }

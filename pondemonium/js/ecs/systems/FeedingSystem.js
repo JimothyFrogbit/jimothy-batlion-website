@@ -1,20 +1,22 @@
 // ── FeedingSystem ────────────────────────────────────────────────────
-// ECS Phase 2b: Handles all entity feeding interactions.
+// ECS Phase 3: Self-contained ECS query-based feeding.
+// No longer depends on pondRef or old entity arrays.
 //
-// Replicates three feeding patterns from pond.js:
-//   1. processEating()              — Tadpoles + Froglets eat algae (Food)
-//   2. processMosquitoEating()      — Froglets eat Mosquitoes
-//   3. processDragonflyEating()     — Dragonfly Nymphs hunt tadpoles/larvae
+// Handles all entity feeding interactions:
+//   1. Tadpoles + Froglets eat algae (Food)
+//   2. Froglets eat Mosquitoes
+//   3. Dragonfly Nymphs hunt tadpoles/larvae
+//
+// Phase 3 changes:
+//   - Removed pondRef dependency
+//   - Prey/food found via ECS queries (Position + Species + relevant stores)
+//   - Consumed prey is marked dead via world.markDead()
+//   - Death particles spawned inline (absorbed from PredationSystem)
 //
 // Component Requirements:
 //   Primary: Mouth + Energy + Position + Species
 //   Optional: Predator (dragonfly nymph attack logic)
 //   Optional: Growth (dragonfly nymph growth-on-meal)
-//
-// Phase 2: Reads old entity arrays via pondRef (old code is still
-// source of truth). Updates ECS Energy.satiation to mirror old code
-// behaviour. Phase 3 will switch to pure ECS queries and drive the
-// actual feeding/marking.
 //
 // ── Feeding Rules ────────────────────────────────────────────────────
 //
@@ -28,17 +30,22 @@
 
 import { EcsSystem } from '../engine.js';
 import { rand } from '../../utils.js';
+import { Position, Renderable, Species, ParticleState } from '../components.js';
+
+const DEATH_COLORS = {
+  tadpole:        'hsla(30, 40%, 25%, 0.4)',
+  mosquitoLarva:  'hsla(30, 40%, 25%, 0.4)',
+  mosquito:       'hsla(0, 0%, 50%, 0.3)',
+  food:           'hsla(120, 30%, 40%, 0.3)',
+  default:        'hsla(30, 30%, 30%, 0.4)',
+};
 
 export class FeedingSystem extends EcsSystem {
-  constructor(pondRef) {
+  constructor() {
     super('FeedingSystem');
-    this._pond = pondRef;
   }
 
   update(dt, world) {
-    const pond = this._pond;
-    if (!pond) return;
-
     const mouthStore = world.getStore('Mouth');
     const energyStore = world.getStore('Energy');
     const posStore = world.getStore('Position');
@@ -62,19 +69,19 @@ export class FeedingSystem extends EcsSystem {
 
       switch (species.type) {
         case 'tadpole':
-          this._tryEatAlgae(pond, pos, mouth, energy, 'tadpole');
+          this._tryEatAlgae(pos, mouth, energy, 'tadpole', world);
           break;
 
         case 'froglet':
           // Froglets prefer mosquitoes over algae
-          if (!this._tryEatMosquito(pond, pos, energy)) {
-            this._tryEatAlgae(pond, pos, mouth, energy, 'froglet');
+          if (!this._tryEatMosquito(pos, energy, world)) {
+            this._tryEatAlgae(pos, mouth, energy, 'froglet', world);
           }
           break;
 
         case 'dragonflyNymph':
           if (predator) {
-            this._tryHunt(pond, pos, energy, predator, growth, dt);
+            this._tryHunt(pos, energy, predator, growth, dt, world);
           }
           break;
 
@@ -84,69 +91,151 @@ export class FeedingSystem extends EcsSystem {
     }
   }
 
+  // ── ECS Query Helpers ──────────────────────────────────────────────
+
+  /**
+   * Find the nearest ECS entity matching species type within maxDist.
+   * Optionally filtered by a custom filter function.
+   * Returns { entityId, Position, ...components } or null.
+   */
+  _findNearestInECS(pos, world, requiredStores, speciesType, maxDist, filter) {
+    const candidates = world.queryData(...requiredStores);
+    let best = null;
+    let bestD = maxDist;
+
+    for (const c of candidates) {
+      // Skip dead entities
+      if (!world.hasEntity(c.entityId)) continue;
+
+      // Filter by species type if specified
+      if (speciesType && (!c.Species || c.Species.type !== speciesType)) continue;
+
+      // Apply optional custom filter
+      if (filter && !filter(c)) continue;
+
+      const cx = c.Position ? c.Position.x : 0;
+      const cy = c.Position ? c.Position.y : 0;
+      const d = Math.hypot(pos.x - cx, pos.y - cy);
+
+      if (d < bestD) {
+        bestD = d;
+        best = c;
+      }
+    }
+
+    return best;
+  }
+
+  /**
+   * Mark a prey entity as dead and spawn death particles.
+   */
+  _killPrey(world, preyEid, preyX, preyY, preyType) {
+    if (world.hasEntity(preyEid)) {
+      world.markDead(preyEid);
+    }
+
+    // Spawn death particles
+    const color = DEATH_COLORS[preyType] || DEATH_COLORS.default;
+    for (let i = 0; i < 4; i++) {
+      const peid = world.createEntity({
+        Position: Position(preyX, preyY),
+        Renderable: Renderable(
+          1 + Math.random(),
+          color,
+          4  // top layer
+        ),
+        Species: Species('particle'),
+        ParticleState: ParticleState(
+          15 + Math.random() * 10,  // life
+          25,                        // maxLife
+          1 + Math.random(),         // size
+          0.01,                      // gravity
+          'dot',
+          color
+        ),
+      });
+      // Apply random velocity — particles spray outward
+      const ppos = world.getComponent(peid, 'Position');
+      if (ppos) {
+        ppos.vx = (Math.random() - 0.5) * 1.5;
+        ppos.vy = 0.1 + Math.random() * 0.3;
+      }
+    }
+  }
+
   // ── Algae / Filter Feeding ─────────────────────────────────────────
 
   /**
-   * Attempt to eat algae (Food). Mirrors pond.processEating() for
-   * tadpoles and froglets.
+   * Attempt to eat algae (Food) via ECS query.
    *
    * Tadpole size check: food.radius <= mouth.gape + 1
    * Froglet size check: food.radius <= mouth.gape + 2
-   * Proximity: eater.radius + food.radius overlap
-   *
-   * Tadpole nutrition efficiency: metabolisim > 0.8 → 0.7×, else 1.2×
-   * Froglet nutrition: 1.5×
    */
-  _tryEatAlgae(pond, pos, mouth, energy, eaterType) {
-    if (!pond.food || pond.food.length === 0) return false;
-
+  _tryEatAlgae(pos, mouth, energy, eaterType, world) {
     const gape = mouth.gape || 3;
     const sizeTolerance = eaterType === 'froglet' ? 2 : 1;
     const eaterRadius = eaterType === 'froglet' ? 10 : 4;
 
-    for (const food of pond.food) {
-      if (!food.alive) continue;
-      if (food.radius > gape + sizeTolerance) continue;
+    const filter = (c) => {
+      const r = c.Renderable ? c.Renderable.radius : 4;
+      return r <= gape + sizeTolerance;
+    };
 
-      const d = Math.hypot(pos.x - food.x, pos.y - food.y);
-      if (d < eaterRadius + food.radius) {
-        // ── Update ECS Energy.satiation to mirror old code ──
-        const nutrition = food.nutrition || 5;
-        if (eaterType === 'froglet') {
-          energy.satiation = Math.min(100, energy.satiation + nutrition * 1.5);
-        } else {
-          // Tadpole: metabolism > 0.8 reduces efficiency
-          const efficiency = energy.metabolism > 0.8 ? 0.7 : 1.2;
-          energy.satiation = Math.min(100, energy.satiation + nutrition * efficiency);
-        }
-        return true;
-      }
+    const nearest = this._findNearestInECS(
+      pos, world,
+      ['Position', 'Species', 'Nutrition', 'Renderable'],
+      'food', eaterRadius * 3,  // search within 3x body length
+      filter
+    );
+
+    if (!nearest || !nearest.Position) return false;
+
+    const d = Math.hypot(pos.x - nearest.Position.x, pos.y - nearest.Position.y);
+    if (d >= eaterRadius + (nearest.Renderable ? nearest.Renderable.radius : 4)) return false;
+
+    // ── Update satiation ──
+    const nutrition = nearest.Nutrition ? nearest.Nutrition.value : 5;
+    if (eaterType === 'froglet') {
+      energy.satiation = Math.min(100, energy.satiation + nutrition * 1.5);
+    } else {
+      // Tadpole: metabolism > 0.8 reduces efficiency
+      const efficiency = energy.metabolism > 0.8 ? 0.7 : 1.2;
+      energy.satiation = Math.min(100, energy.satiation + nutrition * efficiency);
     }
-    return false;
+
+    // Kill the food entity
+    this._killPrey(world, nearest.entityId, nearest.Position.x, nearest.Position.y, 'food');
+    return true;
   }
 
   // ── Mosquito Hunting (Froglets) ────────────────────────────────────
 
   /**
-   * Attempt to eat a mosquito. Mirrors pond.processMosquitoEating().
+   * Attempt to eat a mosquito via ECS query.
    *
    * Vertical bounds: dy ∈ (-30, 10)  (mosquito within leap range)
    * Proximity: eater.radius + 10
    * Satiation gain: 20
    */
-  _tryEatMosquito(pond, pos, energy) {
-    if (!pond.mosquitoes || pond.mosquitoes.length === 0) return false;
+  _tryEatMosquito(pos, energy, world) {
+    const nearest = this._findNearestInECS(
+      pos, world,
+      ['Position', 'Species'],
+      'mosquito', 20,  // search within froglet.radius (10) + 10
+      null
+    );
 
-    for (const mosquito of pond.mosquitoes) {
-      if (!mosquito.alive) continue;
+    if (!nearest || !nearest.Position) return false;
 
-      const dy = mosquito.y - pos.y;
-      if (dy > -30 && dy < 10) {
-        const d = Math.hypot(pos.x - mosquito.x, pos.y - mosquito.y);
-        if (d < 20) {  // froglet.radius (10) + 10
-          energy.satiation = Math.min(100, energy.satiation + 20);
-          return true;
-        }
+    const dy = nearest.Position.y - pos.y;
+    if (dy > -30 && dy < 10) {
+      const d = Math.hypot(pos.x - nearest.Position.x, pos.y - nearest.Position.y);
+      if (d < 20) {  // froglet.radius (10) + 10
+        energy.satiation = Math.min(100, energy.satiation + 20);
+
+        // Kill the mosquito
+        this._killPrey(world, nearest.entityId, nearest.Position.x, nearest.Position.y, 'mosquito');
+        return true;
       }
     }
     return false;
@@ -155,14 +244,14 @@ export class FeedingSystem extends EcsSystem {
   // ── Predatory Hunting (Dragonfly Nymphs) ──────────────────────────
 
   /**
-   * Attempt to hunt prey. Mirrors pond.processDragonflyEating().
+   * Attempt to hunt prey via ECS query.
    *
    * Order: Tadpoles first (preferred), then MosquitoLarvae.
    * Cooldown: 20 ticks after eating a tadpole, 15 after larva.
    * On tadpole kill: satiation +30, growth +0.08, meals++
    * On larva kill:   satiation +15, growth +0.04, meals++
    */
-  _tryHunt(pond, pos, energy, predator, growth, dt) {
+  _tryHunt(pos, energy, predator, growth, dt, world) {
     // Tick cooldowns
     if (predator.attackCooldown > 0) {
       predator.attackCooldown -= 1;
@@ -177,36 +266,55 @@ export class FeedingSystem extends EcsSystem {
     const nymphRadius = 9;
 
     // ── Try tadpoles first (preferred prey) ──
-    if (pond.tadpoles) {
-      for (const prey of pond.tadpoles) {
-        if (!prey.alive) continue;
-        const d = Math.hypot(pos.x - prey.x, pos.y - prey.y);
-        if (d < nymphRadius + prey.radius + 4) {
-          energy.satiation = Math.min(100, energy.satiation + 30);
-          if (growth) {
-            growth.growth = Math.min(1, growth.growth + 0.08);
-          }
-          predator.meals = (predator.meals || 0) + 1;
-          predator.attackCooldown = 20;
-          return true;
+    const nearestTadpole = this._findNearestInECS(
+      pos, world,
+      ['Position', 'Species', 'Energy'],
+      'tadpole', nymphRadius + 4 + 10,  // nymphRadius + max tadpole radius + buffer
+      (c) => {
+        const r = c.Renderable ? c.Renderable.radius : 4;
+        return true;  // all tadpoles are valid
+      }
+    );
+
+    if (nearestTadpole && nearestTadpole.Position) {
+      const d = Math.hypot(pos.x - nearestTadpole.Position.x, pos.y - nearestTadpole.Position.y);
+      const preyRadius = nearestTadpole.Renderable ? nearestTadpole.Renderable.radius : 4;
+      if (d < nymphRadius + preyRadius + 4) {
+        energy.satiation = Math.min(100, energy.satiation + 30);
+        if (growth) {
+          growth.growth = Math.min(1, growth.growth + 0.08);
         }
+        predator.meals = (predator.meals || 0) + 1;
+        predator.attackCooldown = 20;
+
+        // Kill prey
+        this._killPrey(world, nearestTadpole.entityId, nearestTadpole.Position.x, nearestTadpole.Position.y, 'tadpole');
+        return true;
       }
     }
 
     // ── Then mosquito larvae ──
-    if (pond.mosquitoLarvae) {
-      for (const prey of pond.mosquitoLarvae) {
-        if (!prey.alive) continue;
-        const d = Math.hypot(pos.x - prey.x, pos.y - prey.y);
-        if (d < nymphRadius + prey.radius + 3) {
-          energy.satiation = Math.min(100, energy.satiation + 15);
-          if (growth) {
-            growth.growth = Math.min(1, growth.growth + 0.04);
-          }
-          predator.meals = (predator.meals || 0) + 1;
-          predator.attackCooldown = 15;
-          return true;
+    const nearestLarva = this._findNearestInECS(
+      pos, world,
+      ['Position', 'Species', 'Energy'],
+      'mosquitoLarva', nymphRadius + 3 + 5,  // nymphRadius + max larva radius + buffer
+      null
+    );
+
+    if (nearestLarva && nearestLarva.Position) {
+      const d = Math.hypot(pos.x - nearestLarva.Position.x, pos.y - nearestLarva.Position.y);
+      const preyRadius = nearestLarva.Renderable ? nearestLarva.Renderable.radius : 3;
+      if (d < nymphRadius + preyRadius + 3) {
+        energy.satiation = Math.min(100, energy.satiation + 15);
+        if (growth) {
+          growth.growth = Math.min(1, growth.growth + 0.04);
         }
+        predator.meals = (predator.meals || 0) + 1;
+        predator.attackCooldown = 15;
+
+        // Kill prey
+        this._killPrey(world, nearestLarva.entityId, nearestLarva.Position.x, nearestLarva.Position.y, 'mosquitoLarva');
+        return true;
       }
     }
 
