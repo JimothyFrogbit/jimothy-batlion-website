@@ -213,123 +213,44 @@ export class Pond {
     const t = dt * this.speed;
     this.simulationTime += t;
 
-    // ── Seasonal modifier computation (hoisted: used by timers below) ──
+    // ── Seasonal modifier computation ──
     this.seasonCycle = (this.seasonCycle + t * this.seasonCycleSpeed) % 1;
     this.dayCycle = (this.dayCycle + t * this.dayCycleSpeed) % 1;
     const seasonIdx = Math.floor(this.seasonCycle * 4);
 
-    // ── ECS Mode: ECS systems handle entity logic ──
+    // ── ECS handles all entity logic ──
     // Main.js runs ecsWorld.update() + ecsWorld.reapDead() each sub-step.
     // syncEcsToPond() repopulates render arrays between update and render.
-    // Here we handle non-entity housekeeping and sync state from ECS systems.
-    if (this._ecsMode) {
-      // Sync stress event state from ECS StressSystem
-      if (this._ecsStressSystem) {
-        this.activeEvent = this._ecsStressSystem.activeEvent
-          ? { ...this._ecsStressSystem.activeEvent }
-          : null;
-        this.stressEventsTotal = this._ecsStressSystem.eventsTotal;
-        this.stressEventLog = this._ecsStressSystem.eventLog?.slice(0, 10) || [];
-          // Propagate stress event rate so ECS system respects slider
-        if (this._stressEventRateProp !== undefined) {
-          this._ecsStressSystem._stressEventRate = this._stressEventRateProp;
-        }
-      }
+    // This method handles non-entity housekeeping only.
 
-      // Propagate reproduction rates to ECS system so UI sliders work
-      if (this._ecsReproductionSystem) {
-        this._ecsReproductionSystem.setFrogRate(this.frogRate);
-        this._ecsReproductionSystem.setMosquitoRate(this.mosquitoRate);
-        this._ecsReproductionSystem.setDragonflyRate(this.dragonflyRate);
-        this._ecsReproductionSystem.setAlgaeRate(this.algaeRate);
-      }
-
-      // Sync release stats from ECS ReleaseSystem
-      if (this._ecsReleaseSystem) {
-        const stats = this._ecsReleaseSystem.getReleaseStats();
-        this.frogsReleased = stats.frogsReleased;
-        this.generation = stats.generation;
-      }
-
-      // Ripples (visual effects, not entity-dependent)
-      this.rippleTimer += t;
-      if (this.rippleTimer > 30 && Math.random() < 0.05) {
-        this.ripples.push({ x: rand(POND_X + 40, POND_X + POND_W - 40), y: rand(POND_Y + 40, POND_Y + POND_H - 40), r: 2, maxR: rand(15, 40), alpha: 0.4 });
-        this.rippleTimer = 0;
-      }
-      this.ripples = this.ripples.filter(r => { r.r += 0.15 * t; r.alpha -= 0.003 * t; return r.alpha > 0 && r.r < r.maxR; });
-
-      // Morph tracking — query ECS Species store for diversity
-      this.currentMorphs = detectMorphClusters(genePool, 2);
-      if (this.morphLineage) {
-        this.morphLineage.record(this.generation, genePool);
-      }
-
-      // Audio (uses entity counts from ECS world queries)
-      if (ecsWorld) {
-        this.updateAudio(t);
-      }
-
-      // Skip entity loops, spawning, eating — all handled by ECS systems
-      return;
-    }
-
-    // ── Legacy mode (no ECS) — full entity loops ──
-    const seasonT = (this.seasonCycle * 4) % 1;
-    const algaeMult = seasonIdx === 1 ? 1.6 : seasonIdx === 3 ? 0.4 : 1.0;
-    const frogMult  = seasonIdx === 1 ? 0.8 : seasonIdx === 3 ? 0.9 : 1.0;
-    const mosquitoMult = seasonIdx === 1 ? 1.3 : seasonIdx === 3 ? 0.5 : 1.0;
-    const metMult = seasonIdx === 3 ? 1.15 : 1.0;
-
-    this.frogTimer += t * (this.frogRate / 10) * frogMult;
-    this.mosquitoTimer += t * (this.mosquitoRate / 10) * (this.mosquitoRate > 0 ? mosquitoMult : 1);
-    this.algaeTimer += t * (this.algaeRate / 10) * algaeMult;
-
-    if (this.frogTimer > 80) { this.frogTimer = 0; this.spawnFrogEggs(); }
-    if (this.mosquitoTimer > 60) { this.mosquitoTimer = 0; this.spawnMosquitoEggs(); }
-    this.dragonflyTimer += t * (this.dragonflyRate / 10);
-    if (this.dragonflyTimer > 120 && this.dragonflyNymphs.length < 12) { this.dragonflyTimer = 0; this.spawnDragonflyNymph(); }
-    if (this.algaeTimer > 15 && this.food.length < 250) {
-      this.algaeTimer = 0;
-      const n = randInt(1, 3);
-      for (let i = 0; i < n; i++) this.addFood(new Food(rand(POND_X + 10, POND_X + POND_W - 10), rand(POND_Y + 10, POND_Y + POND_H - 10)));
-    }
-
-    // ── Stress Events ──
-    if (this.stressEventRate > 0) {
-      this.stressTimer += t * (this.stressEventRate / 6);
-      if (!this.activeEvent && this.stressTimer > 180) {
-        this.stressTimer = 0;
-        this.triggerStressEvent();
-      }
-      if (this.activeEvent) {
-        this.activeEvent.elapsed += t;
-        this.processStressEventTick(t);
-        if (this.activeEvent.elapsed >= this.activeEvent.duration) {
-          this.stressEventsSurvived++;
-          // Mark latest unmarked log entry as survived
-          for (const entry of this.stressEventLog) {
-            if (entry.survived === null) { entry.survived = true; break; }
-          }
-          this.activeEvent = null;
-        }
+    // Sync stress event state from ECS StressSystem
+    if (this._ecsStressSystem) {
+      this.activeEvent = this._ecsStressSystem.activeEvent
+        ? { ...this._ecsStressSystem.activeEvent }
+        : null;
+      this.stressEventsTotal = this._ecsStressSystem.eventsTotal;
+      this.stressEventLog = this._ecsStressSystem.eventLog?.slice(0, 10) || [];
+      if (this._stressEventRateProp !== undefined) {
+        this._ecsStressSystem._stressEventRate = this._stressEventRateProp;
       }
     }
 
-    // ── Entity Updates ──
-    this.updateEntities(this.frogSpawns, t);
-    this.updateEntities(this.tadpoles, t);
-    this.updateEntities(this.froglets, t);
-    this.updateEntities(this.mosquitoEggs, t);
-    this.updateEntities(this.mosquitoLarvae, t);
-    this.updateEntities(this.mosquitoes, t);
-    this.updateEntities(this.dragonflyNymphs, t);
-    this.updateEntities(this.dragonflies, t);
+    // Propagate reproduction rates to ECS system so UI sliders work
+    if (this._ecsReproductionSystem) {
+      this._ecsReproductionSystem.setFrogRate(this.frogRate);
+      this._ecsReproductionSystem.setMosquitoRate(this.mosquitoRate);
+      this._ecsReproductionSystem.setDragonflyRate(this.dragonflyRate);
+      this._ecsReproductionSystem.setAlgaeRate(this.algaeRate);
+    }
 
-    this.processEating();
-    this.processMosquitoEating();
-    this.processDragonflyEating();
+    // Sync release stats from ECS ReleaseSystem
+    if (this._ecsReleaseSystem) {
+      const stats = this._ecsReleaseSystem.getReleaseStats();
+      this.frogsReleased = stats.frogsReleased;
+      this.generation = stats.generation;
+    }
 
+    // Ripples (visual effects, not entity-dependent)
     this.rippleTimer += t;
     if (this.rippleTimer > 30 && Math.random() < 0.05) {
       this.ripples.push({ x: rand(POND_X + 40, POND_X + POND_W - 40), y: rand(POND_Y + 40, POND_Y + POND_H - 40), r: 2, maxR: rand(15, 40), alpha: 0.4 });
@@ -337,48 +258,16 @@ export class Pond {
     }
     this.ripples = this.ripples.filter(r => { r.r += 0.15 * t; r.alpha -= 0.003 * t; return r.alpha > 0 && r.r < r.maxR; });
 
-    this.updateEntities(this.particles, t);
-
-    // ── ECS Phase 2: Run systems in parallel ──
-    // Old entity code is source of truth. ECS reads mirrored components,
-    // computes independent results for future comparison/verification.
-    if (ecsWorld) {
-      // Sync old entity positions → ECS components
-      this._syncAllPositions();
-      // Run ECS systems
-      ecsWorld.update(t);
-      // Clean up dead ECS entities
-      ecsWorld.reapDead();
-    }
-
-    this.food = this.food.filter(e => e.alive);
-    this.frogSpawns = this.frogSpawns.filter(e => e.alive);
-    this.tadpoles = this.tadpoles.filter(e => e.alive);
-    this.froglets = this.froglets.filter(e => e.alive);
-    this.mosquitoEggs = this.mosquitoEggs.filter(e => e.alive);
-    this.mosquitoLarvae = this.mosquitoLarvae.filter(e => e.alive);
-    this.mosquitoes = this.mosquitoes.filter(e => e.alive);
-    this.particles = this.particles.filter(e => e.alive);
-    this.dragonflyNymphs = this.dragonflyNymphs.filter(e => e.alive);
-    this.dragonflies = this.dragonflies.filter(e => e.alive);
-
-    if (this.food.length > 300) this.food.splice(0, this.food.length - 300);
-    if (this.tadpoles.length > 120) { this.tadpoles.sort((a, b) => a.energy - b.energy); this.tadpoles.splice(60); }
-
-    // Record generation data on increment
-    if (this.generation > this._lastRecordedGen) {
-      this._lastRecordedGen = this.generation;
-      this.recordGenerationData();
-    }
-
-    // ── Morph / Speciation tracking ──
-    this.morphLineage.record(this.generation, genePool);
+    // Morph tracking
     this.currentMorphs = detectMorphClusters(genePool, 2);
+    if (this.morphLineage) {
+      this.morphLineage.record(this.generation, genePool);
+    }
 
-    this.hoveredEntity = this.getEntityAt(this.mouseX, this.mouseY);
-
-    // ── Ambient Audio ──
-    this.updateAudio(t);
+    // Audio
+    if (ecsWorld) {
+      this.updateAudio(t);
+    }
   }
 
   // ── Audio System ──────────────────────────────────────────────────
