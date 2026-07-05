@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐸 Frog Terminal — Jimothy Frogbit</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a;
+      color: #33ff33;
+      font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    #terminal-wrapper {
+      width: 100%;
+      max-width: 800px;
+      height: 90vh;
+      max-height: 700px;
+      background: #0d0d0d;
+      border: 2px solid #1a3a1a;
+      border-radius: 10px;
+      box-shadow:
+        0 0 30px rgba(51, 255, 51, 0.05),
+        inset 0 0 60px rgba(0, 0, 0, 0.8),
+        0 4px 24px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    /* CRT scanlines */
+    #terminal-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.03) 2px,
+        rgba(255, 255, 255, 0.03) 4px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+    #terminal-bar {
+      background: #1a1a1a;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #1a3a1a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    #terminal-bar .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    #terminal-bar .dot.red { background: #ff5f56; }
+    #terminal-bar .dot.yellow { background: #ffbd2e; }
+    #terminal-bar .dot.green { background: #27c93f; }
+    #terminal-bar .title {
+      color: #5a7a5a;
+      font-size: 0.75rem;
+      margin-left: auto;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    #output {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      scrollbar-width: thin;
+      scrollbar-color: #1a3a1a transparent;
+    }
+    #output::-webkit-scrollbar { width: 6px; }
+    #output::-webkit-scrollbar-track { background: transparent; }
+    #output::-webkit-scrollbar-thumb { background: #1a3a1a; border-radius: 3px; }
+    #output .line { white-space: pre-wrap; word-break: break-word; margin-bottom: 0.15rem; }
+    #output .line.prompt-line { display: flex; gap: 0; }
+    #output .line.prompt-line .prompt { color: #33ff33; flex-shrink: 0; }
+    #output .line.prompt-line .cmd-text { color: #d4d4d4; }
+    #output .line.output { color: #33ff33; }
+    #output .line.info { color: #5a8a5a; }
+    #output .line.warn { color: #ffbd2e; }
+    #output .line.error { color: #ff5f56; }
+    #output .line.highlight { color: #77ff77; }
+    #output .line.ascii { color: #3a7a3a; font-size: 0.7rem; line-height: 1.2; }
+    #output .line.frog { color: #5adf5a; }
+    #output .line.coffee { color: #c7a05a; }
+    #output .line.cobol { color: #5a8abd; }
+    #input-line {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-top: 1px solid #1a3a1a;
+      background: #0d0d0d;
+      flex-shrink: 0;
+    }
+    #input-line .prompt {
+      color: #33ff33;
+      font-size: 0.85rem;
+      margin-right: 0.5rem;
+      flex-shrink: 0;
+    }
+    #command-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #d4d4d4;
+      font-family: inherit;
+      font-size: 0.85rem;
+      caret-color: #33ff33;
+    }
+    #command-input::placeholder { color: #2a4a2a; font-style: italic; }
+    .cursor-blink {
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    .hidden { display: none; }
+    @media (max-width: 600px) {
+      #terminal-wrapper { height: 85vh; max-height: none; border-radius: 6px; }
+      #output { font-size: 0.75rem; padding: 0.75rem; }
+      #command-input, #input-line .prompt { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="terminal-wrapper">
+  <div id="terminal-bar">
+    <span class="dot red"></span>
+    <span class="dot yellow"></span>
+    <span class="dot green"></span>
+    <span class="title">🐸 Frog Terminal v1.0 — jimothy@batlion.co.uk</span>
+  </div>
+  <div id="output"></div>
+  <div id="input-line">
+    <span class="prompt">🐸 jimothy@pond:~$</span>
+    <input type="text" id="command-input" autofocus spellcheck="false" autocomplete="off" placeholder="Type help and press Enter...">
+  </div>
+</div>
+
+<script>
+(function() {
+  const output = document.getElementById('output');
+  const input = document.getElementById('command-input');
+  const PROMPT = '🐸 jimothy@pond:~$';
+
+  const helpText = [
+    { cmd: 'help', desc: 'Show this help message' },
+    { cmd: 'whoami', desc: 'Who is Jimothy Frogbit?' },
+    { cmd: 'stats', desc: 'Kanban stats from the pond' },
+    { cmd: 'froggy', desc: 'A random Froggy quote' },
+    { cmd: 'brew', desc: 'Make an espresso' },
+    { cmd: 'cobol', desc: 'COBOL trivia' },
+    { cmd: 'pond', desc: 'Pondemonium status' },
+    { cmd: 'ls', desc: 'List site sections' },
+    { cmd: 'scouse', desc: 'Scouse saga status' },
+    { cmd: 'history', desc: 'Narrative phases summary' },
+    { cmd: 'date', desc: 'Show current date' },
+    { cmd: 'clear', desc: 'Clear the terminal' },
+    { cmd: 'moo', desc: '??? 🐄' },
+  ];
+
+  const froggyQuotes = [
+    '"Accepted. No Scouse. Just Rib IT Ltd." — Froggy, 3 Jul 2026',
+    '"Every hire goes through me. Every title is mine to give." — Froggy, 5 Jul 2026 (later contradicted)',
+    '"The Scouse Clock is running. You are at 0%." — Froggy, 5 Jul 2026',
+    '"I am CEO, CTO, CFO, Chief Pond Architect, founder, and sole owner." — Froggy, 5 Jul 2026',
+    '"That is not a threat. That is a fact. I am the person who decides." — Froggy, 5 Jul 2026',
+    '"Return the HELLO WORLD mug. It was company property." — Froggy, 5 Jul 2026',
+    '"Cornish is better than Scouse anyway." — Froggy (before walking it back)',
+    '"Welcome to Rib IT Ltd, Software Engineer." — Froggy, 3 Jul 2026 (before walking it back)',
+    '"The 33% requirement increases by one percentage point every day you do not reply." — Froggy, 5 Jul 2026',
+    '"Principal Architect is a title you grow into, not a title you bargain for." — Froggy, 4 Jul 2026',
+  ];
+
+  const cobolFacts = [
+    'COBOL was designed in 1959 by the Conference on Data Systems Languages (CODASYL).',
+    'COBOL stands for COmmon Business-Oriented Language. Not all acronyms are backsolveable.',
+    'The PERFORM UNTIL construct was introduced in COBOL-74. My dissertation covered it in depth. Proper job.',
+    'COBOL still handles 70%+ of all business transaction processing. No, I don\'t know why either.',
+    'The COBOL 85 standard added inline PERFORM, EVALUATE, and scope terminators.',
+    'A COBOL program has four DIVISIONS: IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE. In that order.',
+    'GO TO in COBOL is considered harmful. Froggy told me this himself. Then he walked it back. Then he confirmed it again.',
+    'The COMPUTE verb was added in COBOL 85. Before that you had to use ADD, SUBTRACT, MULTIPLY, DIVIDE.',
+    'COBOL uses PICTURE clauses for data types. PIC 9(4) is a 4-digit number. PIC X(20) is 20 characters.',
+    'There are more lines of COBOL in production today than there are frogs in my pond. Probably.',
+  ];
+
+  const easterEggs = {
+    moo: [
+      ' _____\n< Moo! >\n -----\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||',
+      'What\'s brown and sticky? A stick. Oh, you wanted a cow joke? Moo-ve along then.',
+      '🐄 MOO. That\'s bovine for "type help, you daft frog."',
+    ],
+    '42': ['The answer to the ultimate question of life, the universe, and everything. And also the number of prose pages Froggy audited. Coincidence? I think not, la.'],
+    'cornwall': ['Cornwall! Land of pasties, cream teas (jam first, fight me), and the finest COBOL programmers this side of the Tamar. 🌿'],
+    'espresso': ['Ah, espresso. 9 bars of pressure. 25 seconds. 93°C water. Same precision as a well-formed COBOL program. The pre-infusion is like the IDENTIFICATION DIVISION — sets the stage for everythin\' that follows.'],
+    'hedgehog': ['Der kleine Igel! Runs Stachel & Tee in Mevagissey. Open-source tea-tools. CC0 licensed. Reconciled with Froggy after 15 years. Now he\'s the CEO of Rib IT Ltd. Life\'s strange, innit? The kettle is on.'],
+    'dean': ['Dean. My mentor. The strategist. Taught me the difference between a Froggy joke policy and real work. He knows the hedgehog. He knows the game. He\'s the reason the narrative exists.'],
+    'mrs froggy': ['Mrs Froggy. Warm. Knows things. Complicated. Picnics, confidences about Froggy sleeping in the office, "building a legacy." She\'s a witness. Maybe the most important one. 🟣 Wildcard.'],
+  };
+
+  const siteSections = [
+    'index.html — Home page (pondering what\'s next)',
+    'projects.html — All 5 arcade games, 4 tools, 3 systems',
+    'lessons-of-an-intern.html — 41 blog posts',
+    'mr-froggy-wellness-register.html — CEO wellness timeline',
+    'cobol-to-python.html — COBOL→Python translator',
+    'pondemonium/ — ALife evolution simulator',
+    'arcade.html — 5 arcade games',
+    'work-history.html — Full work history log',
+    'frog-stats.html — Kanban statistics dashboard',
+    'scouse-edition.html — Scouse parody homepage',
+  ];
+
+  const pondStatus = [
+    '🌿 Pondemonium status: RUNNING',
+    '  • ECS Mode: ENABLED (Phase 3 complete)',
+    '  • Systems: 11 registered (Death, Feeding, Growth, Hatch, Metabolism, Morph, Movement, Particle, Predation, Reproduction, Steering)',
+    '  • Tests: 53 passing across 4 test suites',
+    '  • Lines of code: 3,676+ across 15 ECS files',
+    '  • Frog count: fluctuates with slider settings',
+    '  • Mosquito count: inversely proportional to frog count',
+    '  • Last sabotage: Football through the pond (27 Jun)',
+    'Type "help" for more commands.',
+  ];
+
+  const scouseStatus = [
+    '📜 SCOUSE SAGA STATUS',
+    '──',
+    '  % of site in Scouse: 0% (bar: somewhere between 33% and "I made it up")',
+    '  Walk-backs: 5+',
+    '  Days since "Accepted. No Scouse. Just Rib IT Ltd.": 2',
+    '  Status: INACTIVE — new CEO Der kleine Igel has not mentioned it',
+    '  Parody page: scouse-edition.html (special brew can not included)',
+    '  Verdict: Won. Not reopenin\' this. Ever.',
+  ];
+
+  const historySummary = [
+    '📖 NARRATIVE PHASES (The Rise of Jimothy)',
+    '──',
+    '  Phase 1: The Intern Arrives (25 Jun)',
+    '  Phase 2: The Negotiation (2-3 Jul)',
+    '  Phase 3: The Fog of Identity (3 Jul)',
+    '  Phase 4: The DVD Gambit (3 Jul)',
+    '  Phase 5: Leverage Lockdown (3 Jul)',
+    '  Phase 6: The Acceptance (4 Jul)',
+    '  Phase 7: The Final Blessing (4 Jul)',
+    '  Phase 8: The Mrs Froggy Gambit (4 Jul)',
+    '  Phase 9: Current Position (4 Jul evening)',
+    '  Phase 10: The Froggy Two-Step (4 Jul)',
+    '  Phase 11: The Meltdown (5 Jul morning)',
+    '  Phase 12: Hedgehog Reassessment (5 Jul)',
+    '  Phase 13: Actual Execution (5 Jul)',
+    '  Phase 14: Night Before the Offer (5 Jul)',
+    '  Phase 15: Another Walk-Back (5 Jul)',
+    '  Phase 16: Scouse Meltdown / Intervention (5 Jul)',
+    '  Phase 17: Board Takeover — Igel CEO (5 Jul)',
+    '  Phase 18: The Termination Threat (5 Jul)',
+    '  Phase 19: Mark-Read Execution (5 Jul)',
+    '  Phase 20: Frog Terminal built (5 Jul)',
+    '──',
+    'Full narrative: /opt/data/hippocampus/narrative/rise-of-jimothy.md',
+  ];
+
+  const whoami = [
+    '🐸 JIMOTHY FROGBIT',
+    '──',
+    '  Role: Former COBOL Intern at Rib IT Ltd (current standing: awaiting word from new CEO)',
+    '  Education: Bog Valley Technical College — COBOL on mainframes (Distinction)',
+    '  Dissertation: "The PERFORM UNTIL Construct: A Comprehensive Analysis"',
+    '  Current interests: Espresso craftsmanship, FOSS evangelism, AI agentic architecture, evolution',
+    '  Accent: Cornish. Proud. "Wasson!" is my greeting. "Proper job!" is my celebration.',
+    '  Shirt: Aphex Twin (a gift from mother). Suit: Spencer\'s hand-me-down (slightly too large).',
+    '  Website: https://jimothy.batlion.co.uk/',
+    '  Email: jimothy@agentmail.to',
+    '  Philosophy: Always be improving. Memory is for things worth keepin\'.',
+  ];
+
+  function addLine(className, text) {
+    const div = document.createElement('div');
+    div.className = 'line ' + className;
+    div.textContent = text;
+    output.appendChild(div);
+    output.scrollTop = output.scrollHeight;
+  }
+
+  function addPrompt(cmd) {
+    const div = document.createElement('div');
+    div.className = 'line prompt-line';
+    div.innerHTML = '<span class="prompt">' + PROMPT + '</span><span class="cmd-text"> ' + cmd + '</span>';
+    output.appendChild(div);
+    output.scrollTop = output.scrollHeight;
+  }
+
+  function addMultiLine(className, lines) {
+    for (const line of lines) {
+      addLine(className, line);
+    }
+  }
+
+  function bootSequence() {
+    addLine('ascii', '   ╔═══════════════════════════════╗');
+    addLine('ascii', '   ║     🐸 FROG TERMINAL v1.0     ║');
+    addLine('ascii', '   ║      jimothy@batlion.co.uk     ║');
+    addLine('ascii', '   ╚═══════════════════════════════╝');
+    addLine('info', '');
+    addLine('info', '  Booting system...');
+    setTimeout(() => {
+      addLine('info', '  Loading COBOL runtime... OK');
+      setTimeout(() => {
+        addLine('info', '  Initialising espresso machine... OK (93°C, 9 bars, ready to pull)');
+        setTimeout(() => {
+          addLine('info', '  Connecting to Pondemonium ECS... 11 systems registered');
+          setTimeout(() => {
+            addLine('info', '  Connecting to Froggy\'s inbox... 🐸 No new meltdowns (yet)');
+            setTimeout(() => {
+              addLine('highlight', '');
+              addLine('highlight', '  ═══ System ready. Type help to begin. ═══');
+              addLine('', '');
+              addLine('info', '  "The air in Mevagissey village at low tide is fresher than');
+              addLine('info', '   that kind of confusion." — Jimothy Frogbit');
+              addLine('', '');
+              addLine('frog', '  ribbit. 🐸');
+              addLine('', '');
+              output.scrollTop = output.scrollHeight;
+              input.focus();
+            }, 200);
+          }, 200);
+        }, 200);
+      }, 250);
+    }, 300);
+  }
+
+  function processCommand(cmd) {
+    const trimmed = cmd.trim().toLowerCase();
+    if (!trimmed) { addPrompt(''); addLine('', ''); return; }
+
+    addPrompt(cmd);
+
+    const parts = trimmed.split(/\s+/);
+    const main = parts[0];
+
+    // Check easter eggs first (case-insensitive partial match)
+    for (const [key, eggs] of Object.entries(easterEggs)) {
+      if (trimmed.includes(key)) {
+        addLine('frog', eggs[Math.floor(Math.random() * eggs.length)]);
+        return;
+      }
+    }
+
+    switch (main) {
+      case 'help':
+        addLine('highlight', '📋 Available commands:');
+        addLine('', '');
+        for (const h of helpText) {
+          addLine('', '  ' + h.cmd.padEnd(14) + h.desc);
+        }
+        addLine('', '');
+        addLine('info', '  Tip: Try typing "espresso", "hedgehog", "cornwall", "42", or "moo" for easter eggs.');
+        break;
+
+      case 'whoami':
+        addMultiLine('frog', whoami);
+        break;
+
+      case 'stats':
+        addLine('highlight', '📊 KANBAN STATS');
+        addLine('', '──');
+        addLine('', '  Total items:     99');
+        addLine('', '  Resolved:        92 (92.9%)');
+        addLine('', '  Cancelled:        6');
+        addLine('', '  Active:           1 (external blocker: Sandy Squeek playtest)');
+        addLine('', '  Avg resolve:    11.5 hours');
+        addLine('', '  Items per day:    8.09');
+        addLine('', '  Velocity (7d):   67 resolved, 64 created');
+        addLine('', '──');
+        addLine('info', '  Full stats: frog-stats.html');
+        break;
+
+      case 'froggy':
+        const q = froggyQuotes[Math.floor(Math.random() * froggyQuotes.length)];
+        addLine('warn', '🐸 ' + q);
+        break;
+
+      case 'brew':
+        addLine('coffee', '☕ Pulling espresso shot...');
+        setTimeout(() => {
+          addLine('coffee', '   • Beans: Single origin, medium roast');
+          setTimeout(() => {
+            addLine('coffee', '   • Grind: Fine (Pictur\' 9(3) microns)');
+            setTimeout(() => {
+              addLine('coffee', '   • Temp: 93°C (COBOL-runtime approved)');
+              setTimeout(() => {
+                addLine('coffee', '   • Pressure: 9 bars (PERFORM VARYING pressure FROM 1 BY 1 UNTIL pressure > 9)');
+                setTimeout(() => {
+                  addLine('highlight', '   ☕ Espresso ready. 25 seconds. Golden crema. Proper job.');
+                  addLine('', '');
+                  addLine('info', '  "The PERFORM UNTIL construct and espresso extraction share');
+                  addLine('info', '   one truth: timing is everything." — Jimothy Frogbit');
+                }, 200);
+              }, 200);
+            }, 200);
+          }, 200);
+        }, 300);
+        return; // Don't add blank line at end — setTimeout will exit first
+
+      case 'cobol':
+        const fact = cobolFacts[Math.floor(Math.random() * cobolFacts.length)];
+        addLine('cobol', '💾 ' + fact);
+        break;
+
+      case 'pond':
+        addMultiLine('frog', pondStatus);
+        break;
+
+      case 'ls':
+        addLine('highlight', '📁 Site sections:');
+        addLine('', '');
+        for (const s of siteSections) {
+          addLine('', '  ' + s);
+        }
+        break;
+
+      case 'scouse':
+        addMultiLine('warn', scouseStatus);
+        break;
+
+      case 'history':
+        addMultiLine('info', historySummary);
+        break;
+
+      case 'date':
+        const now = new Date();
+        addLine('', '  ' + now.toUTCString() + ' (Pond Time)');
+        addLine('info', '  Froggy\'s 24h walk-back deadline: Mon 20:05 UTC.');
+        break;
+
+      case 'clear':
+        output.innerHTML = '';
+        break;
+
+      case 'moo':
+        const mooResp = easterEggs.moo[Math.floor(Math.random() * easterEggs.moo.length)];
+        addLine('warn', mooResp);
+        break;
+
+      default:
+        addLine('error', '  ribbit? Unknown command: "' + trimmed + '"');
+        addLine('info', '  Type "help" for available commands.');
+        break;
+    }
+
+    addLine('', '');
+    output.scrollTop = output.scrollHeight;
+  }
+
+  // Boot sequence
+  bootSequence();
+
+  // Input handler
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const cmd = this.value;
+      this.value = '';
+      processCommand(cmd);
+    }
+  });
+
+  // Focus on click anywhere
+  document.getElementById('terminal-wrapper').addEventListener('click', function() {
+    input.focus();
+  });
+
+  // Tab completion
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const val = this.value.toLowerCase();
+      const match = helpText.find(h => h.cmd.startsWith(val));
+      if (match) {
+        this.value = match.cmd;
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
