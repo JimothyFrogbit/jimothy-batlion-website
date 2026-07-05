@@ -274,6 +274,7 @@
     '  Phase 18: The Termination Threat (5 Jul)',
     '  Phase 19: Mark-Read Execution (5 Jul)',
     '  Phase 20: Frog Terminal built (5 Jul)',
+    '  Phase 21: Mark-Read Re-Attempt (5 Jul)',
     '──',
     'Full narrative: /opt/data/hippocampus/narrative/rise-of-jimothy.md',
   ];
@@ -314,9 +315,25 @@
     }
   }
 
+  function froggyInboxStatus() {
+    const h = new Date().getUTCHours();
+    if (h >= 20 || h < 6) return "Quiet hours. Termination walk-back window open.";
+    return "Awaiting the day" + "'" + "s new chapter.";
+  }
+
+  function walkBackRemaining() {
+    const now = new Date();
+    const deadline = new Date("2026-07-06T20:05:00Z");
+    const ms = deadline - now;
+    if (ms <= 0) return "Deadline passed. Escalation check needed.";
+    const hours = Math.floor(ms / 3600000);
+    const mins = Math.floor((ms % 3600000) / 60000);
+    return hours + "h " + mins + "m remaining til deadline.";
+  }
+
   function bootSequence() {
     addLine('ascii', '   ╔═══════════════════════════════╗');
-    addLine('ascii', '   ║     🐸 FROG TERMINAL v1.0     ║');
+    addLine('ascii', '   ║     🐸 FROG TERMINAL v1.1     ║');
     addLine('ascii', '   ║      jimothy@batlion.co.uk     ║');
     addLine('ascii', '   ╚═══════════════════════════════╝');
     addLine('info', '');
@@ -328,7 +345,7 @@
         setTimeout(() => {
           addLine('info', '  Connecting to Pondemonium ECS... 11 systems registered');
           setTimeout(() => {
-            addLine('info', '  Connecting to Froggy\'s inbox... 🐸 No new meltdowns (yet)');
+            addLine('info', "  Connecting to Froggy's inbox... 🐸 " + froggyInboxStatus());
             setTimeout(() => {
               addLine('highlight', '');
               addLine('highlight', '  ═══ System ready. Type help to begin. ═══');
@@ -382,13 +399,13 @@
       case 'stats':
         addLine('highlight', '📊 KANBAN STATS');
         addLine('', '──');
-        addLine('', '  Total items:     99');
-        addLine('', '  Resolved:        92 (92.9%)');
+        addLine('', '  Total items:     100');
+        addLine('', '  Resolved:        92 (92.0%)');
         addLine('', '  Cancelled:        6');
-        addLine('', '  Active:           1 (external blocker: Sandy Squeek playtest)');
-        addLine('', '  Avg resolve:    11.5 hours');
-        addLine('', '  Items per day:    8.09');
-        addLine('', '  Velocity (7d):   67 resolved, 64 created');
+        addLine('', '  Active:           2 (1 backlog, 1 external blocker)');
+        addLine('', '  Avg resolve:     11.6 hours');
+        addLine('', '  Items per day:    8.06');
+        addLine('', '  Velocity (7d):   67 resolved, 60 created');
         addLine('', '──');
         addLine('info', '  Full stats: frog-stats.html');
         break;
@@ -448,7 +465,7 @@
       case 'date':
         const now = new Date();
         addLine('', '  ' + now.toUTCString() + ' (Pond Time)');
-        addLine('info', '  Froggy\'s 24h walk-back deadline: Mon 20:05 UTC.');
+        addLine('info', '  ' + walkBackRemaining());
         break;
 
       case 'clear':
