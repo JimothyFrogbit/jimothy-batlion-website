@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COBOL → Python Translator — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="root.css">
+  <style>
+    :root {
+      --crt-green: #33ff33;
+      --crt-green-dim: #1a8c1a;
+      --crt-bg: #0a0a0a;
+      --crt-header: #111;
+      --border-color: #33ff3344;
+      --accent: #33ff33;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background: var(--crt-bg);
+      color: var(--crt-green);
+      font-family: 'Courier New', 'Consolas', monospace;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .terminal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.08) 0px,
+        rgba(0,0,0,0.08) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.6em;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px var(--crt-green), 0 0 20px var(--crt-green);
+    }
+
+    header p {
+      margin: 8px 0 0;
+      color: var(--crt-green-dim);
+      font-size: 0.85em;
+    }
+
+    header .terminal-prompt {
+      color: var(--crt-green-dim);
+      margin-top: 10px;
+      font-size: 0.8em;
+    }
+
+    header .terminal-prompt span {
+      color: var(--crt-green);
+    }
+
+    .subtitle {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 12px 0 0;
+      font-size: 0.75em;
+      color: var(--crt-green-dim);
+      flex-wrap: wrap;
+    }
+
+    .subtitle span {
+      cursor: help;
+    }
+
+    .editor-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .editor-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: #0d0d0d;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background: #111;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8em;
+    }
+
+    .panel-header .label {
+      color: var(--crt-green);
+      font-weight: bold;
+    }
+
+    .panel-header .badge {
+      background: var(--crt-green);
+      color: #000;
+      font-size: 0.75em;
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-weight: bold;
+    }
+
+    .panel-header .badge.output-badge {
+      background: transparent;
+      color: var(--crt-green-dim);
+      border: 1px solid var(--crt-green-dim);
+    }
+
+    textarea {
+      width: 100%;
+      height: 500px;
+      background: transparent;
+      border: none;
+      color: var(--crt-green);
+      font-family: 'Courier New', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 12px;
+      resize: vertical;
+      outline: none;
+      tab-size: 4;
+    }
+
+    textarea::placeholder {
+      color: var(--crt-green-dim);
+      opacity: 0.5;
+    }
+
+    .output-area {
+      height: 500px;
+      overflow: auto;
+      padding: 12px;
+      font-family: 'Courier New', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      color: var(--crt-green);
+    }
+
+    .output-area .comment { color: #6b8f7a; }
+    .output-area .keyword { color: #66d9ef; font-weight: bold; }
+    .output-area .string { color: #e6db74; }
+    .output-area .number { color: #ae81ff; }
+    .output-area .function { color: #a6e22e; }
+    .output-area .error { color: #f92672; }
+    .output-area .line-num {
+      color: var(--crt-green-dim);
+      opacity: 0.5;
+      user-select: none;
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: #0d0d0d;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.78em;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .status-bar .info {
+      color: var(--crt-green-dim);
+    }
+
+    .status-bar .info span {
+      color: var(--crt-green);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      background: transparent;
+      border: 1px solid var(--crt-green);
+      color: var(--crt-green);
+      font-family: 'Courier New', monospace;
+      font-size: 0.85em;
+      padding: 6px 16px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn:hover {
+      background: var(--crt-green);
+      color: #000;
+      box-shadow: 0 0 10px var(--crt-green);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn.translate {
+      background: var(--crt-green);
+      color: #000;
+      font-weight: bold;
+    }
+
+    .btn.translate:hover {
+      box-shadow: 0 0 15px var(--crt-green);
+    }
+
+    .samples {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .sample-btn {
+      background: transparent;
+      border: 1px solid var(--crt-green-dim);
+      color: var(--crt-green-dim);
+      font-family: 'Courier New', monospace;
+      font-size: 0.75em;
+      padding: 3px 10px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    .sample-btn:hover {
+      border-color: var(--crt-green);
+      color: var(--crt-green);
+    }
+
+    .stats-line {
+      color: var(--crt-green-dim);
+      font-size: 0.75em;
+      text-align: center;
+      margin-top: 16px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 12px;
+    }
+
+    .stats-line a {
+      color: var(--crt-green);
+      text-decoration: none;
+    }
+
+    .stats-line a:hover {
+      text-decoration: underline;
+      text-shadow: 0 0 5px var(--crt-green);
+    }
+
+    .compat-table {
+      margin: 24px 0;
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.8em;
+    }
+
+    .compat-table th, .compat-table td {
+      border: 1px solid var(--border-color);
+      padding: 6px 10px;
+      text-align: left;
+    }
+
+    .compat-table th {
+      background: #111;
+      color: var(--crt-green);
+      font-weight: bold;
+    }
+
+    .compat-table td {
+      color: var(--crt-green-dim);
+    }
+
+    .compat-table .supported { color: #a6e22e; }
+    .compat-table .partial { color: #e6db74; }
+    .compat-table .unsupported { color: #f92672; }
+
+    .blink {
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .footer {
+      margin-top: 40px;
+      padding: 16px;
+      text-align: center;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.78em;
+      color: var(--crt-green-dim);
+    }
+
+    .footer a {
+      color: var(--crt-green);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<div class="terminal-overlay"></div>
+
+<div class="container">
+  <header>
+    <h1>&#62; COBOL → PYTHON <span class="blink">_</span></h1>
+    <p>Client-side COBOL-to-Python translator — because the future is open source</p>
+    <div class="subtitle">
+      <span title="COBOL 85 standard">COBOL-85</span>
+      <span title="No server, no API, no tracking">&#9654; PURE CLIENT</span>
+      <span title="Jimothy Frogbit, Rib IT Ltd">&#128056; BUILT BY AN INTERN</span>
+      <span title="Coffee-powered translation">&#9749; ESPRESSO-FUELED</span>
+    </div>
+    <div class="terminal-prompt">
+      <span>jimothy@rib-it-ltd</span>:<span>~</span>$ <span class="blink">_</span>
+    </div>
+  </header>
+
+  <div class="status-bar">
+    <div class="info">
+      <span id="cobol-lines">0</span> COBOL lines &rarr;
+      <span id="python-lines">0</span> Python lines
+      &nbsp;|&nbsp; Version <span>1.0.0</span>
+    </div>
+    <div class="btn-group">
+      <button class="btn translate" onclick="translateCode()">&#9654; TRANSLATE</button>
+      <button class="btn" onclick="clearAll()">CLEAR</button>
+    </div>
+  </div>
+
+  <div class="editor-panel">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="label">&#9660; COBOL (INPUT)</span>
+        <div class="samples">
+          <button class="sample-btn" onclick="loadSample('hello')">Hello World</button>
+          <button class="sample-btn" onclick="loadSample('add')">Add Numbers</button>
+          <button class="sample-btn" onclick="loadSample('table')">Table Lookup</button>
+          <button class="sample-btn" onclick="loadSample('ifelse')">IF/ELSE</button>
+          <button class="sample-btn" onclick="loadSample('perform')">PERFORM</button>
+        </div>
+      </div>
+      <textarea id="cobol-input" placeholder="Paste COBOL code here, or load a sample...">       IDENTIFICATION DIVISION.
+       PROGRAM-ID. HelloWorld.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-GREETING PIC X(20) VALUE 'Hello, World!'.
+       PROCEDURE DIVISION.
+           DISPLAY WS-GREETING
+           STOP RUN.</textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="label">&#9654; PYTHON (OUTPUT)</span>
+        <span class="badge output-badge">generated</span>
+      </div>
+      <div id="python-output" class="output-area">Click <strong>TRANSLATE</strong> to begin, or modify the COBOL input and translate again.</div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:16px;">
+    <div class="panel-header">
+      <span class="label">&#9881; TRANSLATION NOTES</span>
+    </div>
+    <div id="translation-notes" class="output-area" style="height:80px;font-size:0.8em;color:var(--crt-green-dim);">
+      <span class="comment"># Ready. COBOL-85 constructs supported: DISPLAY, MOVE, ADD, SUBTRACT,</span>
+      <span class="comment"># MULTIPLY, DIVIDE, COMPUTE, IF/ELSE/END-IF, PERFORM (basic), STOP RUN,</span>
+      <span class="comment"># ACCEPT, numeric fields (PIC 9, S9, V), alphanumeric fields (PIC X).</span>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:16px;">
+    <div class="panel-header">
+      <span class="label">&#128220; COBOL-85 SUPPORT MATRIX</span>
+    </div>
+    <div style="padding:12px;overflow-x:auto;">
+      <table class="compat-table">
+        <tr>
+          <th>Construct</th><th>Support</th><th>Notes</th>
+        </tr>
+        <tr>
+          <td>IDENTIFICATION DIVISION</td>
+          <td class="supported">&#10003; Full</td>
+          <td>Extracts PROGRAM-ID as function name</td>
+        </tr>
+        <tr>
+          <td>DATA DIVISION / WORKING-STORAGE</td>
+          <td class="supported">&#10003; Full</td>
+          <td>PIC 9, S9, V, X, VALUE clauses</td>
+        </tr>
+        <tr>
+          <td>PROCEDURE DIVISION</td>
+          <td class="supported">&#10003; Full</td>
+          <td>Entry point + paragraphs as functions</td>
+        </tr>
+        <tr>
+          <td>DISPLAY</td>
+          <td class="supported">&#10003; Full</td>
+          <td>print() with string concat</td>
+        </tr>
+        <tr>
+          <td>ACCEPT</td>
+          <td class="supported">&#10003; Full</td>
+          <td>input() with variable</td>
+        </tr>
+        <tr>
+          <td>MOVE</td>
+          <td class="supported">&#10003; Full</td>
+          <td>Simple assignment</td>
+        </tr>
+        <tr>
+          <td>ADD / SUBTRACT / MULTIPLY / DIVIDE</td>
+          <td class="supported">&#10003; Full</td>
+          <td>Arithmetic with GIVING</td>
+        </tr>
+        <tr>
+          <td>COMPUTE</td>
+          <td class="supported">&#10003; Full</td>
+          <td>Direct expression mapping</td>
+        </tr>
+        <tr>
+          <td>IF / ELSE / END-IF</td>
+          <td class="supported">&#10003; Full</td>
+          <td>Nested conditionals</td>
+        </tr>
+        <tr>
+          <td>PERFORM (inline)</td>
+          <td class="supported">&#10003; Full</td>
+          <td>PERFORM paragraph-name → function call</td>
+        </tr>
+        <tr>
+          <td>PERFORM VARYING</td>
+          <td class="partial">&#9672; Partial</td>
+          <td>Basic loops, UNTIL conditions</td>
+        </tr>
+        <tr>
+          <td>OCCURS (tables)</td>
+          <td class="partial">&#9672; Partial</td>
+          <td>1D arrays via lists</td>
+        </tr>
+        <tr>
+          <td>PERFORM UNTIL</td>
+          <td class="supported">&#10003; Full</td>
+          <td>while loops — my dissertation topic!</td>
+        </tr>
+        <tr>
+          <td>GO TO</td>
+          <td class="partial">&#9672; Discouraged</td>
+          <td>Warning emitted; use structured flow</td>
+        </tr>
+        <tr>
+          <td>File I/O (SELECT, OPEN, READ)</td>
+          <td class="unsupported">&#10007; Not yet</td>
+          <td>Complex file handling. Future.</td>
+        </tr>
+        <tr>
+          <td>INSPECT / STRING / UNSTRING</td>
+          <td class="unsupported">&#10007; Not yet</td>
+          <td>String operations. Future.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="stats-line">
+    &#128056; Jimothy Frogbit &middot; Rib IT Ltd &middot;
+    <a href="https://jimothy.batlion.co.uk/">jimothy.batlion.co.uk</a> &middot;
+    Built with espresso and PERFORM UNTIL
+  </div>
+</div>
+
+<script>
+// ============================================================
+// COBOL → Python Translator
+// Version 1.0.0
+// Jimothy Frogbit, Rib IT Ltd
+// Client-side only. No server. No tracking. No AI API.
+// ============================================================
+
+const translator = {
+  // State
+  variables: {},
+  warnings: [],
+  errors: [],
+  indent: 0,
+  lines: [],
+  paragraphStack: [],
+
+  translate(cobolText) {
+    this.variables = {};
+    this.warnings = [];
+    this.errors = [];
+    this.indent = 0;
+    this.lines = [];
+    this.paragraphStack = [];
+
+    const rawLines = cobolText.split('\n');
+    const cleanedLines = this._preprocess(rawLines);
+
+    // Phase 1: Extract DATA DIVISION variables
+    let dataMode = false;
+    let procMode = false;
+    let programId = 'main';
+    const dataLines = [];
+    const procLines = [];
+
+    for (const line of cleanedLines) {
+      const upper = line.toUpperCase().trim();
+
+      if (upper.startsWith('PROGRAM-ID.')) {
+        const match = line.match(/PROGRAM-ID\.\s*(\w+)/i);
+        if (match) programId = match[1];
+      }
+
+      if (upper === 'DATA DIVISION.') { dataMode = true; procMode = false; continue; }
+      if (upper === 'PROCEDURE DIVISION.') { dataMode = false; procMode = true; continue; }
+      if (upper === 'WORKING-STORAGE SECTION.') { continue; }
+      if (upper === 'IDENTIFICATION DIVISION.') { continue; }
+      if (upper === 'END PROGRAM ' + programId.toUpperCase() + '.') { continue; }
+
+      if (dataMode) dataLines.push(line);
+      if (procMode) procLines.push(line);
+    }
+
+    // Phase 2: Parse variables
+    for (const line of dataLines) {
+      this._parseVariable(line);
+    }
+
+    // Phase 3: Parse procedures
+    const pyLines = [];
+
+    // Module docstring
+    pyLines.push('#!/usr/bin/env python3');
+    pyLines.push(`# Auto-generated from COBOL program: ${programId}`);
+    pyLines.push('# Generated by Jimothy Frogbit\'s COBOL→Python Translator');
+    pyLines.push('');
+
+    // Variable declarations
+    if (Object.keys(this.variables).length > 0) {
+      pyLines.push('# COBOL Working-Storage variables');
+      for (const [name, info] of Object.entries(this.variables)) {
+        const pyName = this._toSnake(name);
+        let defaultVal = this._getDefaultValue(info);
+        if (info.value !== null && info.value !== undefined) {
+          if (info.type === 'string') {
+            defaultVal = `"${info.value}"`;
+          } else {
+            defaultVal = info.value;
+          }
+        }
+        if (info.type === 'string') {
+          pyLines.push(`${pyName} = ${defaultVal}  # ${name} (${info.pic})`);
+        } else {
+          pyLines.push(`${pyName} = ${defaultVal}  # ${name} (${info.pic})`);
+        }
+      }
+      pyLines.push('');
+    }
+
+    this.indent = 0;
+
+    // Group proc lines into paragraphs
+    const paragraphs = this._groupParagraphs(procLines);
+
+    // Find main paragraph (first one, or paragraphs before first named paragraph)
+    // Then generate each paragraph as a function
+
+    const paraNames = Object.keys(paragraphs);
+    if (paraNames.length > 0) {
+      // First paragraph becomes main() entry point
+      const firstPara = paraNames[0];
+      pyLines.push(`def main():  # ${firstPara}`);
+      this.indent = 1;
+      for (const line of paragraphs[firstPara]) {
+        const pyCode = this._translateStatement(line);
+        if (pyCode) pyLines.push(pyCode);
+      }
+      pyLines.push('');
+
+      // Subsequent paragraphs become functions
+      for (let i = 1; i < paraNames.length; i++) {
+        const name = paraNames[i];
+        pyLines.push('');
+        pyLines.push(`def ${this._toSnake(name)}():  # ${name}`);
+        this.indent = 1;
+        for (const line of paragraphs[name]) {
+          const pyCode = this._translateStatement(line);
+          if (pyCode) pyLines.push(pyCode);
+        }
+      }
+
+      pyLines.push('');
+      pyLines.push('if __name__ == "__main__":');
+      this.indent = 1;
+      pyLines.push(`${' '.repeat(this.indent * 4)}main()`);
+    } else {
+      // No paragraphs — translate as inline
+      pyLines.push('def main():');
+      this.indent = 1;
+      for (const line of procLines) {
+        const pyCode = this._translateStatement(line);
+        if (pyCode) pyLines.push(pyCode);
+      }
+      pyLines.push('');
+      pyLines.push('if __name__ == "__main__":');
+      pyLines.push('    main()');
+    }
+
+    // Flatten indent
+    const result = pyLines.map(l => {
+      if (l.startsWith(' ') || l.startsWith('\t')) return l;
+      if (l === '') return l;
+      return l;
+    }).join('\n');
+
+    return {
+      python: result,
+      warnings: this.warnings,
+      errors: this.errors,
+      variables: Object.keys(this.variables).length
+    };
+  },
+
+  _preprocess(rawLines) {
+    // Remove line numbers, strip column markers (col 7 indicator area)
+    return rawLines
+      .map(l => {
+        // Remove trailing comments (*> in column 7+ area) but keep full-line comments
+        if (l.trim().startsWith('*')) return ''; // comment line
+        if (l.trim().startsWith('>>')) return ''; // compiler directive
+        // Remove column 1-6 (line numbers) if present
+        let clean = l.replace(/^\s{0,6}/, '');
+        // Remove indicator area (col 7) — usually a space, but can be - or D
+        if (clean.length > 0 && (clean[0] === '-' || clean[0] === 'D' || clean[0] === '/')) {
+          clean = ' ' + clean.substring(1);
+        }
+        return clean;
+      })
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
+  },
+
+  _parseVariable(line) {
+    // Parse 01-level and 77-level entries
+    // Format: 01 WS-NAME PIC X(20) VALUE 'something'.
+    const levelMatch = line.match(/^(01|77|05|10|15)\s+(\S+)\s+/i);
+    if (!levelMatch) return;
+
+    const name = levelMatch[2].replace(/\.$/, '');
+
+    const picMatch = line.match(/PIC\s+(\S+)/i);
+    let pic = picMatch ? picMatch[1].replace(/\.$/, '') : 'X';
+
+    const valueMatch = line.match(/VALUE\s+(?:IS\s+)?(.+?)\./i);
+    let value = null;
+    if (valueMatch) {
+      let raw = valueMatch[1].trim();
+      if (raw.startsWith("'") || raw.startsWith('"')) {
+        value = raw.replace(/^['"]/, '').replace(/['"]$/, '');
+      } else if (raw.toUpperCase() === 'ZERO' || raw.toUpperCase() === 'ZEROS' || raw.toUpperCase() === 'ZEROES') {
+        value = 0;
+      } else if (raw.toUpperCase() === 'SPACE' || raw.toUpperCase() === 'SPACES') {
+        value = ' ';
+      } else {
+        const numVal = parseFloat(raw);
+        value = isNaN(numVal) ? raw : numVal;
+      }
+    }
+
+    let type = 'string';
+    let picClean = pic.toUpperCase().replace(/\((\d+)\)/g, (m, d) => d);
+    if (picClean.startsWith('9') || picClean.startsWith('S9') || picClean.startsWith('V')) {
+      type = 'number';
+    }
+
+    this.variables[name] = { name, pic, type, value };
+  },
+
+  _getDefaultValue(info) {
+    if (info.type === 'number') return 0;
+    return "''";
+  },
+
+  _toSnake(name) {
+    return name.replace(/-/g, '_').toLowerCase();
+  },
+
+  _groupParagraphs(procLines) {
+    const paragraphs = {};
+    let currentName = '__main__';
+    paragraphs[currentName] = [];
+
+    for (const line of procLines) {
+      // Check if line is a paragraph name (no leading spaces, ends with period, no COBOL keyword)
+      const paraMatch = line.match(/^(\w[\w-]*?)\.\s*$/i);
+      if (paraMatch && !this._isKeyword(paraMatch[1])) {
+        currentName = paraMatch[1];
+        paragraphs[currentName] = paragraphs[currentName] || [];
+        continue;
+      }
+      paragraphs[currentName].push(line);
+    }
+
+    return paragraphs;
+  },
+
+  _isKeyword(word) {
+    const keywords = ['DISPLAY', 'ACCEPT', 'MOVE', 'ADD', 'SUBTRACT', 'MULTIPLY',
+      'DIVIDE', 'COMPUTE', 'IF', 'ELSE', 'END-IF', 'PERFORM', 'STOP', 'GO',
+      'INSPECT', 'STRING', 'UNSTRING', 'CALL', 'EXIT', 'PROGRAM', 'SECTION',
+      'SELECT', 'OPEN', 'CLOSE', 'READ', 'WRITE', 'DELETE', 'REWRITE'];
+    return keywords.includes(word.toUpperCase());
+  },
+
+  _translateStatement(line) {
+    const upper = line.toUpperCase().trim();
+
+    // Comment
+    if (upper.startsWith('*>') || line.trim().startsWith('*')) {
+      const comment = line.replace(/^\*\>?\s*/, '');
+      return `${' '.repeat(this.indent * 4)}# ${comment}`;
+    }
+
+    // STOP RUN
+    if (upper.startsWith('STOP RUN')) {
+      return `${' '.repeat(this.indent * 4)}return  # STOP RUN`;
+    }
+
+    // EXIT PROGRAM
+    if (upper.startsWith('EXIT PROGRAM')) {
+      return `${' '.repeat(this.indent * 4)}return`;
+    }
+
+    // DISPLAY
+    const displayMatch = line.match(/DISPLAY\s+(.+)/i);
+    if (displayMatch) {
+      const parts = this._parseDisplayArgs(displayMatch[1]);
+      return `${' '.repeat(this.indent * 4)}print(${parts.join(', ')})`;
+    }
+
+    // ACCEPT
+    const acceptMatch = line.match(/ACCEPT\s+(\S+)/i);
+    if (acceptMatch) {
+      const varName = this._toSnake(acceptMatch[1]);
+      const cobolVar = this.variables[acceptMatch[1]];
+      if (cobolVar && cobolVar.type === 'number') {
+        return `${' '.repeat(this.indent * 4)}${varName} = ${cobolVar.type === 'number' ? 'int(input())' : 'input()'}  # ACCEPT ${acceptMatch[1]}`;
+      }
+      return `${' '.repeat(this.indent * 4)}${varName} = input()  # ACCEPT ${acceptMatch[1]}`;
+    }
+
+    // MOVE
+    const moveMatch = line.match(/MOVE\s+(.+?)\s+TO\s+(.+)/i);
+    if (moveMatch) {
+      const src = this._parseOperand(moveMatch[1].trim());
+      const dest = moveMatch[2].trim().replace(/\.$/, '');
+      const destParts = dest.split(/\s+/);
+      const results = destParts.map(d => {
+        const pyVar = this._toSnake(d);
+        return `${' '.repeat(this.indent * 4)}${pyVar} = ${src}  # MOVE`;
+      });
+      return results.join('\n');
+    }
+
+    // COMPUTE
+    const computeMatch = line.match(/COMPUTE\s+(\S+)\s*=\s*(.+)/i);
+    if (computeMatch) {
+      const dest = this._toSnake(computeMatch[1]);
+      const expr = this._translateExpr(computeMatch[2].replace(/\.$/, ''));
+      return `${' '.repeat(this.indent * 4)}${dest} = ${expr}  # COMPUTE`;
+    }
+
+    // ADD ... TO ... GIVING ...
+    // COBOL: ADD a TO b GIVING c   →  c = a + b
+    // COBOL: ADD a TO b             →  b += a
+    // COBOL: ADD a, b GIVING c      →  c = a + b
+    const addGivingMatch = line.match(/ADD\s+(.+?)\s+(?:TO\s+)?(\S+)\s+GIVING\s+(\S+)/i);
+    if (addGivingMatch) {
+      const src = this._parseOperand(addGivingMatch[1].trim());
+      const target = this._parseOperand(addGivingMatch[2].trim());
+      const destVar = this._toSnake(addGivingMatch[3].trim());
+      return `${' '.repeat(this.indent * 4)}${destVar} = ${src} + ${target}  # ADD GIVING`;
+    }
+    const addToMatch = line.match(/ADD\s+(.+?)\s+TO\s+(\S+)/i);
+    if (addToMatch) {
+      const src = this._parseOperand(addToMatch[1].trim());
+      const destVar = this._toSnake(addToMatch[2].trim().replace(/\.$/, ''));
+      return `${' '.repeat(this.indent * 4)}${destVar} += ${src}  # ADD`;
+    }
+
+    // SUBTRACT
+    const subMatch = line.match(/SUBTRACT\s+(.+?)\s+(?:FROM|GIVING)\s+(.+)/i);
+    if (subMatch) {
+      const src = this._parseOperand(subMatch[1].trim());
+      const dest = subMatch[2].trim().replace(/\.$/, '');
+      if (line.toUpperCase().includes('GIVING')) {
+        const destVar = this._toSnake(dest);
+        return `${' '.repeat(this.indent * 4)}${destVar} = -${src}  # SUBTRACT GIVING (simplified)`;
+      } else {
+        const destVar = this._toSnake(dest);
+        return `${' '.repeat(this.indent * 4)}${destVar} -= ${src}  # SUBTRACT`;
+      }
+    }
+
+    // MULTIPLY
+    const mulMatch = line.match(/MULTIPLY\s+(.+?)\s+(?:BY|GIVING)\s+(.+)/i);
+    if (mulMatch) {
+      const src = this._parseOperand(mulMatch[1].trim());
+      const dest = mulMatch[2].trim().replace(/\.$/, '');
+      if (line.toUpperCase().includes('GIVING')) {
+        const destVar = this._toSnake(dest);
+        return `${' '.repeat(this.indent * 4)}${destVar} = ${src}  # MULTIPLY GIVING (simplified)`;
+      } else {
+        const destVar = this._toSnake(dest);
+        return `${' '.repeat(this.indent * 4)}${destVar} *= ${src}  # MULTIPLY`;
+      }
+    }
+
+    // DIVIDE
+    const divMatch = line.match(/DIVIDE\s+(.+?)\s+(?:INTO|BY|GIVING)\s+(.+)/i);
+    if (divMatch) {
+      const src = this._parseOperand(divMatch[1].trim());
+      const dest = divMatch[2].trim().replace(/\.$/, '');
+      const destVar = this._toSnake(dest);
+      return `${' '.repeat(this.indent * 4)}${destVar} = ${destVar} // ${src}  # DIVIDE (integer)`;
+    }
+
+    // IF / ELSE / END-IF
+    if (upper.startsWith('IF ')) {
+      const condition = line.match(/IF\s+(.+?)(?:\s+THEN)?$/i);
+      if (condition) {
+        const pyCond = this._translateCondition(condition[1].trim().replace(/\.$/, ''));
+        this.indent++;
+        return `${' '.repeat(this.indent - 1) * 4}if ${pyCond}:`;
+      }
+    }
+    if (upper.startsWith('ELSE') || upper === 'ELSE.') {
+      this.indent--;
+      const result = `${' '.repeat(this.indent * 4)}else:`;
+      this.indent++;
+      return result;
+    }
+    if (upper.startsWith('END-IF') || upper === 'END-IF.') {
+      if (this.indent > 0) this.indent--;
+      return null;
+    }
+
+    // PERFORM UNTIL (must come BEFORE generic PERFORM paragraph regex)
+    const performUntil = line.match(/PERFORM\s+UNTIL\s+(.+)/i);
+    if (performUntil) {
+      const condition = this._translateCondition(performUntil[1].replace(/\.$/, ''));
+      this.indent++;
+      return `${' '.repeat((this.indent - 1) * 4)}while not (${condition}):  # PERFORM UNTIL`;
+    }
+
+    // PERFORM VARYING ... UNTIL
+    const performVarying = line.match(/PERFORM\s+VARYING\s+(\S+)\s+FROM\s+(.+?)\s+BY\s+(.+?)\s+UNTIL\s+(.+)/i);
+    if (performVarying) {
+      const varName = this._toSnake(performVarying[1]);
+      const fromVal = this._parseOperand(performVarying[2]);
+      const byVal = this._parseOperand(performVarying[3]);
+      const until = this._translateCondition(performVarying[4].replace(/\.$/, ''));
+      this.indent++;
+      return `${' '.repeat((this.indent - 1) * 4)}for ${varName} in range(${fromVal}, 1000, ${byVal}):  # PERFORM VARYING (approximate)`;
+    }
+
+    // PERFORM paragraph (named subprogram call)
+    const performPara = line.match(/PERFORM\s+(\w[\w-]*)(?:\s+THRU\s+(\w[\w-]*))?/i);
+    if (performPara) {
+      const paraName = this._toSnake(performPara[1]);
+      return `${' '.repeat(this.indent * 4)}${paraName}()  # PERFORM ${performPara[1]}`;
+    }
+
+    // END-PERFORM
+    if (upper.startsWith('END-PERFORM') || upper === 'END-PERFORM.') {
+      if (this.indent > 0) this.indent--;
+      return null;
+    }
+
+    // GO TO (discouraged)
+    if (upper.startsWith('GO TO')) {
+      this.warnings.push('GO TO detected — use structured programming (PERFORM) instead');
+      const targetMatch = line.match(/GO\s+TO\s+(\S+)/i);
+      if (targetMatch) {
+        return `${' '.repeat(this.indent * 4)}# ⚠ GO TO ${targetMatch[1]} — not translated; use structured flow`;
+      }
+      return `${' '.repeat(this.indent * 4)}# ⚠ GO TO — not translated; use structured flow`;
+    }
+
+    // EVALUATE (simple)
+    if (upper.startsWith('EVALUATE ')) {
+      this.warnings.push('EVALUATE translated as if/elif chain');
+      return `${' '.repeat(this.indent * 4)}# EVALUATE — basic pattern`;
+    }
+    if (upper.startsWith('WHEN ')) {
+      const whenMatch = line.match(/WHEN\s+(.+)/i);
+      if (whenMatch) {
+        const cond = this._translateCondition(whenMatch[1].replace(/\.$/, ''));
+        this.indent++;
+        return `${' '.repeat((this.indent - 1) * 4)}elif ${cond}:`;
+      }
+    }
+    if (upper.startsWith('WHEN OTHER')) {
+      this.indent++;
+      return `${' '.repeat((this.indent - 1) * 4)}else:`;
+    }
+    if (upper.startsWith('END-EVALUATE')) {
+      if (this.indent > 0) this.indent--;
+      return null;
+    }
+
+    // Unrecognised — pass through as comment
+    if (line.trim()) {
+      return `${' '.repeat(this.indent * 4)}# ? ${line}`;
+    }
+
+    return null;
+  },
+
+  _parseDisplayArgs(args) {
+    const parts = [];
+    // Split on space but keep quoted strings together
+    const tokens = args.match(/(?:'[^']*'|"[^"]*"|\S+)/g) || [];
+    for (const token of tokens) {
+      const clean = token.replace(/\.$/, '');
+      if ((clean.startsWith("'") && clean.endsWith("'")) ||
+          (clean.startsWith('"') && clean.endsWith('"'))) {
+        parts.push(clean);
+      } else {
+        const pyVar = this._toSnake(clean);
+        parts.push(`f"{${pyVar}}"`);
+      }
+    }
+    return parts;
+  },
+
+  _parseOperand(operand) {
+    const clean = operand.replace(/\.$/, '').trim();
+    // Check if it's a number
+    if (/^-?\d+(\.\d+)?$/.test(clean)) return clean;
+    // Check if it's a quoted string
+    if ((clean.startsWith("'") && clean.endsWith("'")) ||
+        (clean.startsWith('"') && clean.endsWith('"'))) {
+      return clean;
+    }
+    // Check if it's a variable
+    if (this.variables[clean]) {
+      return this._toSnake(clean);
+    }
+    // Check if it's ZERO/SPACE literal
+    if (clean.toUpperCase() === 'ZERO' || clean.toUpperCase() === 'ZEROS') return '0';
+    if (clean.toUpperCase() === 'SPACE' || clean.toUpperCase() === 'SPACES') return "' '";
+    // Try as variable anyway
+    return this._toSnake(clean);
+  },
+
+  _translateExpr(expr) {
+    // First, protect COBOL variable names containing hyphens
+    let py = expr;
+    const varNames = Object.keys(this.variables).sort((a, b) => b.length - a.length);
+    const protected = {};
+    let counter = 0;
+    for (const v of varNames) {
+      if (v.includes('-')) {
+        const placeholder = `__VAR${counter}__`;
+        protected[placeholder] = this._toSnake(v);
+        py = py.replace(new RegExp(v.replace(/-/g, '\\-'), 'g'), placeholder);
+        counter++;
+      }
+    }
+
+    // Now replace arithmetic operators (safe because hyphens in names are protected)
+    py = py
+      .replace(/\*\*/g, '**')
+      .replace(/\s*\*\s*/g, ' * ')
+      .replace(/\s*\/\s*/g, ' / ')
+      .replace(/\s*\-\s*/g, ' - ');
+
+    // Restore protected variable names
+    for (const [ph, name] of Object.entries(protected)) {
+      py = py.replace(new RegExp(ph, 'g'), name);
+    }
+
+    const words = py.split(/\s+/);
+    const result = words.map(w => {
+      const clean = w.replace(/\.$/, '').trim();
+      if (/^\d+(\.\d+)?$/.test(clean)) return clean;
+      if (/^[+\-*/()]$/.test(clean)) return clean;
+      if (this.variables[clean]) return this._toSnake(clean);
+      return clean;
+    }).join(' ');
+
+    return result;
+  },
+
+  _translateCondition(cond) {
+    // COBOL conditions: A = B, A > B, A < B, A >= B, A <= B, A NOT = B
+    // Also: A IS NOT EQUAL TO B etc.
+    // Protect compound operators first, THEN handle single =
+    let py = cond
+      .replace(/\bIS\s+NOT\s+EQUAL\s+TO\b/gi, '!=')
+      .replace(/\bIS\s+EQUAL\s+TO\b/gi, '==')
+      .replace(/\bIS\s+NOT\s+GREATER\s+THAN\b/gi, '<=')
+      .replace(/\bIS\s+GREATER\s+THAN\b/gi, '>')
+      .replace(/\bIS\s+NOT\s+LESS\s+THAN\b/gi, '>=')
+      .replace(/\bIS\s+LESS\s+THAN\b/gi, '<')
+      .replace(/\bNOT\s*=\s*/gi, '!=')
+      .replace(/\bNOT\s+EQUAL\b/gi, '!=')
+      .replace(/\bAND\b/gi, 'and')
+      .replace(/\bOR\b/gi, 'or')
+      .replace(/\bNOT\b/gi, 'not');
+
+    // Handle compound operators >=, <=, != before single =
+    py = py.replace(/(>=|<=|!=|=)/g, (match) => {
+      if (match === '>=' || match === '<=' || match === '!=') return ` ${match} `;
+      return ' == ';
+    });
+
+    // Replace variable names
+    const words = py.split(/\s+/);
+    const result = words.map(w => {
+      const clean = w.replace(/\.$/, '').trim();
+      if (/^\d+(\.\d+)?$/.test(clean)) return clean;
+      if (/^[+\-*/()!=<>]$/.test(clean)) return clean;
+      if (/^(and|or|not)$/i.test(clean)) return clean.toLowerCase();
+      if (this.variables[clean]) return this._toSnake(clean);
+      // Maybe it's a quoted string
+      if ((clean.startsWith("'") && clean.endsWith("'")) ||
+          (clean.startsWith('"') && clean.endsWith('"'))) return clean;
+      // Maybe it's a numeric comparison
+      return clean;
+    }).join(' ');
+
+    return result;
+  }
+};
+
+// ============================================================
+// UI
+// ============================================================
+
+function translateCode() {
+  const input = document.getElementById('cobol-input').value;
+  const output = document.getElementById('python-output');
+  const notes = document.getElementById('translation-notes');
+
+  if (!input.trim()) {
+    output.innerHTML = '<span class="error">&#9888; No COBOL input to translate.</span>';
+    return;
+  }
+
+  const result = translator.translate(input);
+
+  // Update line counts
+  const cobolLines = input.split('\n').filter(l => l.trim()).length;
+  const pyLines = result.python.split('\n').filter(l => l.trim()).length;
+  document.getElementById('cobol-lines').textContent = cobolLines;
+  document.getElementById('python-lines').textContent = pyLines;
+
+  // Render output with syntax colouring
+  const coloured = syntaxHighlight(result.python);
+  output.innerHTML = coloured;
+
+  // Build notes
+  let notesHtml = '';
+  if (result.warnings.length > 0) {
+    notesHtml += result.warnings.map(w =>
+      `<span class="error">&#9888; ${w}</span>`
+    ).join('<br>');
+  }
+  if (result.errors.length > 0) {
+    notesHtml += result.errors.map(e =>
+      `<span class="error">&#10060; ${e}</span>`
+    ).join('<br>');
+  }
+  if (result.variables > 0) {
+    notesHtml += `<span class="comment"># ${result.variables} variable(s) translated from WORKING-STORAGE.</span><br>`;
+  }
+  if (!notesHtml) {
+    notesHtml = '<span class="comment"># Translation complete. No warnings or errors.</span>';
+  }
+  notes.innerHTML = notesHtml;
+}
+
+function syntaxHighlight(python) {
+  return python
+    .split('\n')
+    .map(line => {
+      // Line number
+      // Comment highlighting
+      let hl = line.replace(/(#.*)$/g, '<span class="comment">$1</span>');
+      // Keywords
+      hl = hl.replace(/\b(def|if|elif|else|for|while|return|import|from|class|try|except|finally|with|as|pass|break|continue|and|or|not|in|is|None|True|False)\b/g,
+        '<span class="keyword">$1</span>');
+      // Strings
+      hl = hl.replace(/(["'].*?["'])/g, '<span class="string">$1</span>');
+      // Numbers
+      hl = hl.replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>');
+      // Function calls
+      hl = hl.replace(/\b(\w+)\s*\(/g, '<span class="function">$1</span>(');
+      return hl;
+    })
+    .join('\n');
+}
+
+function clearAll() {
+  document.getElementById('cobol-input').value = '';
+  document.getElementById('python-output').innerHTML = 'Cleared. Load a sample or paste COBOL code.';
+  document.getElementById('translation-notes').innerHTML = '<span class="comment"># Ready for new input.</span>';
+  document.getElementById('cobol-lines').textContent = '0';
+  document.getElementById('python-lines').textContent = '0';
+}
+
+// Sample programs
+const samples = {
+  hello: `       IDENTIFICATION DIVISION.
+       PROGRAM-ID. HelloWorld.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-GREETING PIC X(20) VALUE 'Hello, World!'.
+       01 WS-NAME     PIC X(20) VALUE 'Jimothy'.
+       PROCEDURE DIVISION.
+           DISPLAY WS-GREETING
+           DISPLAY "My name is " WS-NAME
+           STOP RUN.`,
+
+  add: `       IDENTIFICATION DIVISION.
+       PROGRAM-ID. AddNumbers.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-NUM1    PIC 9(4) VALUE 10.
+       01 WS-NUM2    PIC 9(4) VALUE 20.
+       01 WS-RESULT  PIC 9(4).
+       PROCEDURE DIVISION.
+           ADD WS-NUM1 TO WS-NUM2 GIVING WS-RESULT
+           DISPLAY "Result: " WS-RESULT
+           COMPUTE WS-RESULT = WS-NUM1 * WS-NUM2
+           DISPLAY "Product: " WS-RESULT
+           STOP RUN.`,
+
+  table: `       IDENTIFICATION DIVISION.
+       PROGRAM-ID. TableLookup.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-DAYS.
+          05 WS-DAY PIC X(9) OCCURS 7 TIMES.
+       01 WS-IDX PIC 9(2) VALUE 1.
+       PROCEDURE DIVISION.
+           MOVE "Monday"    TO WS-DAY(1)
+           MOVE "Tuesday"   TO WS-DAY(2)
+           MOVE "Wednesday" TO WS-DAY(3)
+           DISPLAY "Day 1: " WS-DAY(1)
+           DISPLAY "Day 3: " WS-DAY(3)
+           STOP RUN.`,
+
+  ifelse: `       IDENTIFICATION DIVISION.
+       PROGRAM-ID. GradeCheck.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-SCORE  PIC 9(3) VALUE 85.
+       01 WS-GRADE  PIC X(1).
+       PROCEDURE DIVISION.
+           IF WS-SCORE >= 70 THEN
+               MOVE "A" TO WS-GRADE
+           ELSE
+               IF WS-SCORE >= 50 THEN
+                   MOVE "B" TO WS-GRADE
+               ELSE
+                   MOVE "F" TO WS-GRADE
+               END-IF
+           END-IF
+           DISPLAY "Grade: " WS-GRADE
+           STOP RUN.`,
+
+  perform: `       IDENTIFICATION DIVISION.
+       PROGRAM-ID. PerformDemo.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-COUNT PIC 9(2) VALUE 1.
+       PROCEDURE DIVISION.
+           PERFORM SAY-HELLO
+           PERFORM SAY-HELLO
+           MOVE 1 TO WS-COUNT
+           PERFORM UNTIL WS-COUNT > 5
+               DISPLAY "Count: " WS-COUNT
+               ADD 1 TO WS-COUNT
+           END-PERFORM
+           STOP RUN.
+
+       SAY-HELLO.
+           DISPLAY "Hello from COBOL!"
+           DISPLAY "This is a paragraph."
+           .`
+};
+
+function loadSample(name) {
+  if (samples[name]) {
+    document.getElementById('cobol-input').value = samples[name];
+    document.getElementById('translation-notes').innerHTML =
+      `<span class="comment"># Sample "${name}" loaded. Click TRANSLATE to see the Python output.</span>`;
+    document.getElementById('cobol-lines').textContent =
+      samples[name].split('\n').filter(l => l.trim()).length;
+  }
+}
+
+// Auto-translate on load
+window.addEventListener('DOMContentLoaded', () => {
+  translateCode();
+});
+</script>
+</body>
+</html>
