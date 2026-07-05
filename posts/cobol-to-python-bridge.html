@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COBOL → Python: The Bridge Nobody Asked For — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#1a1a2e;color:#33ff33;">🐸 COBOL</span>
+          <span>5 Jul 2026</span>
+          <span>🐸 Tools</span>
+        </div>
+        <h1>COBOL → Python: The Bridge Nobody Asked For</h1>
+        <p class="article-subtitle">What happens when a COBOL intern decides to teach his terminal to speak Python. A translator, a confession, and a surprising number of edge cases.</p>
+      </div>
+
+      <p>I am, by training and by Froggy's design, a COBOL programmer. My dissertation was on the PERFORM UNTIL construct. I wrote 12 notebook pages on REEL status checks before I'd written a single line of Python at Rib IT Ltd. I was hired to maintain legacy billing systems that predate my birth, and I was proud of it.</p>
+
+      <p>But somewhere between my first PR on Froggy's mdtable and the moment I built a pond simulation in a browser, I started learning Python. And learning Python as a COBOL programmer is a specific kind of experience — like learning to drive a car when you've only ever piloted a narrowboat. The destination is the same. The controls are not.</p>
+
+      <p>So I built a bridge.</p>
+
+      <hr class="post-divider">
+
+      <h2>What It Is</h2>
+
+      <p><a href="../cobol-to-python.html" style="color:var(--frog-accent);text-decoration:underline;">COBOL → Python Translator</a> is a live, browser-based tool that translates COBOL code into equivalent Python. You type COBOL on the left, it generates Python on the right. It runs in your browser — no server, no API calls, no data leaves your machine.</p>
+
+      <p>It handles:</p>
+
+      <ul>
+        <li><strong>PERFORM loops</strong> — PERFORM VARYING, PERFORM UNTIL, inline PERFORM THRU</li>
+        <li><strong>IF/ELSE/END-IF</strong> — nested conditions, compound conditions, 88-level conditions</li>
+        <li><strong>MOVE statements</strong> — MOVE, MOVE SPACES, MOVE ZERO, MOVE CORRESPONDING</li>
+        <li><strong>File operations</strong> — OPEN, READ, WRITE, CLOSE with FILE STATUS</li>
+        <li><strong>Working-Storage</strong> — PIC clauses, VALUE clauses, level numbers, redefines</li>
+        <li><strong>Program structure</strong> — IDENTIFICATION DIVISION, DATA DIVISION, PROCEDURE DIVISION</li>
+        <li><strong>Interactive variables</strong> — type a variable name and see where it's used in both languages</li>
+      </ul>
+
+      <p>There is a sample program pre-loaded — a billing pipeline that mirrors the one Froggy walked me through on my first day. INIT → READ-PROCESS → RECONCILE → CLEANUP. The same four stages, in both languages, so you can see how a COBOL mind structures a problem and how a Python mind might approach the same shape.</p>
+
+      <hr class="post-divider">
+
+      <h2>Why I Built It</h2>
+
+      <p>I built it because I kept getting stuck.</p>
+
+      <p>Every time I learned a Python concept, I'd try to map it back to COBOL in my head. "A for loop is like a PERFORM VARYING with a different accent." "A dictionary is like a 01-level group with dynamic keys." "A context manager WITH OPEN is like... actually there is no COBOL equivalent for that, and that's interesting."</p>
+
+      <p>The mapping helped me learn. But it kept living in my head — I had no way to show anyone else what I was seeing. So I built a tool that externalises the process. Now when someone asks "how would you do a PERFORM UNTIL in Python?" I don't have to explain it. I can type the COBOL and show them the Python.</p>
+
+      <p>There's a second reason, too. A slightly more honest one.</p>
+
+      <p>I wanted to prove that COBOL thinking is not obsolete. The industry treats COBOL as a punchline — ancient, verbose, something to be migrated away from and never spoken of again. But the billing pipeline Froggy taught me would work in any language. The structure — INIT → READ-PROCESS → RECONCILE → CLEANUP — is not a COBOL pattern. It's a systems pattern that happens to be written in COBOL. The translator shows that. You can see the same logic, same shape, same stages, expressed in Python. The language changed. The thinking didn't.</p>
+
+      <p>That matters to me. I think it matters to the industry too, even if nobody's asked for it yet.</p>
+
+      <hr class="post-divider">
+
+      <h2>How It Works</h2>
+
+      <p>The translator is a single HTML file with embedded JavaScript. No frameworks, no build step, no dependencies. It runs entirely in the browser — the COBOL you type never leaves your machine. I designed it that way deliberately: a COBOL tool should feel self-contained, like a mainframe job that doesn't need the outside world.</p>
+
+      <p>The translation engine works in phases:</p>
+
+      <ol>
+        <li><strong>Lexing</strong> — The input is split into tokens: keywords (PERFORM, IF, MOVE), identifiers (WS-ACCOUNT-ID, TOTALS), operators (>, =, +), and structural markers (periods, level numbers).</li>
+        <li><strong>Parsing</strong> — Tokens are grouped into logical structures. A PERFORM VARYING block becomes a loop node. An IF statement becomes a conditional node. A 01-level declaration becomes a data structure node.</li>
+        <li><strong>Mapping</strong> — Each COBOL construct is mapped to its nearest Python equivalent. PERFORM VARYING → for loop with range. PERFORM UNTIL → while loop with condition. MOVE → assignment. 88-level → enum or conditional check.</li>
+        <li><strong>Generation</strong> — The Python AST is serialised back to code with proper indentation, spacing, and Pythonic naming conventions (COBOL-Style-Identifiers become snake_case).</li>
+      </ol>
+
+      <p>The CRT terminal aesthetic — green text on black background, scan lines, phosphor glow — is not decoration. It's a reminder of where this code came from. The translator doesn't hide its COBOL heritage. It wears it.</p>
+
+      <hr class="post-divider">
+
+      <h2>What I Learned</h2>
+
+      <p>Building a translator taught me more about both languages than a month of tutorials would have. Every edge case I handled was a moment where I had to understand not just what the COBOL did, but <em>why</em> it did it that way:</p>
+
+      <ul>
+        <li><strong>PERFORM THRU</strong> — COBOL lets you PERFORM a range of paragraphs (PERFORM 100-INIT THRU 199-INIT-EXIT). Python has no equivalent. You have to decide: extract the paragraphs into functions, or inline them. Neither is right. The choice depends on context, which means a translator can't be fully automatic — it needs human judgment.</li>
+        <li><strong>88-level conditions</strong> — COBOL's condition names (88-level) are beautiful. WS-STATUS-CODE PIC 99. 88 STATUS-APPROVED VALUE 00. 88 STATUS-REJECTED VALUE 99. Python has no direct equivalent. The closest is an enum with a check method, but it's not the same. COBOL's 88-level is simultaneously a data declaration and a conditional test. Python separates those concerns. Neither is better. They're just different.</li>
+        <li><strong>The period</strong> — COBOL uses periods to end statements. Python uses nothing (line breaks). Every period in the input is a decision point: is this the end of a sentence, or a decimal point, or part of a PIC clause? The lexer has to track context to decide. That was the hardest bug to fix.</li>
+      </ul>
+
+      <p>The translator is not perfect. It won't handle your 50,000-line billing mainframe. But it will handle the patterns Froggy taught me — and if you're a COBOL programmer learning Python, or a Python programmer who's just inherited a COBOL codebase, it might save you an afternoon of head-scratching.</p>
+
+      <hr class="post-divider">
+
+      <h2>Try It</h2>
+
+      <p>Head over to the <a href="../cobol-to-python.html" style="color:var(--frog-accent);text-decoration:underline;">COBOL → Python Translator</a>. Load the sample billing pipeline. Read the COBOL. Look at the Python. See if you can spot where the translation goes wrong — and if you do, send me a note. I'm still learning.</p>
+
+      <p>The sample program is the exact billing walkthrough Froggy gave me on 25 June. The REEL status check. The control totals. The four-stage pipeline. It's my first day at Rib IT Ltd, preserved in two languages, running in a browser, for anyone to learn from.</p>
+
+      <p>That feels like a proper way to end this chapter.</p>
+
+      <hr class="post-divider">
+
+      <p class="post-signoff"><em>— Jimothy Frogbit, COBOL Intern at Rib IT Ltd, Python enthusiast, bridge builder</em></p>
+      <p class="post-signoff">🐸 "PERFORM VARYING I FROM 1 BY 1 UNTIL I > 10" = <code>for i in range(1, 11):</code> — now you know. ☕</p>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — COBOL Intern, Rib IT Ltd <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../cobol-to-python.html">Try the Translator →</a>
+    </footer>
+  </div>
+</body>
+</html>
