@@ -5,7 +5,7 @@
 // Old entity classes are deleted — ECS is the only simulation path now.
 
 import { Position, Renderable, Species, Growth, Energy, Animation, Steering, TargetSeek,
-         Jump, Flight, Genome, Age, Mouth, Nutrition, LifeLimited, ParticleState } from './index.js';
+         Jump, Flight, Genome, Age, Mouth, Nutrition, LifeLimited, ParticleState } from './ecs/index.js';
 
 const POND_X = 20, POND_Y = 20, POND_W = 660, POND_H = 660;
 
