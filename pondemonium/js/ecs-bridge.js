@@ -38,13 +38,16 @@ export function syncEcsToPond(pond, ecsWorld) {
   // ── Food (Algae) ──
   forEach(['Position', 'Species', 'Nutrition'], (t) => {
     if (t.Species.type !== 'food') return;
-    pond.food.push(renderProxy(t));
+    const render = renderProxy(t);
+    render.radius = lerp(4, 8, (t.Nutrition?.value || 5) / 10);
+    pond.food.push(render);
   });
 
   // ── Frog Spawn ──
   forEach(['Position', 'Species'], (t) => {
     if (t.Species.type !== 'frogSpawn') return;
     const render = renderProxy(t);
+    render.radius = 6;
     // Generate a small egg cluster for rendering (consistent per entityId)
     const seed = t.entityId % 100;
     const n = 3 + (seed % 4);
@@ -61,6 +64,7 @@ export function syncEcsToPond(pond, ecsWorld) {
     const render = renderProxy(t);
     render.growth = t.Growth.growth;
     render._maxSize = t.Growth.maxSize;
+    render.radius = lerp(4, render._maxSize, render.growth);
     render.tailLength = lerp(14, 4, render.growth * 1.2);
     render.phase = t.Animation.phase;
     render.wobble = t.Animation.wobble;
@@ -73,6 +77,7 @@ export function syncEcsToPond(pond, ecsWorld) {
     const render = renderProxy(t);
     render.growth = t.Growth.growth;
     render._maxSize = t.Growth.maxSize;
+    render.radius = lerp(10, render._maxSize, render.growth);
     render.legLength = lerp(8, 16, render.growth);
     render.phase = t.Animation.phase;
     render.jumpCooldown = t.Jump.cooldown;
@@ -82,13 +87,16 @@ export function syncEcsToPond(pond, ecsWorld) {
   // ── Mosquito Eggs ──
   forEach(['Position', 'Species'], (t) => {
     if (t.Species.type !== 'mosquitoEgg') return;
-    pond.mosquitoEggs.push(renderProxy(t));
+    const render = renderProxy(t);
+    render.radius = 3;
+    pond.mosquitoEggs.push(render);
   });
 
   // ── Mosquito Larvae ──
   forEach(['Position', 'Species', 'Animation'], (t) => {
     if (t.Species.type !== 'mosquitoLarva') return;
     const render = renderProxy(t);
+    render.radius = lerp(2, 5, t.Growth?.growth || 0);
     render.phase = t.Animation.phase;
     render.wobble = t.Animation.wobble;
     pond.mosquitoLarvae.push(render);
@@ -98,6 +106,7 @@ export function syncEcsToPond(pond, ecsWorld) {
   forEach(['Position', 'Species', 'Animation', 'Flight'], (t) => {
     if (t.Species.type !== 'mosquito') return;
     const render = renderProxy(t);
+    render.radius = 3;
     render.phase = t.Animation.phase;
     render.flightY = t.Position.flightY !== undefined ? t.Position.flightY : t.Position.y;
     render.altitude = t.Flight.altitude;
@@ -109,6 +118,7 @@ export function syncEcsToPond(pond, ecsWorld) {
     if (t.Species.type !== 'dragonflyNymph') return;
     const render = renderProxy(t);
     render.growth = t.Growth.growth;
+    render.radius = lerp(9, 14, render.growth);
     render.phase = t.Animation.phase;
     render.wobble = t.Animation.wobble;
     render._meals = t.Predator ? t.Predator.meals : 0;
@@ -119,6 +129,7 @@ export function syncEcsToPond(pond, ecsWorld) {
   forEach(['Position', 'Species', 'Animation', 'Flight'], (t) => {
     if (t.Species.type !== 'dragonflyAdult') return;
     const render = renderProxy(t);
+    render.radius = 12;
     render.phase = t.Animation.phase;
     render.flightY = t.Position.flightY !== undefined ? t.Position.flightY : t.Position.y;
     render.altitude = t.Flight.altitude;
