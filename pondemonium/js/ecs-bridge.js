@@ -44,7 +44,15 @@ export function syncEcsToPond(pond, ecsWorld) {
   // ── Frog Spawn ──
   forEach(['Position', 'Species'], (t) => {
     if (t.Species.type !== 'frogSpawn') return;
-    pond.frogSpawns.push(renderProxy(t));
+    const render = renderProxy(t);
+    // Generate a small egg cluster for rendering (consistent per entityId)
+    const seed = t.entityId % 100;
+    const n = 3 + (seed % 4);
+    render.cluster = [];
+    for (let i = 0; i < n; i++) {
+      render.cluster.push({ ox: (seed * 3 + i * 7) % 13 - 6, oy: (seed * 7 + i * 5) % 9 - 4, r: 2.5 + (i % 3) * 0.5 });
+    }
+    pond.frogSpawns.push(render);
   });
 
   // ── Tadpoles ──
@@ -152,7 +160,7 @@ function renderProxy(t) {
   const growth = t.Growth || {};
   const mouth = t.Mouth || {};
   const age = t.Age || {};
-  const genome = t.Genome || null;
+  const genomeData = t.Genome || null;
   const flight = t.Flight || {};
   const predator = t.Predator || {};
   const limited = t.LifeLimited || {};
@@ -169,14 +177,9 @@ function renderProxy(t) {
     maxEnergy: energy.maxEnergy || 100,
     satiation: energy.satiation !== undefined ? energy.satiation : 100,
     species: species.type,
+    genome: genomeData ? genomeData.genotype : null,
     _ecsEntityId: t.entityId,
   };
-
-  // Attach genome for tooltip display
-  if (genome) {
-    proxy.genome = genome.genotype;
-    proxy.phenotype = genome.phenotype;
-  }
 
   // Steering properties (speed, sight) for moving entities
   if (steer.speed !== undefined) proxy._speed = steer.speed;
