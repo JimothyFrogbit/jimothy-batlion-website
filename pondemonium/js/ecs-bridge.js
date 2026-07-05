@@ -40,6 +40,8 @@ export function syncEcsToPond(pond, ecsWorld) {
     if (t.Species.type !== 'food') return;
     const render = renderProxy(t);
     render.radius = lerp(4, 8, (t.Nutrition?.value || 5) / 10);
+    render.age = t.Age?.age || 0;
+    render.maxAge = t.Age?.maxAge || 300;
     pond.food.push(render);
   });
 

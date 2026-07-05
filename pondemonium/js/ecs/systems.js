@@ -16,31 +16,44 @@ import { ParticleSystem } from './systems/ParticleSystem.js';
 import { GrowthSystem } from './systems/GrowthSystem.js';
 import { DeathSystem } from './systems/DeathSystem.js';
 import { FeedingSystem } from './systems/FeedingSystem.js';
+import { PredationSystem } from './systems/PredationSystem.js';
+import { StressSystem } from './systems/StressSystem.js';
+import { ReproductionSystem } from './systems/ReproductionSystem.js';
 
-// Phase 2b systems (not yet imported):
-// import { PredationSystem } from './systems/PredationSystem.js';
-// import { StressSystem } from './systems/StressSystem.js';
-// import { ReproductionSystem } from './systems/ReproductionSystem.js';
-// import { MorphSystem } from './systems/MorphSystem.js';
+// Phase 2b systems (now all imported):
 // import { RenderSystem } from './systems/RenderSystem.js';
 // import { CautionSystem } from './systems/CautionSystem.js';
+import { MorphSystem } from './systems/MorphSystem.js';
+import { HatchSystem } from './systems/HatchSystem.js';
 
-/** Register all Phase 2 systems on a world. */
+/** Register all Phase 2 systems on a world. Returns refs to key systems. */
 export function registerAllSystems(world, pondRef) {
   // Phase 2 — Core systems (implemented)
   world.addSystem(new MovementSystem());
   world.addSystem(new MetabolismSystem());
-  world.addSystem(new SteeringSystem(pondRef));
+  world.addSystem(new SteeringSystem());
   world.addSystem(new ParticleSystem());
   world.addSystem(new GrowthSystem());
   world.addSystem(new DeathSystem());
-  world.addSystem(new FeedingSystem(pondRef));
+  world.addSystem(new FeedingSystem());
+  world.addSystem(new PredationSystem());
 
-  // Phase 2b — Coming soon
-  // world.addSystem(new PredationSystem());
-  // world.addSystem(new StressSystem());
-  // world.addSystem(new ReproductionSystem());
-  // world.addSystem(new MorphSystem());
+  // Phase 3 — Stress + Reproduction (self-contained, no pondRef)
+  const stressSystem = new StressSystem();
+  const reproductionSystem = new ReproductionSystem();
+  world.addSystem(stressSystem);
+  world.addSystem(reproductionSystem);
+
+  // Phase 2b — Morph (implemented)
+  world.addSystem(new MorphSystem());
+
+  // Wire ECS systems into pond for UI/stats delegation
+  if (pondRef) {
+    pondRef.setEcsSystems(stressSystem, reproductionSystem);
+  }
+
+  // Phase 3 — HatchSystem (frog spawn → tadpoles, mosquito eggs → larvae)
+  world.addSystem(new HatchSystem());
 
   // Phase 3 only:
   // world.addSystem(new RenderSystem());
