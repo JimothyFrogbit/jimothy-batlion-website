@@ -229,10 +229,18 @@ export class Pond {
           : null;
         this.stressEventsTotal = this._ecsStressSystem.eventsTotal;
         this.stressEventLog = this._ecsStressSystem.eventLog?.slice(0, 10) || [];
-        // Propagate stress event rate so ECS system respects slider
+          // Propagate stress event rate so ECS system respects slider
         if (this._stressEventRateProp !== undefined) {
           this._ecsStressSystem._stressEventRate = this._stressEventRateProp;
         }
+      }
+
+      // Propagate reproduction rates to ECS system so UI sliders work
+      if (this._ecsReproductionSystem) {
+        this._ecsReproductionSystem.setFrogRate(this.frogRate);
+        this._ecsReproductionSystem.setMosquitoRate(this.mosquitoRate);
+        this._ecsReproductionSystem.setDragonflyRate(this.dragonflyRate);
+        this._ecsReproductionSystem.setAlgaeRate(this.algaeRate);
       }
 
       // Ripples (visual effects, not entity-dependent)
