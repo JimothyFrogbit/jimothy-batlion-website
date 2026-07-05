@@ -12,7 +12,6 @@
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: 100vh;
     overflow-x: hidden;
   }
@@ -22,6 +21,8 @@
     align-items: center;
     gap: 8px;
     padding: 16px;
+    width: 100%;
+    max-width: 1280px;
   }
   h1 {
     font-size: 28px;
@@ -32,28 +33,48 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: none;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
   }
   h1 span { font-weight: 300; font-size: 14px; letter-spacing: 0; background: none; -webkit-text-fill-color: #7a8a9a; display: block; margin-top: -2px; }
+
+  /* ── Three-column layout: controls | pond | stats ── */
   #main {
     display: flex;
     gap: 16px;
     align-items: flex-start;
-    flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
   }
-  canvas {
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0; /* allow children to shrink instead of overflowing */
+  }
+  #col-left, #col-right {
+    width: 280px;
+    flex-shrink: 0;
+  }
+  #col-center {
+    align-items: center;
+    flex-shrink: 1;
+  }
+
+  canvas#pond {
     border-radius: 12px;
     box-shadow: 0 0 40px rgba(34, 211, 238, 0.15), 0 4px 24px rgba(0,0,0,0.6);
     display: block;
     cursor: default;
+    max-width: 100%;
+    height: auto;
   }
-  #panel {
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  #info {
+    font-size: 11px;
+    color: #5a7a7a;
+    text-align: center;
+    max-width: 100%;
   }
+
   .card {
     background: #14142a;
     border: 1px solid #2a2a4a;
@@ -85,6 +106,7 @@
     accent-color: #22d3ee;
     height: 4px;
     cursor: pointer;
+    min-width: 0;
   }
   .ctrl-row .val {
     font-size: 12px;
@@ -92,6 +114,7 @@
     min-width: 28px;
     text-align: right;
     font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
   }
   .btn-row {
     display: flex;
@@ -129,12 +152,6 @@
     vertical-align: middle;
     border: 1px solid rgba(255,255,255,0.1);
   }
-  #info {
-    font-size: 11px;
-    color: #5a7a7a;
-    text-align: center;
-    margin-top: 4px;
-  }
   /* ── Gene Browser ── */
   #genome-card { transition: opacity 0.2s; }
   .genome-entity-info { font-size: 12px; color: #b0d0e0; line-height: 1.5; margin-bottom: 2px; }
@@ -156,17 +173,12 @@
     border-left: 2px solid #2a4a3a;
     margin: 2px 0 6px 0;
   }
-  @media (max-width: 800px) {
-    canvas { width: 100%; max-width: 500px; height: auto; }
-    #panel { width: 100%; max-width: 500px; }
-    #main { flex-direction: column; }
-    #panel-left { order: 1; } /* gene browser at bottom on mobile */
-  }
-  @media (min-width: 801px) {
-    #main { flex-direction: row; align-items: flex-start; }
-    #panel { display: flex; flex-direction: row; gap: 10px; width: auto; }
-    #panel-left { display: flex; flex-direction: column; gap: 10px; width: 240px; order: 1; }
-    #panel-right { display: flex; flex-direction: column; gap: 10px; width: 300px; }
+
+  /* ── Responsive: stack into a single column, pond first ── */
+  @media (max-width: 1180px) {
+    #main { flex-direction: column; align-items: center; }
+    #col-left, #col-right, #col-center { width: 100%; max-width: 500px; }
+    #col-center { order: -1; } /* pond always visible first on narrow screens */
   }
 </style>
 <link rel="icon" href="/assets/images/favicon.png">
@@ -175,29 +187,9 @@
 <div id="app">
   <h1>🐸 Pondemonium <span>an evolution simulator</span></h1>
   <div id="main">
-    <canvas id="pond" width="700" height="700"></canvas>
-    <div id="panel">
-      <div id="panel-left">
-        <div class="card" id="genome-card" style="display:none">
-          <h3>🧬 Gene Browser</h3>
-          <div id="genome-browser">
-            <div class="genome-entity-info" id="genome-entity-info"></div>
-            <hr class="divider">
-            <div class="genome-section-label">GENOTYPE (regulatory genes)</div>
-            <div id="genome-genotype-bars"></div>
-            <hr class="divider">
-            <div class="genome-section-label">PHENOTYPE (expressed traits)</div>
-            <div id="genome-phenotype-bars"></div>
-            <hr class="divider">
-            <div class="genome-section-label">ANCESTOR TRAIL</div>
-            <div id="genome-ancestors"><div style="color:#5a7a7a;font-size:11px;">No ancestors recorded</div></div>
-            <div class="btn-row" style="margin-top:6px">
-              <button class="btn" id="genome-close-btn">✕ Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="panel-right">
+
+    <!-- ── Left column: simulation controls ── -->
+    <div id="col-left" class="col">
       <div class="card" id="controls-card">
         <h3>⚙ Controls</h3>
         <div class="ctrl-row"><label>Speed</label><input type="range" id="speed" min="0" max="60" value="10" step="1"><span class="val" id="speed-val">1×</span></div>
@@ -213,25 +205,22 @@
           <button class="btn danger" id="resetBtn">⟳ Reset</button>
         </div>
         <div class="btn-row" style="margin-top:6px">
+          <button class="btn" id="defaultsBtn" title="Resets the sliders above only — population and evolution progress are untouched">↺ Defaults</button>
+        </div>
+        <div class="btn-row" style="margin-top:6px">
           <button class="btn" id="csvExportBtn" style="font-size:11px">📥 Export CSV (<span id="csvGenCount">0</span> gen)</button>
         </div>
       </div>
-      <div class="card" id="stats-card">
-        <h3>📊 Population</h3>
-        <div id="stats"></div>
-        <hr class="divider">
-        <h3>🧬 Evolution (generation <span id="gen-num">0</span>)</h3>
-        <div id="evo-stats"></div>
-      </div>
-      <div class="card" id="hof-card">
-        <h3>🏆 Hall of Fame</h3>
-        <div id="hof-stats"><div style="color:#5a7a7a;font-size:11px;">Top genomes by offspring count...</div></div>
-      </div>
-      <div class="card" id="chart-card" style="padding:0;overflow:hidden">
-        <h3 style="margin:8px 10px 2px">📈 Evolution Trend</h3>
-        <canvas id="evo-chart" width="300" height="120"></canvas>
-        <div style="color:#4a6a5a;font-size:8px;padding:2px 10px 6px;text-align:center">average regulatory gene values per generation</div>
-      </div>
+    </div>
+
+    <!-- ── Center column: the pond itself ── -->
+    <div id="col-center" class="col">
+      <canvas id="pond" width="700" height="700"></canvas>
+      <div id="info">click on a creature to see its genes · <span id="creature-info">hover over a creature to inspect genotype &amp; phenotype</span></div>
+    </div>
+
+    <!-- ── Right column: population/evolution stats + gene browser ── -->
+    <div id="col-right" class="col">
       <div class="card" id="genome-card" style="display:none">
         <h3>🧬 Gene Browser</h3>
         <div id="genome-browser">
@@ -250,10 +239,25 @@
           </div>
         </div>
       </div>
+      <div class="card" id="stats-card">
+        <h3>📊 Population</h3>
+        <div id="stats"></div>
+        <hr class="divider">
+        <h3>🧬 Evolution (generation <span id="gen-num">0</span>)</h3>
+        <div id="evo-stats"></div>
+      </div>
+      <div class="card" id="hof-card">
+        <h3>🏆 Hall of Fame</h3>
+        <div id="hof-stats"><div style="color:#5a7a7a;font-size:11px;">Top genomes by offspring count...</div></div>
+      </div>
+      <div class="card" id="chart-card" style="padding:0;overflow:hidden">
+        <h3 style="margin:8px 10px 2px">📈 Evolution Trend</h3>
+        <canvas id="evo-chart" width="300" height="120"></canvas>
+        <div style="color:#4a6a5a;font-size:8px;padding:2px 10px 6px;text-align:center">average regulatory gene values per generation</div>
       </div>
     </div>
+
   </div>
-  <div id="info">click on a creature to see its genes · <span id="creature-info">hover over a creature to inspect genotype &amp; phenotype</span></div>
 </div>
 <script type="module" src="js/main.js"></script>
 </body>

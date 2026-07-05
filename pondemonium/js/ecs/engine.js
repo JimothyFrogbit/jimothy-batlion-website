@@ -266,6 +266,35 @@ export class EcsWorld {
     });
   }
 
+  /**
+   * Query all entities of a given Species type, returning a tuple with
+   * EVERY component that entity actually has (not a hand-picked subset).
+   *
+   * Use this instead of queryData() when you need "whatever data this
+   * entity has" (e.g. rendering/tooltip code) — queryData() requires the
+   * caller to enumerate every component up front, and forgetting one
+   * doesn't error, it just silently produces undefined fields downstream.
+   * That exact mistake (missing Age, Genome, Steering, Mouth, Predator,
+   * LifeLimited from various species' render queries) caused blank
+   * tooltips and a tooltip crash — see ecs-bridge.js.
+   */
+  queryBySpecies(speciesType) {
+    const speciesStore = this._stores.get('Species');
+    if (!speciesStore) return [];
+    const results = [];
+    for (const [entityId, species] of speciesStore.getAll()) {
+      if (species.type !== speciesType) continue;
+      const comps = this._entityComponents.get(entityId);
+      if (!comps) continue;
+      const tuple = { entityId };
+      for (const name of comps) {
+        tuple[name] = this.getComponent(entityId, name);
+      }
+      results.push(tuple);
+    }
+    return results;
+  }
+
   /** Count entities with a specific component. */
   count(storeName) {
     const store = this._stores.get(storeName);

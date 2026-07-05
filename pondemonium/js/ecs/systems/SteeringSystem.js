@@ -22,6 +22,7 @@
 
 import { EcsSystem } from '../engine.js';
 import { rand } from '../../utils.js';
+import { findNearest } from '../nearestQuery.js';
 
 const POND_X = 20, POND_Y = 20, POND_W = 660, POND_H = 660;
 
@@ -70,6 +71,12 @@ export class SteeringSystem extends EcsSystem {
         case 'mosquito':
           this._handleMosquitoSteering(pos, steer, dt, hasFlight);
           break;
+        case 'dragonflyAdult':
+          this._handleDragonflyAdultSteering(pos, steer, dt);
+          break;
+        case 'mosquitoLarva':
+          this._handleMosquitoLarvaSteering(pos, targetSeek, dt);
+          break;
         // Drifters (food, particles) and non-moving don't need steering
         default:
           break;
@@ -96,32 +103,9 @@ export class SteeringSystem extends EcsSystem {
   // Queries the ECS world for entities with requiredStores that match
   // speciesType, filtering by maxDist and optional filter function.
   // Returns the queryData entry { entityId, StoreName: data, ... } or null.
+  // Delegates to the spatial grid when available — see nearestQuery.js.
   _findNearestInECS(pos, world, requiredStores, speciesType, maxDist, filter) {
-    const candidates = world.queryData(...requiredStores);
-    let best = null;
-    let bestD = maxDist;
-
-    for (const c of candidates) {
-      // Skip dead entities (marked for death but not yet reaped)
-      if (!world.hasEntity(c.entityId)) continue;
-
-      // Filter by species type if specified
-      if (speciesType && (!c.Species || c.Species.type !== speciesType)) continue;
-
-      // Apply optional custom filter
-      if (filter && !filter(c)) continue;
-
-      const cx = c.Position ? c.Position.x : 0;
-      const cy = c.Position ? c.Position.y : 0;
-      const d = Math.hypot(pos.x - cx, pos.y - cy);
-
-      if (d < bestD) {
-        bestD = d;
-        best = c;
-      }
-    }
-
-    return best;
+    return findNearest(world, pos, requiredStores, speciesType, maxDist, filter);
   }
 
   // ── Tadpole: seek food ──
@@ -247,5 +231,30 @@ export class SteeringSystem extends EcsSystem {
     // Erratic random perturbations
     pos.vx += rand(-1, 1) * 0.1 * steer.agility * dt;
     pos.vy += rand(-1, 1) * 0.1 * steer.agility * dt;
+  }
+
+  // ── Dragonfly Adult: erratic random flight (matches legacy DragonflyAdult.update) ──
+  _handleDragonflyAdultSteering(pos, steer, dt) {
+    pos.vx += rand(-1, 1) * 0.2 * steer.agility * dt;
+    pos.vy += rand(-1, 1) * 0.2 * steer.agility * dt;
+    const spd = Math.hypot(pos.vx, pos.vy);
+    if (spd > steer.speed) {
+      pos.vx = (pos.vx / spd) * steer.speed;
+      pos.vy = (pos.vy / spd) * steer.speed;
+    }
+  }
+
+  // ── Mosquito Larva: gentle undirected wander ──
+  // No food-seeking (larvae are filter-feeders in both legacy and here) —
+  // just a slow drift so they actually go somewhere over time, on top of
+  // the separate small wiggle/rotation AnimationSystem applies for visual
+  // texture. Without this, larvae only ever oscillated in place.
+  _handleMosquitoLarvaSteering(pos, targetSeek, dt) {
+    if (targetSeek.targetTimer <= 0) {
+      targetSeek.targetDir = rand(0, Math.PI * 2);
+      targetSeek.targetTimer = rand(60, 180);
+    }
+    pos.vx += Math.cos(targetSeek.targetDir) * 0.02 * dt;
+    pos.vy += Math.sin(targetSeek.targetDir) * 0.02 * dt;
   }
 }

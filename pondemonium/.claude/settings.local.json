@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls .claude)",
+      "Bash(cat .claude/launch.json)"
+    ]
+  }
+}

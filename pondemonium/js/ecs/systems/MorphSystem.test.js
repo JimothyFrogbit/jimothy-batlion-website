@@ -73,9 +73,10 @@ console.log('\n=== MorphSystem Tests ===\n');
     DeathFx: { spawned: false },
   });
 
-  // Add genome
+  // Add genome — a complete regulatory genotype so expressGenome() produces
+  // real (non-NaN) phenotype values, matching what production code passes.
   const testGenome = {
-    genotype: { MC1R: 0.7, THR: 0.5, BMP: 0.8 },
+    genotype: { POU1F1: 0.5, THR: 0.5, MC1R: 0.7, IGF1: 0.5, LEP: 0.5, NR3C1: 0.5 },
     phenotype: { bodySize: 20, colorHue: 120 },
   };
   world.addComponent(eid, 'Genome', { ...testGenome });
@@ -117,7 +118,8 @@ console.log('\n=== MorphSystem Tests ===\n');
 
     const energy = world.getComponent(frogletId, 'Energy');
     assertEqual(energy.satiation, 80, 'Froglet starts at 80 satiation');
-    assertEqual(energy.metabolism, 0.4, 'Froglet metabolism is 0.4');
+    // metabolism = lerp(0.2, 1.2, expressGenome(genotype).metabolism) — genome-derived, not a flat constant
+    assertNear(energy.metabolism, 0.7, 0.01, 'Froglet metabolism is derived from genome (~0.7 for this genotype)');
 
     // Genome should be inherited
     const inheritedGenome = world.getComponent(frogletId, 'Genome');
@@ -174,7 +176,18 @@ console.log('\n=== MorphSystem Tests ===\n');
 
     const lifeLimited = world.getComponent(mosquitoId, 'LifeLimited');
     assert(lifeLimited !== null, 'Mosquito has LifeLimited component');
-    assertEqual(lifeLimited.lifespan, 400, 'Mosquito lifespan is 400');
+    // Lifespan is genome-derived (lerp(100,700,...)), not a flat constant —
+    // assert it's in the valid range rather than one exact sampled value.
+    assert(lifeLimited.lifespan >= 100 && lifeLimited.lifespan <= 700,
+      `Mosquito lifespan is genome-derived within [100,700] (got ${lifeLimited.lifespan.toFixed(1)})`);
+
+    const steering = world.getComponent(mosquitoId, 'Steering');
+    assert(steering !== null, 'Mosquito has Steering component');
+    assert(steering.speed >= 0.3 && steering.speed <= 2.0,
+      `Mosquito speed is genome-derived within [0.3,2.0] (got ${steering.speed.toFixed(2)})`);
+
+    const genome = world.getComponent(mosquitoId, 'Genome');
+    assert(genome !== null && genome.genotype != null, 'Mosquito carries a Genome component');
 
     const renderable = world.getComponent(mosquitoId, 'Renderable');
     assertNear(renderable.radius, 3, 0.1, 'Mosquito starts at radius 3');

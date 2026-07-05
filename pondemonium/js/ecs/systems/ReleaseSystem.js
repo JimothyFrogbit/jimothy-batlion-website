@@ -29,6 +29,7 @@ import {
   ParticleState, Nutrition, EdgeSpawn,
 } from '../components.js';
 import { rand, randInt } from '../../utils.js';
+import { FROGLET_RELEASE_MIN_AGE } from '../balance.js';
 
 const POND_X = 20, POND_Y = 20, POND_W = 660, POND_H = 660;
 
@@ -76,7 +77,7 @@ export class ReleaseSystem extends EcsSystem {
       const energy = energyStore.get(eid);
       const age = ageStore.get(eid);
       if (energy.satiation <= 60) continue;
-      if (age.age <= 600) continue;
+      if (age.age <= FROGLET_RELEASE_MIN_AGE) continue;
 
       // Random release chance per frame (matching old Froglet.js)
       // base rate: 0.002 * dt, same as old 0.002 * dt * _jumpDrive (avg ~1.0)

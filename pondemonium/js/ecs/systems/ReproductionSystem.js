@@ -28,6 +28,8 @@ import {
   EdgeSpawn,
 } from '../components.js';
 import { rand, randInt } from '../../utils.js';
+import { createFood } from '../factories.js';
+import { FROG_SPAWN_INCUBATION, MOSQUITO_EGG_INCUBATION } from '../balance.js';
 import {
   sampleGenePool, sampleAlgaeGenePool, sampleDragonflyGenePool,
 } from '../../genome.js';
@@ -53,9 +55,16 @@ export class ReproductionSystem extends EcsSystem {
     this._seasonCycle = 0.25;
     this._seasonCycleSpeed = config.seasonCycleSpeed ?? 0.00005;
 
-    // Spawn caps
+    // Spawn caps — without these, nothing bounds population growth except
+    // predation/lifespan, so a long session (or sliders cranked up) can
+    // produce runaway tadpole/froglet/mosquito counts that directly drive
+    // per-tick CPU cost (profiled: ECS tick time scales with population,
+    // see ecs/perf-bench.mjs). Generous enough not to be noticeable in
+    // normal play — they're a safety net, not a difficulty limiter.
     this._maxFood = config.maxFood ?? 250;
     this._maxDragonflyNymphs = config.maxDragonflyNymphs ?? 12;
+    this._maxFrogLineage = config.maxFrogLineage ?? 150; // frogSpawn + tadpole + froglet
+    this._maxMosquitoLineage = config.maxMosquitoLineage ?? 150; // mosquitoLarva + mosquito
 
     // Internal timers
     this._frogTimer = 0;
@@ -103,14 +112,17 @@ export class ReproductionSystem extends EcsSystem {
 
     // ── Frog Reproduction ──
     this._frogTimer += dt * (this._frogRate / 10) * frogMult;
-    if (this._frogTimer > 80) {
+    const frogLineageCount = this._countBySpecies(world, 'frogSpawn')
+      + this._countBySpecies(world, 'tadpole') + this._countBySpecies(world, 'froglet');
+    if (this._frogTimer > 80 && frogLineageCount < this._maxFrogLineage) {
       this._frogTimer = 0;
       this._spawnFrogSpawn(world);
     }
 
     // ── Mosquito Reproduction ──
     this._mosquitoTimer += dt * (this._mosquitoRate / 10) * (this._mosquitoRate > 0 ? mosquitoMult : 1);
-    if (this._mosquitoTimer > 60) {
+    const mosquitoLineageCount = this._countBySpecies(world, 'mosquitoLarva') + this._countBySpecies(world, 'mosquito');
+    if (this._mosquitoTimer > 60 && mosquitoLineageCount < this._maxMosquitoLineage) {
       this._mosquitoTimer = 0;
       this._spawnMosquitoEgg(world);
     }
@@ -150,13 +162,13 @@ export class ReproductionSystem extends EcsSystem {
     const cy = clampPond(y, POND_Y + 15, POND_Y + POND_H - 15);
 
     const genotype = sampleGenePool();
-    const incubation = Math.max(300, 300);
+    const incubation = FROG_SPAWN_INCUBATION;
 
     world.createEntity({
       Position: Position(cx, cy),
       Renderable: Renderable(6, null, 1),
       Species: Species('frogSpawn'),
-      Age: { age: 0, maxAge: 1800 },
+      Age: { age: 0, maxAge: incubation * 6 },
       Genome: { genotype, phenotype: null },
       FrogSpawnTiming: { incubation, hatchTimer: incubation, clusterCount: randInt(3, 6) },
       EdgeSpawn: { genotype },
@@ -176,7 +188,7 @@ export class ReproductionSystem extends EcsSystem {
       Renderable: Renderable(5, null, 1),
       Species: Species('mosquitoEgg'),
       Age: { age: 0, maxAge: Infinity },
-      EggSpawn: { eggCount: randInt(8, 18), incubation: rand(120, 300), timer: 0, driftX: rand(-0.05, 0.05) },
+      EggSpawn: { eggCount: randInt(8, 18), incubation: rand(...MOSQUITO_EGG_INCUBATION), timer: 0, driftX: rand(-0.05, 0.05) },
       EdgeSpawn: { genotype: null },
       Stressable: { resilience: 0.3 },
       DeathFx: { spawned: false },
@@ -231,20 +243,6 @@ export class ReproductionSystem extends EcsSystem {
   _spawnFood(world) {
     const x = rand(POND_X + 10, POND_X + POND_W - 10);
     const y = rand(POND_Y + 10, POND_Y + POND_H - 10);
-    const genotype = sampleAlgaeGenePool();
-
-    const { POU1F1, IGF1, LEP, THR } = genotype;
-    const radius = 2 + (POU1F1 * 0.4 + IGF1 * 0.4) * 6;
-    const nutrition = radius * 1.5;
-    const maxAge = 200 + (LEP * 0.5 + THR * 0.2) * 700;
-
-    world.createEntity({
-      Position: Position(x, y),
-      Renderable: Renderable(radius, null, 0),
-      Species: Species('food'),
-      Age: { age: 0, maxAge },
-      Nutrition: { value: nutrition },
-      Genome: { genotype, phenotype: null },
-    });
+    createFood(world, x, y, sampleAlgaeGenePool());
   }
 }

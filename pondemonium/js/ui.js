@@ -4,6 +4,15 @@ import { expressGenome, REGULATORY_GENES, PHENOTYPE_KEYS, genePool } from './gen
 import { assignMorph, COLOR_MORPHS } from './morphs.js';
 import { drawEvoChart } from './evolution-chart.js';
 
+// Matches each slider's `value` attribute in index.html — the "sensible
+// baseline" starting point for a fresh session. Kept as one object so
+// the Defaults button and the HTML can't silently drift apart from
+// each other (see setupUI's defaultsBtn handler).
+const DEFAULT_SETTINGS = {
+  speed: 10, frogRate: 7, mosquitoRate: 8, algaeRate: 10,
+  dragonflyRate: 5, stressRate: 0, volume: 10,
+};
+
 export function setupUI() {
   const speedSlider = document.getElementById('speed');
   const speedVal = document.getElementById('speed-val');
@@ -21,6 +30,7 @@ export function setupUI() {
   const volumeVal = document.getElementById('volume-val');
   const pauseBtn = document.getElementById('pauseBtn');
   const resetBtn = document.getElementById('resetBtn');
+  const defaultsBtn = document.getElementById('defaultsBtn');
   const csvExportBtn = document.getElementById('csvExportBtn');
   const csvGenCount = document.getElementById('csvGenCount');
   const statsDiv = document.getElementById('stats');
@@ -61,15 +71,14 @@ export function setupUI() {
   });
 
   stressRateSlider.addEventListener('input', () => {
-    const v = parseFloat(stressRateSlider.value);
-    pond.setStressEventRate(v);
-    stressRateVal.textContent = v > 0 ? v : 'OFF';
+    pond.stressEventRate = parseFloat(stressRateSlider.value);
+    stressRateVal.textContent = pond.stressEventRate > 0 ? pond.stressEventRate : 'OFF';
     const hint = document.getElementById('stressHint');
     if (hint) {
-      if (v > 0) {
-        const level = v <= 3 ? 'Mild' : v <= 7 ? 'Moderate' : 'Extreme';
+      if (pond.stressEventRate > 0) {
+        const level = pond.stressEventRate <= 3 ? 'Mild' : pond.stressEventRate <= 7 ? 'Moderate' : 'Extreme';
         hint.innerHTML = `⚠️ <b>${level}</b> — stress culls the weak. Survivors evolve <b>stressResilience</b>. Dragonflies feast!`;
-        hint.style.borderLeftColor = v <= 3 ? '#4a7a3a' : v <= 7 ? '#aa6633' : '#aa4444';
+        hint.style.borderLeftColor = pond.stressEventRate <= 3 ? '#4a7a3a' : pond.stressEventRate <= 7 ? '#aa6633' : '#aa4444';
       } else {
         hint.innerHTML = '💡 Turn on: stress culls the weak, survivors pass resilience genes. Dragonfly nymphs feast on the chaos!';
         hint.style.borderLeftColor = '#2a4a3a';
@@ -99,6 +108,26 @@ export function setupUI() {
     pauseBtn.classList.add('active');
     pond.paused = false;
   });
+
+  // Resets ONLY the sliders above to their sensible starting values —
+  // deliberately does NOT touch the running simulation (population,
+  // generation count, gene pools). That's what the "⟳ Reset" button
+  // next to it is for. Re-dispatches 'input' on each slider so the
+  // existing handlers (which also update the displayed value + persist
+  // settings) do all the actual work — this button doesn't duplicate
+  // that logic, just sets values and lets it run.
+  if (defaultsBtn) {
+    defaultsBtn.addEventListener('click', () => {
+      for (const [id, value] of Object.entries(DEFAULT_SETTINGS)) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        el.value = value;
+        el.dispatchEvent(new Event('input'));
+      }
+      defaultsBtn.textContent = '✅ Defaults restored';
+      setTimeout(() => { defaultsBtn.textContent = '↺ Defaults'; }, 1500);
+    });
+  }
 
   csvExportBtn.addEventListener('click', () => {
     const csv = pond.getCSV();
@@ -307,14 +336,16 @@ export function selectForGeneBrowser(entity) {
   }
   if (genomeCard) genomeCard.style.display = 'block';
 
-  let name = 'Unknown';
-  if (entity.constructor.name === 'FrogSpawn') name = '🐸 Frog Spawn';
-  else if (entity.constructor.name === 'Tadpole') name = ' Tadpole';
-  else if (entity.constructor.name === 'Froglet') name = '🐸 Froglet';
-  else if (entity.constructor.name === 'Mosquito') name = '🦟 Mosquito';
-  else if (entity.constructor.name === 'DragonflyNymph') name = '🐉 Dragonfly Nymph';
-  else if (entity.constructor.name === 'DragonflyAdult') name = '🐉 Dragonfly';
-  else if (entity.constructor.name === 'Food') name = '🌿 Algae';
+  const SPECIES_NAMES = {
+    frogSpawn: '🐸 Frog Spawn',
+    tadpole: ' Tadpole',
+    froglet: '🐸 Froglet',
+    mosquito: '🦟 Mosquito',
+    dragonflyNymph: '🐉 Dragonfly Nymph',
+    dragonflyAdult: '🐉 Dragonfly',
+    food: '🌿 Algae',
+  };
+  const name = SPECIES_NAMES[entity.species] || 'Unknown';
 
   const ageStr = (entity.age / 60).toFixed(0) + 's';
   const morph = assignMorph(entity.genome);

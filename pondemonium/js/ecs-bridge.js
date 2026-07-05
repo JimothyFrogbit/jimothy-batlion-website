@@ -4,9 +4,6 @@
 // with position/radius/color data from ECS components.
 // Old entity classes are deleted — ECS is the only simulation path now.
 
-import { Position, Renderable, Species, Growth, Energy, Animation, Steering, TargetSeek,
-         Jump, Flight, Genome, Age, Mouth, Nutrition, LifeLimited, ParticleState } from './ecs/index.js';
-
 const POND_X = 20, POND_Y = 20, POND_W = 660, POND_H = 660;
 
 /**
@@ -29,25 +26,26 @@ export function syncEcsToPond(pond, ecsWorld) {
   pond.food = [];
   pond.particles = [];
 
-  // Iterator helper: for each entity with ALL specified components, call fn(entityId, components)
-  const forEach = (storeNames, fn) => {
-    const tuples = ecsWorld.queryData(...storeNames);
-    for (const t of tuples) fn(t);
+  // Iterator helper: for each entity of a species, call fn(tuple) with
+  // EVERY component that entity actually has — see EcsWorld.queryBySpecies.
+  // This is deliberately NOT a hand-picked component list per species:
+  // that pattern silently produced blank tooltips and a tooltip crash
+  // three separate times (missing Age, Genome, then Steering/Mouth/
+  // Predator/LifeLimited) before it was replaced with this.
+  const forEach = (speciesType, fn) => {
+    for (const t of ecsWorld.queryBySpecies(speciesType)) fn(t);
   };
 
   // ── Food (Algae) ──
-  forEach(['Position', 'Species', 'Nutrition'], (t) => {
-    if (t.Species.type !== 'food') return;
+  forEach('food', (t) => {
     const render = renderProxy(t);
     render.radius = lerp(4, 8, (t.Nutrition?.value || 5) / 10);
-    render.age = t.Age?.age || 0;
     render.maxAge = t.Age?.maxAge || 300;
     pond.food.push(render);
   });
 
   // ── Frog Spawn ──
-  forEach(['Position', 'Species'], (t) => {
-    if (t.Species.type !== 'frogSpawn') return;
+  forEach('frogSpawn', (t) => {
     const render = renderProxy(t);
     render.radius = 6;
     // Generate a small egg cluster for rendering (consistent per entityId)
@@ -61,8 +59,7 @@ export function syncEcsToPond(pond, ecsWorld) {
   });
 
   // ── Tadpoles ──
-  forEach(['Position', 'Species', 'Energy', 'Growth', 'Animation', 'Steering'], (t) => {
-    if (t.Species.type !== 'tadpole') return;
+  forEach('tadpole', (t) => {
     const render = renderProxy(t);
     render.growth = t.Growth.growth;
     render._maxSize = t.Growth.maxSize;
@@ -74,8 +71,7 @@ export function syncEcsToPond(pond, ecsWorld) {
   });
 
   // ── Froglets ──
-  forEach(['Position', 'Species', 'Energy', 'Growth', 'Animation', 'Steering', 'Jump'], (t) => {
-    if (t.Species.type !== 'froglet') return;
+  forEach('froglet', (t) => {
     const render = renderProxy(t);
     render.growth = t.Growth.growth;
     render._maxSize = t.Growth.maxSize;
@@ -87,16 +83,14 @@ export function syncEcsToPond(pond, ecsWorld) {
   });
 
   // ── Mosquito Eggs ──
-  forEach(['Position', 'Species'], (t) => {
-    if (t.Species.type !== 'mosquitoEgg') return;
+  forEach('mosquitoEgg', (t) => {
     const render = renderProxy(t);
     render.radius = 3;
     pond.mosquitoEggs.push(render);
   });
 
   // ── Mosquito Larvae ──
-  forEach(['Position', 'Species', 'Animation'], (t) => {
-    if (t.Species.type !== 'mosquitoLarva') return;
+  forEach('mosquitoLarva', (t) => {
     const render = renderProxy(t);
     render.radius = lerp(2, 5, t.Growth?.growth || 0);
     render.phase = t.Animation.phase;
@@ -105,8 +99,7 @@ export function syncEcsToPond(pond, ecsWorld) {
   });
 
   // ── Mosquitoes (flying) ──
-  forEach(['Position', 'Species', 'Animation', 'Flight'], (t) => {
-    if (t.Species.type !== 'mosquito') return;
+  forEach('mosquito', (t) => {
     const render = renderProxy(t);
     render.radius = 3;
     render.phase = t.Animation.phase;
@@ -116,20 +109,17 @@ export function syncEcsToPond(pond, ecsWorld) {
   });
 
   // ── Dragonfly Nymphs ──
-  forEach(['Position', 'Species', 'Energy', 'Growth', 'Animation'], (t) => {
-    if (t.Species.type !== 'dragonflyNymph') return;
+  forEach('dragonflyNymph', (t) => {
     const render = renderProxy(t);
     render.growth = t.Growth.growth;
     render.radius = lerp(9, 14, render.growth);
     render.phase = t.Animation.phase;
     render.wobble = t.Animation.wobble;
-    render._meals = t.Predator ? t.Predator.meals : 0;
     pond.dragonflyNymphs.push(render);
   });
 
   // ── Dragonfly Adults ──
-  forEach(['Position', 'Species', 'Animation', 'Flight'], (t) => {
-    if (t.Species.type !== 'dragonflyAdult') return;
+  forEach('dragonflyAdult', (t) => {
     const render = renderProxy(t);
     render.radius = 12;
     render.phase = t.Animation.phase;
@@ -139,8 +129,7 @@ export function syncEcsToPond(pond, ecsWorld) {
   });
 
   // ── Particles ──
-  forEach(['Position', 'Species', 'ParticleState'], (t) => {
-    if (t.Species.type !== 'particle') return;
+  forEach('particle', (t) => {
     const pos = t.Position;
     const ps = t.ParticleState;
     pond.particles.push({
@@ -205,6 +194,7 @@ function renderProxy(t) {
   if (growth.growth !== undefined) proxy.growth = growth.growth;
 
   // Age / lifespan
+  proxy.age = age.age !== undefined ? age.age : 0;
   if (age.maxAge !== undefined && age.maxAge !== Infinity) proxy.maxAge = age.maxAge;
 
   // Flight

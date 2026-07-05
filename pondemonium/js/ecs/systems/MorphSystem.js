@@ -38,6 +38,9 @@ import {
   Flight, LifeLimited, Predator, ParticleState, Stressable,
   DeathFx,
 } from '../components.js';
+import { sampleMosquitoGenePool, expressGenome } from '../../genome.js';
+import { lerp, clamp } from '../../utils.js';
+import { FROGLET_GROWTH_RATE, DRAGONFLY_NYMPH_MIN_AGE } from '../balance.js';
 
 /** Morph particle colours per species type. */
 const MORPH_COLORS = {
@@ -96,6 +99,17 @@ function spawnMorphParticles(world, x, y, speciesType, count = 6) {
 export class MorphSystem extends EcsSystem {
   constructor() {
     super('MorphSystem');
+    this._dragonfliesEmerged = 0;
+  }
+
+  /** Reset internal counters (called on pond reset). */
+  reset() {
+    this._dragonfliesEmerged = 0;
+  }
+
+  /** Get morph stats for pond consumption. */
+  getMorphStats() {
+    return { dragonfliesEmerged: this._dragonfliesEmerged };
   }
 
   update(dt, world) {
@@ -119,8 +133,18 @@ export class MorphSystem extends EcsSystem {
       const type = species.type;
       if (type !== 'tadpole' && type !== 'mosquitoLarva' && type !== 'dragonflyNymph') continue;
 
-      const pos = posStore.get(eid);
       const age = ageStore.get(eid);
+
+      // Dragonfly nymphs: growth alone isn't a maturation signal here — it's
+      // driven entirely by predation (+0.08/+0.04 per meal in FeedingSystem),
+      // so a lucky early meal could otherwise let one emerge almost instantly.
+      // Real naiads take a long time to develop regardless of feeding success;
+      // this floor matches the legacy check (`growth>=1 && age>500`) that
+      // silently stopped applying when Age.age wasn't ticking during the ECS
+      // conversion (see AgeSystem/git history) — restored now that it does.
+      if (type === 'dragonflyNymph' && (!age || age.age <= DRAGONFLY_NYMPH_MIN_AGE)) continue;
+
+      const pos = posStore.get(eid);
       const renderable = renderStore.get(eid);
       const genome = genomeStore ? genomeStore.get(eid) : null;
 
@@ -151,6 +175,7 @@ export class MorphSystem extends EcsSystem {
         }
         case 'dragonflyNymph': {
           this._morphToDragonflyAdult(world, x, y, genome);
+          this._dragonfliesEmerged++;
           break;
         }
       }
@@ -160,17 +185,31 @@ export class MorphSystem extends EcsSystem {
   // ── Tadpole → Froglet ────────────────────────────────────────────
 
   _morphToFroglet(world, x, y, genome) {
+    // Traits are derived from the tadpole's expressed phenotype, matching
+    // legacy Froglet constructor — without this, genome has no effect on
+    // froglet behaviour at all.
+    const p = genome?.genotype ? expressGenome(genome.genotype) : null;
+    const maxSize = p ? lerp(12, 24, p.bodySize) : 16;
+    const growthRate = p ? lerp(...FROGLET_GROWTH_RATE, p.growthSpeed) : FROGLET_GROWTH_RATE[0];
+    const metabolism = p ? lerp(0.2, 1.2, p.metabolism) : 0.4;
+    const mouthGape = p ? lerp(3, 10, p.mouthGape) : 9;
+    const speed = p ? lerp(0.3, 1.8, p.swimSpeed) : 5;
+    const agility = p ? lerp(1.0, 0.15, p.bodySize) : 1.0;
+    const sight = p ? lerp(40, 160, p.sightRange) : 120;
+    const jumpDrive = p ? lerp(0.3, 1.5, p.growthSpeed * 0.7 + p.bodySize * 0.3) : 1.0;
+    const resilience = p ? p.stressResilience : 0.3;
+
     const newEid = world.createEntity({
       Position: Position(x, y),
       Renderable: Renderable(10, '#88cc44', 1),  // radius=10, froglet green
       Species: Species('froglet'),
       Age: { age: 0, maxAge: 3000 },
-      Growth: Growth(0.85, genome?.phenotype?.bodySize || 16, 0.002, null),
-      Energy: { energy: 100, maxEnergy: 100, satiation: 80, metabolism: 0.4 },
-      Mouth: Mouth(9, 'both'),
-      Steering: Steering(5, 1.0, 120),
+      Growth: Growth(0.85, maxSize, growthRate, null),
+      Energy: { energy: 100, maxEnergy: 100, satiation: 80, metabolism },
+      Mouth: Mouth(mouthGape, 'both'),
+      Steering: Steering(speed, agility, sight),
       TargetSeek: TargetSeek(),
-      Jump: Jump(1.0),
+      Jump: Jump(jumpDrive),
       Animation: Animation(),
       Predator: {
         attackCooldown: 0,
@@ -178,7 +217,7 @@ export class MorphSystem extends EcsSystem {
         preferredPrey: ['food', 'mosquito'],
         huntCooldown: 0,
       },
-      Stressable: { resilience: 0.3 },
+      Stressable: { resilience },
       DeathFx: { spawned: false },
     });
 
@@ -195,13 +234,25 @@ export class MorphSystem extends EcsSystem {
     const offsetX = x + (Math.random() * 10 - 5);
     const offsetY = y - (5 + Math.random() * 10);
 
+    // Mosquitoes always carry a genome, sampled from their gene pool
+    // (matches legacy Mosquito constructor: `genome || sampleMosquitoGenePool()`).
+    // Speed/lifespan/altitude are derived from it below — a mosquito with
+    // hardcoded stats regardless of genome was the same class of bug as the
+    // tadpole/froglet one (genome sampled but never actually used).
+    const genotype = sampleMosquitoGenePool();
+    const { POU1F1, THR, MC1R, IGF1, LEP } = genotype;
+    const speed = lerp(0.3, 2.0, clamp(POU1F1 * 0.5 + THR * 0.3));
+    const altitude = lerp(-30, -5, clamp(MC1R * 0.5 + THR * 0.3));
+    const lifespan = lerp(100, 700, clamp(LEP * 0.6 + IGF1 * 0.2));
+    const agility = lerp(1.0, 0.5, 3 / 8); // radius=3, matches legacy _agility formula
+
     const newEid = world.createEntity({
       Position: Position(offsetX, offsetY),
       Renderable: Renderable(3, '#aabbcc', 3),  // radius=3, flying layer
       Species: Species('mosquito'),
-      Age: { age: 0, maxAge: 600 },
-      Steering: Steering(2.0, 0.6, 40),  // speed, agility, sight — for erratic flight
-      Flight: Flight(-15, 0),
+      Age: { age: 0, maxAge: lifespan + 200 },
+      Steering: Steering(speed, agility, 40),  // sight unused — mosquitoes fly erratically, don't hunt
+      Flight: Flight(altitude, 0),
       Animation: Animation(),
       Predator: {
         attackCooldown: 0,
@@ -209,9 +260,10 @@ export class MorphSystem extends EcsSystem {
         preferredPrey: [],
         huntCooldown: 0,
       },
-      LifeLimited: { lifespan: 400, age: 0 },
+      LifeLimited: { lifespan, age: 0 },
       Stressable: { resilience: 0.2 },
       DeathFx: { spawned: false },
+      Genome: { genotype, phenotype: null },
     });
   }
 
@@ -230,7 +282,7 @@ export class MorphSystem extends EcsSystem {
       : 300;
     const agility = Math.min(1.0, 0.5 + speed / 6);
 
-    world.createEntity({
+    const newEid = world.createEntity({
       Position: Position(offsetX, offsetY),
       Renderable: Renderable(12, '#6aaa4a', 3),  // radius=12, flying layer
       Species: Species('dragonflyAdult'),
@@ -242,5 +294,10 @@ export class MorphSystem extends EcsSystem {
       Stressable: { resilience: 0.2 },
       DeathFx: { spawned: false },
     });
+
+    // Inherit genome from nymph — needed for AgeSystem's addToDragonflyGenePool on release
+    if (genome) {
+      world.addComponent(newEid, 'Genome', cloneGenome(genome));
+    }
   }
 }

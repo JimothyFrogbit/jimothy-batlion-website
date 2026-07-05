@@ -50,8 +50,8 @@ export function Growth(growth = 0, maxSize = 10, growthRate = 0.001, targetEntit
 
 // ── Energy ──────────────────────────────────────────────────────────
 // Metabolic resources. [Tadpole, Froglet, DragonflyNymph]
-export function Energy(energy = 100, maxEnergy = 100) {
-  return { energy, maxEnergy, satiation: 100, metabolism: 1.0 };
+export function Energy(energy = 100, maxEnergy = 100, satiation = 100, metabolism = 1.0) {
+  return { energy, maxEnergy, satiation, metabolism };
 }
 
 // ── Mouth ───────────────────────────────────────────────────────────

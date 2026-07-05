@@ -11,7 +11,9 @@
 //   - Removed pondRef dependency
 //   - Prey/food found via ECS queries (Position + Species + relevant stores)
 //   - Consumed prey is marked dead via world.markDead()
-//   - Death particles spawned inline (absorbed from PredationSystem)
+//   - Death particles spawned inline — this is the only place dragonfly-
+//     nymph predation happens (kill, particles, satiation, growth,
+//     meals, cooldown, all together); there is no separate system for it
 //
 // Component Requirements:
 //   Primary: Mouth + Energy + Position + Species
@@ -31,6 +33,8 @@
 import { EcsSystem } from '../engine.js';
 import { rand } from '../../utils.js';
 import { Position, Renderable, Species, ParticleState } from '../components.js';
+import { findNearest } from '../nearestQuery.js';
+import { DRAGONFLY_NYMPH_GROWTH_PER_TADPOLE_MEAL, DRAGONFLY_NYMPH_GROWTH_PER_LARVA_MEAL } from '../balance.js';
 
 const DEATH_COLORS = {
   tadpole:        'hsla(30, 40%, 25%, 0.4)',
@@ -97,33 +101,10 @@ export class FeedingSystem extends EcsSystem {
    * Find the nearest ECS entity matching species type within maxDist.
    * Optionally filtered by a custom filter function.
    * Returns { entityId, Position, ...components } or null.
+   * Delegates to the spatial grid when available — see nearestQuery.js.
    */
   _findNearestInECS(pos, world, requiredStores, speciesType, maxDist, filter) {
-    const candidates = world.queryData(...requiredStores);
-    let best = null;
-    let bestD = maxDist;
-
-    for (const c of candidates) {
-      // Skip dead entities
-      if (!world.hasEntity(c.entityId)) continue;
-
-      // Filter by species type if specified
-      if (speciesType && (!c.Species || c.Species.type !== speciesType)) continue;
-
-      // Apply optional custom filter
-      if (filter && !filter(c)) continue;
-
-      const cx = c.Position ? c.Position.x : 0;
-      const cy = c.Position ? c.Position.y : 0;
-      const d = Math.hypot(pos.x - cx, pos.y - cy);
-
-      if (d < bestD) {
-        bestD = d;
-        best = c;
-      }
-    }
-
-    return best;
+    return findNearest(world, pos, requiredStores, speciesType, maxDist, filter);
   }
 
   /**
@@ -282,7 +263,7 @@ export class FeedingSystem extends EcsSystem {
       if (d < nymphRadius + preyRadius + 4) {
         energy.satiation = Math.min(100, energy.satiation + 30);
         if (growth) {
-          growth.growth = Math.min(1, growth.growth + 0.08);
+          growth.growth = Math.min(1, growth.growth + DRAGONFLY_NYMPH_GROWTH_PER_TADPOLE_MEAL);
         }
         predator.meals = (predator.meals || 0) + 1;
         predator.attackCooldown = 20;
@@ -307,7 +288,7 @@ export class FeedingSystem extends EcsSystem {
       if (d < nymphRadius + preyRadius + 3) {
         energy.satiation = Math.min(100, energy.satiation + 15);
         if (growth) {
-          growth.growth = Math.min(1, growth.growth + 0.04);
+          growth.growth = Math.min(1, growth.growth + DRAGONFLY_NYMPH_GROWTH_PER_LARVA_MEAL);
         }
         predator.meals = (predator.meals || 0) + 1;
         predator.attackCooldown = 15;

@@ -14,6 +14,7 @@
 // Growth multipliers (satiation-gated) are handled by GrowthSystem.
 
 import { EcsSystem } from '../engine.js';
+import { MATURATION_SLOWDOWN } from '../balance.js';
 
 export class MetabolismSystem extends EcsSystem {
   constructor() {
@@ -36,17 +37,27 @@ export class MetabolismSystem extends EcsSystem {
 
       switch (type) {
         case 'tadpole':
+          // Scaled by MATURATION_SLOWDOWN alongside growth rate (see
+          // balance.js) — growth is gated by satiation>50, so slowing
+          // growth WITHOUT also slowing hunger creates a feedback loop:
+          // a slower-growing tadpole spends longer in a food-scarce
+          // state, which caps its growth rate further via that same
+          // gate, which keeps it a tadpole even longer — empirically
+          // this stalled growth around ~0.15-0.20 forever at 4x with
+          // metabolism left alone (see git history / _diag.mjs). Scaling
+          // both together keeps "time to starve vs. time to mature"
+          // proportional, so slower literally means slower, not stuck.
           metabolism = energy.metabolism || 1.0;
-          satiationDrain = metabolism * 0.20;
-          energyDrainMin = 0.10;
-          energyDrainMax = 0.35;
+          satiationDrain = (metabolism * 0.20) / MATURATION_SLOWDOWN;
+          energyDrainMin = 0.10 / MATURATION_SLOWDOWN;
+          energyDrainMax = 0.35 / MATURATION_SLOWDOWN;
           break;
 
         case 'froglet':
           metabolism = energy.metabolism || 1.0;
-          satiationDrain = metabolism * 0.16;
-          energyDrainMin = 0.08;
-          energyDrainMax = 0.30;
+          satiationDrain = (metabolism * 0.16) / MATURATION_SLOWDOWN;
+          energyDrainMin = 0.08 / MATURATION_SLOWDOWN;
+          energyDrainMax = 0.30 / MATURATION_SLOWDOWN;
           break;
 
         case 'dragonflyNymph':

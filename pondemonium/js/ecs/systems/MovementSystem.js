@@ -42,8 +42,10 @@ export class MovementSystem extends EcsSystem {
 
       // ── Apply velocity to position ──
       if (hasFlight) {
-        // Flying entities: flightY is the "ground-track", y is visual
+        // Flying entities: flightY is the "ground-track", y is visual.
+        // x has no such split — apply vx directly, same as legacy Mosquito/DragonflyAdult.
         const flight = flightStore.get(eid);
+        pos.x += pos.vx * dt;
         pos.flightY = (pos.flightY !== undefined ? pos.flightY : pos.y) + pos.vy * dt;
         pos.y = pos.flightY + flight.altitude;
       } else {

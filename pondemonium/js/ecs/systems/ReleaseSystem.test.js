@@ -7,6 +7,11 @@ import { EcsWorld } from '../engine.js';
 import { registerAllComponents } from '../components.js';
 import { ReleaseSystem } from './ReleaseSystem.js';
 import { randomGenotype, resetPool } from '../../genome.js';
+import { FROGLET_RELEASE_MIN_AGE } from '../balance.js';
+
+// "Old enough" for these fixtures — comfortably above the release gate,
+// whatever MATURATION_SLOWDOWN currently is (see balance.js).
+const OLD_ENOUGH_AGE = FROGLET_RELEASE_MIN_AGE + 100;
 
 let passed = 0, failed = 0;
 
@@ -38,7 +43,7 @@ function createFroglet(world, overrides = {}) {
     Position: { x: 100, y: 100, vx: 0, vy: 0, flightY: 100 },
     Renderable: { radius: 10, color: '#88cc44', alpha: 1.0, layer: 1, hovered: false },
     Species: { type: 'froglet' },
-    Age: { age: overrides.age !== undefined ? overrides.age : 700, maxAge: 3000 },
+    Age: { age: overrides.age !== undefined ? overrides.age : OLD_ENOUGH_AGE, maxAge: 3000 },
     Growth: { growth: overrides.growth !== undefined ? overrides.growth : 1.1, maxSize: 16, growthRate: 0.002, targetEntityType: null },
     Energy: { energy: 100, maxEnergy: 100, satiation: overrides.satiation !== undefined ? overrides.satiation : 80, metabolism: 0.4 },
     Mouth: { gape: 9, diet: 'both', eatCooldown: 0 },
@@ -98,7 +103,7 @@ console.log('\n=== ReleaseSystem Tests ===\n');
   registerAllComponents(world);
   const releaseSys = new ReleaseSystem();
   world.addSystem(releaseSys);
-  createFroglet(world, { growth: 1.0, satiation: 80, age: 700 });
+  createFroglet(world, { growth: 1.0, satiation: 80, age: OLD_ENOUGH_AGE });
   let releases = 0;
   for (let i = 0; i < 3000; i++) {
     releaseSys.update(1, world);
@@ -115,7 +120,7 @@ console.log('\n=== ReleaseSystem Tests ===\n');
   const releaseSys = new ReleaseSystem();
   world.addSystem(releaseSys);
   for (let i = 0; i < 10; i++) {
-    createFroglet(world, { growth: 1.0, satiation: 80, age: 700 });
+    createFroglet(world, { growth: 1.0, satiation: 80, age: OLD_ENOUGH_AGE });
   }
   let releases = 0;
   for (let i = 0; i < 5000; i++) {
@@ -133,7 +138,7 @@ console.log('\n=== ReleaseSystem Tests ===\n');
   const releaseSys = new ReleaseSystem();
   world.addSystem(releaseSys);
   const gen = randomGenotype();
-  createFroglet(world, { growth: 1.0, satiation: 80, age: 700, genome: gen });
+  createFroglet(world, { growth: 1.0, satiation: 80, age: OLD_ENOUGH_AGE, genome: gen });
   let released = false;
   for (let i = 0; i < 3000; i++) {
     releaseSys.update(1, world);
@@ -151,7 +156,7 @@ console.log('\n=== ReleaseSystem Tests ===\n');
   registerAllComponents(world);
   const releaseSys = new ReleaseSystem();
   world.addSystem(releaseSys);
-  createFroglet(world, { growth: 1.0, satiation: 80, age: 700 });
+  createFroglet(world, { growth: 1.0, satiation: 80, age: OLD_ENOUGH_AGE });
   for (let i = 0; i < 3000; i++) {
     releaseSys.update(1, world);
     if (releaseSys.getReleaseStats().frogsReleased > 0) break;
@@ -171,7 +176,7 @@ console.log('\n=== ReleaseSystem Tests ===\n');
   const initialParticles = world.query('Species', 'ParticleState').length;
   const initialFood = world.query('Species', 'Nutrition').length;
 
-  createFroglet(world, { growth: 1.0, satiation: 80, age: 700 });
+  createFroglet(world, { growth: 1.0, satiation: 80, age: OLD_ENOUGH_AGE });
   let particlesCreated = 0;
   let foodCreated = 0;
   let wasReleased = false;
