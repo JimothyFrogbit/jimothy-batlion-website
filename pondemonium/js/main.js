@@ -9,7 +9,7 @@ const pond = new Pond(canvas);
 const ui = setupUI();
 loadSettings();
 
-// ECS world is initialised inside Pond's constructor — just grab the reference
+// ECS world is initialised inside Pond's constructor
 
 const TICK_RATE = 1 / 60;
 let lastTime = 0;
@@ -27,15 +27,12 @@ function gameLoop(time) {
       ecsWorld.update(dt60);
       ecsWorld.reapDead();
     }
-    // Pond handles seasons, stress events, and syncs ECS → render arrays
+    // Pond handles seasons, stress events
     pond.update(subDt * 60);
   }
 
-  // Sync ECS entities into pond's rendering arrays for draw
+  // Sync ECS entities into pond rendering arrays for draw
   syncEcsToPond(pond, ecsWorld);
-
-  // Hovered entity detection — arrays are now populated by syncEcsToPond
-  pond.hoveredEntity = pond.getEntityAt(pond.mouseX, pond.mouseY);
 
   pond.render();
   updateUI(ui);

@@ -161,10 +161,11 @@ export class Pond {
     this._ecsMode = true;
   }
 
-  /** Store references to ECS systems for stats/UI delegation. */
-  setEcsSystems(stressSystem, reproductionSystem) {
+  /** Store ECS system references for state sync. */
+  setEcsSystems(stressSystem, reproductionSystem, releaseSystem) {
     this._ecsStressSystem = stressSystem;
     this._ecsReproductionSystem = reproductionSystem;
+    this._ecsReleaseSystem = releaseSystem;
   }
 
   /** Set stress event rate, propagating to ECS system if active. */
@@ -241,6 +242,13 @@ export class Pond {
         this._ecsReproductionSystem.setMosquitoRate(this.mosquitoRate);
         this._ecsReproductionSystem.setDragonflyRate(this.dragonflyRate);
         this._ecsReproductionSystem.setAlgaeRate(this.algaeRate);
+      }
+
+      // Sync release stats from ECS ReleaseSystem
+      if (this._ecsReleaseSystem) {
+        const stats = this._ecsReleaseSystem.getReleaseStats();
+        this.frogsReleased = stats.frogsReleased;
+        this.generation = stats.generation;
       }
 
       // Ripples (visual effects, not entity-dependent)

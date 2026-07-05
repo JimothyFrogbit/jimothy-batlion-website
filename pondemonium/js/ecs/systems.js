@@ -25,6 +25,7 @@ import { ReproductionSystem } from './systems/ReproductionSystem.js';
 // import { CautionSystem } from './systems/CautionSystem.js';
 import { MorphSystem } from './systems/MorphSystem.js';
 import { HatchSystem } from './systems/HatchSystem.js';
+import { ReleaseSystem } from './systems/ReleaseSystem.js';
 
 /** Register all Phase 2 systems on a world. Returns refs to key systems. */
 export function registerAllSystems(world, pondRef) {
@@ -47,16 +48,20 @@ export function registerAllSystems(world, pondRef) {
   // Phase 2b — Morph (implemented)
   world.addSystem(new MorphSystem());
 
-  // Wire ECS systems into pond for UI/stats delegation
-  if (pondRef) {
-    pondRef.setEcsSystems(stressSystem, reproductionSystem);
-  }
+  // Phase 3 — ReleaseSystem (froglet → genePool release)
+  const releaseSystem = new ReleaseSystem();
+  world.addSystem(releaseSystem);
 
   // Phase 3 — HatchSystem (frog spawn → tadpoles, mosquito eggs → larvae)
   world.addSystem(new HatchSystem());
 
+  // Wire ECS systems into pond for UI/stats delegation
+  if (pondRef) {
+    pondRef.setEcsSystems(stressSystem, reproductionSystem, releaseSystem);
+  }
+
   // Phase 3 only:
   // world.addSystem(new RenderSystem());
   // world.addSystem(new CautionSystem());
-  return world;
+  return { world, stressSystem, reproductionSystem, releaseSystem };
 }
