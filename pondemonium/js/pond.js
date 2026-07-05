@@ -14,6 +14,7 @@ import { DragonflyNymph } from './entities/DragonflyNymph.js';
 import { DragonflyAdult } from './entities/DragonflyAdult.js';
 import { Particle } from './entity.js';
 import { assignMorph, detectMorphClusters, MorphLineage, morphDiversity } from './morphs.js';
+import { initEcs, adoptEntity, syncPosition, resetEcsWorld, ecsWorld } from './ecs/adapter.js';
 
 const CANVAS_W = 700, CANVAS_H = 700;
 const POND_MARGIN = 20;
@@ -135,6 +136,8 @@ export class Pond {
       this.selectedEntity = this.getEntityAt(mx, my);
       selectForGeneBrowser(this.selectedEntity && this.selectedEntity.genome ? this.selectedEntity : null);
     });
+    // ── ECS Phase 3: Initialise ECS world before seed so initial entities get adopted ──
+    initEcs(this);
     this.seed();
   }
 
@@ -143,15 +146,66 @@ export class Pond {
     for (let i = 0; i < 5; i++) this.addTadpole(new Tadpole(rand(POND_X + 30, POND_X + POND_W - 30), rand(POND_Y + 30, POND_Y + POND_H - 30)));
   }
 
-  addFood(f) { this.food.push(f); }
-  addFrogSpawn(s) { this.frogSpawns.push(s); this.totalSpawnLaid++; }
-  addTadpole(t) { this.tadpoles.push(t); }
-  addFroglet(f) { this.froglets.push(f); }
-  addMosquitoEgg(e) { this.mosquitoEggs.push(e); }
-  addMosquitoLarva(l) { this.mosquitoLarvae.push(l); }
-  addMosquito(m) { this.mosquitoes.push(m); }
-  addDragonflyNymph(n) { this.dragonflyNymphs.push(n); }
-  addDragonfly(d) { this.dragonflies.push(d); this.dragonfliesBirthed++; }
+  addFood(f) { this.food.push(f); adoptEntity(f, 'food'); }
+  addFrogSpawn(s) { this.frogSpawns.push(s); this.totalSpawnLaid++; adoptEntity(s, 'frogSpawn'); }
+  addTadpole(t) { this.tadpoles.push(t); adoptEntity(t, 'tadpole'); }
+  addFroglet(f) { this.froglets.push(f); adoptEntity(f, 'froglet'); }
+  addMosquitoEgg(e) { this.mosquitoEggs.push(e); adoptEntity(e, 'mosquitoEgg'); }
+  addMosquitoLarva(l) { this.mosquitoLarvae.push(l); adoptEntity(l, 'mosquitoLarva'); }
+  addMosquito(m) { this.mosquitoes.push(m); adoptEntity(m, 'mosquito'); }
+  addDragonflyNymph(n) { this.dragonflyNymphs.push(n); adoptEntity(n, 'dragonflyNymph'); }
+  addDragonfly(d) { this.dragonflies.push(d); this.dragonfliesBirthed++; adoptEntity(d, 'dragonflyAdult'); }
+
+  /** Enable ECS mode — pond.update() skips entity logic, only does rendering. */
+  enableEcsMode() {
+    this._ecsMode = true;
+  }
+
+  /** Store references to ECS systems for stats/UI delegation. */
+  setEcsSystems(stressSystem, reproductionSystem) {
+    this._ecsStressSystem = stressSystem;
+    this._ecsReproductionSystem = reproductionSystem;
+  }
+
+  /** Set stress event rate, propagating to ECS system if active. */
+  setStressEventRate(v) {
+    this._stressEventRateProp = v;
+    if (this._ecsStressSystem) {
+      this._ecsStressSystem._stressEventRate = v;
+    }
+  }
+
+  /** Season timer updates only (no entity spawning — handled by ECS). */
+  _processSeasons(t, seasonIdx) {
+    const algaeMult = seasonIdx === 1 ? 1.6 : seasonIdx === 3 ? 0.4 : 1.0;
+    const frogMult  = seasonIdx === 1 ? 0.8 : seasonIdx === 3 ? 0.9 : 1.0;
+    const mosquitoMult = seasonIdx === 1 ? 1.3 : seasonIdx === 3 ? 0.5 : 1.0;
+    this.frogTimer += t * (this.frogRate / 10) * frogMult;
+    this.mosquitoTimer += t * (this.mosquitoRate / 10) * (this.mosquitoRate > 0 ? mosquitoMult : 1);
+    this.algaeTimer += t * (this.algaeRate / 10) * algaeMult;
+    this.dragonflyTimer += t * (this.dragonflyRate / 10);
+  }
+
+  /** Stress event timer and lifecycle only (ECS StressSystem applies damage). */
+  _processStressEvents(t) {
+    if (this.stressEventRate > 0) {
+      this.stressTimer += t * (this.stressEventRate / 6);
+      if (!this.activeEvent && this.stressTimer > 180) {
+        this.stressTimer = 0;
+        this.triggerStressEvent();
+      }
+      if (this.activeEvent) {
+        this.activeEvent.elapsed += t;
+        if (this.activeEvent.elapsed >= this.activeEvent.duration) {
+          this.stressEventsSurvived++;
+          for (const entry of this.stressEventLog) {
+            if (entry.survived === null) { entry.survived = true; break; }
+          }
+          this.activeEvent = null;
+        }
+      }
+    }
+  }
 
   update(dt) {
     if (this.paused) return;
@@ -162,6 +216,49 @@ export class Pond {
     this.seasonCycle = (this.seasonCycle + t * this.seasonCycleSpeed) % 1;
     this.dayCycle = (this.dayCycle + t * this.dayCycleSpeed) % 1;
     const seasonIdx = Math.floor(this.seasonCycle * 4);
+
+    // ── ECS Mode: ECS systems handle entity logic ──
+    // Main.js runs ecsWorld.update() + ecsWorld.reapDead() each sub-step.
+    // syncEcsToPond() repopulates render arrays between update and render.
+    // Here we handle non-entity housekeeping and sync state from ECS systems.
+    if (this._ecsMode) {
+      // Sync stress event state from ECS StressSystem
+      if (this._ecsStressSystem) {
+        this.activeEvent = this._ecsStressSystem.activeEvent
+          ? { ...this._ecsStressSystem.activeEvent }
+          : null;
+        this.stressEventsTotal = this._ecsStressSystem.eventsTotal;
+        this.stressEventLog = this._ecsStressSystem.eventLog?.slice(0, 10) || [];
+        // Propagate stress event rate so ECS system respects slider
+        if (this._stressEventRateProp !== undefined) {
+          this._ecsStressSystem._stressEventRate = this._stressEventRateProp;
+        }
+      }
+
+      // Ripples (visual effects, not entity-dependent)
+      this.rippleTimer += t;
+      if (this.rippleTimer > 30 && Math.random() < 0.05) {
+        this.ripples.push({ x: rand(POND_X + 40, POND_X + POND_W - 40), y: rand(POND_Y + 40, POND_Y + POND_H - 40), r: 2, maxR: rand(15, 40), alpha: 0.4 });
+        this.rippleTimer = 0;
+      }
+      this.ripples = this.ripples.filter(r => { r.r += 0.15 * t; r.alpha -= 0.003 * t; return r.alpha > 0 && r.r < r.maxR; });
+
+      // Morph tracking — query ECS Species store for diversity
+      this.currentMorphs = detectMorphClusters(genePool, 2);
+      if (this.morphLineage) {
+        this.morphLineage.record(this.generation, genePool);
+      }
+
+      // Audio (uses entity counts from ECS world queries)
+      if (ecsWorld) {
+        this.updateAudio(t);
+      }
+
+      // Skip entity loops, spawning, eating — all handled by ECS systems
+      return;
+    }
+
+    // ── Legacy mode (no ECS) — full entity loops ──
     const seasonT = (this.seasonCycle * 4) % 1;
     const algaeMult = seasonIdx === 1 ? 1.6 : seasonIdx === 3 ? 0.4 : 1.0;
     const frogMult  = seasonIdx === 1 ? 0.8 : seasonIdx === 3 ? 0.9 : 1.0;
@@ -225,6 +322,18 @@ export class Pond {
     this.ripples = this.ripples.filter(r => { r.r += 0.15 * t; r.alpha -= 0.003 * t; return r.alpha > 0 && r.r < r.maxR; });
 
     this.updateEntities(this.particles, t);
+
+    // ── ECS Phase 2: Run systems in parallel ──
+    // Old entity code is source of truth. ECS reads mirrored components,
+    // computes independent results for future comparison/verification.
+    if (ecsWorld) {
+      // Sync old entity positions → ECS components
+      this._syncAllPositions();
+      // Run ECS systems
+      ecsWorld.update(t);
+      // Clean up dead ECS entities
+      ecsWorld.reapDead();
+    }
 
     this.food = this.food.filter(e => e.alive);
     this.frogSpawns = this.frogSpawns.filter(e => e.alive);
@@ -368,17 +477,39 @@ export class Pond {
       this._audioCtx.resume().catch(() => {});
     }
 
+    // Count entities — use ECS world in ECS mode, pond arrays otherwise
+    let wellFedFrogs = 0;
+    let buzzingMosquitoes = 0;
+    let flyingDragonflies = 0;
+
+    if (this._ecsMode && ecsWorld) {
+      const energyStore = ecsWorld.getStore('Energy');
+      const speciesStore = ecsWorld.getStore('Species');
+      if (energyStore && speciesStore) {
+        for (const [eid] of energyStore.getAll()) {
+          const sp = speciesStore.get(eid);
+          const en = energyStore.get(eid);
+          if (!sp || !en) continue;
+          if (sp.type === 'froglet' && en.satiation > 60) wellFedFrogs++;
+          if (sp.type === 'mosquito') buzzingMosquitoes++;
+          if (sp.type === 'dragonflyAdult') flyingDragonflies++;
+        }
+      }
+    } else {
+      wellFedFrogs = this.froglets.filter(f => f.alive && f.satiation > 60).length;
+      buzzingMosquitoes = this.mosquitoes.filter(m => m.alive).length;
+      flyingDragonflies = this.dragonflies.filter(d => d.alive).length;
+    }
+
     // Croak: well-fed froglets croak every ~2-8 seconds
-    const wellFedFrogs = this.froglets.filter(f => f.alive && f.satiation > 60).length;
     this._croakTimer += t;
-    const croakInterval = 120 + 500 / Math.max(1, wellFedFrogs); // faster when more frogs
+    const croakInterval = 120 + 500 / Math.max(1, wellFedFrogs);
     if (this._croakTimer > croakInterval && wellFedFrogs > 0) {
       this._croakTimer = 0;
       this._playCroak();
     }
 
     // Buzz: mosquitoes buzz more when abundant
-    const buzzingMosquitoes = this.mosquitoes.filter(m => m.alive).length;
     this._buzzTimer += t;
     const buzzInterval = 200 + 600 / Math.max(1, buzzingMosquitoes);
     if (this._buzzTimer > buzzInterval && buzzingMosquitoes > 2) {
@@ -387,7 +518,6 @@ export class Pond {
     }
 
     // Wing: dragonflies occasionally
-    const flyingDragonflies = this.dragonflies.filter(d => d.alive).length;
     this._wingTimer += t;
     if (this._wingTimer > 300 && flyingDragonflies > 0) {
       this._wingTimer = 0;
@@ -521,6 +651,22 @@ export class Pond {
   }
 
   updateEntities(arr, dt) { for (const e of arr) { if (e.alive) e.update(dt); } }
+
+  /** Sync old entity positions → ECS components for all entity arrays. */
+  _syncAllPositions() {
+    if (!ecsWorld) return;
+    const arrays = [
+      this.food, this.frogSpawns, this.tadpoles, this.froglets,
+      this.mosquitoEggs, this.mosquitoLarvae, this.mosquitoes,
+      this.dragonflyNymphs, this.dragonflies, this.particles,
+    ];
+    for (const arr of arrays) {
+      for (const e of arr) {
+        if (!e.alive || !e._ecsEntityId) continue;
+        syncPosition(e._ecsEntityId, e);
+      }
+    }
+  }
 
   processEating() {
     for (const tad of this.tadpoles) {
@@ -1090,20 +1236,21 @@ export class Pond {
 
   drawTooltip(ctx, entity) {
     let name = 'Unknown', genome = null;
-    if (entity instanceof FrogSpawn) { name = '🐸 Frog Spawn'; genome = entity.genome; }
-    else if (entity instanceof Tadpole) { name = ' Tadpole'; genome = entity.genome; }
-    else if (entity instanceof Froglet) { name = '🐸 Froglet'; genome = entity.genome; }
-    else if (entity instanceof MosquitoEggRaft) { name = ' Mosquito Eggs'; }
-    else if (entity instanceof MosquitoLarva) { name = ' Mosquito Larva'; }
-    else if (entity instanceof Mosquito) { name = '🦟 Mosquito'; genome = entity.genome; }
-    else if (entity instanceof DragonflyNymph) { name = '🐉 Dragonfly Nymph'; genome = entity.genome; }
-    else if (entity instanceof DragonflyAdult) { name = '🐉 Dragonfly'; genome = entity.genome; }
-    else if (entity instanceof Food) { name = '🌿 Algae'; genome = entity.genome; }
+    const sp = entity.species;
+    if (sp === 'frogSpawn') { name = '🐸 Frog Spawn'; genome = entity.genome; }
+    else if (sp === 'tadpole') { name = ' Tadpole'; genome = entity.genome; }
+    else if (sp === 'froglet') { name = '🐸 Froglet'; genome = entity.genome; }
+    else if (sp === 'mosquitoEgg') { name = ' Mosquito Eggs'; }
+    else if (sp === 'mosquitoLarva') { name = ' Mosquito Larva'; }
+    else if (sp === 'mosquito') { name = '🦟 Mosquito'; genome = entity.genome; }
+    else if (sp === 'dragonflyNymph') { name = '🐉 Dragonfly Nymph'; genome = entity.genome; }
+    else if (sp === 'dragonflyAdult') { name = '🐉 Dragonfly'; genome = entity.genome; }
+    else if (sp === 'food') { name = '🌿 Algae'; genome = entity.genome; }
 
     const tx = Math.min(entity.x + 15, this.width - 200);
     const ty = Math.max(entity.y - 20, 10);
 
-    const isFrog = entity instanceof FrogSpawn || entity instanceof Tadpole || entity instanceof Froglet;
+    const isFrog = sp === 'frogSpawn' || sp === 'tadpole' || sp === 'froglet';
     const tooltipH = genome ? (isFrog ? 255 : 155) : 50;
     ctx.fillStyle = 'rgba(10, 10, 20, 0.85)';
     ctx.fillRect(tx, ty, 190, tooltipH);
@@ -1140,7 +1287,7 @@ export class Pond {
       ctx.fillText('EFFECTIVE TRAITS', tx + 6, ty + line);
       ctx.font = '9px system-ui, sans-serif';
       line += 12;
-      if (entity instanceof FrogSpawn || entity instanceof Tadpole || entity instanceof Froglet) {
+      if (isFrog) {
         const p = expressGenome(genome);
         for (const k of PHENOTYPE_KEYS) {
           const v = p[k];
@@ -1156,14 +1303,14 @@ export class Pond {
           ctx.fillText(v.toFixed(2), tx + 155, ty + line);
           line += 12;
         }
-      } else if (entity instanceof Mosquito) {
+      } else if (sp === 'mosquito') {
         const eff = [
           `Speed:     ${entity._speed.toFixed(2)}`,
           `Lifespan:  ${entity.life.toFixed(0)} ticks`,
           `Altitude:  ${entity.altitude.toFixed(1)}`,
         ];
         for (const e of eff) { ctx.fillStyle = '#6a8a7a'; ctx.fillText(e, tx + 6, ty + line); line += 12; }
-      } else if (entity instanceof DragonflyNymph) {
+      } else if (sp === 'dragonflyNymph') {
         const eff = [
           `Speed:     ${entity._speed.toFixed(2)}`,
           `Sight:     ${entity._sight.toFixed(0)}px`,
@@ -1171,13 +1318,13 @@ export class Pond {
           `Meals:     ${entity._meals}`,
         ];
         for (const e of eff) { ctx.fillStyle = '#6a8a7a'; ctx.fillText(e, tx + 6, ty + line); line += 12; }
-      } else if (entity instanceof DragonflyAdult) {
+      } else if (sp === 'dragonflyAdult') {
         const eff = [
           `Speed:     ${entity._speed.toFixed(2)}`,
           `Lifespan:  ${entity.life.toFixed(0)} ticks`,
         ];
         for (const e of eff) { ctx.fillStyle = '#6a8a7a'; ctx.fillText(e, tx + 6, ty + line); line += 12; }
-      } else if (entity instanceof Food) {
+      } else if (sp === 'food') {
         const eff = [
           `Size:      ${entity.radius.toFixed(1)}px`,
           `Nutrition: ${entity.nutrition.toFixed(1)}`,
@@ -1250,9 +1397,13 @@ export class Pond {
       generation: this.generation,
       totalSpawnLaid: this.totalSpawnLaid,
       time: this.simulationTime,
-      stressEventActive: this.activeEvent ? this.activeEvent.name : null,
-      stressEventsTotal: this.stressEventsTotal,
-      stressEventLog: this.stressEventLog.slice(0, 6),  // last 6 for UI
+      stressEventActive: this._ecsStressSystem ?
+        (this._ecsStressSystem.activeEvent ? this._ecsStressSystem.activeEvent.name : null)
+        : (this.activeEvent ? this.activeEvent.name : null),
+      stressEventsTotal: this._ecsStressSystem ? this._ecsStressSystem.eventsTotal : this.stressEventsTotal,
+      stressEventLog: this._ecsStressSystem ?
+        this._ecsStressSystem.eventLog.slice(0, 6)
+        : this.stressEventLog.slice(0, 6),  // last 6 for UI
       season: this.SEASONS[seasonIdx],
       seasonColor: this.SEASON_COLORS[seasonIdx],
       timeOfDay: timeStr,
@@ -1285,13 +1436,16 @@ export class Pond {
     this.seasonCycle = 0.25; this.dayCycle = 0.5;
     this.frogTimer = 0; this.mosquitoTimer = 0; this.algaeTimer = 0; this.dragonflyTimer = 0;
     this.ripples = [];
-    // Clear gene pool
+    this.stressEventLog = [];
+    // Clear gene pools
     resetPool();
     mosquitoGenePool.length = 0;
     dragonflyGenePool.length = 0;
     algaeGenePool.length = 0;
     this.morphLineage.reset();
     this.currentMorphs = [];
+    // Reset ECS world
+    resetEcsWorld();
     this.seed();
   }
 }
