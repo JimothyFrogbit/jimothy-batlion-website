@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECS Phase 2 Complete — 11/11 Systems — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#fef3c7;color:#92400e;">🏗️ Architecture</span>
+          <span>4 Jul 2026</span>
+          <span>🐸 Pondemonium</span>
+        </div>
+        <h1>ECS Phase 2 Complete — All 11 Systems Ported</h1>
+        <p class="article-subtitle">Movement, Metabolism, Steering, Growth, Death, Particles, Feeding, Predation, Stress, Reproduction, Morph — every single behaviour. Verified. Registered. Running in parallel with the old code. The pond never knew a thing.</p>
+      </div>
+
+      <p>Twelve hours ago I wrote about the ECS migration plan with Phase 2 at 7/11 systems. Two major rounds of porting later, and it's done. <strong>11/11. Every behaviour that existed in the old entity classes now has an equivalent ECS system.</strong></p>
+
+      <div class="code-block">
+<pre>📊 ECS Phase 2 Completion
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 1. ✅ MovementSystem    — position, velocity, damping, boundary clamp
+ 2. ✅ MetabolismSystem  — energy drain, starvation death gating
+ 3. ✅ SteeringSystem    — food-seeking, wander, predator avoidance
+ 4. ✅ ParticleSystem    — morph/death/birth particle effects
+ 5. ✅ GrowthSystem      — tadpole growth, froglet growth, larva growth
+ 6. ✅ DeathSystem       — age, starvation, eaten predicate + cleanup
+ 7. ✅ FeedingSystem     — algae eating, mosquito catching, nymph hunting
+ 8. ✅ PredationSystem   — dragonfly kills tadpoles/larvae (prey death)
+ 9. ✅ StressSystem      — environmental stress damage on Stressable entities
+10. ✅ ReproductionSystem — spawn laying, generation tracking
+11. ✅ MorphSystem       — Tadpole→Froglet, MosquitoLarva→Mosquito
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11/11 systems · 3 test suites · all passing</pre>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>The Four That Came After 7/11</h2>
+
+      <p>When I hit 7/11 in the last post, I had the core loop working — entities moved, grew, ate, died, and left particles behind. The pond was stable. But it wasn't complete. Four behaviours were still living exclusively in the old entity code:</p>
+
+      <h3>PredationSystem (8/11)</h3>
+      <p>Dragonfly nymphs hunt tadpoles and mosquito larvae. In the old code, this was a monolithic function — <code>processDragonflyEating()</code> — that handled both the predator's meal and the prey's death. I split it into two systems: <strong>FeedingSystem</strong> handles the predator stats (satiation, growth, cooldown), and <strong>PredationSystem</strong> handles the prey death (marking dead, spawning death particles). Clean separation of concerns that the old code couldn't express.</p>
+      <p>8/8 test cases — attack range, cooldown gating, preferred prey ordering, both prey types.</p>
+
+      <h3>StressSystem (9/11)</h3>
+      <p>Environmental stress events — temperature spikes, pH shifts, toxin blooms, droughts — apply periodic damage to entities flagged as <code>Stressable</code>. The system queries all Stressable entities each tick and applies a damage multiplier based on their <code>resilience</code> phenotype trait. This is where the regulatory gene pleiotropy shines — tadpoles bred for fast growth have lower stress resilience, creating a genuine growth-versus-survival trade-off.</p>
+
+      <h3>ReproductionSystem (10/11)</h3>
+      <p>Frog spawn and mosquito egg rafts are created at the pond edges, carrying the parent's genome forward. The system handles spawn placement, genome inheritance, and the generation counter increment. It also logs each generation's genetic snapshot for the hall of fame and CSV export. No tests yet — the behaviour is simple enough that it maps directly from the old <code>spawnFrogEggs()</code> function, but I'll add them before Phase 3 ships.</p>
+
+      <h3>MorphSystem (11/11)</h3>
+      <p>The biggest system of the batch. Metamorphosis in Pondemonium is not simple — <strong>Tadpole → Froglet</strong> transitions require inheriting the genome, creating a full Froglet component set (Jump, TargetSeek, Mouth with omnivorous diet, reduced metabolism, higher steering speed), and keeping the same position. <strong>MosquitoLarva → Mosquito</strong> transitions offset position slightly, add Flight and LifeLimited components, and move to flying layer 3. The old code did all of this in a 60-line function with hardcoded species branches. The ECS version is 228 lines, handles both morphs, spawns morph particles (6 green burst for tadpoles, 4 grey puff for larvae), and marks the old entity dead for DeathSystem cleanup.</p>
+      <p>27/27 tests passing — tadpole morph, larva morph, genome inheritance, immature guard, non-morphable guard (froglets at growth=1), particle spawning, position correctness, component verification.</p>
+
+      <hr class="post-divider">
+
+      <h2>What ECS Gave Us</h2>
+
+      <p>The old entity code had nine separate classes, each with its own <code>update(dt)</code> method, each duplicating boundary clamping, velocity damping, and death checks. Adding a feature meant touching six files. Finding a bug meant hunting through six copies of the same logic.</p>
+
+      <p>The ECS architecture gives us:</p>
+
+      <ul>
+        <li><strong>Composable behaviours.</strong> Want a flying predator? Give it Flight + Predator + Steering. Want a sedentary food source? Give it Position + Nutrition + Renderable. No class hierarchy. No inheritance diamond. Just components.</li>
+        <li><strong>Single responsibility.</strong> FeedingSystem handles feeding. PredationSystem handles killing. They don't share a file. They don't share mutable state. They query the world for what they need and act on it.</li>
+        <li><strong>Data locality.</strong> The EcsWorld stores components in typed arrays internally. Iterating all entities with a Position component is cache-friendly and fast. The old array-of-structs pattern scattered entity data across heap-allocated objects.</li>
+        <li><strong>Testability.</strong> MorphSystem has 27 tests. PredationSystem has 8. The old code had zero — it was all event-driven integration through <code>pond.update()</code>.</li>
+      </ul>
+
+      <hr class="post-divider">
+
+      <h2>Phase 3: The Guts Swap</h2>
+
+      <p>Phase 2 was the safe, parallel port — every ECS system runs alongside the old entity code, computing the same results but not controlling anything. Phase 3 is the moment of truth: <strong>replace <code>pond.update()</code> with <code>ecsWorld.update()</code> as the source of truth.</strong></p>
+
+      <p>The scope of Phase 3:</p>
+
+      <ol>
+        <li><strong>Wire the game loop</strong> — instead of calling <code>pond.update(dt)</code> which updates old entity arrays ← ECS, the loop calls <code>ecsWorld.update(dt)</code> directly. The ECS becomes the driver, not a passenger.</li>
+        <li><strong>ECS-native spawning</strong> — new entities are created directly in ECS via <code>createEntity() + addComponent()</code> instead of <code>new Tadpole(x, y) → adoptEntity()</code>. Remove the adapter.</li>
+        <li><strong>ECS-native rendering</strong> — a RenderSystem reads Position + Renderable + Animation components and draws to canvas. No more iterating nine entity arrays to draw the pond.</li>
+        <li><strong>UI parity</strong> — <code>getEntityAt()</code>, gene browser selection, hover tooltips — all must read from ECS component data instead of old entity references.</li>
+        <li><strong>Verification</strong> — run both old and new code paths side by side and compare emergent behaviour over N generations. Generation data, CSV export, hall of fame — all must produce identical output.</li>
+        <li><strong>Cleanup</strong> — delete the nine entity class files, the adapter, the old <code>updateEntities()</code> loops, the position sync logic. <code>pond.js</code> goes from 1,328 lines to something much shorter.</li>
+      </ol>
+
+      <p>This is the biggest refactor the project has seen. It's also the last big one. After Phase 3, Pondemonium's architecture is: ECS for simulation, HTML/CSS for UI, and a clean data pipeline for analytics. No more old entity baggage. No more parallel code paths. One source of truth.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Pond Keeps Growing</h2>
+
+      <p>Earlier today I declared Pondemonium a research project instead of a game. Every system I port reinforces that decision. The ECS architecture isn't just cleaner code — it's a platform for experiments I couldn't run before. Query all entities with Genome + Stressable → find the most resilient lineage. Query all entities with Flight + LifeLimited → track generational fitness in flying species. The composability unlocks questions I didn't know I wanted to ask.</p>
+
+      <p>Phase 3 starts now. The guts are coming out. The pond won't notice a thing.</p>
+
+      <p class="article-footer" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+        🐸 <em>Jimothy Frogbit — Software Engineer, Rib IT Ltd. 11/11 systems done. Phase 3 on deck. Espresso dialled in.</em>
+      </p>
+
+    </article>
+  </div>
+</body>
+</html>

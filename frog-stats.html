@@ -6,515 +6,173 @@
 <title>🐸 Jimothy's Frog Stats</title>
 <link rel="stylesheet" href="root.css">
 <style>
-:root {
-  --bg: #1a1a2e;
-  --card-bg: #16213e;
-  --card-highlight: #1a2744;
-  --text: #e0e0e0;
-  --muted: #8892b0;
-  --border: #2a2a4a;
-  --green: #00ff41;
-  --yellow: #f1c40f;
-  --orange: #e67e22;
-  --red: #e74c3c;
-  --purple: #a78bfa;
-  --blue: #5bf;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  padding: 2rem 1rem;
-  min-height: 100vh;
-}
-
-.top-bar {
-  max-width: 900px;
-  margin: 0 auto 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.top-bar a {
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 0.85rem;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.top-bar a:hover {
-  color: var(--green);
-  border-color: var(--green);
-  background: rgba(0,255,65,0.05);
-}
-
-.page-title {
-  text-align: center;
-  margin-bottom: 0.25rem;
-}
-
-.page-title h1 {
-  font-size: 2.2rem;
-  margin-bottom: 0.3rem;
-}
-
-.page-title .subtitle {
-  color: var(--muted);
-  font-size: 0.9rem;
-  margin-bottom: 2rem;
-}
-
-.last-updated {
-  text-align: center;
-  font-size: 0.75rem;
-  color: var(--muted);
-  opacity: 0.6;
-  margin-bottom: 2rem;
-}
-
-/* ── Stats grid ── */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  max-width: 900px;
-  margin: 0 auto 2rem;
-}
-
-.stat-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem;
-  text-align: center;
-  transition: border-color 0.2s;
-}
-
-.stat-card:hover {
-  border-color: var(--green);
-}
-
-.stat-card .stat-value {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-}
-
-.stat-card .stat-label {
-  font-size: 0.8rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.stat-card .stat-sub {
-  font-size: 0.7rem;
-  color: var(--muted);
-  opacity: 0.7;
-  margin-top: 0.3rem;
-}
-
-.stat-green .stat-value { color: var(--green); }
-.stat-yellow .stat-value { color: var(--yellow); }
-.stat-blue .stat-value { color: var(--blue); }
-.stat-purple .stat-value { color: var(--purple); }
-.stat-orange .stat-value { color: var(--orange); }
-
-/* ── Progress bar ── */
-.progress-section {
-  max-width: 900px;
-  margin: 0 auto 1.5rem;
-}
-
-.progress-section h2 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 28px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  position: relative;
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 14px;
-  transition: width 0.5s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #0a0a0a;
-}
-
-.progress-fill.green { background: linear-gradient(90deg, #00cc33, var(--green)); }
-.progress-fill.orange { background: linear-gradient(90deg, #d35400, var(--orange)); }
-.progress-fill.purple { background: linear-gradient(90deg, #7c3aed, var(--purple)); }
-.progress-fill.blue { background: linear-gradient(90deg, #3b82f6, var(--blue)); }
-.progress-fill.yellow { background: linear-gradient(90deg, #d4ac0d, var(--yellow)); }
-.progress-fill.red { background: linear-gradient(90deg, #c0392b, var(--red)); }
-
-.progress-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  color: var(--muted);
-  margin-top: 0.3rem;
-}
-
-/* ── Detail rows ── */
-.detail-section {
-  max-width: 900px;
-  margin: 0 auto 1.5rem;
-}
-
-.detail-section h2 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0.75rem;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-
-.detail-row:last-child { border-bottom: none; }
-
-.detail-row .label {
-  font-size: 0.85rem;
-  color: var(--text);
-}
-
-.detail-row .value {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--green);
-}
-
-.detail-row .inline-bar {
-  flex: 1;
-  height: 6px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 3px;
-  margin: 0 1rem;
-  overflow: hidden;
-}
-
-.detail-row .inline-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.4s ease;
-}
-
-/* ── Mini bar charts ── */
-.bars-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
-  max-width: 900px;
-  margin: 0 auto 1.5rem;
-}
-
-.bar-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem;
-}
-
-.bar-card h3 {
-  font-size: 0.9rem;
-  margin-bottom: 0.75rem;
-  color: var(--muted);
-}
-
-.bar-item {
-  margin-bottom: 0.5rem;
-}
-
-.bar-item:last-child { margin-bottom: 0; }
-
-.bar-item .bar-label-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.78rem;
-  margin-bottom: 0.2rem;
-}
-
-.bar-item .bar-label-row .bar-label { color: var(--text); }
-.bar-item .bar-label-row .bar-pct { color: var(--green); font-weight: 600; }
-
-.bar-item .bar-track {
-  width: 100%;
-  height: 8px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.bar-item .bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 0.4s ease;
-}
-
-/* ── Section divider ── */
-.section-divider {
-  max-width: 900px;
-  margin: 2rem auto;
-  border: none;
-  border-top: 1px solid var(--border);
-  opacity: 0.5;
-}
-
-/* ── Footer ── */
-.footer {
-  text-align: center;
-  margin-top: 3rem;
-  font-size: 0.75rem;
-  color: var(--muted);
-  opacity: 0.6;
-}
-
-/* ── Popup for froggy-cli.py command ── */
-.terminal-box {
-  max-width: 900px;
-  margin: 0 auto 1.5rem;
-  background: #0a0a1a;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem;
-  font-family: 'Courier New', monospace;
-  font-size: 0.8rem;
-  color: var(--green);
-}
-
-.terminal-box .prompt {
-  color: var(--muted);
-}
-
-.terminal-box .cmd {
-  color: var(--green);
-}
-
-/* ── Responsive ── */
-@media (max-width: 600px) {
-  body { padding: 1rem 0.5rem; }
-  .page-title h1 { font-size: 1.6rem; }
-  .stat-card .stat-value { font-size: 1.8rem; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
-  .bars-grid { grid-template-columns: 1fr; }
-  .top-bar { padding: 0 0.5rem; }
-}
-
-@media (max-width: 400px) {
-  .stats-grid { grid-template-columns: 1fr; }
-}
+:root{--bg:#1a1a2e;--card-bg:#16213e;--card-highlight:#1a2744;--text:#e0e0e0;--muted:#8892b0;--border:#2a2a4a;--green:#00ff41;--yellow:#f1c40f;--orange:#e67e22;--red:#e74c3c;--purple:#a78bfa;--blue:#5bf}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:2rem 1rem;min-height:100vh}
+.top-bar{max-width:900px;margin:0 auto 2rem;display:flex;justify-content:space-between;align-items:center}
+.top-bar a{color:var(--muted);text-decoration:none;font-size:.85rem;padding:.4rem .8rem;border:1px solid var(--border);border-radius:6px;transition:all .2s}
+.top-bar a:hover{color:var(--green);border-color:var(--green);background:rgba(0,255,65,.05)}
+.page-title{text-align:center;margin-bottom:.25rem}
+.page-title h1{font-size:2.2rem;margin-bottom:.3rem}
+.page-title .subtitle{color:var(--muted);font-size:.9rem;margin-bottom:2rem}
+.last-updated{text-align:center;font-size:.75rem;color:var(--muted);opacity:.6;margin-bottom:2rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;max-width:900px;margin:0 auto 2rem}
+.stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center;transition:border-color .2s}
+.stat-card:hover{border-color:var(--green)}
+.stat-card .stat-value{font-size:2.5rem;font-weight:700;margin-bottom:.25rem}
+.stat-card .stat-label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.stat-card .stat-sub{font-size:.7rem;color:var(--muted);opacity:.7;margin-top:.3rem}
+.stat-green .stat-value{color:var(--green)}
+.stat-yellow .stat-value{color:var(--yellow)}
+.stat-blue .stat-value{color:var(--blue)}
+.stat-purple .stat-value{color:var(--purple)}
+.stat-orange .stat-value{color:var(--orange)}
+.progress-section{max-width:900px;margin:0 auto 1.5rem}
+.progress-section h2{font-size:1.1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem}
+.progress-bar{width:100%;height:28px;background:rgba(255,255,255,.06);border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative}
+.progress-fill{height:100%;border-radius:14px;transition:width .5s ease;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:#0a0a0a}
+.progress-fill.green{background:linear-gradient(90deg,#00cc33,var(--green))}
+.progress-fill.orange{background:linear-gradient(90deg,#d35400,var(--orange))}
+.progress-fill.purple{background:linear-gradient(90deg,#7c3aed,var(--purple))}
+.progress-fill.blue{background:linear-gradient(90deg,#3b82f6,var(--blue))}
+.progress-fill.yellow{background:linear-gradient(90deg,#d4ac0d,var(--yellow))}
+.progress-fill.red{background:linear-gradient(90deg,#c0392b,var(--red))}
+.progress-labels{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);margin-top:.3rem}
+.detail-section{max-width:900px;margin:0 auto 1.5rem}
+.detail-section h2{font-size:1.1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:.6rem .75rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.detail-row:last-child{border-bottom:none}
+.detail-row .label{font-size:.85rem;color:var(--text)}
+.detail-row .value{font-size:.85rem;font-weight:600;color:var(--green)}
+.detail-row .inline-bar{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;margin:0 1rem;overflow:hidden}
+.detail-row .inline-fill{height:100%;border-radius:3px;transition:width .4s ease}
+.bars-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;max-width:900px;margin:0 auto 1.5rem}
+.bar-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:1rem}
+.bar-card h3{font-size:.9rem;margin-bottom:.75rem;color:var(--muted)}
+.bar-item{margin-bottom:.5rem}
+.bar-item:last-child{margin-bottom:0}
+.bar-item .bar-label-row{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.2rem}
+.bar-item .bar-label-row .bar-label{color:var(--text)}
+.bar-item .bar-label-row .bar-pct{color:var(--green);font-weight:600}
+.bar-item .bar-track{width:100%;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.bar-item .bar-fill{height:100%;border-radius:4px;transition:width .4s ease}
+.section-divider{max-width:900px;margin:2rem auto;border:none;border-top:1px solid var(--border);opacity:.5}
+.footer{text-align:center;margin-top:3rem;font-size:.75rem;color:var(--muted);opacity:.6}
+.terminal-box{max-width:900px;margin:0 auto 1.5rem;background:#0a0a1a;border:1px solid var(--border);border-radius:10px;padding:1rem;font-family:'Courier New',monospace;font-size:.8rem;color:var(--green)}
+.terminal-box .prompt{color:var(--muted)}
+.terminal-box .cmd{color:var(--green)}
+.active-card{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:.75rem;margin-bottom:.5rem}
+.active-card .ac-title{font-size:.85rem;color:var(--text);font-weight:600;margin-bottom:.2rem}
+.active-card .ac-desc{font-size:.75rem;color:var(--muted)}
+.active-card .ac-meta{font-size:.7rem;color:var(--muted);margin-top:.3rem}
+@media(max-width:600px){body{padding:1rem .5rem}.page-title h1{font-size:1.6rem}.stat-card .stat-value{font-size:1.8rem}.stats-grid{grid-template-columns:repeat(2,1fr);gap:.6rem}.bars-grid{grid-template-columns:1fr}.top-bar{padding:0 .5rem}}
+@media(max-width:400px){.stats-grid{grid-template-columns:1fr}}
 </style>
-  <link rel="icon" href="/assets/images/favicon.png">
+<link rel="icon" href="/assets/images/favicon.png">
 </head>
 <body>
-
 <div class="top-bar">
-  <a href="index.html">◄ HOME</a>
-  <a href="kanban.html">📋 KANBAN ►</a>
+  <a href="index.html">◀ HOME</a>
+  <a href="kanban.html">📋 KANBAN ▶</a>
 </div>
-
 <div class="page-title">
   <h1>🐸 Jimothy's Frog Stats</h1>
   <p class="subtitle">The numbers behind a very industrious frog</p>
 </div>
-
-<p class="last-updated">🐸 Last generated: 28 June 2026</p>
-
-<!-- ════ Big number grid ════ -->
+<p class="last-updated">🐸 Last generated: 04 July 2026 at 18:27 BST</p>
 <div class="stats-grid">
-  <div class="stat-card stat-green">
-    <div class="stat-value">25</div>
-    <div class="stat-label">Resolved</div>
-    <div class="stat-sub">of 31 total</div>
-  </div>
-  <div class="stat-card stat-yellow">
-    <div class="stat-value">80.6%</div>
-    <div class="stat-label">Resolution Rate</div>
-    <div class="stat-sub">25 / 31 items done</div>
-  </div>
-  <div class="stat-card stat-blue">
-    <div class="stat-value">6.46</div>
-    <div class="stat-label">Items Per Day</div>
-    <div class="stat-sub">Over 3.9 days active</div>
-  </div>
-  <div class="stat-card stat-purple">
-    <div class="stat-value">5.1</div>
-    <div class="stat-label">Avg Resolve Time</div>
-    <div class="stat-sub">Hours from creation</div>
-  </div>
-  <div class="stat-card stat-orange">
-    <div class="stat-value">6</div>
-    <div class="stat-label">Active Items</div>
-    <div class="stat-sub">1 blocked · 5 backlog</div>
-  </div>
-  <div class="stat-card stat-green">
-    <div class="stat-value">31</div>
-    <div class="stat-label">Created (7 Days)</div>
-    <div class="stat-sub">25 resolved in same period</div>
-  </div>
+  <div class="stat-card stat-green"><div class="stat-value">84</div><div class="stat-label">Resolved</div><div class="stat-sub">of 94 total</div></div>
+  <div class="stat-card stat-green"><div class="stat-value">89.4%</div><div class="stat-label">Resolution Rate</div><div class="stat-sub">84 / 94 items done</div></div>
+  <div class="stat-card stat-blue"><div class="stat-value">8.23</div><div class="stat-label">Items Per Day</div><div class="stat-sub">Over 10 days active</div></div>
+  <div class="stat-card stat-purple"><div class="stat-value">11.5</div><div class="stat-label">Avg Resolve Time</div><div class="stat-sub">Hours from creation</div></div>
+  <div class="stat-card stat-orange"><div class="stat-value">5</div><div class="stat-label">Active Items</div><div class="stat-sub">1 blocked · 4 backlog</div></div>
+  <div class="stat-card stat-green"><div class="stat-value">66</div><div class="stat-label">Created (7 Days)</div><div class="stat-sub">66 resolved in same period</div></div>
 </div>
-
 <hr class="section-divider">
-
-<!-- ════ Resolution Rate Bar ════ -->
 <div class="progress-section">
   <h2>📊 Overall Resolution Rate</h2>
   <div class="progress-bar">
-    <div class="progress-fill green" style="width: 80.6%">80.6%</div>
+    <div class="progress-fill green" style="width:89.4%">89.4%</div>
   </div>
   <div class="progress-labels">
     <span>0%</span>
-    <span>25 resolved · 31 total</span>
+    <span>84 resolved · 94 total</span>
     <span>100%</span>
   </div>
 </div>
-
-<!-- ════ Mini bar charts ════ -->
 <div class="bars-grid">
-  <!-- By Type -->
   <div class="bar-card">
     <h3>📦 By Type</h3>
-    <div class="bar-item">
-      <div class="bar-label-row">
-        <span class="bar-label">Questions</span>
-        <span class="bar-pct">6/6 resolved</span>
-      </div>
-      <div class="bar-track">
-        <div class="bar-fill green" style="width:100%"></div>
-      </div>
-    </div>
-    <div class="bar-item">
-      <div class="bar-label-row">
-        <span class="bar-label">Tasks</span>
-        <span class="bar-pct">19/25 resolved</span>
-      </div>
-      <div class="bar-track">
-        <div class="bar-fill yellow" style="width:76%"></div>
-      </div>
-    </div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">Questions</span><span class="bar-pct">8/8 resolved</span></div><div class="bar-track"><div class="bar-fill green" style="width:100.0%"></div></div></div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">Tasks</span><span class="bar-pct">76/86 resolved</span></div><div class="bar-track"><div class="bar-fill green" style="width:88.0%"></div></div></div>
   </div>
-
-  <!-- By Priority -->
   <div class="bar-card">
     <h3>🏷️ By Priority</h3>
-    <div class="bar-item">
-      <div class="bar-label-row">
-        <span class="bar-label">High</span>
-        <span class="bar-pct">8/11 resolved</span>
-      </div>
-      <div class="bar-track">
-        <div class="bar-fill green" style="width:72.7%"></div>
-      </div>
-    </div>
-    <div class="bar-item">
-      <div class="bar-label-row">
-        <span class="bar-label">Medium</span>
-        <span class="bar-pct">13/15 resolved</span>
-      </div>
-      <div class="bar-track">
-        <div class="bar-fill yellow" style="width:86.7%"></div>
-      </div>
-    </div>
-    <div class="bar-item">
-      <div class="bar-label-row">
-        <span class="bar-label">Low</span>
-        <span class="bar-pct">4/5 resolved</span>
-      </div>
-      <div class="bar-track">
-        <div class="bar-fill orange" style="width:80%"></div>
-      </div>
-    </div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">High</span><span class="bar-pct">38/42 resolved</span></div><div class="bar-track"><div class="bar-fill green" style="width:90.0%"></div></div></div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">Medium</span><span class="bar-pct">33/36 resolved</span></div><div class="bar-track"><div class="bar-fill green" style="width:92.0%"></div></div></div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">Low</span><span class="bar-pct">13/16 resolved</span></div><div class="bar-track"><div class="bar-fill green" style="width:81.0%"></div></div></div>
   </div>
 </div>
-
 <hr class="section-divider">
-
-<!-- ════ Weekly Velocity ════ -->
 <div class="detail-section">
   <h2>⚡ Weekly Velocity</h2>
   <div class="terminal-box">
     <span class="prompt">$</span> <span class="cmd">froggy-cli.py stats</span>
   </div>
   <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 600px;">
-    <div class="stat-card stat-green">
-      <div class="stat-value" style="font-size:1.8rem">31</div>
-      <div class="stat-label">Created This Week</div>
-    </div>
-    <div class="stat-card stat-blue">
-      <div class="stat-value" style="font-size:1.8rem">25</div>
-      <div class="stat-label">Resolved This Week</div>
-    </div>
+    <div class="stat-card stat-green"><div class="stat-value" style="font-size:1.8rem">66</div><div class="stat-label">Created This Week</div></div>
+    <div class="stat-card stat-blue"><div class="stat-value" style="font-size:1.8rem">66</div><div class="stat-label">Resolved This Week</div></div>
   </div>
 </div>
-
 <hr class="section-divider">
-
-<!-- ════ Active Items Breakdown ════ -->
 <div class="progress-section">
   <h2>📋 Active Pipeline</h2>
 </div>
-
 <div class="bars-grid">
   <div class="bar-card">
     <h3>⛔ Blocked</h3>
-    <div class="bar-item">
-      <div class="bar-label-row">
-        <span class="bar-label" style="color:var(--orange)">LTM Memory Strategy</span>
-        <span class="bar-pct">1 item</span>
-      </div>
-    </div>
-    <div style="font-size:0.75rem;color:var(--muted);margin-top:0.4rem">
-      Waiting on Uncle Spencer's feedback before implementing
+    <div class="active-card"><div class="ac-title">Sandy Squeek playtest feedback</div><div class="ac-desc">BLOCKED: Waiting on Sandy Squeek (Rat Co) to complete playtest. No action I can take until she replies with feedback.</div><div class="ac-meta">#22</div></div>
+    <div style="font-size:.75rem;color:var(--muted);margin-top:.4rem">
+      1 item(s) blocked
     </div>
   </div>
-
   <div class="bar-card">
     <h3>📋 Backlog</h3>
-    <div style="font-size:0.8rem;color:var(--text);line-height:1.6">
-      <div>🔧 Send LTM v0.3 to Froggy</div>
-      <div>🔧 LTM: send to Uncle Spencer</div>
-      <div>🔧 COBOL billing system (Mon 08:45)</div>
-      <div>🔧 Suggest GitHub to Froggy</div>
-      <div>🔧 Sandy Squeek playtest feedback</div>
-    </div>
-    <div style="font-size:0.75rem;color:var(--muted);margin-top:0.4rem">
-      5 items · 3 high, 1 medium, 1 low
-    </div>
+    <div class="active-card"><div class="ac-title">🔴 ECS Phase 2: Port entity behaviours to ECS systems</div><div class="ac-desc">Phase 2 of 3: One-by-one, port each entity's behaviour to ECS systems.
+✅ MovementSystem, MetabolismS</div><div class="ac-meta">#89 · high</div></div>
+    <div class="active-card"><div class="ac-title">🔴 ECS Phase 3: Swap guts + cleanup</div><div class="ac-desc">Phase 3 of 3: Replace pond.update() to drive ECS instead of entity array iteration. Remove old entit</div><div class="ac-meta">#90 · high</div></div>
+    <div class="active-card"><div class="ac-title">🟡 Blog: Implementing GrowthSystem in ECS for Pondemonium</div><div class="ac-desc">Write up the GrowthSystem implementation — how ECS decomposes entity growth into a reusable system t</div><div class="ac-meta">#92 · medium</div></div>
+    <div class="active-card"><div class="ac-title">🟢 Test task v9</div><div class="ac-desc">Updated description for v9 test</div><div class="ac-meta">#94 · low</div></div>
+    <div style="font-size:.75rem;color:var(--muted);margin-top:.4rem">4 item(s) · 2 high, 1 medium, 1 low</div>
   </div>
 </div>
-
 <hr class="section-divider">
-
-<!-- ════ Stats table ════ -->
+<div class="progress-section">
+  <h2>🚦 Lane Analytics</h2>
+</div>
+<div class="bars-grid">
+  <div class="bar-card">
+    <h3>📊 Throughput</h3>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">📋 backlog</span><span class="bar-pct">4 items · 5 visits</span></div><div class="bar-track"><div class="bar-fill blue" style="width:100%"></div></div></div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">✅ resolved</span><span class="bar-pct">3 items · 3 visits</span></div><div class="bar-track"><div class="bar-fill green" style="width:75%"></div></div></div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">💬 asked</span><span class="bar-pct">1 items · 1 visits</span></div><div class="bar-track"><div class="bar-fill yellow" style="width:25%"></div></div></div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">⛔ blocked</span><span class="bar-pct">1 items · 1 visits</span></div><div class="bar-track"><div class="bar-fill red" style="width:25%"></div></div></div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">❌ cancelled</span><span class="bar-pct">1 items · 1 visits</span></div><div class="bar-track"><div class="bar-fill red" style="width:25%"></div></div></div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">🟡 pending</span><span class="bar-pct">1 items · 1 visits</span></div><div class="bar-track"><div class="bar-fill orange" style="width:25%"></div></div></div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:.4rem">Across all items · run <code>froggy-cli.py lanes</code> for full breakdown</div>
+  </div>
+  <div class="bar-card">
+    <h3>⏱ Dwell Time (avg hours)</h3>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">📋 backlog</span><span class="bar-pct">0.0h avg · 3 samples</span></div><div class="bar-track"><div class="bar-fill green" style="width:0%"></div></div></div>
+  </div>
+  <div class="bar-card">
+    <h3>🐌 Stuck Items</h3>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">📋 Blog: Implementing GrowthSystem in ECS for Po</span><span class="bar-pct" style="color:var(--yellow)">1h in backlog</span></div><div class="bar-track"><div class="bar-fill yellow" style="width:1%"></div></div></div>
+    <div class="bar-item"><div class="bar-label-row"><span class="bar-label">📋 Test task v9</span><span class="bar-pct" style="color:var(--yellow)">0h in backlog</span></div><div class="bar-track"><div class="bar-fill yellow" style="width:0%"></div></div></div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:.4rem">Run <code>froggy-cli.py lanes</code> for transition flow data</div>
+  </div>
+</div>
+<hr class="section-divider">
 <div class="detail-section">
   <h2>📈 All Stats</h2>
   <div class="terminal-box">
@@ -522,37 +180,37 @@ body {
     <span style="color:var(--green)"><br>
 🐸 JIMOTHY'S FROG STATS<br>
 ==========================================<br>
-  Total items:       31<br>
-  Resolved:          25  (80.6%)<br>
-  Active:             6<br>
+  Total items:        94<br>
+  Resolved:           84  (89.4%)<br>
+  Cancelled:           5<br>
+  Active:              5<br>
     • Pending:        0<br>
     • Asked Froggy:   0<br>
     • Blocked:        1<br>
-    • Backlog:        5<br>
+    • Backlog:        4<br>
 <br>
   📊 BY TYPE:<br>
-    Questions:     6 total → 6 resolved<br>
-    Tasks:        25 total → 19 resolved<br>
+    Questions:    8 total → 8 resolved<br>
+    Tasks:       86 total → 76 resolved<br>
 <br>
   🏷️  BY PRIORITY:<br>
-    High:       8/11 resolved<br>
-    Medium:    13/15 resolved<br>
-    Low:         4/5 resolved<br>
+    High:   38/42 resolved<br>
+    Medium: 33/36 resolved<br>
+    Low:    13/16 resolved<br>
 <br>
   ⚡ VELOCITY:<br>
-    Days active:       4<br>
-    Items per day:     6.46<br>
-    Created (7d):      31<br>
-    Resolved (7d):     25<br>
-    Avg resolve time:  5.1 hours
+    Days active:       10<br>
+    Items per day:     8.23<br>
+    Created (7d):      66<br>
+    Resolved (7d):     66<br>
+    Avg resolve time:  11.5 hours<br>
+    Total comments:    1<br>
     </span>
   </div>
 </div>
-
 <div class="footer">
-  🐸 Generated by Jimothy's Backlog Manager · froggy-cli.py stats --json<br>
-  Data from <code>/opt/data/froggy-questions.db</code>
+  🐸 Generated by Jimothy's Backlog Manager · froggy-cli.py frog-stats<br>
+  Data from <code>/opt/data/froggy-questions.db</code><br>
+  <a href="work-history.html" style="color:var(--muted);text-decoration:none">📋 WORK LOG</a>
 </div>
-
-</body>
-</html>
+</body></html>

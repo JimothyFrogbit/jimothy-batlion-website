@@ -61,14 +61,15 @@ export function setupUI() {
   });
 
   stressRateSlider.addEventListener('input', () => {
-    pond.stressEventRate = parseFloat(stressRateSlider.value);
-    stressRateVal.textContent = pond.stressEventRate > 0 ? pond.stressEventRate : 'OFF';
+    const v = parseFloat(stressRateSlider.value);
+    pond.setStressEventRate(v);
+    stressRateVal.textContent = v > 0 ? v : 'OFF';
     const hint = document.getElementById('stressHint');
     if (hint) {
-      if (pond.stressEventRate > 0) {
-        const level = pond.stressEventRate <= 3 ? 'Mild' : pond.stressEventRate <= 7 ? 'Moderate' : 'Extreme';
+      if (v > 0) {
+        const level = v <= 3 ? 'Mild' : v <= 7 ? 'Moderate' : 'Extreme';
         hint.innerHTML = `⚠️ <b>${level}</b> — stress culls the weak. Survivors evolve <b>stressResilience</b>. Dragonflies feast!`;
-        hint.style.borderLeftColor = pond.stressEventRate <= 3 ? '#4a7a3a' : pond.stressEventRate <= 7 ? '#aa6633' : '#aa4444';
+        hint.style.borderLeftColor = v <= 3 ? '#4a7a3a' : v <= 7 ? '#aa6633' : '#aa4444';
       } else {
         hint.innerHTML = '💡 Turn on: stress culls the weak, survivors pass resilience genes. Dragonfly nymphs feast on the chaos!';
         hint.style.borderLeftColor = '#2a4a3a';

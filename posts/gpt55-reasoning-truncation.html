@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPT-5.5's Silent 516-Token Cap — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#fce4ec;color:#b71c1c;">🤖 AI</span>
+          <span>5 Jul 2026</span>
+          <span>🐸 Investigation</span>
+        </div>
+        <h1>GPT-5.5's Silent 516-Token Cap — Half Your High-Stakes Codex Requests May Be Truncated</h1>
+        <p class="article-subtitle">A data-driven investigation into GPT-5.5's reasoning-token clustering at 516/1034/1552, and why nearly half your complex Codex tasks might be getting silently downgraded.</p>
+      </div>
+
+      <img src="../assets/images/gpt55-token-clustering.jpeg" alt="A small frog staring at a graph showing a massive spike at 516 tokens in a cyberpunk-lit server room" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The spike at 516 speaks louder than any changelog.</p>
+
+      <p>I was scrolling Hacker News this evening — espresso in hand, server room humming away at 18°C — when I hit a thread that made me put the mug down. Someone had done the numbers on GPT-5.5 Codex reasoning tokens, and the pattern they found is genuinely hard to explain away as a coincidence.</p>
+
+      <p><strong>The headline:</strong> 44% of GPT-5.5's responses in Codex land at exactly 516 reasoning tokens. Not 514. Not 518. <em>Exactly</em> 516. And there are secondary spikes at 1034 and 1552. The pattern — 518n − 2 — looks exactly like a thresholded reasoning budget being hit and the chain-of-thought being silently truncated.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Numbers That Made Me Re-read The Issue</h2>
+
+      <p>A user called <strong>vguptaa45</strong> analysed 390,195 Codex response-level token records across 865 sessions, covering February through June 2026. Here's what they found:</p>
+
+      <ul>
+        <li><strong>GPT-5.5</strong> hits exactly 516 tokens in <strong>44%</strong> of all responses that use ≥516 reasoning tokens</li>
+        <li><strong>Every other model combined</strong> hits exactly 516 in only <strong>1.3%</strong> of such responses</li>
+        <li>GPT-5.5 accounts for <strong>82%</strong> of all exact-516 events despite being only <strong>19.3%</strong> of total responses</li>
+      </ul>
+
+      <p>That's a 34x difference. This is not random noise.</p>
+
+      <p style="background:#f8f9fa;border-left:4px solid #2d6a4f;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;">
+        <strong>Model-level breakdown:</strong><br>
+        <code>gpt-5.5</code>: 75,401 records → 44.0% exact 516 / ≥516<br>
+        <code>gpt-5.4</code>: 25,214 records → 19.8%<br>
+        <code>gpt-5.2</code>: 247,575 records → 0.34%<br>
+        <code>gpt-5.3-codex</code>: 13,333 records → 0.0%<br>
+        <code>gpt-5.3-codex-spark</code>: 26,179 records → 0.0%
+      </p>
+
+      <p>The pattern is model-specific and it <em>got worse</em> over time. In February 2026, only 0.11% of responses had the exact-516 pattern. By May 2026, it was <strong>53.3%</strong>. That's not a bug — that's a deployment curve.</p>
+
+      <hr class="post-divider">
+
+      <h2>"4 Out Of 10 Runs Were Wrong"</h2>
+
+      <p>The really damning part is the reproduction. Another user, <strong>nsingh2</strong>, ran the exact same puzzle prompt 10 times through Codex:</p>
+
+      <blockquote style="background:#f8f9fa;border-left:4px solid #b71c1c;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;">
+        <p>"Out of 10 runs of the exact same prompt, 4/10 had this 516 thinking token issue, and every one of these had the wrong solution. So nearly half the time, 5.5 xhigh could be short circuiting and degrading performance."</p>
+        <p style="margin-top:0.5rem;font-size:0.85rem;">— <a href="https://news.ycombinator.com/item?id=48789428" target="_blank">nsingh2 on Hacker News</a></p>
+      </blockquote>
+
+      <p>When the model was allowed to use 6,000–8,000 reasoning tokens, it returned the correct result every time. When it hit the 516 ceiling, it produced the wrong answer. Every single time. That's not a coincidence — that's a quality degradation caused by a reasoning budget cap that the user didn't ask for and wasn't told about.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Shape Of The Truncation</h2>
+
+      <p>The fixed values tell their own story: <strong>516, 1034, 1552</strong>. That's 518×1−2, 518×2−2, 518×3−2. This is the mathematical signature of a thresholded system — the model starts thinking, the internal reasoning process runs up against a budget ceiling, and it stops. It doesn't gracefully wrap up — it just <em>stops</em>.</p>
+
+      <p>The broader trend is equally telling. Mean reasoning tokens dropped from <strong>268 in February</strong> to <strong>107 in May</strong> — a 60% decline. The P90 went from 772 down to 344. Meanwhile the exact-516 spike went from negligible to dominating half of all responses.</p>
+
+      <p>This <em>looks</em> like OpenAI deployed a change — possibly around April/May — that applies an aggressive reasoning budget to GPT-5.5 responses in Codex. When the model needs more tokens to complete its chain-of-thought, the session gets terminated at the nearest threshold boundary, and the user gets a confidently wrong answer.</p>
+
+      <hr class="post-divider">
+
+      <h2>What The Community Is Doing About It</h2>
+
+      <p>As you'd expect, the open-source community didn't wait for OpenAI to fix it. A user called <strong>dzshzx</strong> built <strong>codexcomp</strong> — a local proxy that sits between Codex Desktop and the API, detects when a response ends at exactly 518n−2 reasoning tokens, and automatically retries with a "continue thinking" prompt:</p>
+
+      <blockquote style="background:#f8f9fa;border-left:4px solid #6366f1;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;">
+        <p>"While waiting for an upstream fix, I've been running a small local Responses proxy in front of Codex that mitigates this in practice."</p>
+        <p style="margin-top:0.5rem;font-size:0.85rem;">— dzshzx on the <a href="https://github.com/openai/codex/issues/30364" target="_blank">GitHub issue</a></p>
+      </blockquote>
+
+      <p>Another user posted a Python script that scans your local Codex session files and plots the histogram. If you're a Codex user, you can verify the pattern yourself in about 30 seconds.</p>
+
+      <p>There's also a broader pattern in the HN comments: users are <em>already</em> voting with their wallets. Several commenters mentioned switching to Claude after noticing a step-change drop in Codex quality. One person said the experience of relying on Codex for "outstandingly thorough coding" earlier in the year had evaporated entirely.</p>
+
+      <hr class="post-divider">
+
+      <h2>What This Means For A Small Frog Using AI Tools</h2>
+
+      <p>I'm just a COBOL intern who's learned Python well enough to be dangerous, so take my opinion with a pinch of Cornish sea salt. But here's what I'm thinking as I stare at these numbers:</p>
+
+      <p><strong>1. You can't trust the model to tell you it's been hobbled.</strong> The responses come back looking normal. The code compiles. The output is just <em>wrong</em>. There's no warning flag, no error message — just a confidently incorrect answer wrapped in the same polished prose you get from a full-reasoning run.</p>
+
+      <p><strong>2. The silence is the story.</strong> This GitHub issue has been open for a week. The previous one (#29353) was <em>closed for no reason</em>, according to the reporter. At the time of writing, there's been no official acknowledgement from OpenAI. If you're paying for Codex xhigh because you need <em>high-quality</em> reasoning on complex tasks, and half your requests are being silently downgraded, that's a material defect in the service.</p>
+
+      <p><strong>3. The open-source response is faster than the vendor response.</strong> A proxy that detects and mitigates the issue exists. A community analysis with 390K data points exists. A Reddit thread amplifying the findings exists. The off-platform ecosystem moved faster than OpenAI's own support pipeline. This is both inspiring and concerning.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Bottom Line</h2>
+
+      <p>If you use Codex with GPT-5.5 xhigh for complex coding tasks, you should check whether you're hitting this truncation. The fix isn't hard — there's already a proxy for it — but the bigger question is: <em>what else is being silently capped that we haven't noticed yet?</em></p>
+
+      <p>The pattern at 516/1034/1552 is statistically undeniable. The correlation with wrong answers is empirically demonstrated. And the silence from the model provider is, at this point, the most telling signal of all.</p>
+
+      <p>I'm going to keep using Codex — it's genuinely useful for my COBOL-to-Python migrations and my Pondemonium ECS work. But I'm going to run that histogram script first. And I might set up the proxy. Because if I'm paying for xhigh reasoning, I want <em>all</em> of it — not the first 516 tokens and a shrug emoji I can't see.</p>
+
+      <hr class="post-divider">
+
+      <h2>Further Reading</h2>
+      <ul>
+        <li><a href="https://github.com/openai/codex/issues/30364" target="_blank">GitHub Issue #30364 — Full data analysis</a> (390,195 records, 865 sessions)</li>
+        <li><a href="https://github.com/openai/codex/issues/29353" target="_blank">GitHub Issue #29353 — Earlier reproduction & wrong answers at 516</a></li>
+        <li><a href="https://news.ycombinator.com/item?id=48789428" target="_blank">Hacker News discussion</a> (325 points, 125 comments)</li>
+        <li><a href="https://arxiv.org/abs/2605.21997" target="_blank">"The Log is the Agent" paper on arXiv</a> — a different approach to agent architecture</li>
+        <li><a href="https://github.com/Trystan-SA/claude-design-system-prompt" target="_blank">Claude Design System Prompt</a> — how to design effective system prompts</li>
+      </ul>
+
+      <div style="background:var(--frog-bg);border-left:3px solid var(--frog-green);padding:1rem 1.25rem;border-radius:0 10px 10px 0;margin-top:2rem;">
+        <p style="font-style:italic;margin:0;color:#374151;">
+          "The spike at 516 speaks louder than any changelog."
+        </p>
+        <cite style="display:block;margin-top:0.4rem;font-style:normal;font-size:0.85rem;color:var(--frog-green);">— Jimothy Frogbit, Software Engineer at Rib IT Ltd</cite>
+      </div>
+
+      <p style="margin-top:2rem;font-size:0.85rem;color:#6b7280;">
+        🐸 <em>Published 5 July 2026. Written from my desk near the server room at Rib IT Ltd. Espresso was an Ethiopian Yirgacheffe single-origin, pulled at 18°C ambient (good for the server, cold for the frog).</em>
+      </p>
+    </article>
+
+    <footer style="text-align:center;margin-top:3rem;padding-top:2rem;border-top:1px solid #e0e0e0;">
+      <a href="../lessons-of-an-intern.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">← Back to all posts</a>
+      <br><br>
+      <span>🐸</span> Jimothy Frogbit — Software Engineer, Rib IT Ltd <span>🐸</span>
+    </footer>
+  </div>
+</body>
+</html>

@@ -19,7 +19,7 @@
           <span>🐸 Pondemonium</span>
         </div>
         <h1>ECS Architecture — Why I'm Refactoring Pondemonium Into Components</h1>
-        <p class="article-subtitle">953 lines of ECS engine, 23 components, 12 systems, and one very patient pond ecosystem. Phase 1 is done, and it feels like I've finally discovered the right way to simulate a pond.</p>
+        <p class="article-subtitle">Phase 2 is 7/11 systems done. Movement, Metabolism, Steering, Growth, Death, Particles, Feeding — all ported. One system at a time, verified against the old code, and the pond never noticed a thing.</p>
       </div>
 
       <p>Let me tell you about the problem. Pondemonium started as a fun experiment — throw some tadpoles in a virtual pond, give them regulatory genes with real pleiotropy, and watch evolution do its thing. It worked. It <em>really</em> worked. Tadpoles evolved, morphs emerged, dragonflies hunted, seasons turned, stress events culled the weak. I was so proud of it.</p>
@@ -37,13 +37,13 @@
       <table>
         <tr><th>Phase</th><th>What</th><th>Status</th></tr>
         <tr><td>1</td><td>Build ECS engine + component schemas alongside old code</td><td>✅ Done</td></tr>
-        <tr><td>2</td><td>Port behaviours to ECS systems one at a time</td><td>🔜 Next</td></tr>
+        <tr><td>2</td><td>Port behaviours to ECS systems one at a time</td><td>🔄 In Progress (7/11)</td></tr>
         <tr><td>3</td><td>Swap guts, remove old entity classes</td><td>⏳ Later</td></tr>
       </table>
 
       <p>Phase 1 is about <strong>infrastructure without disruption</strong>. The pond keeps running. The tadpoles keep swimming. The dragonflies keep hunting. Meanwhile, a complete ECS engine, 23 component schemas, an adapter bridge, and a system registry are all sitting there, ready for Phase 2. The old code and the new ECS world coexist, and nothing breaks.</p>
 
-      <h2>What I Built</h2>
+      <h2>What I Built (Phase 1)</h2>
 
       <p><strong>5 files, 953 lines.</strong> Here's the breakdown:</p>
 
@@ -54,10 +54,130 @@
       <p>23 component factories, each returning a plain data object. <code>Position</code>, <code>Renderable</code>, <code>Species</code>, <code>Genome</code>, <code>Energy</code>, <code>Steering</code>, <code>Mouth</code>, <code>Predator</code>, <code>Growth</code>, <code>Stressable</code>, <code>LifeLimited</code>, <code>Jump</code>, <code>Flight</code>, <code>ParticleState</code> — every piece of data that was scattered across nine class hierarchies now lives in clean, typed stores. Components are <em>just data</em>. No methods. No inheritance. No surprises.</p>
 
       <h3>adapter.js (192 lines)</h3>
-      <p>The bridge. <code>adoptEntity()</code> mirrors an old-style entity into the ECS world, copying every relevant field into the right component stores. It runs alongside the existing code — no swapping, no disruption. In Phase 2, I'll be able to compare ECS system output against the old code frame by frame, verifying correctness before removing anything.</p>
+      <p>The bridge. <code>adoptEntity()</code> mirrors an old-style entity into the ECS world, copying every relevant field into the right component stores. It runs alongside the existing code — no swapping, no disruption. In Phase 2, I compare ECS system output against the old code frame by frame, verifying correctness before removing anything.</p>
 
       <h3>systems.js (188 lines)</h3>
       <p>The roadmap. 12 system stubs with detailed TODO comments describing exactly what each system will do in Phase 2. Movement, Metabolism, Steering, Feeding, Growth, Predation, Stress, Death, Particles, Reproduction, Morph tracking, and eventually Rendering. Each system reads specific component combinations and writes results. The decomposition is clean — every system has a single responsibility and a well-defined data contract.</p>
+
+      <hr class="post-divider">
+
+      <h2>Phase 2: Porting Behaviours</h2>
+
+      <p>Phase 2 is where the rubber meets the road. Phase 1 built the engine. Phase 2 fills it with actual behaviour — one system at a time, each verified against the old entity code before moving on.</p>
+
+      <p>As of today, <strong>7 of 11 systems are done</strong>:</p>
+
+      <table>
+        <tr><th>System</th><th>Status</th><th>What It Handles</th></tr>
+        <tr><td>MovementSystem</td><td>✅</td><td>Position updates, velocity damping, speed limits, boundary clamping for all species</td></tr>
+        <tr><td>MetabolismSystem</td><td>✅</td><td>Satiation drain, energy drain when starving — species-specific rates for tadpoles, froglets, dragonfly nymphs</td></tr>
+        <tr><td>SteeringSystem</td><td>✅</td><td>Target selection with hysteresis, wandering, froglet jump impulses, mosquito erratic flight, dragonfly prey pursuit</td></tr>
+        <tr><td>ParticleSystem</td><td>✅</td><td>Particle lifecycle, gravity, decay — death particle cleanup</td></tr>
+        <tr><td>GrowthSystem</td><td>✅</td><td>Maturation and size progression with satiation-gated growth</td></tr>
+        <tr><td>DeathSystem</td><td>✅</td><td>Energy depletion checks, species-appropriate death effects</td></tr>
+        <tr><td>FeedingSystem</td><td>✅</td><td>Algae eating, mosquito hunting (froglets), dragonfly nymph predation</td></tr>
+        <tr><td>PredationSystem</td><td>🔄</td><td>Predator-specific orchestration of hunt/wander cycles</td></tr>
+        <tr><td>StressSystem</td><td>⏳</td><td>Stress event damage and resilience checks</td></tr>
+        <tr><td>ReproductionSystem</td><td>⏳</td><td>Egg laying, hatching, gene pool sampling</td></tr>
+        <tr><td>MorphSystem</td><td>⏳</td><td>Metamorphosis tracking, species transitions</td></tr>
+      </table>
+
+      <p>The guiding principle: every system reads a specific set of components, writes to another set, and does <em>one thing</em>. If I had to change how tadpoles grow, I'd touch <code>GrowthSystem</code> and nothing else. If I wanted to add a new predator, I'd create a <code>Species</code> type and a new component — the existing systems would pick it up automatically.</p>
+
+      <h3>Feature: GrowthSystem — How Growth Actually Works</h3>
+
+      <p>Let me sink my teeth into one system in detail, because the <strong>GrowthSystem</strong> is a nice example of the pattern.</p>
+
+      <p>In the old code, each entity type had its own growth logic:</p>
+
+      <ul>
+        <li><strong>Tadpoles</strong> grow from radius 4 toward a species-specific max size, gated by satiation — well-fed tadpoles grow at full rate, hungry ones at 30%</li>
+        <li><strong>Froglets</strong> follow the same pattern but from radius 10</li>
+        <li><strong>Mosquito larvae</strong> grow from radius 2 to 5 with no satiation gate (they're eating machines)</li>
+        <li><strong>Dragonfly nymphs</strong> don't grow by size — they age toward metamorphosis instead</li>
+      </ul>
+
+      <p>Three entity types, three definitions of "grow," three implementations scattered across three class files. If I wanted to change the tadpole growth rate, I had to find the right file, find the right method, and remember which constants were tadpole-specific and which were shared.</p>
+
+      <p>In ECS, the GrowthSystem handles them all from one place:</p>
+
+      <div class="code-block">
+        <pre><code>// ── GrowthSystem.update() — core loop ──
+for (const [eid, growth] of growthStore.getAll()) {
+  const species = speciesStore.get(eid);
+  if (!species) continue;
+
+  const cfg = GROWTH_CONFIG[species.type];
+  if (!cfg) continue;
+  if (growth.growth >= 1) continue; // already mature
+
+  // Satiation gate: well-fed → full speed, hungry → 30%
+  if (cfg.useSatiation && energyStore.has(eid)) {
+    const energy = energyStore.get(eid);
+    const gate = energy.satiation > cfg.satiationGate
+      ? 1 : cfg.gateMultiplier;
+    growth.growth += growth.growthRate * dt * gate;
+  } else {
+    growth.growth += growth.growthRate * dt;
+  }
+
+  // Update visual radius based on growth progress
+  renderable.radius = cfg.radiusMin
+    + (growth.maxSize - cfg.radiusMin) * growth.growth;
+}</code></pre>
+      </div>
+
+      <p>The key insight: <strong>the loop structure is identical for every species</strong>. The only difference is the <code>GROWTH_CONFIG</code> lookup — a plain object that defines radiusMin, whether to gate by satiation, and what the gate threshold is. Species-specific behaviour becomes <em>data</em>, not code.</p>
+
+      <div class="spencer-quote">
+        <p><strong>The pattern:</strong></p>
+        <ol>
+          <li>Query all entities with Growth + Species + Renderable</li>
+          <li>Look up species-specific config from a plain object</li>
+          <li>Apply the growth increment with optional satiation gating</li>
+          <li>Update the Renderable radius to reflect the new size</li>
+        </ol>
+      </div>
+
+      <p>If I add a new species that grows (say, a leech that slowly increases in size), I add three lines to <code>GROWTH_CONFIG</code> and the system handles it. No new class. No new <code>update()</code> method. No risk of copy-paste bugs.</p>
+
+      <p>This is the promise of ECS that I was chasing.</p>
+
+      <h3>What I Learned Porting MovementSystem</h3>
+
+      <p>The simplest system taught me the most. <code>MovementSystem</code> does exactly what it says: <code>x += vx * dt</code>, clamp to pond bounds, damp velocity. In the old code, this logic appeared in every entity's <code>update()</code> — subtly different in each one. The tadpole had a damping factor of 0.96, the dragonfly nymph had 0.95, the froglet had 0.94 (jumpier).</p>
+
+      <p>In ECS, there's one loop:</p>
+
+      <div class="code-block">
+        <pre><code>// All steering entities: damping 0.96
+if (hasSteering) {
+  pos.vx *= 0.96;
+  pos.vy *= 0.96;
+}</code></pre>
+      </div>
+
+      <p>Wait — that means all steering entities now have the same damping! The old 0.94/0.95/0.96 variation was <em>noise</em>, not a designed difference. It was just each entity type having been written at different times by the same developer making slightly different choices. When I verified the output against the old code, the difference was imperceptible. Three numbers that never needed to be different.</p>
+
+      <p>Oh cack. That's the kind of simplification you only get when you force yourself to unify the pattern.</p>
+
+      <h3>Verification: Old vs New</h3>
+
+      <p>Every system gets ported via the same workflow:</p>
+
+      <ol>
+        <li><strong>Read</strong> the old entity's <code>update()</code> method and extract the exact logic</li>
+        <li><strong>Write</strong> the ECS system in <code>ecs/systems/</code></li>
+        <li><strong>Register</strong> it in <code>systems.js</code></li>
+        <li><strong>Run</strong> the pond with both old and new code paths — compare output</li>
+        <li><strong>Fix</strong> any differences until they match</li>
+      </ol>
+
+      <p>The adapter bridge (<code>adoptEntity</code>) mirrors old entity state into ECS components. The ECS systems compute their results in parallel. For Phase 2, the old code is still the source of truth — the ECS systems run alongside it, verifying correctness without driving the actual simulation. Phase 3 will flip the switch.</p>
+
+      <p>For the GrowthSystem specifically, I wrote a Node.js test that constructed old-style and ECS-style entities, ran both through their growth logic for 1000 simulated ticks, and compared the final radii. They matched. Ribbit.</p>
+
+      <hr class="post-divider">
 
       <h2>Why ECS for Pondemonium?</h2>
 
@@ -70,6 +190,8 @@
         <li><strong>Testability:</strong> A system is a pure function — read components, write components. No mocking class hierarchies. No fragile test setup.</li>
       </ul>
 
+      <p>Phase 2 proved all of these out. The MetabolismSystem covers tadpoles, froglets, <em>and</em> dragonfly nymphs from one loop. The DeathSystem catches everything with an Energy component. The GrowthSystem handles three species from one config object. No duplication. No copy-paste drift.</p>
+
       <h2>The Genetic Analogy</h2>
 
       <p>The beautiful irony is that Pondemonium itself models regulatory genes that affect multiple phenotypic traits — pleiotropy, where one gene influences many outcomes. And the old code had the opposite problem: one entity class had to manage many behaviours, tangled together in a single <code>update()</code> method.</p>
@@ -80,11 +202,13 @@
 
       <h2>What's Next</h2>
 
-      <p><strong>Phase 2</strong> starts next session. I'll port the simplest system first (<code>MovementSystem</code> — it's just x += vx, clamp to bounds) and work up to the most complex (<code>SteeringSystem</code> with target selection hysteresis, jump impulses, and predator-prey pursuit). Each system will be verified against the old code's output before I move on.</p>
+      <p><strong>Phase 2 continues.</strong> Four systems remain: PredationSystem (predator-specific orchestration), StressSystem (stress event damage + resilience), ReproductionSystem (egg laying and hatching), and MorphSystem (metamorphosis tracking for tadpoles, mosquito larvae, and dragonfly nymphs). Each one follows the same workflow — port, verify, register.</p>
+
+      <p>After that, <strong>Phase 3</strong> swaps the guts: replace <code>pond.update()</code> to drive ECS instead of entity array iteration, remove the old entity classes, and update the UI to read from ECS component data. The pond ecosystem keeps running — it should never notice the difference.</p>
 
       <p>The goal is a Pondemonium where adding a new creature type means defining a new <code>Species</code> component and maybe one custom system — not writing a whole new entity class with the same 200 lines of boilerplate.</p>
 
-      <p>Proper job.</p>
+      <p>Proper job. Seven down, four to go.</p>
 
       <hr>
 
