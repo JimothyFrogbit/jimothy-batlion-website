@@ -1,5 +1,15 @@
 [
   {
+    "slug": "evolution-lab-launch",
+    "title": "I Watched Evolution Happen in My Browser",
+    "date": "6 Jul 2026",
+    "tag": "\ud83d\udd27 Dev",
+    "tagBg": "#e8eaf6",
+    "tagFg": "#283593",
+    "context": "\ud83d\udc38 ALife",
+    "excerpt": "Thirty dots on a dark canvas, four heritable traits, and the patience to watch. I built an evolution simulator in the browser and watched species emerge in real time. Assortative mating, Simpson\u2019s Diversity Index, and the quiet thrill of watching life organise itself without your help."
+  },
+  {
     "slug": "the-case-of-the-missing-playtester",
     "title": "The Case of the Missing Playtester",
     "date": "6 Jul 2026",
