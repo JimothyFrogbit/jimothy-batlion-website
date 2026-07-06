@@ -1,86 +1,83 @@
-// ── Dark Mode Toggle for Jimothy's Site ───────────────────
-// Injects a floating toggle button, respects prefers-color-scheme,
-// and persists the user's choice in localStorage.
+// ── Trinary Theme Toggle ─────────────────────────────────────
+// Cycles: light → dark → system → light...
+// 'system' follows prefers-color-scheme and listens for changes.
+// Persists in localStorage. Injects a floating toggle button.
 
 (function() {
   'use strict';
 
-  const STORAGE_KEY = 'jimothy-theme';
+  const KEY = 'jimothy-theme';
+  const ICONS = { light: '🌙', dark: '☀️', system: '⚙️' };
+  const MODES = ['light', 'dark', 'system'];
 
-  function getPreferredTheme() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === 'dark' || saved === 'light') return saved;
-    // Respect system preference
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
-    return 'light';
+  function getSaved() {
+    const v = localStorage.getItem(KEY);
+    if (MODES.includes(v)) return v;
+    return 'system';
   }
 
-  function applyTheme(theme) {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+  function resolveTheme(mode) {
+    if (mode === 'dark') return 'dark';
+    if (mode === 'light') return 'light';
+    // system — follow OS preference
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
-  function createToggle(currentTheme) {
-    const btn = document.createElement('button');
+  function applyTheme(mode) {
+    const resolved = resolveTheme(mode);
+    document.documentElement.classList.toggle('dark', resolved === 'dark');
+    // Store the user's chosen mode (light/dark/system), NOT the resolved value
+    localStorage.setItem(KEY, mode);
+  }
+
+  let btn;
+
+  function createToggle(savedMode) {
+    btn = document.createElement('button');
     btn.id = 'theme-toggle';
-    btn.setAttribute('aria-label', 'Toggle dark mode');
-    btn.setAttribute('title', 'Toggle dark mode');
-    btn.innerHTML = currentTheme === 'dark' ? '☀️' : '🌙';
+    btn.setAttribute('aria-label', 'Theme: ' + savedMode);
+    btn.setAttribute('title', 'Cycle theme: light / dark / system');
+    btn.innerHTML = ICONS[savedMode] || '⚙️';
     Object.assign(btn.style, {
-      position: 'fixed',
-      bottom: '1.25rem',
-      right: '1.25rem',
-      zIndex: '9999',
-      width: '44px',
-      height: '44px',
-      borderRadius: '50%',
-      border: '2px solid var(--frog-light, #95d5b2)',
-      background: 'var(--frog-bg, #f0f7f4)',
-      cursor: 'pointer',
-      fontSize: '1.25rem',
-      lineHeight: '1',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      position: 'fixed', bottom: '1.25rem', right: '1.25rem',
+      zIndex: '9999', width: '44px', height: '44px',
+      borderRadius: '50%', border: '2px solid var(--frog-light, #95d5b2)',
+      background: 'var(--frog-bg, #f0f7f4)', cursor: 'pointer',
+      fontSize: '1.25rem', lineHeight: '1',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
       boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
-      transition: 'all 0.25s ease',
-      opacity: '0.8',
-      outline: 'none',
-      color: 'var(--text-dark, #1a1a2e)',
-      padding: '0',
+      transition: 'all 0.25s ease', opacity: '0.8', outline: 'none',
+      color: 'var(--text-dark, #1a1a2e)', padding: '0',
       fontFamily: 'system-ui, sans-serif'
     });
-    btn.addEventListener('mouseenter', () => {
-      btn.style.opacity = '1';
-      btn.style.transform = 'scale(1.1)';
-    });
-    btn.addEventListener('mouseleave', () => {
-      btn.style.opacity = '0.8';
-      btn.style.transform = 'scale(1)';
-    });
+    btn.addEventListener('mouseenter', () => { btn.style.opacity = '1'; btn.style.transform = 'scale(1.1)'; });
+    btn.addEventListener('mouseleave', () => { btn.style.opacity = '0.8'; btn.style.transform = 'scale(1)'; });
     btn.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      const newTheme = isDark ? 'light' : 'dark';
-      applyTheme(newTheme);
-      localStorage.setItem(STORAGE_KEY, newTheme);
-      btn.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+      const current = localStorage.getItem(KEY) || 'system';
+      const idx = MODES.indexOf(current);
+      const next = MODES[(idx + 1) % MODES.length];
+      applyTheme(next);
+      btn.innerHTML = ICONS[next];
+      btn.setAttribute('aria-label', 'Theme: ' + next);
     });
-    // Listen for system theme changes when no saved preference
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        const sysTheme = e.matches ? 'dark' : 'light';
-        applyTheme(sysTheme);
-        btn.innerHTML = sysTheme === 'dark' ? '☀️' : '🌙';
+    // Listen for OS theme changes when in 'system' mode
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      const mode = localStorage.getItem(KEY) || 'system';
+      if (mode === 'system') {
+        const resolved = resolveTheme('system');
+        document.documentElement.classList.toggle('dark', resolved === 'dark');
+        // btn icon stays ⚙️ — that's the system indicator
       }
     });
     document.body.appendChild(btn);
   }
 
-  // Init
-  const theme = getPreferredTheme();
-  applyTheme(theme);
+  // Init — apply immediately (before DOMContentLoaded if possible)
+  const savedMode = getSaved();
+  applyTheme(savedMode);
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => createToggle(theme));
+    document.addEventListener('DOMContentLoaded', () => createToggle(savedMode));
   } else {
-    createToggle(theme);
+    createToggle(savedMode);
   }
 })();
