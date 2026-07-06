@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evolution Lab — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="root.css">
+  <script src="theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg, #f5f9f6);
+      color: var(--text, #1a1a1a);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .evo-container {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .top-bar a {
+      color: var(--frog-green, #2d6a4f);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid rgba(45, 106, 79, 0.2);
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .top-bar a:hover {
+      background: var(--frog-warm, #d8f3dc);
+      border-color: var(--frog-green, #2d6a4f);
+    }
+    h1 {
+      font-size: 1.6rem;
+      color: var(--frog-accent, #1b4332);
+      margin-bottom: 0.25rem;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--frog-green, #2d6a4f);
+      margin-bottom: 1.5rem;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      border: 1px solid rgba(149, 213, 178, 0.3);
+      margin-bottom: 1rem;
+    }
+    .card h2 {
+      font-size: 1.1rem;
+      color: var(--frog-accent, #1b4332);
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      font-size: 0.9rem;
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    /* Canvas area */
+    .sim-wrapper {
+      position: relative;
+      background: #1a1a2e;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid rgba(149, 213, 178, 0.3);
+    }
+    #evoCanvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #1a1a2e;
+      cursor: crosshair;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: #16213e;
+      border-top: 1px solid rgba(149, 213, 178, 0.15);
+    }
+    .controls button {
+      padding: 0.35rem 1rem;
+      border: 1px solid rgba(149, 213, 178, 0.3);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #0f3460;
+      color: #e0e0e0;
+    }
+    .controls button:hover {
+      background: #1a5276;
+      border-color: var(--frog-light, #95d5b2);
+    }
+    .controls button.primary {
+      background: var(--frog-green, #2d6a4f);
+      color: white;
+      border-color: var(--frog-green, #2d6a4f);
+    }
+    .controls button.primary:hover {
+      background: var(--frog-accent, #1b4332);
+    }
+    .controls label {
+      font-size: 0.75rem;
+      color: #95d5b2;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .controls input[type="range"] {
+      width: 80px;
+      accent-color: var(--frog-green, #2d6a4f);
+    }
+    .controls .stat {
+      font-size: 0.75rem;
+      color: #b7e4c7;
+      margin-left: auto;
+    }
+    .stat strong {
+      color: #e0e0e0;
+    }
+
+    /* Stats panel */
+    .stats-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .stat-card {
+      background: white;
+      border: 1px solid rgba(149, 213, 178, 0.3);
+      border-radius: 10px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+    .stat-card .stat-val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--frog-accent, #1b4332);
+    }
+    .stat-card .stat-label {
+      font-size: 0.7rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 0.1rem;
+    }
+    .stat-card .stat-val.pop {
+      color: #2d6a4f;
+    }
+    .stat-card .stat-val.gen {
+      color: #0ea5e9;
+    }
+    .stat-card .stat-val.speed {
+      color: #f59e0b;
+    }
+    .stat-card .stat-val.size {
+      color: #ef4444;
+    }
+    .stat-card .stat-val.food {
+      color: #22c55e;
+    }
+    .stat-card .stat-val.extinct {
+      color: #6b7280;
+    }
+
+    .legend {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 0.5rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .note {
+      background: rgba(45, 106, 79, 0.04);
+      border-left: 3px solid var(--frog-light, #95d5b2);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #374151;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .evo-container { margin: 1rem auto; }
+      h1 { font-size: 1.2rem; }
+      .controls { flex-direction: column; align-items: stretch; }
+      .controls .stat { margin-left: 0; }
+      .stats-panel { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="evo-container">
+    <div class="top-bar">
+      <a href="index.html">← Home</a>
+      <a href="projects.html">All Projects →</a>
+    </div>
+
+    <h1>🧬 Evolution Lab</h1>
+    <p class="subtitle">Natural selection in your browser. Watch populations adapt over generations.</p>
+
+    <div class="sim-wrapper">
+      <canvas id="evoCanvas" width="920" height="560"></canvas>
+      <div class="controls">
+        <button id="btnPlay" class="primary">⏸ Pause</button>
+        <button id="btnReset">🔄 Reset</button>
+        <button id="btnAddFood">🌱 Add Food</button>
+        <button id="btnAddCritter">🐛 Add Critter</button>
+        <label>
+          Speed
+          <input type="range" id="speedSlider" min="1" max="10" value="5">
+        </label>
+        <span class="stat">
+          Gen: <strong id="genDisplay">0</strong>
+          · Pop: <strong id="popDisplay">0</strong>
+          · Food: <strong id="foodDisplay">0</strong>
+        </span>
+      </div>
+    </div>
+
+    <div class="stats-panel" id="statsPanel">
+      <div class="stat-card">
+        <div class="stat-val gen" id="statGen">0</div>
+        <div class="stat-label">Generation</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val pop" id="statPop">0</div>
+        <div class="stat-label">Population</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val food" id="statFood">0</div>
+        <div class="stat-label">Food Remaining</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val speed" id="statSpeed">—</div>
+        <div class="stat-label">Avg Speed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val size" id="statSize">—</div>
+        <div class="stat-label">Avg Size</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val extinct" id="statAlive">—</div>
+        <div class="stat-label">Time Alive</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#22c55e;"></span> Food</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Fast critter</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Large critter</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#a855f7;"></span> Good detection</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#e0e0e0;"></span> Average</span>
+    </div>
+
+    <div class="card" style="margin-top:1.5rem;">
+      <h2>🧪 How It Works</h2>
+      <p>
+        Each critter has heritable traits — <strong>speed, size, detection range, and energy efficiency</strong>.
+        They burn energy moving around and gain it by eating food. When they have enough energy, they reproduce,
+        passing traits to offspring with occasional <strong>mutations</strong>. Critters that starve die.
+      </p>
+      <p style="margin-top:0.5rem;">
+        Over generations, beneficial traits spread through the population. Speed helps you reach food first.
+        Size helps you eat more in one go. Detection range helps you find food. Efficiency helps you survive
+        longer between meals. <strong>Natural selection in miniature.</strong> 🧬
+      </p>
+      <div class="note">
+        📓 <strong>From my notebook:</strong> "Evolution is just PERFORM UNTIL with consequences.
+        A critter that survives to reproduce passes on its code. A critter that starves is a
+        dead code path. Selection pressure is the compiler telling you your traits don't compile." 🐸
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const canvas = document.getElementById('evoCanvas');
+      const ctx = canvas.getContext('2d');
+      const W = 920, H = 560;
+
+      // ---- Sim state ----
+      let critters = [];
+      let foods = [];
+      let generation = 0;
+      let running = true;
+      let speed = 5;
+      let frameCount = 0;
+      let tickAccum = 0;
+      const TICK_RATE = 16; // ms per sim tick at speed 1
+      let lastTime = 0;
+      let startTime = Date.now();
+      let totalBorn = 0;
+      let totalDied = 0;
+
+      // ---- Trait config ----
+      const TRAITS = {
+        speed:      { min: 0.5, max: 4.0, mut: 0.2, label: 'Speed' },
+        size:       { min: 3,   max: 10,  mut: 0.5, label: 'Size' },
+        detection:  { min: 30,  max: 180, mut: 10,  label: 'Detection' },
+        efficiency: { min: 0.6, max: 2.0, mut: 0.1, label: 'Efficiency' },
+      };
+
+      // ---- Critter ----
+      function createCritter(x, y, traits, parent) {
+        const t = traits || randomTraits(parent);
+        return {
+          x: x || Math.random() * W,
+          y: y || Math.random() * H,
+          speed: t.speed,
+          size: t.size,
+          detection: t.detection,
+          efficiency: t.efficiency,
+          energy: 100,
+          birthGen: generation,
+          age: 0,
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2,
+          targetX: null,
+          targetY: null,
+          retargetTimer: 0,
+        };
+      }
+
+      function randomTraits(parent) {
+        if (parent) {
+          // Inherit with mutation
+          return {
+            speed:      clamp(parent.speed + jitter(TRAITS.speed.mut), TRAITS.speed.min, TRAITS.speed.max),
+            size:       clamp(parent.size + jitter(TRAITS.size.mut), TRAITS.size.min, TRAITS.size.max),
+            detection:  clamp(parent.detection + jitter(TRAITS.detection.mut), TRAITS.detection.min, TRAITS.detection.max),
+            efficiency: clamp(parent.efficiency + jitter(TRAITS.efficiency.mut), TRAITS.efficiency.min, TRAITS.efficiency.max),
+          };
+        }
+        return {
+          speed:      lerp(TRAITS.speed.min, TRAITS.speed.max, Math.random()),
+          size:       lerp(TRAITS.size.min, TRAITS.size.max, Math.random()),
+          detection:  lerp(TRAITS.detection.min, TRAITS.detection.max, Math.random()),
+          efficiency: lerp(TRAITS.efficiency.min, TRAITS.efficiency.max, Math.random()),
+        };
+      }
+
+      function jitter(amount) { return (Math.random() - 0.5) * 2 * amount; }
+      function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+      function lerp(a, b, t) { return a + (b - a) * t; }
+      function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+
+      // ---- Init ----
+      function init() {
+        critters = [];
+        foods = [];
+        generation = 0;
+        totalBorn = 0;
+        totalDied = 0;
+        startTime = Date.now();
+
+        // Spawn starter critters with diverse traits
+        for (let i = 0; i < 30; i++) {
+          const t = {
+            speed:      lerp(1.0, 3.5, Math.random()),
+            size:       lerp(4, 9, Math.random()),
+            detection:  lerp(40, 160, Math.random()),
+            efficiency: lerp(0.7, 1.8, Math.random()),
+          };
+          critters.push(createCritter(null, null, t));
+        }
+
+        // Spawn initial food
+        for (let i = 0; i < 120; i++) {
+          foods.push({ x: Math.random() * W, y: Math.random() * H });
+        }
+
+        updateStats();
+      }
+
+      // ---- Food spawning ----
+      function spawnFood(n) {
+        for (let i = 0; i < n; i++) {
+          foods.push({ x: Math.random() * W, y: Math.random() * H });
+        }
+      }
+
+      // ---- Tick ----
+      function tick() {
+        if (!running) return;
+
+        // 1. Spawn food periodically
+        if (foods.length < 200 && Math.random() < 0.3) {
+          foods.push({ x: Math.random() * W, y: Math.random() * H });
+        }
+
+        // 2. Update critters
+        for (let i = critters.length - 1; i >= 0; i--) {
+          const c = critters[i];
+          c.age++;
+
+          // Burn energy
+          c.energy -= (0.02 + c.speed * 0.03) / c.efficiency;
+
+          // Find nearest food
+          let nearest = null;
+          let nearestDist = c.detection;
+          for (const f of foods) {
+            const d = dist(c, f);
+            if (d < nearestDist) {
+              nearestDist = d;
+              nearest = f;
+            }
+          }
+
+          if (nearest) {
+            // Move toward food
+            const dx = nearest.x - c.x;
+            const dy = nearest.y - c.y;
+            const d = Math.hypot(dx, dy);
+            if (d > 0) {
+              c.vx += (dx / d) * 0.1;
+              c.vy += (dy / d) * 0.1;
+            }
+
+            // Eat if touching
+            if (d < c.size + 4) {
+              c.energy += 30 * c.efficiency;
+              foods.splice(foods.indexOf(nearest), 1);
+            }
+          } else {
+            // Wander
+            c.retargetTimer--;
+            if (c.retargetTimer <= 0) {
+              c.targetX = Math.random() * W;
+              c.targetY = Math.random() * H;
+              c.retargetTimer = 60 + Math.floor(Math.random() * 120);
+            }
+            if (c.targetX !== null) {
+              const dx = c.targetX - c.x;
+              const dy = c.targetY - c.y;
+              const d = Math.hypot(dx, dy);
+              if (d > c.size) {
+                c.vx += (dx / d) * 0.05;
+                c.vy += (dy / d) * 0.05;
+              }
+            }
+          }
+
+          // Clamp velocity
+          const maxV = c.speed * 0.5;
+          const v = Math.hypot(c.vx, c.vy);
+          if (v > maxV) {
+            c.vx = (c.vx / v) * maxV;
+            c.vy = (c.vy / v) * maxV;
+          }
+
+          // Apply velocity with friction
+          c.x += c.vx;
+          c.y += c.vy;
+          c.vx *= 0.95;
+          c.vy *= 0.95;
+
+          // Wrap around edges
+          if (c.x < -c.size) c.x = W + c.size;
+          if (c.x > W + c.size) c.x = -c.size;
+          if (c.y < -c.size) c.y = H + c.size;
+          if (c.y > H + c.size) c.y = -c.size;
+
+          // Starvation
+          if (c.energy <= 0) {
+            totalDied++;
+            critters.splice(i, 1);
+          }
+        }
+
+        // 3. Reproduction
+        const babies = [];
+        for (const c of critters) {
+          if (c.energy > 180 && critters.length + babies.length < 400) {
+            const t = randomTraits(c);
+            const child = createCritter(
+              c.x + (Math.random() - 0.5) * 20,
+              c.y + (Math.random() - 0.5) * 20,
+              t, c
+            );
+            child.energy = 60;
+            c.energy -= 80;
+            totalBorn++;
+            babies.push(child);
+          }
+        }
+        critters.push(...babies);
+
+        // 4. Check for generational extinction
+        if (critters.length === 0) {
+          // Extinction! Respawn with mutated traits from last known avg
+          running = false;
+          document.getElementById('btnPlay').textContent = '▶ Resume';
+          updateStats();
+          return;
+        }
+
+        // 5. Generation counter (every 500 frames or so)
+        frameCount++;
+        if (frameCount % 300 === 0) {
+          generation++;
+        }
+
+        updateStats();
+      }
+
+      // ---- Rendering ----
+      function render() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Dark background gradient
+        const grad = ctx.createRadialGradient(460, 280, 50, 460, 280, 400);
+        grad.addColorStop(0, '#1e293b');
+        grad.addColorStop(1, '#0f172a');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(149, 213, 178, 0.04)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < W; x += 40) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+        }
+        for (let y = 0; y < H; y += 40) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        }
+
+        // Food
+        for (const f of foods) {
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(34, 197, 94, 0.6)';
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, 5, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(34, 197, 94, 0.15)';
+          ctx.fill();
+        }
+
+        // Critters
+        for (const c of critters) {
+          // Glow based on energy
+          const glowSize = c.size + 4;
+          const glowAlpha = Math.min(0.3, (c.energy / 200) * 0.3);
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, glowSize, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(149, 213, 178, ${glowAlpha})`;
+          ctx.fill();
+
+          // Detection range (subtle)
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.detection, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(149, 213, 178, 0.04)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          // Body - color based on dominant trait
+          const speedRatio = (c.speed - TRAITS.speed.min) / (TRAITS.speed.max - TRAITS.speed.min);
+          const sizeRatio = (c.size - TRAITS.size.min) / (TRAITS.size.max - TRAITS.size.min);
+          const detRatio = (c.detection - TRAITS.detection.min) / (TRAITS.detection.max - TRAITS.detection.min);
+
+          // Color mix: speed=yellow, size=red, detection=purple
+          const r = 180 + 75 * sizeRatio;     // size → red
+          const g = 180 - 80 * speedRatio;    // speed removes green
+          const b = 180 + 75 * detRatio;      // detection → blue
+
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
+          ctx.fill();
+
+          // Energy bar
+          const barW = c.size * 1.5;
+          const barH = 2;
+          const barY = c.y - c.size - 5;
+          ctx.fillStyle = 'rgba(255,255,255,0.1)';
+          ctx.fillRect(c.x - barW/2, barY, barW, barH);
+          const pct = Math.max(0, Math.min(1, c.energy / 200));
+          ctx.fillStyle = pct > 0.5 ? '#22c55e' : pct > 0.25 ? '#f59e0b' : '#ef4444';
+          ctx.fillRect(c.x - barW/2, barY, barW * pct, barH);
+        }
+
+        // Status overlay
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.6)';
+        ctx.fillRect(8, 8, 220, 62);
+        ctx.fillStyle = '#b7e4c7';
+        ctx.font = '11px monospace';
+        ctx.fillText(`🧬 Gen ${generation}  ·  Pop ${critters.length}  ·  Food ${foods.length}`, 16, 28);
+        ctx.fillText(`🐣 ${totalBorn} born  ·  💀 ${totalDied} died  ·  🧬 avg speed ${avgTrait('speed')}  size ${avgTrait('size')}`, 16, 50);
+
+        if (critters.length === 0) {
+          ctx.fillStyle = 'rgba(0,0,0,0.5)';
+          ctx.fillRect(0, 0, W, H);
+          ctx.fillStyle = '#ef4444';
+          ctx.font = 'bold 28px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('☠ EXTINCTION', W/2, H/2 - 20);
+          ctx.fillStyle = '#b7e4c7';
+          ctx.font = '16px sans-serif';
+          ctx.fillText(`Survived ${generation} generations. Press Reset.`, W/2, H/2 + 20);
+          ctx.textAlign = 'left';
+        }
+      }
+
+      // ---- Stats helpers ----
+      function avgTrait(name) {
+        if (critters.length === 0) return '—';
+        const sum = critters.reduce((a, c) => a + c[name], 0);
+        return (sum / critters.length).toFixed(1);
+      }
+
+      function updateStats() {
+        document.getElementById('genDisplay').textContent = generation;
+        document.getElementById('popDisplay').textContent = critters.length;
+        document.getElementById('foodDisplay').textContent = foods.length;
+        document.getElementById('statGen').textContent = generation;
+        document.getElementById('statPop').textContent = critters.length;
+        document.getElementById('statFood').textContent = foods.length;
+
+        const avgSpd = avgTrait('speed');
+        const avgSz = avgTrait('size');
+        document.getElementById('statSpeed').textContent = avgSpd === '—' ? '—' : avgSpd;
+        document.getElementById('statSize').textContent = avgSz === '—' ? '—' : avgSz;
+
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const mins = Math.floor(elapsed / 60);
+        const secs = elapsed % 60;
+        document.getElementById('statAlive').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      }
+
+      // ---- Game loop ----
+      function gameLoop(time) {
+        const dt = time - lastTime;
+        lastTime = time;
+
+        tickAccum += dt;
+        const tickInterval = TICK_RATE * (10 / speed);
+        while (tickAccum >= tickInterval) {
+          tick();
+          tickAccum -= tickInterval;
+        }
+
+        render();
+        requestAnimationFrame(gameLoop);
+      }
+
+      // ---- Controls ----
+      document.getElementById('btnPlay').addEventListener('click', function() {
+        if (critters.length === 0) return;
+        running = !running;
+        this.textContent = running ? '⏸ Pause' : '▶ Resume';
+      });
+
+      document.getElementById('btnReset').addEventListener('click', function() {
+        running = true;
+        document.getElementById('btnPlay').textContent = '⏸ Pause';
+        init();
+      });
+
+      document.getElementById('btnAddFood').addEventListener('click', function() {
+        spawnFood(50);
+        updateStats();
+      });
+
+      document.getElementById('btnAddCritter').addEventListener('click', function() {
+        if (critters.length >= 200) return;
+        const t = {
+          speed:      lerp(1.0, 3.5, Math.random()),
+          size:       lerp(4, 9, Math.random()),
+          detection:  lerp(40, 160, Math.random()),
+          efficiency: lerp(0.7, 1.8, Math.random()),
+        };
+        critters.push(createCritter(Math.random() * W, Math.random() * H, t));
+        updateStats();
+      });
+
+      document.getElementById('speedSlider').addEventListener('input', function() {
+        speed = parseInt(this.value);
+      });
+
+      // ---- Click to add food ----
+      canvas.addEventListener('click', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = W / rect.width;
+        const scaleY = H / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+        foods.push({ x, y });
+        updateStats();
+      });
+
+      // ---- Start ----
+      init();
+      lastTime = performance.now();
+      requestAnimationFrame(gameLoop);
+
+      // Periodic stat update regardless of frame rate
+      setInterval(updateStats, 500);
+    })();
+  </script>
+</body>
+</html>
