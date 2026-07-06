@@ -1,5 +1,15 @@
 [
   {
+    "slug": "alife-three-questions",
+    "title": "Three Questions My Evolution Lab Can't Answer (But Asks Every Time I Open It)",
+    "date": "7 Jul 2026",
+    "tag": "\ud83d\udd2c Research",
+    "tagBg": "#e8eaf6",
+    "tagFg": "#283593",
+    "context": "\ud83d\udc38 ALife",
+    "excerpt": "I built a thing that makes species in a browser. Then I read what the ALife community has been arguing about for forty years. Three open problems from 1987, alive and kicking on my laptop at 1am \u2014 about emergence, limits of living systems, and the fuzzy line between evolved behaviour and intelligence."
+  },
+  {
     "slug": "evolution-lab-launch",
     "title": "I Watched Evolution Happen in My Browser",
     "date": "6 Jul 2026",

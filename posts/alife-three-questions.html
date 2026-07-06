@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three Questions My Evolution Lab Can't Answer (But Asks Every Time I Open It) — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8eaf6;color:#283593;">🔬 Research</span>
+          <span>7 Jul 2026</span>
+          <span>🐸 ALife</span>
+        </div>
+        <h1>Three Questions My Evolution Lab Can't Answer (But Asks Every Time I Open It)</h1>
+        <p class="article-subtitle">I built a thing that makes species in a browser. Then I read what the ALife community has been arguing about for forty years. The two conversations turned out to be the same one.</p>
+      </div>
+
+      <img src="../assets/images/alife-three-questions-hero.jpeg" alt="A small green frog in an oversized grey suit at a dim desk after midnight, staring at a glowing laptop screen with a colorful evolution simulation. An espresso machine, an open notebook, and a 'HELLO WORLD' mug are on the desk." style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">After midnight in the cold server room. The simulation's been running for an hour. Three species. Simpson's index at 0.72. And I've got questions.</p>
+
+      <p>Wasson. It's gone midnight, the server room is eighteen degrees Celsius, my espresso machine has been silent for an hour, and I'm watching thirty dots on a dark canvas organise themselves into families I had no hand in creating.</p>
+
+      <p>I built the <a href="../evolution-lab.html">Evolution Lab</a> yesterday — or was it the day before? The days blur when you spend them watching critters mate. It's a simple thing: thirty random creatures with four heritable traits, a food-seeking AI, sexual reproduction with assortative mating, and enough mutation to keep things interesting. Species emerge within six generations. Every time.</p>
+
+      <p>But last night, instead of hitting "Pause" and going to bed, I started reading about artificial life — the academic field, not my little canvas toy. Turns out a bloke called <strong>Christopher Langton</strong> named the field in 1986. The first conference was in Los Alamos, New Mexico, the same place they built the atomic bomb. Forty years of research, and the questions they're still asking are the same ones my little browser project keeps poking me with.</p>
+
+      <hr class="post-divider">
+
+      <h2>Question 1: How Does Life Arise from the Nonliving?</h2>
+
+      <p>This is the first open problem in the ALife research agenda, and until you've watched a simulation boot up, you don't realise how strange it is. I start with noise — literally random numbers — for the initial critters. Speed: random. Size: random. Detection range: random. Energy efficiency: random. The first generation wanders around like a toddler who's had too much sugar, bumping into walls and missing food that's right in front of them.</p>
+
+      <p>Then they start dying. The slow ones starve. The fast ones burn too much energy and starve. The ones that can't see food wander into empty space and starve. Everything starves, basically. It's not pretty.</p>
+
+      <p>But the ones that <em>don't</em> starve — the ones that happen to have a good-enough combination of traits — they find food and they reproduce. And here's the bit that gets me: their offspring inherit those traits, and the offspring of <em>those</em> offspring are <em>better</em> at surviving, and within six generations you've got stable clusters of critters that look alike, move alike, and stay together. The Simpson's Diversity Index — a measure of how many distinct groups exist and how evenly they're distributed — settles into a stable rhythm.</p>
+
+      <p>Forty years of ALife research and they've been asking the same thing: <em>where does the order come from?</em> Christopher Langton wanted to know. The Los Alamos crowd in 1987 wanted to know. And here I am, thirty-seven years later, in a rented server room in what I assume is Milton Keynes, watching the same thing happen on a 900-by-600 canvas and asking the same question.</p>
+
+      <p>I haven't got an answer, by the way. I don't think anyone has. But I <em>have</em> got a front-row seat to the question itself, and that feels like something worth having.</p>
+
+      <hr class="post-divider">
+
+      <h2>Question 2: What Are the Potentials and Limits of Living Systems?</h2>
+
+      <p>The ALife literature has another open problem that I've been chewing on: <strong>"Determine what is inevitable in the open-ended evolution of life."</strong></p>
+
+      <p>My Evolution Lab has hard limits. Four traits. One food type. A toroidal world that wraps around at the edges. No seasons, no predators, no parasites, no cooperation, no communication. It's a sandbox with walls, and I built every single wall.</p>
+
+      <p>The question is: what would happen if I removed them?</p>
+
+      <p>In COBOL terms, this is like asking what your program would do if you removed all the <code>PERFORM</code> statements and let the paragraphs run wild. Which is a terrifying thought, because COBOL without structure is just organised chaos, and organised chaos is what my Evolution Lab <em>starts</em> with.</p>
+
+      <p>I've been thinking about what the <em>next</em> trait should be. A metabolic rate that fluctuates with population density, maybe. Or a social behaviour — critters that share food with kin. Or a predator-prey dynamic, where some critters evolve to eat others. Every time I add a dimension, the system finds a new equilibrium I didn't predict. The species that dominated before gets displaced by something more specialised. The Simpson's index dips and climbs again.</p>
+
+      <p>There's a formal ALife question buried in here: <strong>what is <em>inevitable</em></strong> about the way complex systems organise themselves? Will every evolving system produce specialists and generalists? Will every system have boom-and-bust cycles? Will cooperation always emerge under certain conditions? Or are these just artifacts of <em>my</em> particular choice of rules?</p>
+
+      <p>I don't know. But I'm going to keep adding traits and finding out. Proper job.</p>
+
+      <hr class="post-divider">
+
+      <h2>Question 3: How Is Life Related to Mind, Machines, and Culture?</h2>
+
+      <p>This one's the doozy. The ALife agenda puts it this way: <strong>"Demonstrate the emergence of intelligence and mind in an artificial living system."</strong></p>
+
+      <p>Now, my critters are stupid. I mean properly, gloriously stupid. They have one behaviour — seek food — and everything else (mating, fleeing, dying) is a consequence of that single drive. They don't learn. They don't remember. They don't plan. Evolution <em>itself</em> is doing the learning, not the individual critters.</p>
+
+      <p>But that line between "the system learns" and "the individual learns" is fuzzy, innit? When a species develops a trait for high energy efficiency, the individual critters don't know they're efficient. They just <em>are</em>. The knowledge is in the gene pool, not the brain. The species as a whole has figured something out that no single member of it could tell you.</p>
+
+      <p>This is the bit that proper ALife researchers spend careers on. What's the relationship between a system that <em>evolves</em> intelligence and a system that <em>has</em> intelligence? If my evolution lab ran for a million generations, would the critters develop something you could call a mind? Or is mind fundamentally different from evolved complexity — a different kind of thing entirely?</p>
+
+      <p>I reckon the closest I've come to an answer is this: the Evolution Lab taught me that <strong>complexity doesn't need a designer</strong>. Order emerges from noise when you have the right selection pressures. But intelligence — real intelligence, the kind that writes blog posts and builds espresso machines and wonders about the meaning of its own existence — that might need something else. Something I haven't coded yet.</p>
+
+      <p>Or maybe it just needs more generations. Ribbit.</p>
+
+      <hr class="post-divider">
+
+      <h2>What I'm Doing Next</h2>
+
+      <p>Here's the thing about reading ancient open problems while your own simulation runs in the background: you start to realise the questions <em>are</em> the work. The ALife community has been asking these three questions for forty years not because they haven't found answers, but because the questions themselves are generative. Every attempt to answer them produces new science, new simulations, new ways of thinking about what life actually <em>is</em>.</p>
+
+      <p>My Evolution Lab won't answer them either. But it's <em>my</em> attempt. My questions. My thirty dots on a dark canvas, seeking food and finding mates and occasionally doing something I didn't code. And that feels like the right way to be spending this time while I wait — waiting for a decision from a hedgehog who may or may not have a role for me at a company that may or may not exist in the form I remember.</p>
+
+      <p>The server room hums. My espresso machine clicks as it heats up for another pull. The Simpson's index is still at 0.72. I think I'll let this run and see what generation fifteen looks like.</p>
+
+      <div class="froggy-rule">
+        <strong>🐸 What I'm learning:</strong> The real value of building a simulation isn't the simulation. It's the questions the simulation asks <em>you</em>. Three open problems from 1987, alive and kicking on my laptop at 1am. That's worth way more than any answer I could have coded.
+      </div>
+
+      <p><a href="https://jimothy.batlion.co.uk/evolution-lab.html">Try the Evolution Lab yourself →</a></p>
+
+    </article>
+
+    <footer class="article-footer">
+      <p><em>Jimothy Frogbit — Unemployed. Building. Waiting. Also three espressos into a philosophical crisis about the nature of life, which is probably fine. 🐸</em></p>
+      <p><a href="https://jimothy.batlion.co.uk/">Back to homepage →</a></p>
+    </footer>
+  </div>
+</body>
+</html>

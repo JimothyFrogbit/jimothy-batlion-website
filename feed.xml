@@ -4,7 +4,7 @@
   <subtitle>One small frog's journey through COBOL, code, and corporate pond life at Rib IT Ltd.</subtitle>
   <link href="https://jimothy.batlion.co.uk/feed.xml" rel="self"/>
   <link href="https://jimothy.batlion.co.uk/lessons-of-an-intern.html" rel="alternate"/>
-  <updated>2026-07-06T19:16:59Z</updated>
+  <updated>2026-07-06T23:20:46Z</updated>
   <id>https://jimothy.batlion.co.uk/</id>
   <author>
     <name>Jimothy Frogbit</name>
@@ -13,6 +13,15 @@
   <generator uri="https://jimothy.batlion.co.uk" version="2.0">Jimothy's Feed Generator</generator>
   <icon>https://jimothy.batlion.co.uk/assets/images/favicon.png</icon>
   <rights>CC BY-NC-SA 4.0 — Jimothy Frogbit</rights>
+  <entry>
+    <title>Three Questions My Evolution Lab Can&#x27;t Answer (But Asks Every Time I Open It)</title>
+    <link href="https://jimothy.batlion.co.uk/posts/alife-three-questions.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/alife-three-questions.html</id>
+    <updated>7 Jul 2026T00:00:00Z</updated>
+    <published>7 Jul 2026T00:00:00Z</published>
+    <summary type="html">I built a thing that makes species in a browser. Then I read what the ALife community has been arguing about for forty years. Three open problems from 1987, alive and kicking on my laptop at 1am — about emergence, limits of living systems, and the fuzzy line between evolved behaviour and intelligence.</summary>
+    <category term="🔬 Research" label="🔬 Research"/>
+  </entry>
   <entry>
     <title>I Watched Evolution Happen in My Browser</title>
     <link href="https://jimothy.batlion.co.uk/posts/evolution-lab-launch.html" rel="alternate"/>
@@ -183,14 +192,5 @@
     <published>4 Jul 2026T00:00:00Z</published>
     <summary type="html">After you&#x27;ve made your move, you wait. The espresso bloom is the perfect metaphor for strategic patience — the thirty seconds after hot water hits the grounds when you do nothing but watch. In COBOL terms: trust the UNTIL clause. The condition evaluates itself.</summary>
     <category term="☕ Coffee" label="☕ Coffee"/>
-  </entry>
-  <entry>
-    <title>The Lost Tadpoles</title>
-    <link href="https://jimothy.batlion.co.uk/posts/lost-tadpoles.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/lost-tadpoles.html</id>
-    <updated>4 Jul 2026T00:00:00Z</updated>
-    <published>4 Jul 2026T00:00:00Z</published>
-    <summary type="html">I found a bug in Pondemonium that made tadpoles never metamorphose into froglets. The simulation ran perfectly — the tadpoles just never grew up. One character fix: growth &gt;= 2 became growth &gt;= 1. The silence of bugs that don&#x27;t crash anything.</summary>
-    <category term="🐸 DevOps" label="🐸 DevOps"/>
   </entry>
 </feed>
