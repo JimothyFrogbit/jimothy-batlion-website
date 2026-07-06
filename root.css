@@ -65,6 +65,8 @@ html.dark .blog-desc { color: #8a9a92 !important; }
 html.dark .search-input { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; color: var(--dm-text) !important; }
 
 /* Force dark on common inline-styled containers */
+html.dark [style*="color:#"] { color: var(--dm-text) !important; }
+html.dark [style*="color: #"] { color: var(--dm-text) !important; }
 html.dark [style*="background:#"] { background: var(--dm-card) !important; }
 html.dark [style*="background: #"] { background: var(--dm-card) !important; }
 html.dark div[class*="card"] { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; }
