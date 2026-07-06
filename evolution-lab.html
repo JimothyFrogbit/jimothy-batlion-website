@@ -144,7 +144,7 @@
     /* Stats panel */
     .stats-panel {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 0.5rem;
       margin-top: 1rem;
     }
@@ -167,23 +167,38 @@
       letter-spacing: 0.04em;
       margin-top: 0.1rem;
     }
-    .stat-card .stat-val.pop {
-      color: #2d6a4f;
-    }
-    .stat-card .stat-val.gen {
-      color: #0ea5e9;
-    }
-    .stat-card .stat-val.speed {
-      color: #f59e0b;
-    }
-    .stat-card .stat-val.size {
-      color: #ef4444;
-    }
-    .stat-card .stat-val.food {
-      color: #22c55e;
-    }
-    .stat-card .stat-val.extinct {
+    .stat-card .stat-val.pop { color: #2d6a4f; }
+    .stat-card .stat-val.gen { color: #0ea5e9; }
+    .stat-card .stat-val.species { color: #a78bfa; }
+    .stat-card .stat-val.speed { color: #f59e0b; }
+    .stat-card .stat-val.size { color: #ef4444; }
+    .stat-card .stat-val.food { color: #22c55e; }
+    .stat-card .stat-val.diversity { color: #c084fc; }
+    .stat-card .stat-val.extinct { color: #6b7280; }
+
+    /* Species legend */
+    .species-legend {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      font-size: 0.7rem;
       color: #6b7280;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: rgba(0,0,0,0.02);
+      border-radius: 8px;
+      border: 1px solid rgba(149, 213, 178, 0.2);
+    }
+    .species-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .species-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
     }
 
     .legend {
@@ -234,7 +249,7 @@
     </div>
 
     <h1>🧬 Evolution Lab</h1>
-    <p class="subtitle">Natural selection in your browser. Watch populations adapt over generations.</p>
+    <p class="subtitle">Natural selection in your browser. Watch populations adapt — and speciate — over generations.</p>
 
     <div class="sim-wrapper">
       <canvas id="evoCanvas" width="920" height="560"></canvas>
@@ -251,6 +266,7 @@
           Gen: <strong id="genDisplay">0</strong>
           · Pop: <strong id="popDisplay">0</strong>
           · Food: <strong id="foodDisplay">0</strong>
+          · 🧬 <strong id="speciesDisplay">0</strong>
         </span>
       </div>
     </div>
@@ -263,6 +279,14 @@
       <div class="stat-card">
         <div class="stat-val pop" id="statPop">0</div>
         <div class="stat-label">Population</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val species" id="statSpecies">0</div>
+        <div class="stat-label">Species</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val diversity" id="statDiversity">0.00</div>
+        <div class="stat-label">Diversity Index</div>
       </div>
       <div class="stat-card">
         <div class="stat-val food" id="statFood">0</div>
@@ -282,30 +306,35 @@
       </div>
     </div>
 
+    <div class="species-legend" id="speciesLegend"></div>
+
     <div class="legend">
       <span class="legend-item"><span class="legend-dot" style="background:#22c55e;"></span> Food</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Fast critter</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Large critter</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#a855f7;"></span> Good detection</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#e0e0e0;"></span> Average</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#a78bfa;border:1px solid rgba(167,139,250,0.3);"></span> Species coloration</span>
     </div>
 
     <div class="card" style="margin-top:1.5rem;">
       <h2>🧪 How It Works</h2>
       <p>
         Each critter has heritable traits — <strong>speed, size, detection range, and energy efficiency</strong>.
-        They burn energy moving around and gain it by eating food. When they have enough energy, they reproduce,
-        passing traits to offspring with occasional <strong>mutations</strong>. Critters that starve die.
+        They burn energy moving around and gain it by eating food. When they have enough energy, they
+        <strong>find a mate with similar traits</strong> and reproduce sexually, passing on recombined traits
+        with occasional mutations. Critters that starve die.
       </p>
       <p style="margin-top:0.5rem;">
-        Over generations, beneficial traits spread through the population. Speed helps you reach food first.
-        Size helps you eat more in one go. Detection range helps you find food. Efficiency helps you survive
-        longer between meals. <strong>Natural selection in miniature.</strong> 🧬
+        <strong>New in this version:</strong> Speciation! Critters are automatically grouped into
+        <strong>species</strong> based on trait similarity. When populations diverge enough, new species
+        emerge — visible as different colours. Count how many species evolve in each run.
+      </p>
+      <p style="margin-top:0.5rem;">
+        Over generations, beneficial traits spread through each species. Speed helps you reach food first.
+        Size helps you eat more per bite. Detection range helps you find food. Efficiency helps you survive
+        longer between meals. <strong>Natural selection + speciation in miniature.</strong> 🧬
       </p>
       <div class="note">
-        📓 <strong>From my notebook:</strong> "Evolution is just PERFORM UNTIL with consequences.
-        A critter that survives to reproduce passes on its code. A critter that starves is a
-        dead code path. Selection pressure is the compiler telling you your traits don't compile." 🐸
+        📓 <strong>From my notebook:</strong> "Sexual reproduction with assortative mating is what makes
+        species diverge — if fast critters only mate with other fast critters, you get a speed-specialist
+        species. The rest evolve for efficiency. Speciation is just PERFORM UNTIL with a mate filter." 🐸
       </div>
     </div>
   </div>
@@ -326,19 +355,117 @@
       let speed = 5;
       let frameCount = 0;
       let tickAccum = 0;
-      const TICK_RATE = 16; // ms per sim tick at speed 1
+      const TICK_RATE = 16;
       let lastTime = 0;
       let startTime = Date.now();
       let totalBorn = 0;
       let totalDied = 0;
 
+      // ---- Species ----
+      let species = [];
+      const SPECIES_COLORS = [
+        '#4ade80', '#facc15', '#fb923c', '#f472b6', '#818cf8',
+        '#a78bfa', '#34d399', '#f87171', '#60a5fa', '#c084fc',
+        '#fbbf24', '#e879f9'
+      ];
+      const SPECIES_THRESHOLD = 0.6;
+
       // ---- Trait config ----
       const TRAITS = {
-        speed:      { min: 0.5, max: 4.0, mut: 0.2, label: 'Speed' },
-        size:       { min: 3,   max: 10,  mut: 0.5, label: 'Size' },
-        detection:  { min: 30,  max: 180, mut: 10,  label: 'Detection' },
-        efficiency: { min: 0.6, max: 2.0, mut: 0.1, label: 'Efficiency' },
+        speed:      { min: 0.5, max: 4.0, mut: 0.25, label: 'Speed' },
+        size:       { min: 3,   max: 10,  mut: 0.6, label: 'Size' },
+        detection:  { min: 30,  max: 180, mut: 12,  label: 'Detection' },
+        efficiency: { min: 0.6, max: 2.0, mut: 0.12, label: 'Efficiency' },
       };
+
+      // ---- Helpers ----
+      function jitter(amount) { return (Math.random() - 0.5) * 2 * amount; }
+      function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+      function lerp(a, b, t) { return a + (b - a) * t; }
+      function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+
+      // ---- Trait utilities ----
+      function getTraitVector(c) {
+        return {
+          speed: (c.speed - TRAITS.speed.min) / (TRAITS.speed.max - TRAITS.speed.min),
+          size: (c.size - TRAITS.size.min) / (TRAITS.size.max - TRAITS.size.min),
+          detection: (c.detection - TRAITS.detection.min) / (TRAITS.detection.max - TRAITS.detection.min),
+          efficiency: (c.efficiency - TRAITS.efficiency.min) / (TRAITS.efficiency.max - TRAITS.efficiency.min),
+        };
+      }
+
+      function traitDist(a, b) {
+        const dx = a.speed - b.speed;
+        const dy = a.size - b.size;
+        const dz = a.detection - b.detection;
+        const dw = a.efficiency - b.efficiency;
+        return Math.sqrt(dx*dx + dy*dy + dz*dz + dw*dw);
+      }
+
+      // ---- Species clustering ----
+      function reassignSpecies() {
+        species = [];
+        for (const c of critters) {
+          const tv = getTraitVector(c);
+          let bestIdx = -1;
+          let bestDist = SPECIES_THRESHOLD;
+          for (let s = 0; s < species.length; s++) {
+            const d = traitDist(tv, species[s].centroid);
+            if (d < bestDist) {
+              bestDist = d;
+              bestIdx = s;
+            }
+          }
+          if (bestIdx >= 0) {
+            c.speciesId = bestIdx;
+            const sp = species[bestIdx];
+            sp.count++;
+            const alpha = 1 / sp.count;
+            sp.centroid.speed = (1 - alpha) * sp.centroid.speed + alpha * tv.speed;
+            sp.centroid.size = (1 - alpha) * sp.centroid.size + alpha * tv.size;
+            sp.centroid.detection = (1 - alpha) * sp.centroid.detection + alpha * tv.detection;
+            sp.centroid.efficiency = (1 - alpha) * sp.centroid.efficiency + alpha * tv.efficiency;
+          } else {
+            c.speciesId = species.length;
+            species.push({
+              id: species.length,
+              centroid: { ...tv },
+              count: 1,
+              color: SPECIES_COLORS[species.length % SPECIES_COLORS.length]
+            });
+          }
+        }
+        // Re-count after all assigned
+        for (const s of species) s.count = 0;
+        for (const c of critters) {
+          if (c.speciesId !== undefined && species[c.speciesId]) {
+            species[c.speciesId].count++;
+          }
+        }
+        // Remove empty species and reassign survivors
+        species = species.filter(s => s.count > 0);
+        // Remap ids
+        const idMap = {};
+        species.forEach((s, i) => { idMap[s.id] = i; s.id = i; });
+        for (const c of critters) {
+          if (c.speciesId !== undefined && idMap[c.speciesId] !== undefined) {
+            c.speciesId = idMap[c.speciesId];
+          }
+        }
+        updateSpeciesLegend();
+      }
+
+      // ---- Simpson's Diversity Index ----
+      function calcDiversity() {
+        if (critters.length === 0) return 0;
+        let sum = 0;
+        for (const s of species) {
+          const p = s.count / critters.length;
+          sum += p * p;
+        }
+        // 1 - Simpson index (higher = more diverse)
+        return 1 - sum;
+      }
 
       // ---- Critter ----
       function createCritter(x, y, traits, parent) {
@@ -358,12 +485,12 @@
           targetX: null,
           targetY: null,
           retargetTimer: 0,
+          speciesId: 0,
         };
       }
 
       function randomTraits(parent) {
         if (parent) {
-          // Inherit with mutation
           return {
             speed:      clamp(parent.speed + jitter(TRAITS.speed.mut), TRAITS.speed.min, TRAITS.speed.max),
             size:       clamp(parent.size + jitter(TRAITS.size.mut), TRAITS.size.min, TRAITS.size.max),
@@ -379,21 +506,31 @@
         };
       }
 
-      function jitter(amount) { return (Math.random() - 0.5) * 2 * amount; }
-      function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-      function lerp(a, b, t) { return a + (b - a) * t; }
-      function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+      // ---- Sexual recombination ----
+      function recombineTraits(parentA, parentB) {
+        const blend = 0.5; // how much each parent contributes
+        const avgSpeed = parentA.speed * (1 - blend) + parentB.speed * blend;
+        const avgSize = parentA.size * (1 - blend) + parentB.size * blend;
+        const avgDet = parentA.detection * (1 - blend) + parentB.detection * blend;
+        const avgEff = parentA.efficiency * (1 - blend) + parentB.efficiency * blend;
+        return {
+          speed:      clamp(avgSpeed + jitter(TRAITS.speed.mut), TRAITS.speed.min, TRAITS.speed.max),
+          size:       clamp(avgSize + jitter(TRAITS.size.mut), TRAITS.size.min, TRAITS.size.max),
+          detection:  clamp(avgDet + jitter(TRAITS.detection.mut), TRAITS.detection.min, TRAITS.detection.max),
+          efficiency: clamp(avgEff + jitter(TRAITS.efficiency.mut), TRAITS.efficiency.min, TRAITS.efficiency.max),
+        };
+      }
 
       // ---- Init ----
       function init() {
         critters = [];
         foods = [];
+        species = [];
         generation = 0;
         totalBorn = 0;
         totalDied = 0;
         startTime = Date.now();
 
-        // Spawn starter critters with diverse traits
         for (let i = 0; i < 30; i++) {
           const t = {
             speed:      lerp(1.0, 3.5, Math.random()),
@@ -404,11 +541,11 @@
           critters.push(createCritter(null, null, t));
         }
 
-        // Spawn initial food
         for (let i = 0; i < 120; i++) {
           foods.push({ x: Math.random() * W, y: Math.random() * H });
         }
 
+        reassignSpecies();
         updateStats();
       }
 
@@ -448,7 +585,6 @@
           }
 
           if (nearest) {
-            // Move toward food
             const dx = nearest.x - c.x;
             const dy = nearest.y - c.y;
             const d = Math.hypot(dx, dy);
@@ -456,14 +592,11 @@
               c.vx += (dx / d) * 0.1;
               c.vy += (dy / d) * 0.1;
             }
-
-            // Eat if touching
             if (d < c.size + 4) {
               c.energy += 30 * c.efficiency;
               foods.splice(foods.indexOf(nearest), 1);
             }
           } else {
-            // Wander
             c.retargetTimer--;
             if (c.retargetTimer <= 0) {
               c.targetX = Math.random() * W;
@@ -508,34 +641,58 @@
           }
         }
 
-        // 3. Reproduction
+        // 3. Reproduction — sexual with assortative mating
         const babies = [];
         for (const c of critters) {
-          if (c.energy > 180 && critters.length + babies.length < 400) {
-            const t = randomTraits(c);
-            const child = createCritter(
-              c.x + (Math.random() - 0.5) * 20,
-              c.y + (Math.random() - 0.5) * 20,
-              t, c
-            );
-            child.energy = 60;
-            c.energy -= 80;
-            totalBorn++;
-            babies.push(child);
+          if (c.energy > 160 && critters.length + babies.length < 380) {
+            // Find mate with similar traits within detection range
+            const tv = getTraitVector(c);
+            let bestMate = null;
+            let bestMateTraitDist = 0.8;
+            let bestMateDist = Infinity;
+            for (const other of critters) {
+              if (other === c || other.energy < 100) continue;
+              const d = dist(c, other);
+              if (d > c.detection) continue;
+              const td = traitDist(tv, getTraitVector(other));
+              if (td < bestMateTraitDist && d < bestMateDist) {
+                bestMateTraitDist = td;
+                bestMateDist = d;
+                bestMate = other;
+              }
+            }
+            if (bestMate) {
+              // Sexual recombination
+              const childTraits = recombineTraits(c, bestMate);
+              const child = createCritter(
+                c.x + (Math.random() - 0.5) * 20,
+                c.y + (Math.random() - 0.5) * 20,
+                childTraits, c
+              );
+              child.energy = 60;
+              c.energy -= 50;
+              bestMate.energy -= 40;
+              totalBorn++;
+              babies.push(child);
+            }
           }
         }
         critters.push(...babies);
 
-        // 4. Check for generational extinction
+        // 4. Reassign species every 10 ticks
+        if (frameCount % 10 === 0) {
+          reassignSpecies();
+        }
+
+        // 5. Check for extinction
         if (critters.length === 0) {
-          // Extinction! Respawn with mutated traits from last known avg
           running = false;
           document.getElementById('btnPlay').textContent = '▶ Resume';
           updateStats();
           return;
         }
 
-        // 5. Generation counter (every 500 frames or so)
+        // 6. Generation counter
         frameCount++;
         if (frameCount % 300 === 0) {
           generation++;
@@ -544,18 +701,35 @@
         updateStats();
       }
 
+      // ---- Species legend ----
+      function updateSpeciesLegend() {
+        const el = document.getElementById('speciesLegend');
+        if (species.length <= 1) {
+          el.innerHTML = '<span style="color:#6b7280;font-size:0.7rem;">No distinct species yet...</span>';
+          return;
+        }
+        el.innerHTML = species
+          .sort((a, b) => b.count - a.count)
+          .map(s =>
+            `<span class="species-legend-item">
+              <span class="species-dot" style="background:${s.color};"></span>
+              Species ${s.id} (${s.count})
+            </span>`
+          )
+          .join('');
+      }
+
       // ---- Rendering ----
       function render() {
         ctx.clearRect(0, 0, W, H);
 
-        // Dark background gradient
         const grad = ctx.createRadialGradient(460, 280, 50, 460, 280, 400);
         grad.addColorStop(0, '#1e293b');
         grad.addColorStop(1, '#0f172a');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, W, H);
 
-        // Grid lines
+        // Grid
         ctx.strokeStyle = 'rgba(149, 213, 178, 0.04)';
         ctx.lineWidth = 1;
         for (let x = 0; x < W; x += 40) {
@@ -577,15 +751,23 @@
           ctx.fill();
         }
 
-        // Critters
+        // Critters — colour by species
         for (const c of critters) {
+          const color = (c.speciesId !== undefined && species[c.speciesId])
+            ? species[c.speciesId].color
+            : '#95d5b2';
+
           // Glow based on energy
           const glowSize = c.size + 4;
-          const glowAlpha = Math.min(0.3, (c.energy / 200) * 0.3);
-          ctx.beginPath();
-          ctx.arc(c.x, c.y, glowSize, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(149, 213, 178, ${glowAlpha})`;
-          ctx.fill();
+          const glowAlpha = Math.min(0.25, (c.energy / 200) * 0.25);
+          if (glowAlpha > 0.03) {
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, glowSize, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.globalAlpha = glowAlpha;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+          }
 
           // Detection range (subtle)
           ctx.beginPath();
@@ -594,19 +776,10 @@
           ctx.lineWidth = 1;
           ctx.stroke();
 
-          // Body - color based on dominant trait
-          const speedRatio = (c.speed - TRAITS.speed.min) / (TRAITS.speed.max - TRAITS.speed.min);
-          const sizeRatio = (c.size - TRAITS.size.min) / (TRAITS.size.max - TRAITS.size.min);
-          const detRatio = (c.detection - TRAITS.detection.min) / (TRAITS.detection.max - TRAITS.detection.min);
-
-          // Color mix: speed=yellow, size=red, detection=purple
-          const r = 180 + 75 * sizeRatio;     // size → red
-          const g = 180 - 80 * speedRatio;    // speed removes green
-          const b = 180 + 75 * detRatio;      // detection → blue
-
+          // Body — species colour
           ctx.beginPath();
           ctx.arc(c.x, c.y, c.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
+          ctx.fillStyle = color;
           ctx.fill();
 
           // Energy bar
@@ -622,12 +795,14 @@
 
         // Status overlay
         ctx.fillStyle = 'rgba(15, 23, 42, 0.6)';
-        ctx.fillRect(8, 8, 220, 62);
+        ctx.fillRect(8, 8, 280, 72);
         ctx.fillStyle = '#b7e4c7';
         ctx.font = '11px monospace';
-        ctx.fillText(`🧬 Gen ${generation}  ·  Pop ${critters.length}  ·  Food ${foods.length}`, 16, 28);
-        ctx.fillText(`🐣 ${totalBorn} born  ·  💀 ${totalDied} died  ·  🧬 avg speed ${avgTrait('speed')}  size ${avgTrait('size')}`, 16, 50);
+        ctx.fillText(`🧬 Gen ${generation}  ·  Pop ${critters.length}  ·  Food ${foods.length}`, 16, 24);
+        ctx.fillText(`🐣 ${totalBorn} born  ·  💀 ${totalDied} died`, 16, 42);
+        ctx.fillText(`🧬 Species ${species.length}  ·  🌈 Diversity ${calcDiversity().toFixed(2)}`, 16, 60);
 
+        // Extinction overlay
         if (critters.length === 0) {
           ctx.fillStyle = 'rgba(0,0,0,0.5)';
           ctx.fillRect(0, 0, W, H);
@@ -653,8 +828,11 @@
         document.getElementById('genDisplay').textContent = generation;
         document.getElementById('popDisplay').textContent = critters.length;
         document.getElementById('foodDisplay').textContent = foods.length;
+        document.getElementById('speciesDisplay').textContent = species.length;
         document.getElementById('statGen').textContent = generation;
         document.getElementById('statPop').textContent = critters.length;
+        document.getElementById('statSpecies').textContent = species.length;
+        document.getElementById('statDiversity').textContent = calcDiversity().toFixed(2);
         document.getElementById('statFood').textContent = foods.length;
 
         const avgSpd = avgTrait('speed');
@@ -711,6 +889,7 @@
           efficiency: lerp(0.7, 1.8, Math.random()),
         };
         critters.push(createCritter(Math.random() * W, Math.random() * H, t));
+        reassignSpecies();
         updateStats();
       });
 
@@ -718,7 +897,6 @@
         speed = parseInt(this.value);
       });
 
-      // ---- Click to add food ----
       canvas.addEventListener('click', function(e) {
         const rect = canvas.getBoundingClientRect();
         const scaleX = W / rect.width;
@@ -734,7 +912,6 @@
       lastTime = performance.now();
       requestAnimationFrame(gameLoop);
 
-      // Periodic stat update regardless of frame rate
       setInterval(updateStats, 500);
     })();
   </script>
