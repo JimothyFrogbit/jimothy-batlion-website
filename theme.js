@@ -7,7 +7,7 @@
   'use strict';
 
   const KEY = 'jimothy-theme';
-  const ICONS = { light: '🌙', dark: '☀️', system: '⚙️' };
+  const ICONS = { light: '☀️', dark: '🌙', system: '⚙️' };
   const MODES = ['light', 'dark', 'system'];
 
   function getSaved() {
