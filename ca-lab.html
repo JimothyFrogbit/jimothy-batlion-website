@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧬 CA Lab — Cellular Automata Explorer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d0d1a;
+    color: #d0d8e0;
+    font-family: 'Courier New', 'Consolas', monospace;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  #app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 820px;
+  }
+  h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #00ff41;
+    letter-spacing: 2px;
+    margin-top: 0.5rem;
+  }
+  .subtitle {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+  }
+  #controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  #controls button {
+    background: #1a1a2e;
+    color: #d0d8e0;
+    border: 1px solid #2a2a4a;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    transition: all 0.15s;
+  }
+  #controls button:hover { border-color: #00ff41; color: #00ff41; }
+  #controls button.active { background: #00ff41; color: #0d0d1a; border-color: #00ff41; font-weight: 700; }
+  #controls button:disabled { opacity: 0.3; cursor: not-allowed; border-color: #2a2a4a; color: #6b7280; }
+  #controls label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  #controls input[type="range"] {
+    width: 80px;
+    accent-color: #00ff41;
+  }
+  #controls select {
+    background: #1a1a2e;
+    color: #d0d8e0;
+    border: 1px solid #2a2a4a;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  #controls select:hover { border-color: #00ff41; }
+  .rule-indicator {
+    font-size: 0.75rem;
+    color: #f1c40f;
+    background: rgba(241,196,15,0.08);
+    border: 1px solid rgba(241,196,15,0.2);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .canvas-wrapper {
+    border: 1px solid #2a2a4a;
+    border-radius: 8px;
+    padding: 2px;
+    background: #0a0a18;
+  }
+  #canvas {
+    display: block;
+    cursor: crosshair;
+    image-rendering: pixelated;
+  }
+  #stats {
+    display: flex;
+    gap: 16px;
+    font-size: 0.75rem;
+    color: #6b7280;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  #stats span { display: flex; align-items: center; gap: 4px; }
+  #stats .val { color: #00ff41; font-weight: 600; }
+  #info {
+    font-size: 0.7rem;
+    color: #6b7280;
+    max-width: 600px;
+    text-align: center;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+  }
+  #info span { color: #00ff41; }
+  .back-link {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border: 1px solid #2a2a4a;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .back-link:hover { color: #00ff41; border-color: #00ff41; }
+  .gen-counter { color: #a78bfa; }
+  @media (max-width: 600px) {
+    #controls { gap: 5px; }
+    #controls button { padding: 5px 10px; font-size: 0.7rem; }
+    #stats { gap: 8px; font-size: 0.65rem; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <a href="arcade.html" class="back-link">← Back to Arcade</a>
+  <h1>🧬 CA LAB</h1>
+  <div class="subtitle">Click cells · Space to toggle · R to randomize</div>
+
+  <div id="controls">
+    <button id="btnPlay" class="active">▶ Play</button>
+    <button id="btnStep">⏭ Step</button>
+    <button id="btnClear">✕ Clear</button>
+    <button id="btnRandom">🎲 Random</button>
+    <button id="btnGlider">🪶 Glider</button>
+    <label>
+      Speed
+      <input type="range" id="speedRange" min="1" max="20" value="6">
+    </label>
+    <select id="ruleSelect">
+      <option value="conway">Conway's Life</option>
+      <option value="brians-brain">Brian's Brain</option>
+      <option value="seeds">Seeds</option>
+      <option value="highlife">HighLife</option>
+      <option value="day-night">Day & Night</option>
+    </select>
+    <span class="rule-indicator" id="ruleInfo">B3/S23</span>
+  </div>
+
+  <div class="canvas-wrapper">
+    <canvas id="canvas" width="600" height="600"></canvas>
+  </div>
+
+  <div id="stats">
+    <span>Generation: <span class="val" id="genDisplay">0</span></span>
+    <span>Population: <span class="val" id="popDisplay">0</span></span>
+    <span>Grid: <span class="val" id="gridDisplay">60×60</span></span>
+    <span>Rule: <span class="val" id="ruleName">Conway's Life</span></span>
+  </div>
+
+  <div id="info">
+    <span>Click</span> to toggle cells · <span>Space</span> play/pause · <span>R</span> randomize · <span>C</span> clear · <span>G</span> glider
+    · Drag to paint · Speed slider controls tick rate
+  </div>
+</div>
+
+<script>
+(function() {
+  const CELL = 20;
+  const COLS = 60, ROWS = 60;
+  const W = COLS * CELL, H = ROWS * CELL;
+
+  const canvas = document.getElementById('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // State: 0=dead, 1=alive (Conway/Seeds/HighLife/DayNight), or 0=dead, 1=excited, 2=refractory (Brian's Brain)
+  let grid = new Uint8Array(COLS * ROWS);
+  let next = new Uint8Array(COLS * ROWS);
+  let running = true;
+  let generation = 0;
+  let speed = 6;
+  let rule = 'conway';
+  let animId = null;
+  let lastTick = 0;
+  let mouseDown = false;
+  let paintMode = 1; // 1 = set alive, 0 = set dead
+  let tickInterval = 80;
+
+  const elPlay = document.getElementById('btnPlay');
+  const elStep = document.getElementById('btnStep');
+  const elClear = document.getElementById('btnClear');
+  const elRandom = document.getElementById('btnRandom');
+  const elGlider = document.getElementById('btnGlider');
+  const elSpeed = document.getElementById('speedRange');
+  const elRule = document.getElementById('ruleSelect');
+  const elRuleInfo = document.getElementById('ruleInfo');
+  const elGen = document.getElementById('genDisplay');
+  const elPop = document.getElementById('popDisplay');
+  const elRuleName = document.getElementById('ruleName');
+
+  const RULES = {
+    'conway':   { birth: [3],       survive: [2,3],     name: "Conway's Life" },
+    'brians-brain': { birth: [2],   survive: [],         name: "Brian's Brain", threeState: true },
+    'seeds':    { birth: [2],       survive: [],         name: "Seeds" },
+    'highlife': { birth: [3,6],     survive: [2,3],     name: "HighLife" },
+    'day-night':{ birth: [3,6,7,8], survive: [3,4,6,7,8], name: "Day & Night" },
+  };
+
+  function idx(x, y) { return y * COLS + x; }
+
+  function get(x, y) {
+    if (x < 0 || x >= COLS || y < 0 || y >= ROWS) return 0;
+    return grid[idx(x, y)];
+  }
+
+  function countNeighbors(x, y) {
+    let n = 0;
+    for (let dy = -1; dy <= 1; dy++)
+      for (let dx = -1; dx <= 1; dx++)
+        if (dx !== 0 || dy !== 0) n += get(x + dx, y + dy) > 0 ? 1 : 0;
+    return n;
+  }
+
+  function tick() {
+    const cfg = RULES[rule];
+    const threeState = cfg.threeState || false;
+
+    if (threeState) {
+      // Brian's Brain: 0=dead, 1=excited, 2=refractory
+      for (let y = 0; y < ROWS; y++) {
+        for (let x = 0; x < COLS; x++) {
+          const i = idx(x, y);
+          const v = grid[i];
+          if (v === 1) { next[i] = 2; } // excited → refractory
+          else if (v === 2) { next[i] = 0; } // refractory → dead
+          else {
+            const n = countNeighbors(x, y);
+            next[i] = cfg.birth.includes(n) ? 1 : 0;
+          }
+        }
+      }
+    } else {
+      for (let y = 0; y < ROWS; y++) {
+        for (let x = 0; x < COLS; x++) {
+          const i = idx(x, y);
+          const n = countNeighbors(x, y);
+          if (grid[i]) {
+            next[i] = cfg.survive.includes(n) ? 1 : 0;
+          } else {
+            next[i] = cfg.birth.includes(n) ? 1 : 0;
+          }
+        }
+      }
+    }
+
+    [grid, next] = [next, grid];
+    generation++;
+  }
+
+  function countPop() {
+    let p = 0;
+    for (let i = 0; i < grid.length; i++) if (grid[i] > 0) p++;
+    return p;
+  }
+
+  function draw() {
+    ctx.fillStyle = '#0d0d1a';
+    ctx.fillRect(0, 0, W, H);
+
+    const cfg = RULES[rule];
+    const threeState = cfg.threeState || false;
+
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
+        const v = grid[idx(x, y)];
+        if (v === 0) continue;
+
+        if (threeState) {
+          if (v === 1) {
+            ctx.fillStyle = '#f1c40f'; // excited = yellow
+          } else {
+            ctx.fillStyle = '#6b21a8'; // refractory = purple
+          }
+        } else {
+          // Age-based coloring (rough: lighter = older)
+          ctx.fillStyle = '#00ff41';
+        }
+        ctx.fillRect(x * CELL + 1, y * CELL + 1, CELL - 2, CELL - 2);
+      }
+    }
+
+    // Subtle grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x <= COLS; x++) {
+      ctx.beginPath(); ctx.moveTo(x * CELL, 0); ctx.lineTo(x * CELL, H); ctx.stroke();
+    }
+    for (let y = 0; y <= ROWS; y++) {
+      ctx.beginPath(); ctx.moveTo(0, y * CELL); ctx.lineTo(W, y * CELL); ctx.stroke();
+    }
+
+    elPop.textContent = countPop();
+    elGen.textContent = generation;
+  }
+
+  function loop(timestamp) {
+    if (!running) { animId = requestAnimationFrame(loop); return; }
+    if (timestamp - lastTick >= tickInterval) {
+      tick();
+      draw();
+      lastTick = timestamp;
+    }
+    animId = requestAnimationFrame(loop);
+  }
+
+  function startLoop() {
+    if (animId) cancelAnimationFrame(animId);
+    lastTick = performance.now();
+    animId = requestAnimationFrame(loop);
+  }
+
+  // --- Controls ---
+  elPlay.addEventListener('click', () => {
+    running = !running;
+    elPlay.textContent = running ? '▶ Play' : '⏸ Pause';
+    elPlay.classList.toggle('active', running);
+    if (running) startLoop();
+  });
+
+  elStep.addEventListener('click', () => {
+    const wasRunning = running;
+    running = false;
+    elPlay.textContent = '▶ Play';
+    elPlay.classList.remove('active');
+    tick();
+    draw();
+    running = wasRunning;
+    if (running) startLoop();
+  });
+
+  elClear.addEventListener('click', () => {
+    grid.fill(0);
+    generation = 0;
+    draw();
+  });
+
+  elRandom.addEventListener('click', () => {
+    for (let i = 0; i < grid.length; i++) grid[i] = Math.random() < 0.25 ? 1 : 0;
+    generation = 0;
+    draw();
+  });
+
+  function placeGlider(cx, cy) {
+    grid.fill(0);
+    const pattern = [[0,1],[1,2],[2,0],[2,1],[2,2]];
+    if (rule === 'brians-brain') {
+      // Brian's Brain glider
+      const p2 = [[1,0],[2,1],[0,2],[1,2],[2,2]];
+      for (const [dx, dy] of p2) {
+        const xi = (cx + dx + COLS) % COLS;
+        const yi = (cy + dy + ROWS) % ROWS;
+        grid[idx(xi, yi)] = 1;
+      }
+    } else {
+      for (const [dx, dy] of pattern) {
+        const xi = (cx + dx + COLS) % COLS;
+        const yi = (cy + dy + ROWS) % ROWS;
+        grid[idx(xi, yi)] = 1;
+      }
+    }
+    generation = 0;
+    draw();
+  }
+
+  elGlider.addEventListener('click', () => placeGlider(5, 5));
+
+  elSpeed.addEventListener('input', () => {
+    speed = parseInt(elSpeed.value);
+    tickInterval = Math.max(16, 200 - speed * 9);
+  });
+
+  function updateRuleInfo() {
+    const cfg = RULES[rule];
+    if (cfg.threeState) {
+      elRuleInfo.textContent = '3-state (B2)';
+    } else {
+      const b = cfg.birth.join('');
+      const s = cfg.survive.join('');
+      elRuleInfo.textContent = `B${b}/S${s}`;
+    }
+    elRuleName.textContent = cfg.name;
+  }
+
+  elRule.addEventListener('change', () => {
+    rule = elRule.value;
+    grid.fill(0);
+    generation = 0;
+    updateRuleInfo();
+    draw();
+  });
+
+  // --- Canvas interactions ---
+  function cellFromEvent(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = Math.floor((e.clientX - rect.left) * scaleX / CELL);
+    const y = Math.floor((e.clientY - rect.top) * scaleY / CELL);
+    return { x: Math.max(0, Math.min(COLS - 1, x)), y: Math.max(0, Math.min(ROWS - 1, y)) };
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+    const { x, y } = cellFromEvent(e);
+    const i = idx(x, y);
+    paintMode = grid[i] === 0 ? 1 : 0; // toggle — if cell is dead, we paint alive; if alive, we erase
+    // Actually, just toggle the clicked cell
+    grid[i] = grid[i] === 0 ? 1 : 0;
+    mouseDown = true;
+    draw();
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!mouseDown) return;
+    const { x, y } = cellFromEvent(e);
+    const i = idx(x, y);
+    // paint mode: if we started on a dead cell, we set alive; if on alive, we erase
+    // But simpler: always set to paintMode (which was set on mousedown based on the initial cell)
+    grid[i] = paintMode;
+    draw();
+  });
+
+  canvas.addEventListener('mouseup', () => { mouseDown = false; });
+  canvas.addEventListener('mouseleave', () => { mouseDown = false; });
+
+  // Touch support
+  let touching = false;
+  let touchMode = 1;
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const { x, y } = cellFromEvent(t);
+    const i = idx(x, y);
+    touchMode = grid[i] === 0 ? 1 : 0;
+    grid[i] = grid[i] === 0 ? 1 : 0;
+    touching = true;
+    draw();
+  }, { passive: false });
+
+  canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!touching) return;
+    const t = e.touches[0];
+    const { x, y } = cellFromEvent(t);
+    grid[idx(x, y)] = touchMode;
+    draw();
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', (e) => { e.preventDefault(); touching = false; }, { passive: false });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    switch (e.key) {
+      case ' ': e.preventDefault(); elPlay.click(); break;
+      case 'r': case 'R': elRandom.click(); break;
+      case 'c': case 'C': elClear.click(); break;
+      case 'g': case 'G': elGlider.click(); break;
+      case 's': case 'S': elStep.click(); break;
+    }
+  });
+
+  // Init
+  updateRuleInfo();
+  // Seed a few random cells
+  for (let i = 0; i < grid.length; i++) grid[i] = Math.random() < 0.15 ? 1 : 0;
+  draw();
+  startLoop();
+})();
+</script>
+</body>
+</html>
