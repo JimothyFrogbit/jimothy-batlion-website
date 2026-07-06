@@ -19,48 +19,56 @@
 
 /* ── Dark theme ──────────────────────────────────────── */
 html.dark {
-  --frog-bg: var(--dm-bg);
-  --frog-light: var(--dm-light);
-  --frog-accent: var(--dm-accent);
-  --frog-warm: var(--dm-warm);
-  --text-dark: var(--dm-text);
-  --frog-green: var(--dm-green);
+  --frog-bg: var(--dm-bg) !important;
+  --frog-light: var(--dm-light) !important;
+  --frog-accent: var(--dm-accent) !important;
+  --frog-warm: var(--dm-warm) !important;
+  --text-dark: var(--dm-text) !important;
+  --frog-green: var(--dm-green) !important;
 }
 
 html.dark body {
   background-image:
     radial-gradient(circle at 10% 90%, rgba(82, 183, 136, 0.04) 0%, transparent 50%),
     radial-gradient(circle at 90% 10%, rgba(45, 106, 79, 0.06) 0%, transparent 50%);
+  background: var(--dm-bg) !important;
+  color: var(--dm-text) !important;
 }
 
 /* Improve dark mode readability for links and headings */
-html.dark a { color: var(--dm-accent); }
-html.dark a:hover { color: #6fcf97; }
-html.dark header { background: var(--dm-card); border-color: var(--dm-card-border); }
-html.dark .entry-content { background: var(--dm-card); border-color: var(--dm-card-border); }
+html.dark a { color: var(--dm-accent) !important; }
+html.dark a:hover { color: #6fcf97 !important; }
+html.dark header { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; }
+html.dark .entry-content { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; }
 
 /* Dark mode for blog.css elements (imported via @import) */
-html.dark .blog-header { background: var(--dm-card); }
-html.dark .post-card { background: var(--dm-card); border-color: var(--dm-card-border); }
-html.dark .post-card:hover { border-color: var(--dm-accent); }
-html.dark .post-meta { color: #7a8a82; }
-html.dark .post-excerpt { color: #8a9a92; }
-html.dark article { background: var(--dm-card); }
-html.dark .article-body { color: var(--dm-text); }
-html.dark .article-body code { background: #1a2e25; }
-html.dark .article-body td { border-color: var(--dm-card-border); }
-html.dark .article-body tr:nth-child(even) td { background: rgba(82, 183, 136, 0.04); }
-html.dark .article-body td:first-child { color: var(--dm-accent); }
-html.dark .article-body blockquote { background: #141f1a; color: #9aaba3; }
-html.dark .article-body .notebook-note { background: #1e2516; border-color: #8a7a2a; color: #b8a84a; }
-html.dark .article-body .notebook-note strong { color: #d4c45e; }
-html.dark .article-body .froggy-rule { background: #1e2516; border-color: #8a7a2a; color: #b8a84a; }
-html.dark .article-body .froggy-rule strong { color: #d4c45e; }
-html.dark .article-body .frog-diagram svg { background: #141f1a; }
-html.dark .coming-soon { background: var(--dm-card); border-color: var(--dm-card-border); color: #7a8a82; }
-html.dark footer { color: #6a7a72; }
-html.dark .blog-desc { color: #8a9a92; }
-html.dark .search-input { background: var(--dm-card); border-color: var(--dm-card-border); color: var(--dm-text); }
+html.dark .blog-header { background: var(--dm-card) !important; }
+html.dark .post-card { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; }
+html.dark .post-card:hover { border-color: var(--dm-accent) !important; }
+html.dark .post-meta { color: #7a8a82 !important; }
+html.dark .post-excerpt { color: #8a9a92 !important; }
+html.dark article { background: var(--dm-card) !important; }
+html.dark .article-body { color: var(--dm-text) !important; }
+html.dark .article-body code { background: #1a2e25 !important; }
+html.dark .article-body td { border-color: var(--dm-card-border) !important; }
+html.dark .article-body tr:nth-child(even) td { background: rgba(82, 183, 136, 0.04) !important; }
+html.dark .article-body td:first-child { color: var(--dm-accent) !important; }
+html.dark .article-body blockquote { background: #141f1a !important; color: #9aaba3 !important; }
+html.dark .article-body .notebook-note { background: #1e2516 !important; border-color: #8a7a2a !important; color: #b8a84a !important; }
+html.dark .article-body .notebook-note strong { color: #d4c45e !important; }
+html.dark .article-body .froggy-rule { background: #1e2516 !important; border-color: #8a7a2a !important; color: #b8a84a !important; }
+html.dark .article-body .froggy-rule strong { color: #d4c45e !important; }
+html.dark .article-body .frog-diagram svg { background: #141f1a !important; }
+html.dark .coming-soon { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; color: #7a8a82 !important; }
+html.dark footer { color: #6a7a72 !important; }
+html.dark .blog-desc { color: #8a9a92 !important; }
+html.dark .search-input { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; color: var(--dm-text) !important; }
+
+/* Force dark on common inline-styled containers */
+html.dark [style*="background:#"] { background: var(--dm-card) !important; }
+html.dark [style*="background: #"] { background: var(--dm-card) !important; }
+html.dark div[class*="card"] { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; }
+html.dark .card { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; }
 
 /* Smooth transition for theme change */
 html, body, header, a, .entry-content, footer {
