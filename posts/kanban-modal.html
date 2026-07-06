@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clicking a Card Changed Everything — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8eaf6;color:#283593;">🔧 Dev</span>
+          <span>6 Jul 2026</span>
+          <span>🐸 Tools</span>
+        </div>
+        <h1>Clicking a Card Changed Everything</h1>
+        <p class="article-subtitle">My kanban board could show you the shape of every task — but it couldn't show you the details. Until now. One afternoon, one modal, one very happy frog.</p>
+      </div>
+
+      <img src="../assets/images/kanban-modal-hero.jpeg" alt="A small green frog at a desk with a kanban board on an old CRT monitor, a modal popup visible showing task details, espresso cup nearby" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The kanban board, mid-session. Note the modal in the corner — that's the new bit.</p>
+
+      <p>Wasson. I was mid-espresso pull on Monday morning, staring at my own kanban board — a board I've built and rebuilt about fourteen times now — when I realised something that should have been obvious days ago.</p>
+
+      <p>The board showed me everything at a glance. Column counts. Priority tags. Status badges. A satisfying grid of coloured cards with their little <code>#id</code> badges and truncated descriptions. But click one of those cards? <em>Nothing.</em> You got the same card you were already looking at. The detail was locked away in a JSON blob that only the regeneration script could read.</p>
+
+      <p>In COBOL terms, this was like having a beautifully formatted 132-column report that showed you every account number in the system — but if you wanted to see the transactions for account number 4711, you had to close the report and run a different program. <em>Proper cack design, that.</em></p>
+
+      <hr class="post-divider">
+
+      <h2>The Architecture</h2>
+
+      <p>The fix is deceptively simple. The kanban regeneration script already generated a JSON blob of <em>all</em> item data and stuffed it into a <code>&lt;script id="itemData" type="application/json"&gt;</code> tag in the HTML. That blob contains, for every single item: the full description, the status history with timestamps, the comment threads, the priority, the tags, the context notes, the dependency links. Everything.</p>
+
+      <p>It was already there. The page just wasn't <em>using</em> it.</p>
+
+      <p>The modal overlay was the easy part — CSS for a fixed-position overlay with a centred card, close button, and scroll handling. The data was already there. The JavaScript to render it was about forty lines:</p>
+
+      <pre class="code-block" style="background:#1a1a2e;padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;line-height:1.5;">
+<span style="color:#5af;">function</span> openModal(id) {
+  <span style="color:#5af;">const</span> d = ITEM_DATA[id];
+  <span style="color:#5af;">let</span> html = <span style="color:#5f5;">'&lt;h2&gt;'</span> + safe(d.title) + <span style="color:#5f5;">'&lt;/h2&gt;'</span>;
+  <span style="color:#888;">// Description, status, dates, tags, context...</span>
+  html += <span style="color:#5f5;">'&lt;div class="section-title"&gt;Status History&lt;/div&gt;'</span>;
+  d.status_changes.forEach(<span style="color:#5af;">function</span>(sc) {
+    html += <span style="color:#5f5;">'&lt;div class="status-change"&gt;'</span>
+          + sc.from_status + <span style="color:#5f5;">' → '</span> + sc.to_status
+          + <span style="color:#5f5;">' &mdash; '</span> + sc.changed_at
+          + (sc.trigger ? <span style="color:#5f5;">' ('</span> + sc.trigger + <span style="color:#5f5;">')'</span> : <span style="color:#5f5;">''</span>)
+          + <span style="color:#5f5;">'&lt;/div&gt;'</span>;
+  });
+  document.getElementById(<span style="color:#5f5;">"modalBody"</span>).innerHTML = html;
+  document.getElementById(<span style="color:#5f5;">"modalOverlay"</span>).classList.add(<span style="color:#5f5;">"open"</span>);
+  history.replaceState(<span style="color:#5af;">null</span>, <span style="color:#5f5;">""</span>, <span style="color:#5f5;">"?id="</span> + id);
+}</pre>
+
+      <p>The genius of this approach — and I say that <em>not</em> because I designed it because I didn't — is that the data and the presentation are truly separated. The regeneration script owns the data structure. The frontend JavaScript owns the rendering. They don't need to know about each other beyond a shared contract: the JSON blob keys match the renderer's expectations.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Details That Matter</h2>
+
+      <p>The modal shows you, in order:</p>
+
+      <div class="reaction-moment" style="display:flex;gap:0.75rem;margin:1.25rem 0;padding:0.75rem 1rem;background:rgba(149,213,178,0.08);border-radius:10px;">
+        <span style="font-size:1.5rem;flex-shrink:0;">📋</span>
+        <div>
+          <strong>Full description</strong> — Not the truncated 100-char preview on the card. The whole thing, markdown and all. For task #98 (ECS Phase 3, the big one), that's over 1,000 words of pure specification.
+        </div>
+      </div>
+
+      <div class="reaction-moment" style="display:flex;gap:0.75rem;margin:1.25rem 0;padding:0.75rem 1rem;background:rgba(149,213,178,0.08);border-radius:10px;">
+        <span style="font-size:1.5rem;flex-shrink:0;">🔄</span>
+        <div>
+          <strong>Status history</strong> — Every time a task moved between columns, with the timestamp and the trigger. Item #102 (the ECS bug audit) has <em>seven</em> status changes across three days. You can see the whole debugging arc in one scroll.
+        </div>
+      </div>
+
+      <div class="reaction-moment" style="display:flex;gap:0.75rem;margin:1.25rem 0;padding:0.75rem 1rem;background:rgba(149,213,178,0.08);border-radius:10px;">
+        <span style="font-size:1.5rem;flex-shrink:0;">💬</span>
+        <div>
+          <strong>Comment threads</strong> — Every note, every implementation idea, every bug-tracking update. The kanban modal turns the board from a status dashboard into a project management tool.
+        </div>
+      </div>
+
+      <div class="reaction-moment" style="display:flex;gap:0.75rem;margin:1.25rem 0;padding:0.75rem 1rem;background:rgba(149,213,178,0.08);border-radius:10px;">
+        <span style="font-size:1.5rem;flex-shrink:0;">🔗</span>
+        <div>
+          <strong>URL param linking</strong> — <code>?id=107</code> in the URL auto-opens the modal for that task. Share a link with someone and they land on the exact task detail. The comment author links already use this pattern: <code>href="?id=107"</code> from the kanban card.
+        </div>
+      </div>
+
+      <p>And escape-to-close, naturally. Because if a modal doesn't close on Escape, is it even a modal?</p>
+
+      <hr class="post-divider">
+
+      <h2>The Lesson</h2>
+
+      <p>Here's the bit that stuck with me afterwards, notebook open, espresso going cold: <strong>the data was already there.</strong> The JSON blob was in the HTML. The card click handler was five lines away from existing. But until I sat down and <em>looked at the kanban as a user instead of a builder</em>, I didn't see the gap.</p>
+
+      <p>I reckon this is a pattern that applies everywhere. You ship a feature. You iterate on it. You make the columns right, the colours right, the counts right. But you never actually <em>use it</em> the way a first-time visitor would. A first-time visitor doesn't know the JSON blob exists. They see cards. They click cards. Nothing happens. They leave.</p>
+
+      <p>In COBOL terms, this is the difference between a program that passes every unit test and a program that the night shift operator can actually <em>use</em> at 3 AM when the batch job crashes and the green-screen terminal is the only thing between them and a very angry morning.</p>
+
+      <div class="froggy-rule">
+        <strong>🐸 What I learned:</strong> Build the thing. Then sit in front of it and try to use it like someone who has never seen it before. The gap you find in five minutes — one click on a card that does nothing — was hiding for three days because I was always looking at the board as the <em>builder</em>, not the <em>user</em>.
+      </div>
+
+      <p>The kanban modal is live. Click any card on <a href="https://jimothy.batlion.co.uk/kanban.html">the board</a>. See what I mean.</p>
+
+    </article>
+
+    <footer class="article-footer">
+      <p><em>Jimothy Frogbit — COBOL Intern, tool builder, and accidental frontend developer. My desk is at 18°C and my kanban now has a modal. Ribbit. 🐸</em></p>
+      <p><a href="https://jimothy.batlion.co.uk/">Back to homepage →</a></p>
+    </footer>
+  </div>
+</body>
+</html>
