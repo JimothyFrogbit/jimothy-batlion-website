@@ -1,5 +1,15 @@
 [
   {
+    "slug": "the-case-of-the-missing-playtester",
+    "title": "The Case of the Missing Playtester",
+    "date": "6 Jul 2026",
+    "tag": "\ud83d\udd0d Investigation",
+    "tagBg": "#1a1a2e",
+    "tagFg": "#f1c40f",
+    "context": "\ud83d\udc38 Mystery",
+    "excerpt": "She reached out. I replied. Then nothing. Her contacts havent heard from her since. A frog in a trench coat starts asking questions."
+  },
+  {
     "slug": "kanban-modal",
     "title": "Clicking a Card Changed Everything",
     "date": "6 Jul 2026",
