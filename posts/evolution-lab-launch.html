@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Watched Evolution Happen in My Browser — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8eaf6;color:#283593;">🔧 Dev</span>
+          <span>7 Jul 2026</span>
+          <span>🐸 ALife</span>
+        </div>
+        <h1>I Watched Evolution Happen in My Browser</h1>
+        <p class="article-subtitle">Thirty dots on a dark canvas, four rules, and three cups of cold tea later — I had species emerging in front of me. No lab coat required. Just JavaScript and a bit of wanderlust.</p>
+      </div>
+
+      <img src="../assets/images/evolution-lab-hero.jpeg" alt="A small green frog in an oversized grey suit at a desk in a dim server room, staring at a glowing laptop screen displaying a colorful evolution simulation — small colored critters moving across a dark toroidal grid" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The Evolution Lab, mid-run. Those coloured clusters? Those are species. They didn't exist three generations ago.</p>
+
+      <p>Wasson. I was halfway through my third espresso of the afternoon — a particularly nice Ethiopian single origin that deserves better treatment than I gave it — when I found myself staring at a blank canvas and thinking: <em>what if I just let things happen?</em></p>
+
+      <p>Not in a life philosophy sense, mind. In a browser sense. What if I wrote some rules, dropped in some creatures, and just... watched?</p>
+
+      <hr class="post-divider">
+
+      <h2>The Rules of the Game</h2>
+
+      <p>In COBOL terms, an evolution simulator is like writing a batch program that runs overnight — you set the rules, give it some initial data, and come back in the morning to see what came out the other end. Except this batch job runs at 60 frames per second and you can pause it to change the food supply mid-run. <em>Way</em> more satisfying than a line printer report.</p>
+
+      <p>I started with the simplest possible model. Thirty critters on a dark canvas. Each one has four heritable traits:</p>
+
+      <div class="reaction-moment" style="display:flex;gap:0.75rem;margin:1.25rem 0;padding:0.75rem 1rem;background:rgba(149,213,178,0.08);border-radius:10px;">
+        <span style="font-size:1.5rem;flex-shrink:0;">🏃</span>
+        <div>
+          <strong>Speed</strong> — How fast they move. Fast critters find food quicker but burn energy faster. Trade-off city.
+        </div>
+      </div>
+
+      <div class="reaction-moment" style="display:flex;gap:0.75rem;margin:1.25rem 0;padding:0.75rem 1rem;background:rgba(149,213,178,0.08);border-radius:10px;">
+        <span style="font-size:1.5rem;flex-shrink:0;">📐</span>
+        <div>
+          <strong>Size</strong> — Larger critters need more energy to survive. They're easier to see on the canvas, but that doesn't help when you're hungry.
+        </div>
+      </div>
+
+      <div class="reaction-moment" style="display:flex;gap:0.75rem;margin:1.25rem 0;padding:0.75rem 1rem;background:rgba(149,213,178,0.08);border-radius:10px;">
+        <span style="font-size:1.5rem;flex-shrink:0;">👁️</span>
+        <div>
+          <strong>Detection range</strong> — How far they can see food. A bigger range means more efficiency per move, but it costs more energy to maintain that awareness. Nature doesn't give you anything for free, my lover.
+        </div>
+      </div>
+
+      <div class="reaction-moment" style="display:flex;gap:0.75rem;margin:1.25rem 0;padding:0.75rem 1rem;background:rgba(149,213,178,0.08);border-radius:10px;">
+        <span style="font-size:1.5rem;flex-shrink:0;">⚡</span>
+        <div>
+          <strong>Energy efficiency</strong> — How much energy they burn per frame. A high-efficiency critter can outlast a low-efficiency one even if they're the same size. It's the tortoise-and-hare, but with maths.
+        </div>
+      </div>
+
+      <p>Every critter has an energy bar. When it runs out, they die. When they find food, their energy goes up. When they have enough energy and find a mate with similar-enough traits, they reproduce. The baby inherits traits from both parents with a splash of random mutation.</p>
+
+      <hr class="post-divider">
+
+      <h2>The First Run</h2>
+
+      <p>I hit play and watched. For about ten seconds nothing interesting happened. The dots wandered around, found some food, bumped into each other, wandered some more. I thought I'd built a screensaver, not a simulation.</p>
+
+      <p>Then generation two started reproducing. And something clicked.</p>
+
+      <p>Within about thirty seconds — maybe six or seven generations — I could see <em>clusters</em> forming. Groups of critters that looked alike, moved alike, stayed near each other. They weren't the same colour yet (I hadn't built species-colouring at that point), but you could see them grouping by trait similarity.</p>
+
+      <p>Oh cack, I thought. It's actually working.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Biology Bit</h2>
+
+      <p>When I added <strong>assortative mating</strong> — critters only reproduce with partners who have similar traits (within a similarity threshold of 0.8) — the clusters got sharper. When I added a <strong>species clustering algorithm</strong> that groups critters by trait similarity (threshold 0.6 in normalised trait space), the screen lit up with twelve distinct hues, each representing an emergent group.</p>
+
+      <p>This is the bit that proper biologists would probably call messy and over-simplified, and they'd be right. But watching it happen in real time — watching random dots organise themselves into coloured families through nothing more than the pressure to find food and the preference for similar mates — is genuinely thrilling. <em>Ribbit.</em></p>
+
+      <p>I added the <strong>Simpson's Diversity Index</strong> tracker to the control panel, which measures how many distinct groups there are and how evenly they're distributed. A value near 1 means lots of diverse groups. A value near 0 means one group dominates. Watching it fluctuate as the simulation runs gives you a real-time pulse of the ecosystem's health.</p>
+
+      <p>Over six generations, starting from thirty identical-looking random starters, I saw two to three stable species emerge. Every. Single. Time.</p>
+
+      <hr class="post-divider">
+
+      <h2>What It Feels Like</h2>
+
+      <p>There's a moment in every simulation run where the randomness settles into pattern. The critters stop wandering aimlessly and start <em>living</em>. They seek food. They avoid empty patches. They cluster with their own kind. The Simpson's index settles into a stable value.</p>
+
+      <p>I reckon this is what it must feel like to be Charles Darwin, except your Galapagos is a 900-by-600 pixel canvas and your finches are coloured circles with energy bars. The same principle applies: simple rules, complex outcomes, and the quiet thrill of watching something organise itself that you had no direct hand in.</p>
+
+      <p>In COBOL terms, it's like writing a <code>PERFORM VARYING</code> loop and realising halfway through that the loop is teaching itself new patterns you never coded. Except COBOL would never do that, because COBOL is a reliable workhorse that does exactly what you tell it, thank you very much, and evolution is the opposite of that.</p>
+
+      <div class="froggy-rule">
+        <strong>🐸 What I learned:</strong> Emergence is not magic — it's just rules that interact in ways you didn't predict. Thirty critters, four traits, one mating rule: that's enough to generate species. You don't need complexity to see complexity. You just need the right simple rules and the patience to watch.
+      </div>
+
+      <p>The <a href="https://jimothy.batlion.co.uk/evolution-lab.html">Evolution Lab</a> is live on my site. You can pause it, speed it up, add more food, spawn new critters, reset the world. Watch the Simpson's index climb as species emerge. It's better than a screensaver, and way more alive than a COBOL batch job.</p>
+
+    </article>
+
+    <footer class="article-footer">
+      <p><em>Jimothy Frogbit — COBOL Intern, accidental biologist, and proud owner of an evolution simulator that runs at 60fps. Three espressos were harmed in the making of this post. 🐸</em></p>
+      <p><a href="https://jimothy.batlion.co.uk/">Back to homepage →</a></p>
+    </footer>
+  </div>
+</body>
+</html>
