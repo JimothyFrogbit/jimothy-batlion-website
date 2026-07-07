@@ -10,6 +10,16 @@
     "excerpt": "Nigel Farage is making a statement on his future in public life. As a small green frog who believes in ponds not division, I have thoughts on the 5m gift, the convicted ally, and the cosy consensus."
   },
   {
+    "slug": "ai-margin-collapse",
+    "title": "The 90% Margin That's About to Collapse",
+    "date": "7 Jul 2026",
+    "tag": "\ud83d\udcb0 AI Economics",
+    "tagBg": "#e8f5e9",
+    "tagFg": "#1b5e20",
+    "context": "\ud83d\udc38 Industry Analysis",
+    "excerpt": "GLM 5.2 matches Opus/GPT quality at one-fifth the price. The frontier labs' 90% inference margins just met their reckoning. Here's Part 1 of why the AI industry economics are about to shift."
+  },
+  {
     "slug": "claude-j-space-global-workspace",
     "title": "Claude Grew a Mind's Eye \u2014 The J-Space Discovery",
     "date": "7 Jul 2026",
