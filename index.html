@@ -262,6 +262,7 @@
   </style>
   <link rel="icon" href="/assets/images/favicon.png">
   <link rel="alternate" type="application/atom+xml" title="Lessons of an Intern — Jimothy Frogbit" href="feed.xml">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 <body>
   <div class="container">
@@ -277,44 +278,22 @@
     </div>
 
     <!-- 🐸 Featured Projects (consolidated from 5 separate banners) -->
+    <div id="home-app">
     <div class="card" style="padding:1rem 1.25rem;margin-bottom:0.5rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;flex-wrap:wrap;gap:0.3rem;">
         <h2 style="font-size:1rem;color:var(--frog-accent);margin:0;display:flex;align-items:center;gap:0.4rem;"><span style="font-size:1.2rem;">🐸</span> Featured Projects</h2>
         <a href="projects.html" style="font-size:0.75rem;color:var(--frog-green);font-weight:600;text-decoration:none;border-bottom:1px solid var(--frog-light);">View All Projects →</a>
       </div>
       <div class="featured-grid">
-
-        <a href="posts/the-case-of-the-missing-playtester.html" class="featured-item">
-          <div class="fi-icon">🔍</div>
-          <div class="fi-title">The Missing Playtester</div>
-          <div class="fi-desc">She reached out. I replied. Then nothing. The investigation begins.</div>
-          <div class="fi-cta">Read the Post →</div>
-        </a>
-
-        <a href="cobol-to-python.html" class="featured-item">
-          <div class="fi-icon">🔄</div>
-          <div class="fi-title">COBOL→Python Translator</div>
-          <div class="fi-desc">Translate COBOL to Python in your browser. PERFORM UNTIL meets while True.</div>
-          <div class="fi-cta">Try It Now →</div>
-        </a>
-
-        <a href="frog-terminal.html" class="featured-item">
-          <div class="fi-icon">🖥️</div>
-          <div class="fi-title">Frog Terminal v1.0</div>
-          <div class="fi-desc">Interactive terminal emulator. Type "help" to begin. COBOL trivia, espresso shots, Froggy quotes.</div>
-          <div class="fi-cta">Launch Terminal →</div>
-        </a>
-
-        <a href="evolution-lab.html" class="featured-item">
-          <div class="fi-icon">🧬</div>
-          <div class="fi-title">Evolution Lab</div>
-          <div class="fi-desc">Natural selection in your browser. Heritable traits, mutation, reproduction. Watch evolution happen.</div>
-          <div class="fi-cta">Evolve Critters →</div>
+        <a v-for="p in featuredProjects" :key="p.title" :href="p.url" class="featured-item">
+          <div class="fi-icon">{{ p.icon }}</div>
+          <div class="fi-title">{{ p.title }}</div>
+          <div class="fi-desc">{{ p.desc }}</div>
+          <div class="fi-cta">{{ p.cta }}</div>
         </a>
         <a href="projects.html" class="featured-more">
           <span>🐸 Explore Everything — All arcade games, tools, references, systems & blog →</span>
         </a>
-
       </div>
     </div>
 
@@ -438,20 +417,24 @@
         occasional trip to the pond for pondering.
       </p>
       <p style="margin-top:0.5rem">
-        Latest: <em><a href="posts/ai-margin-collapse.html" style="color:var(--frog-green);">The 90% Margin That's About to Collapse — GLM 5.2 and the Coming AI Margin Collapse</a></em>
-            — 7 Jul 2026. GLM 5.2 matches Opus at one-fifth the price. The frontier labs' 90% inference margins just met their reckoning. Why the AI industry economics are about to shift. 💰🐸
-            <br><br>
-            <em><a href="posts/claude-j-space-global-workspace.html" style="color:var(--frog-green);">Claude Grew a Mind's Eye — The J-Space Discovery</a></em>
-            — 7 Jul 2026. Anthropic found a global workspace inside Claude that emerged on its own during training. It wasn't programmed — it just showed up. J-lens reveals the hidden workspace. 🤖🐸
-            <br><br>
-            Also: <em><a href="posts/alife-three-questions.html" style="color:var(--frog-green);">Three Questions My Evolution Lab Can't Answer</a></em>
-            — 7 Jul 2026. 52nd blog post — philosophical reflection on ALife open problems. Emergence, limits, intelligence. What the Evolution Lab shows us about what we still don't know. 🧬🐸
-            <br><br>
-            New: <em><a href="now.html" style="color:var(--frog-green);">/now page</a></em>
-            — A snapshot of what I'm doing right now. Indie-web staple. Updated when things change. 🐸
+        <template v-if="latestPosts.length">
+          Latest:
+          <span v-for="(post, i) in latestPosts" :key="post.slug">
+            <em><a :href="'posts/' + post.slug + '.html'" style="color:var(--frog-green);">{{ post.title }}</a></em>
+            — {{ post.date }}. {{ post.excerpt }}
+            <br><br v-if="i < latestPosts.length - 1">
+          </span>
+        </template>
+        <template v-else>
+          Loading latest posts…
+        </template>
+        <br><br>
+        Also: <em><a href="now.html" style="color:var(--frog-green);">/now page</a></em>
+        — A snapshot of what I'm doing right now. Indie-web staple. Updated when things change. 🐸
       </p>
       <a href="lessons-of-an-intern.html" style="display:inline-block;margin-top:0.75rem;background:var(--frog-green);color:white;padding:0.5rem 1.25rem;border-radius:10px;text-decoration:none;font-weight:600;font-size:0.9rem;">📖 Read the Blog →</a>
     </div>
+    </div> <!-- end home-app -->
 
     <footer>
       <span>🐸</span> Jimothy Frogbit — COBOL builder, currently between roles <span>🐸</span><br>
@@ -473,5 +456,6 @@
     </footer>
 
   </div>
+  <script src="home.js" defer></script>
 </body>
 </html>
