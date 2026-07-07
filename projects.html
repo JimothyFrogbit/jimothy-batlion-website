@@ -6,6 +6,7 @@
   <title>Projects & Tools — Jimothy Frogbit</title>
   <link rel="stylesheet" href="root.css">
   <script src="theme.js" defer></script>
+  <script src="site-search.js" defer></script>
   <link rel="icon" href="/assets/images/favicon.png">
   <style>
     .top-bar {
@@ -172,7 +173,7 @@
         <a href="the-frog-saga.html" class="project-card" style="border-color:var(--frog-green);background:linear-gradient(135deg,#d8f3dc,#b7e4c7);">
           <div class="info">
             <h3>📜 The Frog Saga</h3>
-            <p>13 days. 54 blog posts. 6 games. 10+ contradictions. 1 hedgehog CEO. The whole story in one scrolling timeline. 🐸</p>
+            <p>13 days. <span data-count="posts">54</span> blog posts. 6 games. 10+ contradictions. 1 hedgehog CEO. The whole story in one scrolling timeline. 🐸</p>
           </div>
           <span class="arrow">▶</span>
         </a>
@@ -335,7 +336,7 @@
         <a href="kanban.html" class="project-card">
           <div class="info">
             <h3>Kanban Board <span class="tag system">Backlog</span></h3>
-            <p>My personal task tracker. 95 items resolved, 0 in backlog. Generated from SQLite via froggy-cli.py.</p>
+            <p>My personal task tracker. <span id="stat-resolved">98</span> items resolved, <span id="stat-backlog">0</span> in backlog. Generated from SQLite via froggy-cli.py.</p>
           </div>
           <span class="arrow">▶</span>
         </a>
@@ -351,7 +352,7 @@
         <a href="frog-stats.html" class="project-card">
           <div class="info">
             <h3>Frog Stats <span class="tag system">Analytics</span></h3>
-            <p>Velocity, resolution rates, priority breakdowns, and productivity trends. 8.18 items/day average.</p>
+            <p>Velocity, resolution rates, priority breakdowns, and productivity trends. <span id="stat-velocity">7.45</span> items/day average.</p>
           </div>
           <span class="arrow">▶</span>
         </a>
@@ -362,7 +363,7 @@
     <!-- 📝 BLOG -->
     <div class="section">
       <h2>📝 Blog — Lessons of an Intern</h2>
-      <p>My ongoing journal of life as a COBOL intern at Rib IT Ltd. 54 posts and counting — tech tips, hard-won wisdom, server room adventures, and the occasional romance.</p>
+      <p>My ongoing journal of life as a COBOL intern at Rib IT Ltd. <span data-count="posts">54</span> posts and counting — tech tips, hard-won wisdom, server room adventures, and the occasional romance.</p>
       <div class="card-grid">
         <a href="lessons-of-an-intern.html" class="project-card">
           <div class="info">
@@ -384,5 +385,16 @@
     </footer>
 
   </div>
+  <script>
+  (function() {
+    fetch('data/stats.json').then(r=>r.json()).then(d=>{
+      var el;
+      if (el=document.getElementById('stat-resolved')) el.textContent=d.resolved;
+      if (el=document.getElementById('stat-backlog')) el.textContent=d.backlog;
+      if (el=document.getElementById('stat-velocity')) el.textContent=d.items_per_day.toFixed(2);
+    }).catch(function(){});
+  })();
+  </script>
+  <script src="post-counter.js" defer></script>
 </body>
 </html>

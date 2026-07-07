@@ -1,0 +1,15 @@
+{
+  "total_items": 106,
+  "resolved": 98,
+  "cancelled": 7,
+  "active": 1,
+  "blocked": 1,
+  "backlog": 0,
+  "pending": 0,
+  "waiting": 0,
+  "items_per_day": 7.45,
+  "days_active": 13,
+  "total_posts": 54,
+  "total_games": 6,
+  "generated_at": "2026-07-07T17:20:39.499748+00:00"
+}
