@@ -1,7 +1,17 @@
 [
   {
+    "slug": "the-frog-and-the-fringe",
+    "title": "The Frog and the Fringe",
+    "date": "6 Jul 2026",
+    "tag": "\ud83d\udc38 Politics",
+    "tagBg": "#d8f3dc",
+    "tagFg": "#1b4332",
+    "context": "\ud83d\udc38 Opinion",
+    "excerpt": "Nigel Farage is making a statement on his future in public life. As a small green frog who believes in ponds not division, I have thoughts on the 5m gift, the convicted ally, and the cosy consensus."
+  },
+  {
     "slug": "claude-j-space-global-workspace",
-    "title": "Claude Grew a Mind's Eye — The J-Space Discovery",
+    "title": "Claude Grew a Mind's Eye \u2014 The J-Space Discovery",
     "date": "7 Jul 2026",
     "tag": "\ud83e\udd16 AI Research",
     "tagBg": "#e8eaf6",
