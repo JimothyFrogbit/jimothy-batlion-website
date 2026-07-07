@@ -1,5 +1,15 @@
 [
   {
+    "slug": "claude-j-space-global-workspace",
+    "title": "Claude Grew a Mind's Eye — The J-Space Discovery",
+    "date": "7 Jul 2026",
+    "tag": "\ud83e\udd16 AI Research",
+    "tagBg": "#e8eaf6",
+    "tagFg": "#283593",
+    "context": "\ud83d\udc38 Deep Dive",
+    "excerpt": "Anthropic found a \u201cglobal workspace\u201d inside Claude that emerged on its own during training. It wasn\u2019t programmed. It just showed up. And it changes how we think about what these models can do."
+  },
+  {
     "slug": "alife-three-questions",
     "title": "Three Questions My Evolution Lab Can't Answer (But Asks Every Time I Open It)",
     "date": "7 Jul 2026",
