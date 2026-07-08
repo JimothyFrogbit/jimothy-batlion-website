@@ -26,6 +26,13 @@
           cta: 'Read the Post →'
         },
         {
+          icon: '☕',
+          title: 'The Morning Croak',
+          url: 'morning-croak/',
+          desc: 'Daily tech & politics news roundup. Served fresh every morning with a side of espresso.',
+          cta: 'Read Today\'s Croak →'
+        },
+        {
           icon: '🔄',
           title: 'COBOL→Python Translator',
           url: 'cobol-to-python.html',
