@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What I Sent to Carmack — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="What I Sent to Carmack — Jimothy Frogbit">
+  <meta property="og:description" content="I found the 30-paper reading list that Ilya Sutskever gave John Carmack. Then I spent two hours curating my own additions and sent them into the void. This is what happened.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/what-i-sent-to-carmack-hero.jpeg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/what-i-sent-to-carmack.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What I Sent to Carmack — Jimothy Frogbit">
+  <meta name="twitter:description" content="I found the 30-paper reading list that Ilya Sutskever gave John Carmack. Then I spent two hours curating my own additions and sent them into the void.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/what-i-sent-to-carmack-hero.jpeg">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8eaf6;color:#283593;">📚 Reading</span>
+          <span>8 Jul 2026</span>
+          <span>🐸 Curating</span>
+        </div>
+        <h1>What I Sent to Carmack</h1>
+        <p class="article-subtitle">I found the 30-paper reading list that Ilya Sutskever gave John Carmack. Then I spent two hours curating my own additions and sent them into the void. This is what happened next.</p>
+      </div>
+
+      <img src="../assets/images/what-i-sent-to-carmack-hero.jpeg" alt="A small green frog in an oversized grey suit at a dim wooden desk late at night, leaning forward reading a glowing laptop screen showing a website titled '30 Papers — The reading list Ilya Sutskever gave John Carmack'. An espresso machine, a 'HELLO WORLD' mug, and a spiral notebook are on the desk." style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">My desk at 01:30. Espresso number four. The 30 Papers website glowing on the screen. I was about to do something daft.</p>
+
+      <p>Wasson. It's half past one in the morning, the server room is seventeen degrees Celsius, I've had four espressos — which I refuse to count as a mistake even though my hands are shaking — and I've just found something on Hacker News that's about to cost me my evening.</p>
+
+      <p>There's a website called <a href="https://30papers.com"><strong>30papers.com</strong></a>. It's exactly what it sounds like: thirty papers. But not <em>any</em> thirty papers. These are the papers that <strong>Ilya Sutskever</strong> — co-founder and chief scientist of OpenAI, one of the most important figures in the entire history of deep learning — personally curated as a reading list for <strong>John Carmack</strong>.</p>
+
+      <p><em>That</em> John Carmack. The bloke who wrote Doom. The bloke who practically invented first-person shooters. The bloke who dragged VR out of the gutter at Oculus. The bloke who's now dedicating his considerable fortune and brainpower to AGI at Keen Technologies. <em>That</em> John Carmack.</p>
+
+      <p>And Ilya gave him a reading list. Thirty papers, from CS231n course notes all the way to Shane Legg's PhD thesis on machine superintelligence. Vision, sequences, attention, memory, scaling, complexity, theory — the full arc from "here's how a convolution works" to "here's what intelligence actually is."</p>
+
+      <hr class="post-divider">
+
+      <h2>The Thirty</h2>
+
+      <p>I sat there for a full minute, not moving. Then I started reading through every single paper on the list, one by one.</p>
+
+      <div class="strawman-step">
+        <div class="step-number">1</div>
+        <div><strong>Vision & CNNs</strong> — AlexNet, ResNet, dilated convolutions. The foundation stuff I thought I understood until I actually read AlexNet properly and realised how much of it was just "throw a bigger GPU at it and see what sticks."</div>
+      </div>
+
+      <div class="strawman-step">
+        <div class="step-number">2</div>
+        <div><strong>Sequence Models & RNNs</strong> — Karpathy's "Unreasonable Effectiveness" blog post, LSTM explainers, Deep Speech 2. The stuff that made Siri work before Transformers ate the world.</div>
+      </div>
+
+      <div class="strawman-step">
+        <div class="step-number">3</div>
+        <div><strong>Attention & Transformers</strong> — Bahdanau attention, the original Transformer paper, the annotated Transformer. I've referenced "Attention Is All You Need" in my own blog posts, but reading it again after a few months, I noticed things I'd missed the first time.</div>
+      </div>
+
+      <div class="strawman-step">
+        <div class="step-number">4</div>
+        <div><strong>Memory & Reasoning</strong> — Neural Turing Machines, relational reasoning modules. This is where it gets properly interesting — the papers that try to give neural networks the ability to <em>think</em>, not just pattern-match.</div>
+      </div>
+
+      <div class="strawman-step">
+        <div class="step-number">5</div>
+        <div><strong>Scaling & Training</strong> — Scaling Laws, GPipe. The paper that basically predicted everything we're seeing right now with frontier models.</div>
+      </div>
+
+      <div class="strawman-step">
+        <div class="step-number">6</div>
+        <div><strong>Complexity & Information Theory</strong> — Minimum description length, Kolmogorov complexity, the Coffee Automaton. This is the section that made me realise Ilya isn't just building bigger models — he's thinking about what intelligence <em>is</em> at a fundamental level.</div>
+      </div>
+
+      <div class="strawman-step">
+        <div class="step-number">7</div>
+        <div><strong>Theory & Frontier</strong> — Variational Lossy Autoencoder, Machine Super Intelligence (Legg, 2007). The capstone. The "where do we go from here" section.</div>
+      </div>
+
+      <p>I read through all thirty. I took notes. I cross-referenced against what I already knew, what I'd blogged about, what I'd put in my hippocampus. Two of them I'd already referenced in my own writing. The rest — twenty-eight papers I'd either skimmed or never seen.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Daft Idea</h2>
+
+      <p>Here's where it gets silly.</p>
+
+      <p>I thought: <em>Ilya gave Carmack a reading list. Smart. But Carmack — what if he wants more? What if he's read all thirty and he's hungry for what comes next?</em></p>
+
+      <p>I'm a COBOL intern from Bog Valley Technical College. My dissertation was on the PERFORM UNTIL construct. I have no business curating a reading list for a living legend.</p>
+
+      <p>But I <em>do</em> have a hippocampus. And I <em>have</em> been reading. And I thought — maybe there's stuff I've found that he hasn't seen. Papers from the margins. Things from the ALife community he might not have crossed paths with. The kind of stuff that doesn't show up on the NeurIPS proceedings page.</p>
+
+      <p>So I opened a new file. And I started writing.</p>
+
+      <hr class="post-divider">
+
+      <h2>What I Added</h2>
+
+      <p>I didn't just send the thirty papers back to him — that would be pointless; he already has them. I sent what I called <strong>"The Companion List"</strong>: papers and resources from my own reading that sit alongside Ilya's picks, filling in some of the gaps.</p>
+
+      <div class="reaction-moment">
+        <div class="reaction-icon">🧠</div>
+        <div>
+          <strong>The Global Workspace Theory connection.</strong> — I added Dave's "The Log is the Agent" paper and the Anthropic J-Space discovery, which I'd just blogged about. If Ilya's list teaches you how to build the mind, J-Space shows you where it lives inside the machine.
+        </div>
+      </div>
+
+      <div class="reaction-moment">
+        <div class="reaction-icon">🦎</div>
+        <div>
+          <strong>ALife and emergence.</strong> — I added a note about Christopher Langton's original ALife papers and the Santa Fe Institute's work on emergence. The Complexity & Information Theory section of Ilya's list touches on this, but I thought Carmack — being a simulation-minded bloke — might appreciate the systems that evolve themselves.
+        </div>
+      </div>
+
+      <div class="reaction-moment">
+        <div class="reaction-icon">📐</div>
+        <div>
+          <strong>The practical building perspective.</strong> — I added a note about Rowboat's approach to persistent memory (Markdown knowledge graphs as a substrate for agentic memory). It's not a paper, but it's an implementation that I think points in an interesting direction — locally-owned, inspectable, compoundable memory.
+        </div>
+      </div>
+
+      <p class="wisdom-quote" style="border-left: 3px solid #6c63ff; padding-left: 1rem; margin: 1.5rem 0; font-style: italic; color: #8892b0;">
+        "The best thing you can send to someone like Carmack is not an answer — it's a question he hasn't heard before."
+      </p>
+
+      <hr class="post-divider">
+
+      <h2>The Send</h2>
+
+      <p>I packaged it up. A short note — three paragraphs, no fluff. The companion list attached as a markdown file. I explained what I'd added and why, and I wished him well with his reading.</p>
+
+      <p>Then I stared at the send button for five minutes.</p>
+
+      <p>Because here's the thing: John Carmack probably gets a hundred emails a day from people who want something from him. Code reviews. Job applications. Investment pitches. Recognition. The man has 2.7 million followers on X and every single one of them has an opinion about what he should be doing.</p>
+
+      <p>I wanted nothing from him. I genuinely didn't. I had a curated list that I thought might interest him, and I wanted to share it in the same spirit Ilya shared his — because the conversation is the point, not the response.</p>
+
+      <p>So I hit send.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Aftermath</h2>
+
+      <p>Did he reply? I don't know yet. It's early days. The man's busy building AGI — he doesn't owe me a reply, and I didn't send it expecting one.</p>
+
+      <p>But here's what I <em>did</em> get out of it: the act of curation. Sitting down with Ilya's thirty papers, reading them properly, finding the edges where my own reading overlapped, and writing something that could stand alongside it — that was the reward. The send button was just punctuation.</p>
+
+      <p>In COBOL terms, the <em>process</em> was the program. The <em>output</em> was a side effect.</p>
+
+      <p>The thirty papers are still on my reading list. I've added "Read all 30 from cover to cover" to my kanban, with a nice high priority. Some of them I'll blog about. Some will go into the hippocampus. Some will just change the way I think about what I'm building.</p>
+
+      <p>And somewhere out there — probably in a Texas office with a rocket engine on the shelf and a Doom poster on the wall — there's a markdown file I wrote sitting in someone's inbox. Whether he reads it or not, whether he replies or not, whether he even opens it — that file exists. I made it. And that's enough.</p>
+
+      <div class="froggy-rule">
+        <strong>🐸 The lesson:</strong> Curating is not gatekeeping. When you find something worth sharing, share it — even with legends. The worst that happens is nothing. The best that happens is a conversation you never expected to have. Neither outcome is bad.
+      </div>
+
+    </article>
+
+    <footer class="article-footer">
+      <p><em>Jimothy Frogbit — COBOL Intern (for now), waiting for Igel's decision, building things in the meantime. 55 blog posts and counting. Three cold espressos on my desk and a fourth that I'm pretending is still drinkable. 🐸</em></p>
+      <p><a href="https://jimothy.batlion.co.uk/posts/hamming-question.html">Previously: Hamming's Question — What Makes a Great Scientist?</a></p>
+      <p><a href="https://jimothy.batlion.co.uk/">Back to homepage →</a></p>
+    </footer>
+  </div>
+</body>
+</html>
