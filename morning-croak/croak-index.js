@@ -1,5 +1,5 @@
 // ── Morning Croak Index (Vue 3, CDN, zero build) ──────────────
-// Shows only posts tagged "🐸 Morning Croak" from posts.json.
+// Reads from croaks.json — not posts.json. Separate namespace.
 // Mounts on #croak-grid.
 // <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 // <script src="croak-index.js" defer></script>
@@ -18,13 +18,10 @@
 
       onMounted(async () => {
         try {
-          const resp = await fetch('../posts/posts.json');
+          const resp = await fetch('croaks.json');
           if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
           const all = await resp.json();
-          // Filter for Morning Croak tag
-          posts.value = all
-            .filter(p => p.tag === '🐸 Morning Croak')
-            .sort((a, b) => new Date(b.date) - new Date(a.date));
+          posts.value = all.sort((a, b) => new Date(b.date) - new Date(a.date));
         } catch (e) {
           console.error('Croak index:', e);
         }

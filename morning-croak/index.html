@@ -136,7 +136,7 @@
         <span style="font-size:2.5rem;display:block;margin-bottom:0.5rem;">☕</span>
         No croaks yet. The first one's brewing...
       </p>
-      <a v-for="p in posts" :key="p.slug" :href="'morning-croak/' + p.slug.replace('morning-croak-', '') + '.html'" class="croak-entry">
+      <a v-for="p in posts" :key="p.slug" :href="p.slug + '.html'" class="croak-entry">
         <div class="ce-date">{{ p.date }}</div>
         <div class="ce-title">{{ p.title }}</div>
         <div class="ce-summary">{{ p.excerpt }}</div>
