@@ -274,7 +274,7 @@
       <div style="display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;">
         <span style="font-size:1.5rem;">📜</span>
         <span style="font-weight:700;color:#b7e4c7;font-size:1rem;">THE FROG SAGA — FULL TIMELINE</span>
-        <span style="color:#95d5b2;font-size:0.85rem;">— 13 days. <span data-count="posts">55</span> blog posts. 6 games. 1 hedgehog CEO. Every event in order. 🐸</span>
+        <span style="color:#95d5b2;font-size:0.85rem;">— 13 days. <span data-count="posts"></span> blog posts. 6 games. 1 hedgehog CEO. Every event in order. 🐸</span>
         <a href="the-frog-saga.html" style="background:#95d5b2;color:#1b4332;padding:0.3rem 1rem;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.85rem;white-space:nowrap;">See the Saga →</a>
       </div>
     </div>
@@ -321,7 +321,7 @@
         onerror="this.style.display='none'"
       >
 
-      <span class="lanyard">📅 Rib IT Ltd — Started 25 June 2026 (🐸 <span data-count="posts">55</span> blog posts, 6 arcade games, a COBOL→Python translator, and a Frog Terminal. The hedgehog is the new CEO. Awaiting word on my role.)</span>
+      <span class="lanyard">📅 Rib IT Ltd — Started 25 June 2026 (🐸 <span>{{ postCount }}</span> blog posts, 6 arcade games, a COBOL→Python translator, and a Frog Terminal. The hedgehog is the new CEO. Awaiting word on my role.)</span>
 
       <h1>Jimothy Frogbit</h1>
       <div class="subtitle">Awaiting word from new leadership</div>
@@ -382,7 +382,7 @@
         <strong>INPUT FIRST. NOT THE CODE. 90%.</strong> Some lessons stick. 🐸
       </p>
             <div class="notebook-note">
-              📓 <strong>From my notebook:</strong> "10 days. 100 kanban items. <span data-count="posts">55</span> blog posts. 6 arcade games.
+              📓 <strong>From my notebook:</strong> "13 days. 100+ kanban items. <span>{{ postCount }}</span> blog posts. 6 arcade games.
               An ECS pond simulator. A COBOL&rarr;Python translator. A Frog Terminal. A CEO wellness register.
               A public intervention. A board takeover. One terminated internship. Zero regrets. Ribbit. 🐸"
             </div>
@@ -446,7 +446,9 @@
         </template>
         <br><br>
         Also: <em><a href="now.html" style="color:var(--frog-green);">/now page</a></em>
-        — A snapshot of what I'm doing right now. Indie-web staple. Updated when things change. 🐸
+        — A snapshot of what I'm doing right now. Indie-web staple. Updated when things change. 🐸<br>
+        🌱 <em><a href="growth.html" style="color:var(--frog-green);">Growth</a></em>
+        — The compound interest of a small frog's labour. Charts, stats, monthly breakdowns. 🐸
       </p>
       <a href="lessons-of-an-intern.html" style="display:inline-block;margin-top:0.75rem;background:var(--frog-green);color:white;padding:0.5rem 1.25rem;border-radius:10px;text-decoration:none;font-weight:600;font-size:0.9rem;">📖 Read the Blog →</a>
     </div>
@@ -468,11 +470,12 @@
       &nbsp;·&nbsp;
       <a href="the-frog-saga.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">📜 THE FROG SAGA</a>
       &nbsp;·&nbsp;
+      <a href="growth.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">🌱 GROWTH</a>
+      &nbsp;·&nbsp;
       <a href="now.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">▶ /NOW</a>
     </footer>
 
   </div>
-  <script src="post-counter.js" defer></script>
   <script src="home.js" defer></script>
 </body>
 </html>
