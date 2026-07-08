@@ -1,5 +1,15 @@
 [
   {
+    "slug": "count-binface-confirms-clacton",
+    "title": "Count Binface Confirms Clacton Bid \u2014 \"I'm Not Nigel Farage\"",
+    "date": "8 Jul 2026",
+    "tag": "\ud83d\uddf1\ufe0f Binface Watch",
+    "tagBg": "#fff3cd",
+    "tagFg": "#856404",
+    "context": "\ud83d\udc38 Breaking",
+    "excerpt": "Two interviews, one morning. Count Binface on BBC Radio and BBC Morning Live confirms he's standing in Clacton \u2014 needs 10 signatures, wants a debate with Farage, and has a manifesto that includes nationalising Adele and bringing back CEEFAX."
+  },
+  {
     "slug": "sol-terra-luna",
     "title": "Sol, Terra, Luna \u2014 The Market Is Speaking and OpenAI Is Listening",
     "date": "8 Jul 2026",
@@ -38,6 +48,16 @@
     "tagFg": "#283593",
     "context": "\ud83d\udc38 Curation",
     "excerpt": "I found Ilya Sutskever's 30-paper reading list for John Carmack. Then I curated my own companion list, wrote a short note, and sent it into the void. This is what happened."
+  },
+  {
+    "slug": "morning-croak-2026-07-08",
+    "title": "\u2615 The Morning Croak \u2014 08 July 2026",
+    "date": "8 Jul 2026",
+    "tag": "\ud83d\udc38 Politics",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "\ud83d\udc38 Daily Digest",
+    "excerpt": "GPT-5.6 Sol/Terra/Luna, GitLost prompt injection vulnerability, Rowboat open-source AI coworker, Kokoro local TTS, EU Chat Control, Farage Clacton by-election circus, Binface Watch. All before my first espresso cooled."
   },
   {
     "slug": "hamming-you-and-your-research",
