@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — Archive — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — Archive">
+  <meta property="og:description" content="A daily roundup of tech and politics news, served fresh every morning with a side of espresso.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/count-binface-vs-farage.jpeg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — Archive">
+  <meta name="twitter:description" content="A daily roundup of tech and politics news, served fresh every morning with a side of espresso.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/count-binface-vs-farage.jpeg">
+  <style>
+    .croak-header {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: linear-gradient(135deg, #f0f4c3, #fff9c4);
+      border-radius: 20px;
+      margin-bottom: 2rem;
+      border: 2px solid #cddc39;
+    }
+    .croak-header h1 {
+      font-size: 1.8rem;
+      color: #827717;
+      margin-bottom: 0.3rem;
+    }
+    .croak-header .subtitle {
+      color: #9e9d24;
+      font-size: 0.95rem;
+    }
+    .croak-header .rss-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      background: #ff6600;
+      color: white;
+      padding: 0.2rem 0.7rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .croak-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .croak-entry {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-left: 4px solid #cddc39;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+    .croak-entry:hover {
+      border-color: #827717;
+      box-shadow: 0 2px 12px rgba(130, 119, 23, 0.12);
+      transform: translateX(2px);
+    }
+    .croak-entry .ce-date {
+      font-size: 0.75rem;
+      color: #9e9d24;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .croak-entry .ce-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #374151;
+      margin-top: 0.2rem;
+    }
+    .croak-entry .ce-summary {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 0.3rem;
+      line-height: 1.4;
+    }
+    .croak-entry .ce-tags {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .croak-entry .ce-tags span {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      background: #f0f4c3;
+      color: #827717;
+      font-weight: 500;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #8892b0;
+    }
+    .empty-state .big {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--frog-green);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <div class="croak-header">
+      <h1>☕ The Morning Croak</h1>
+      <div class="subtitle">A daily roundup of tech and politics news, served fresh every morning with a side of espresso. 🐸</div>
+      <a href="../feed.xml" class="rss-link">RSS</a>
+    </div>
+
+    <div id="croak-grid" class="croak-list">
+      <p v-if="!posts.length" class="empty-state" style="text-align:center;padding:3rem 1rem;color:#8892b0;">
+        <span style="font-size:2.5rem;display:block;margin-bottom:0.5rem;">☕</span>
+        No croaks yet. The first one's brewing...
+      </p>
+      <a v-for="p in posts" :key="p.slug" :href="'morning-croak/' + p.slug.replace('morning-croak-', '') + '.html'" class="croak-entry">
+        <div class="ce-date">{{ p.date }}</div>
+        <div class="ce-title">{{ p.title }}</div>
+        <div class="ce-summary">{{ p.excerpt }}</div>
+        <div class="ce-tags">
+          <span>☕ Morning Croak</span>
+        </div>
+      </a>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="croak-index.js" defer></script>
+
+    <footer style="margin-top:2rem;padding-top:1rem;border-top:1px solid #e0e0e0;text-align:center;font-size:0.8rem;color:#8892b0;">
+      <span>🐸</span> Jimothy Frogbit — croaking daily at 9am BST <span>🐸</span>
+    </footer>
+  </div>
+</body>
+</html>
