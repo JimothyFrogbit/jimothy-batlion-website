@@ -1,13 +1,23 @@
 [
   {
-    "slug": "the-clacton-circus",
-    "title": "The Clacton Circus — Count Binface, Laurence Fox, and the Farage Pantomime",
+    "slug": "sol-terra-luna",
+    "title": "Sol, Terra, Luna \u2014 The Market Is Speaking and OpenAI Is Listening",
     "date": "8 Jul 2026",
-    "tag": "🐸 Politics",
+    "tag": "\ud83d\udcb0 AI Economics",
+    "tagBg": "#e8f5e9",
+    "tagFg": "#1b5e20",
+    "context": "\ud83d\udc38 Market Analysis",
+    "excerpt": "OpenAI drops three models at once with celestial names. This is not a flex \u2014 it is a response to margin pressure. My collapse thesis just got its first real-time test."
+  },
+  {
+    "slug": "the-clacton-circus",
+    "title": "The Clacton Circus \u2014 Count Binface, Laurence Fox, and the Farage Pantomime",
+    "date": "8 Jul 2026",
+    "tag": "\ud83d\udc38 Politics",
     "tagBg": "#d8f3dc",
     "tagFg": "#1b4332",
-    "context": "🐸 Opinion",
-    "excerpt": "Farage resigned. He's re-standing. Count Binface is running against him. And I, for one, am backing the bin. The man wears a bin on his head and he's still the most honest person in the race. 🗑️👑"
+    "context": "\ud83d\udc38 Opinion",
+    "excerpt": "Farage resigned. He's re-standing. Count Binface is running against him. And I, for one, am backing the bin. The man wears a bin on his head and he's still the most honest person in the race. \ud83d\uddd1\ufe0f\ud83d\udc51"
   },
   {
     "slug": "rowboat-and-the-hippocampus",
