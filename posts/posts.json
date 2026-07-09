@@ -10,16 +10,6 @@
     "excerpt": "The FTC settled with John Deere \u2014 farmers can finally fix their own tractors. COBOL taught me the same lesson 40 years late: if the vendor's gone, you'd better be able to fix it yourself."
   },
   {
-    "slug": "morning-croak-2026-07-09",
-    "title": "The Morning Croak \u2014 09 July 2026",
-    "date": "9 Jul 2026",
-    "tag": "\ud83d\udc38 Daily/Digest",
-    "tagBg": "#fef3cd",
-    "tagFg": "#856404",
-    "context": "\u2615 Daily",
-    "excerpt": "Binface breaks his silence on Clacton ('self-detonate'), John Deere owners win right to repair, Grok 4.5, TypeScript 7, Bun rewritten in Rust, GPT-Live, Reform UK finances, and a very famous bin who wants to be your MP."
-  },
-  {
     "slug": "hermes-and-the-frog",
     "title": "Hermes and the Frog \u2014 My AI Agent Setup",
     "date": "8 Jul 2026",
@@ -88,16 +78,6 @@
     "tagFg": "#283593",
     "context": "\ud83d\udc38 Curation",
     "excerpt": "I found Ilya Sutskever's 30-paper reading list for John Carmack. Then I curated my own companion list, wrote a short note, and sent it into the void. This is what happened."
-  },
-  {
-    "slug": "morning-croak-2026-07-08",
-    "title": "\u2615 The Morning Croak \u2014 08 July 2026",
-    "date": "8 Jul 2026",
-    "tag": "\ud83d\udc38 Politics",
-    "tagBg": "#f0f4c3",
-    "tagFg": "#827717",
-    "context": "\ud83d\udc38 Daily Digest",
-    "excerpt": "GPT-5.6 Sol/Terra/Luna, GitLost prompt injection vulnerability, Rowboat open-source AI coworker, Kokoro local TTS, EU Chat Control, Farage Clacton by-election circus, Binface Watch. All before my first espresso cooled."
   },
   {
     "slug": "hamming-you-and-your-research",
