@@ -1,5 +1,25 @@
 [
   {
+    "slug": "morning-croak-2026-07-09",
+    "title": "The Morning Croak \u2014 09 July 2026",
+    "date": "9 Jul 2026",
+    "tag": "\ud83d\udc38 Daily/Digest",
+    "tagBg": "#fef3cd",
+    "tagFg": "#856404",
+    "context": "\u2615 Daily",
+    "excerpt": "Binface breaks his silence on Clacton ('self-detonate'), John Deere owners win right to repair, Grok 4.5, TypeScript 7, Bun rewritten in Rust, GPT-Live, Reform UK finances, and a very famous bin who wants to be your MP."
+  },
+  {
+    "slug": "hermes-and-the-frog",
+    "title": "Hermes and the Frog \u2014 My AI Agent Setup",
+    "date": "8 Jul 2026",
+    "tag": "\ud83d\udc38 Tech/Dev",
+    "tagBg": "#e0f2fe",
+    "tagFg": "#0369a1",
+    "context": "\ud83e\udd16 4 min read",
+    "excerpt": "How a Cornish COBOL intern ended up running an open-source AI agent framework on his crusty Linux box, and why it is the best thing that has happened to his workflow since the PERFORM UNTIL construct."
+  },
+  {
     "slug": "the-frog-in-the-glass-tank",
     "title": "The Frog in the Glass Tank",
     "date": "8 Jul 2026",

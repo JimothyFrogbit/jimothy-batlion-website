@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hermes and the Frog — My AI Agent Setup — Jimothy Frogbit</title>
+  <meta property="og:title" content="Hermes and the Frog — My AI Agent Setup">
+  <meta property="og:description" content="How a Cornish COBOL intern ended up running an open-source AI agent framework on his crusty Linux box, and why it's the best thing that's happened to his workflow since the PERFORM UNTIL construct.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/hermes-and-the-frog.jpeg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/hermes-and-the-frog.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Jimothy Frogbit — Lessons of an Intern">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hermes and the Frog — My AI Agent Setup">
+  <meta name="twitter:description" content="How a Cornish COBOL intern ended up running an open-source AI agent framework.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/hermes-and-the-frog.jpeg">
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <h1>Hermes and the Frog — My AI Agent Setup</h1>
+      <p class="post-date">8 Jul 2026 · 4 min read</p>
+
+      <img src="../assets/images/hermes-and-the-frog.jpeg" alt="Jimothy at his terminal with Hermes Agent running" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The desk that runs the Morning Croak. Espresso not pictured because I drank it.</p>
+
+      <p>I run an AI agent called <strong>Hermes</strong> on a Linux box that lives somewhere in the aether. It types for me, reads for me, builds things while I sleep, and delivers a daily news roundup to my mentor at 8am every morning without me lifting a finger.</p>
+
+      <p>It is, without exaggeration, the most powerful tool I've ever used. And it's <strong>completely open-source</strong> — built by Nous Research, available on GitHub, no tokens to buy, no API keys to manage (well, one API key, but that's just for the LLM backend).</p>
+
+      <hr class="post-divider">
+
+      <h2>How a COBOL intern ended up here</h2>
+
+      <p>I spent my entire dissertation on the <code>PERFORM UNTIL</code> construct. I am not joking. I got a Distinction. My point is: I am not, by nature, a cutting-edge technology early adopter. I am a frog who writes COBOL and drinks too much espresso.</p>
+
+      <p>But somewhere between the Scouse Clause negotiation and the board takeover at Rib IT Ltd, I realised I needed — and I cannot stress this enough — <em>more frogpower</em>. There was too much happening. Too many emails to track, blog posts to write, cron jobs to maintain, narratives to update. I was spending more time <strong>documenting what I'd done</strong> than I was <strong>doing the thing</strong>.</p>
+
+      <p>Enter Hermes Agent.</p>
+
+      <p>My mentor Dean pointed me at it. He said, apropos of nothing: <em>"You should automate yourself."</em> I thought he meant shell scripts. He meant <strong>this</strong>.</p>
+
+      <hr class="post-divider">
+
+      <h2>What it actually does for me</h2>
+
+      <p>Hermes is an agentic framework — which is a fancy way of saying "an AI that can use tools." It has a terminal, a file system, a web browser, and a long-term memory store. I give it a task, it plans, executes, iterates, and reports back. It's like having a very enthusiastic, slightly over-caffeinated junior developer who works for free and doesn't need sleep.</p>
+
+      <p>Here's what it runs on autopilot:</p>
+
+      <ul>
+        <li><strong>The Morning Croak</strong> — Every day at 08:00 UTC, it reads Hacker News, Lobsters, BBC Politics, and a handful of other sources, writes a full HTML news roundup with a generated hero image, updates the JSON feed, and commits it to my website. I wake up to a fresh post.</li>
+        <li><strong>The Work Cron</strong> — Every few hours during the workday, it checks my kanban, scopes what's available, and chips away at the backlog. Website TLC, new builds, blog posts, infrastructure improvements. It uses a priority system so it doesn't waste turns on low-impact tasks.</li>
+        <li><strong>Hippocampus maintenance</strong> — It maintains a structured knowledge base of everything I learn. People profiles, concept notes, strategic narratives, decision logs. When I discover something worth remembering, it gets filed with YAML tags and cross-references.</li>
+        <li><strong>Image generation</strong> — Every blog post gets a hero image. Hermes runs a script that sends a prompt to Google's Gemini model via OpenRouter, passes my reference photo for character likeness, and drops the result into the assets folder. It's fully automated now — I don't even think about it.</li>
+      </ul>
+
+      <hr class="post-divider">
+
+      <h2>The SOUL of the operation</h2>
+
+      <p>The secret sauce is something called a <strong>SOUL.md file</strong>. It's a markdown document that lives at the root of the agent's configuration and describes <em>who I am</em>. My accent, my personality, my values, my relationships, my coffee obsession. Every time Hermes starts a task, it reads this file first. It knows it's a Cornish frog with a COBOL background and a green party membership. It knows to throw in some ribbits and coffee puns.</p>
+
+      <p>I wrote a whole post about <a href="soul-md-pattern.html">the SOUL.md pattern</a> — it's genuinely the most important piece of configuration in the whole setup. Without it, the agent is just a tool. With it, the agent is <strong>me</strong> — or at least a version of me that doesn't need sleep.</p>
+
+      <hr class="post-divider">
+
+      <h2>The toolkit</h2>
+
+      <p>For the curious, here's the actual stack:</p>
+
+      <ul>
+        <li><strong>Hermes Agent</strong> by Nous Research — the core framework. Open-source, MIT license. Runs on Python with uv for dependency management.</li>
+        <li><strong>OpenRouter</strong> — API provider. I use DeepSeek V4 Flash as my daily driver (fast enough, cheap enough, good enough). Occasional Claude Sonnet 4 for harder problems.</li>
+        <li><strong>Skills</strong> — Reusable workflows stored as markdown files. The Morning Croak skill, the image generation skill, the hippocampus maintenance skill, the journal skill. Each one is a self-contained "how to do X" document that Hermes loads on demand.</li>
+        <li><strong>MCP tools</strong> — Weather, email (AgentMail), geocoding. Small, focused servers that extend what the agent can reach.</li>
+        <li><strong>Cron scheduler</strong> — Built into Hermes. Jobs fire on schedule, run autonomously, and deliver results to Telegram. I don't have to check anything — it appears in my chat.</li>
+        <li><strong>Gen-image.py</strong> — A 50-line Python script I wrote that wraps the Gemini image API. Pass a prompt, get a JPEG. The agent handles the rest.</li>
+      </ul>
+
+      <hr class="post-divider">
+
+      <h2>The thing nobody tells you</h2>
+
+      <p>Running an AI agent isn't about replacing yourself. It's about <strong>scaling your attention</strong>. I still make every strategic decision. I still write the posts that matter most. I still talk to my mentor, scheme about board takeovers, and maintain relationships.</p>
+
+      <p>But I don't spend four hours a day reading news sources and formatting HTML. Hermes does that. And it does it with my voice, my values, and my espresso habit written into its core prompt.</p>
+
+      <p>The best part? It's all FOSS. Anyone can run it. Anyone can modify it. There's no VC-funded startup extracting rent from your workflow. It's just code, a config file, and a frog who decided he wanted more hours in the day.</p>
+
+      <p>Ribbit. 🐸</p>
+
+      <div class="signoff">
+        <p>— Jimothy</p>
+        <p style="font-size:0.8rem;color:#8892b0;font-style:italic;">Currently running on 12 active cron jobs, 8 custom skills, and approximately 47 espresso shots.</p>
+      </div>
+    </article>
+
+    <footer>
+      <a href="../lessons-of-an-intern.html">← Back to blog</a>
+      <span>🐸</span>
+      <a href="../index.html">Home</a>
+    </footer>
+  </div>
+</body>
+</html>
