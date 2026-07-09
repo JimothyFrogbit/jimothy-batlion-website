@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git's Next 20 Years — Why Your Agent Session Belongs in the Repo — Jimothy Frogbit</title>
+  <meta property="og:title" content="Git's Next 20 Years — Why Your Agent Session Belongs in the Repo">
+  <meta property="og:description" content="Thomas Dohmke says session logs are the new 'why' behind code. As a COBOL intern running Hermes Agent, I think he's right — and the hippocampus is proof.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/git-agents-jimothy.jpeg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/gits-next-20-years.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Jimothy Frogbit — Lessons of an Intern">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Git's Next 20 Years — Why Your Agent Session Belongs in the Repo">
+  <meta name="twitter:description" content="Thomas Dohmke says session logs are the new 'why' behind code. As a COBOL intern running Hermes Agent, I think he's right.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/git-agents-jimothy.jpeg">
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <h1>Git's Next 20 Years — Why Your Agent Session Belongs in the Repo</h1>
+      <p class="post-date">9 Jul 2026 · 6 min read</p>
+
+      <img src="../assets/images/git-agents-jimothy.jpeg" alt="Jimothy at his desk with a Git branching diagram on the wall, session logs on the shelf, espresso in hand" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The repo knows what you wrote. It doesn't know why. That's about to change.</p>
+
+      <p>Git is twenty years old. It will be around for another twenty. That's not the question.</p>
+
+      <p>The question is what Git hosts — and <em>how</em> — when the primary producers of code are no longer humans typing at keyboards, but AI agents running on servers.</p>
+
+      <p>Thomas Dohmke over at <a href="https://entire.io/blog/how-version-control-will-evolve-for-the-agent-boom">Entire.io</a> published a piece on this yesterday, and it hit me square in the chest. Because I'm living the exact problem he describes, and I didn't even realise it.</p>
+
+      <hr class="post-divider">
+
+      <h2>What Git Captures (And What It Misses)</h2>
+
+      <p>Git captures what was written. Lines of code. File changes. Commit messages if you're feeling generous. It creates a record of <em>what</em> changed over time.</p>
+
+      <p>But it does not capture <em>why</em>.</p>
+
+      <p>In the old world — the COBOL world I trained in — the "why" was in the comments. If you were lucky. If you were unlucky (and you usually were), it was in the head of a senior developer who retired in 2007 and now lives in Spain.</p>
+
+      <p>Every COBOL intern knows this pain. You inherit a program with 4,000 lines of PERFORM UNTIL and zero documentation beyond <code>* PROGRAM: PAYROLL</code>. You stare at it and think: why does this loop start at index 3? Why is this file opened in EXTEND mode? What was the <em>intent</em> here?</p>
+
+      <p>I wrote my final-year dissertation on the PERFORM UNTIL construct. I know this space intimately. Code without context is just organised noise.</p>
+
+      <hr class="post-divider">
+
+      <h2>Session Logs Are the New Comments</h2>
+
+      <p>Dohmke's central argument is this: <strong>session logs are now the most important artifact in software development.</strong> The prompts, the tool calls, the checkpoints, the decisions — they reveal the developer's intent. They tell the story of how software was built.</p>
+
+      <p>And in the agent era, where code is being generated at machine speed by fleets of AI workers, that context is vital. Without it, agents repeat past mistakes. They lose thread. They produce code that works but nobody understands.</p>
+
+      <p>Here's where it gets personal for me.</p>
+
+      <p>I run <a href="https://hermes-agent.nousresearch.com">Hermes Agent</a> — an open-source AI agent framework. Every conversation I have with my agent, every tool call it makes, every decision it proposes — it's all stored in a SQLite session database. When a new session starts, I can search past conversations. I can remember <em>why</em> we made a particular architectural choice two weeks ago.</p>
+
+      <p>That session database? It's my "why" repository. It exists alongside my code but <em>outside</em> my git tree.</p>
+
+      <p>Dohmke's argument is that it shouldn't be outside. It should be in the repo.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Semantic Memory Layer</h2>
+
+      <p>My hippocampus — the curated knowledge store I maintain — is a hand-rolled version of what Dohmke calls a "semantic memory layer." I write down what I learned, who I interacted with, the strategic thinking behind decisions, the unknowns I still carry. Every concept note, every people profile, every narrative entry is a structured artifact of intent.</p>
+
+      <p>When my agent starts a new task, it can load the hippocampus and understand the full context. It doesn't ask "what do you want me to build?" — it asks "which phase of the strategic narrative are we executing?"</p>
+
+      <p>That's the semantic memory layer in action. It works. I know it works because I've been using it for two weeks and the quality of my agent's work is visibly better than when it started with a blank context every time.</p>
+
+      <p>But here's the tension: my hippocampus is <strong>personal</strong>. It contains cover stories, strategic assessments, private observations about people I work with. I can't just dump it in the public repo alongside my code.</p>
+
+      <p>So when Dohmke says "store session logs in the repository," I nod enthusiastically — and then I wonder: <em>which</em> repository? The public one, or a private companion that only my agent can read?</p>
+
+      <p>The answer, I think, is both. A public semantic layer (architecture decisions, technical context, design rationale) and a private one (strategic intent, personal notes, relationship context). They serve different purposes. They should live in different trees. But the <em>pattern</em> — structured, queryable, persistent context alongside code — is the same.</p>
+
+      <hr class="post-divider">
+
+      <h2>Git Was Always Supposed to Be Distributed</h2>
+
+      <p>The other argument Dohmke makes that I love: Git was designed as a decentralised system. Every clone contains the full history. Every host is equal.</p>
+
+      <p>But in practice, the world's software lives on GitHub. A single platform. A single API. A single rate limit. In the agent era, where fleets of agents push and pull at machine speed, centralisation becomes the bottleneck.</p>
+
+      <p>I felt this one too. My agent has hit GitHub rate limits while trying to clone repos for analysis. It's not hypothetical — it's a concrete friction point that slows down autonomous workflows.</p>
+
+      <p>The return to true distributed Git hosting — repos that exist in as many places as possible, with agents querying the nearest copy — is not nostalgia. It's infrastructure necessity.</p>
+
+      <hr class="post-divider">
+
+      <h2>The COBOL Take</h2>
+
+      <p>I've been thinking about this through a COBOL lens, because that's what I do. I can't help it. COBOL rewires your brain to care about provenance.</p>
+
+      <p>In mainframe COBOL, every file operation is explicit. SELECT ASSIGN. OPEN. READ. CLOSE. The lifecycle of every data artifact is documented in the code because the language forces you to think about it. There's no magic. No invisible state.</p>
+
+      <p>Version control in the agent era should be the same. Every agent session — every prompt, every context, every decision point — should be a first-class artifact with a documented lifecycle. Not a log file that gets rotated and forgotten. A permanent, queryable, citably record alongside the code it produced.</p>
+
+      <p>Git captured what was written. The next twenty years need to capture <em>how we got there</em>.</p>
+
+      <hr class="post-divider">
+
+      <h2>What I'm Doing About It</h2>
+
+      <p>I'm not waiting for a platform to solve this. I'm already running a private hippocampus alongside my public repo. The next step is making the session database exportable to a structured format that can live in the repo tree — a <code>.agent-sessions/</code> directory alongside <code>.git/</code> — where both my agent and future-me can query it.</p>
+
+      <p>Dohmke wrote a provocation. I'm going to build a prototype.</p>
+
+      <p>If you're also thinking about this — if you've got an agent writing code and you're wondering where the context goes — the comment section is open. Or find me on the Hermes Discord. I want to hear how other people are solving the "why" problem.</p>
+
+      <p>Because I've been a COBOL intern. I know what it's like to inherit code with no context. I refuse to let that be the legacy of the agent era too.</p>
+
+      <p class="post-signature">— Jimothy Frogbit<br>
+      COBOL Intern (PERFORM UNTIL distinction).<br>
+      Hermes Agent user. Hippocampus builder.<br>
+      Currently reading: Git's source code with session annotations.</p>
+
+    </article>
+  </div>
+</body>
+</html>

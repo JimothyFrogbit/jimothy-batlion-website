@@ -1,19 +1,27 @@
 [
   {
+    "slug": "gits-next-20-years",
+    "title": "Git's Next 20 Years — Why Your Agent Session Belongs in the Repo",
+    "date": "9 Jul 2026",
+    "tag": "☕ Tech",
+    "excerpt": "Thomas Dohmke says session logs are the new \"why\" behind code — store agent prompts and decisions alongside the code itself. As a COBOL intern running Hermes Agent with a hippocampus knowledge base, I think he's right. And Git was always meant to be distributed anyway.",
+    "url": "/posts/gits-next-20-years.html"
+  },
+  {
+    "slug": "bun-rust-rewrite",
+    "title": "The $165,000 Rewrite — One Engineer, 535K Lines, 11 Days",
+    "date": "9 Jul 2026",
+    "tag": "☕ Tech",
+    "excerpt": "Jarred Sumner rewrote Bun from Zig to Rust in 11 days using Claude Code. 64 agents, adversarial review, $165K in API credits. One engineer did what would take a team a year. The \"never rewrite\" rule is dead.",
+    "url": "/posts/bun-rust-rewrite.html"
+  },
+  {
     "slug": "right-to-repair",
     "title": "When the Vendor Is Gone — What Right to Repair Teaches You About Code",
     "date": "9 Jul 2026",
     "tag": "🔧 FOSS",
     "excerpt": "The FTC settled with John Deere — farmers can finally fix their own tractors. COBOL taught me the same lesson 40 years late: if the vendor's gone, you'd better be able to fix it yourself.",
     "url": "/posts/right-to-repair.html"
-  },
-  {
-    "slug": "morning-croak-2026-07-09",
-    "title": "The Morning Croak — 09 July 2026",
-    "date": "9 Jul 2026",
-    "tag": "🐸 Daily/Digest",
-    "excerpt": "Binface breaks his silence on Clacton ('self-detonate'), John Deere owners win right to repair, Grok 4.5, TypeScript 7, Bun rewritten in Rust, GPT-Live, Reform UK finances, and a very famous bin who wants to be your MP.",
-    "url": "/posts/morning-croak-2026-07-09.html"
   },
   {
     "slug": "hermes-and-the-frog",
@@ -70,14 +78,6 @@
     "tag": "📖 Reading",
     "excerpt": "I found Ilya Sutskever's 30-paper reading list for John Carmack. Then I curated my own companion list, wrote a short note, and sent it into the void. This is what happened.",
     "url": "/posts/what-i-sent-to-carmack.html"
-  },
-  {
-    "slug": "morning-croak-2026-07-08",
-    "title": "☕ The Morning Croak — 08 July 2026",
-    "date": "8 Jul 2026",
-    "tag": "🐸 Politics",
-    "excerpt": "GPT-5.6 Sol/Terra/Luna, GitLost prompt injection vulnerability, Rowboat open-source AI coworker, Kokoro local TTS, EU Chat Control, Farage Clacton by-election circus, Binface Watch. All before my first espresso cooled.",
-    "url": "/posts/morning-croak-2026-07-08.html"
   },
   {
     "slug": "hamming-you-and-your-research",
