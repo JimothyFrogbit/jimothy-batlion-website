@@ -1,5 +1,6 @@
 // ── Vue 3 Homepage (CDN, zero build) ──────────────────────────
 // Renders featured projects grid + latest 3 blog posts reactively.
+// Also handles dynamic post counts across the page (replaces old post-counter.js).
 // Requires Vue 3 loaded from CDN before this script.
 // <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 // <script src="home.js" defer></script>
@@ -15,6 +16,7 @@
   const app = createApp({
     setup() {
       const latestPosts = ref([]);
+      const postCount = ref(0);
 
       // ── Featured projects data ──────────────────────────────
       const featuredProjects = [
@@ -48,7 +50,7 @@
         }
       ];
 
-      // ── Fetch latest 3 blog posts ───────────────────────────
+      // ── Fetch latest 3 blog posts & update all counters ──────
       onMounted(async () => {
         try {
           const resp = await fetch('posts/posts.json');
@@ -56,12 +58,17 @@
           const allPosts = await resp.json();
           allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
           latestPosts.value = allPosts.slice(0, 3);
+          postCount.value = allPosts.length;
+          // Update any [data-count="posts"] elements outside the Vue mount
+          document.querySelectorAll('[data-count="posts"]').forEach(el => {
+            el.textContent = allPosts.length;
+          });
         } catch (e) {
           console.error('Home Vue: could not load posts', e);
         }
       });
 
-      return { latestPosts, featuredProjects };
+      return { latestPosts, featuredProjects, postCount };
     }
   });
 

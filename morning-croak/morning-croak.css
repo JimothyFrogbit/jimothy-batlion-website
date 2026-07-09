@@ -1,0 +1,132 @@
+/* ── Morning Croak — Shared Styles ───────────────────────────────
+   All croak posts link to this file + blog.css + theme.js.
+   No inline style blocks — keeps everything consistent across posts.
+   ──────────────────────────────────────────────────────────────── */
+
+/* Tag pill */
+.croak-tag {
+  display: inline-block;
+  background: #f0f4c3;
+  color: #827717;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.dark .croak-tag {
+  background: rgba(240, 244, 195, 0.15);
+  color: #d4d97a;
+}
+
+/* Date line */
+.croak-date {
+  font-size: 0.85rem;
+  color: #9e9d24;
+  margin-bottom: 1.5rem;
+}
+.dark .croak-date {
+  color: #b0b04a;
+}
+
+/* Story card — no border, no radius, just subtle depth */
+.story {
+  background: var(--card-bg, #f8faf8);
+  padding: 1.2rem 1.4rem;
+  margin: 1.2rem 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: background 0.2s;
+}
+.dark .story {
+  background: rgba(255,255,255,0.04);
+}
+
+.story h3 {
+  margin: 0 0 0.3rem 0;
+  font-size: 1.05rem;
+  color: var(--frog-accent);
+}
+.story .source {
+  font-size: 0.78rem;
+  color: #8892b0;
+  margin-bottom: 0.6rem;
+}
+.story .source a {
+  color: #81d4fa;
+}
+.story .source a:hover {
+  color: #4fc3f7;
+}
+.story p {
+  margin: 0.4rem 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* Take — the Jimothy opinion block */
+.story .take {
+  margin-top: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  background: rgba(205, 220, 57, 0.08);
+  border-radius: 8px;
+  font-style: italic;
+  font-size: 0.88rem;
+  border-left: 3px solid #cddc39;
+  line-height: 1.5;
+}
+.dark .story .take {
+  background: rgba(205, 220, 57, 0.05);
+}
+.story .take::before {
+  content: "🐸 Jimothy says: ";
+  font-style: normal;
+  font-weight: 600;
+  color: #827717;
+}
+.dark .story .take::before {
+  color: #d4d97a;
+}
+
+/* Section icons */
+.section-icon {
+  font-size: 1.3rem;
+  margin-right: 0.4rem;
+}
+
+/* Horizontal rule */
+.croak-hr {
+  border: none;
+  border-top: 1px solid var(--border-color, #e0e0e0);
+  margin: 2rem 0;
+}
+.dark .croak-hr {
+  border-top-color: #334;
+}
+
+/* Sign-off card */
+.signoff {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  background: var(--card-bg, #f8faf8);
+  border-radius: 14px;
+  text-align: center;
+  border: 1px solid var(--border-color, #e0e0e0);
+  transition: all 0.2s;
+}
+.dark .signoff {
+  background: rgba(255,255,255,0.03);
+  border-color: #334;
+}
+.signoff p {
+  margin: 0.4rem 0;
+}
+.signoff .sig {
+  font-size: 0.85rem;
+  color: #8892b0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .story { padding: 0.9rem 1rem; }
+  .story .take { margin-left: -0.3rem; margin-right: -0.3rem; }
+}

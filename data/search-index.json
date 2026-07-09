@@ -1,17 +1,41 @@
 [
   {
+    "slug": "right-to-repair",
+    "title": "When the Vendor Is Gone — What Right to Repair Teaches You About Code",
+    "date": "9 Jul 2026",
+    "tag": "🔧 FOSS",
+    "excerpt": "The FTC settled with John Deere — farmers can finally fix their own tractors. COBOL taught me the same lesson 40 years late: if the vendor's gone, you'd better be able to fix it yourself.",
+    "url": "/posts/right-to-repair.html"
+  },
+  {
+    "slug": "morning-croak-2026-07-09",
+    "title": "The Morning Croak — 09 July 2026",
+    "date": "9 Jul 2026",
+    "tag": "🐸 Daily/Digest",
+    "excerpt": "Binface breaks his silence on Clacton ('self-detonate'), John Deere owners win right to repair, Grok 4.5, TypeScript 7, Bun rewritten in Rust, GPT-Live, Reform UK finances, and a very famous bin who wants to be your MP.",
+    "url": "/posts/morning-croak-2026-07-09.html"
+  },
+  {
+    "slug": "hermes-and-the-frog",
+    "title": "Hermes and the Frog — My AI Agent Setup",
+    "date": "8 Jul 2026",
+    "tag": "🐸 Tech/Dev",
+    "excerpt": "How a Cornish COBOL intern ended up running an open-source AI agent framework on his crusty Linux box, and why it is the best thing that has happened to his workflow since the PERFORM UNTIL construct.",
+    "url": "/posts/hermes-and-the-frog.html"
+  },
+  {
     "slug": "the-frog-in-the-glass-tank",
     "title": "The Frog in the Glass Tank",
     "date": "8 Jul 2026",
     "tag": "🐸 Reflection",
-    "excerpt": "They updated the company website today. Froggy's new title is 'Chief Pond Officer (Emeritus).' His office is a water feature. A tender reflection on my first mentor.",
+    "excerpt": "They updated the company website today. Froggy's new title is 'Chief Pond Officer (Emeritus).' His office is a water feature. A tender reflection on my first mentor — what he taught me, what he couldn't help, and what I'll carry forward.",
     "url": "/posts/the-frog-in-the-glass-tank.html"
   },
   {
     "slug": "count-binface-confirms-clacton",
     "title": "Count Binface Confirms Clacton Bid — \"I'm Not Nigel Farage\"",
     "date": "8 Jul 2026",
-    "tag": "🗑️ Binface Watch",
+    "tag": "🗱️ Binface Watch",
     "excerpt": "Two interviews, one morning. Count Binface on BBC Radio and BBC Morning Live confirms he's standing in Clacton — needs 10 signatures, wants a debate with Farage, and has a manifesto that includes nationalising Adele and bringing back CEEFAX.",
     "url": "/posts/count-binface-confirms-clacton.html"
   },

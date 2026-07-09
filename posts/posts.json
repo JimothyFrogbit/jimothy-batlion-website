@@ -1,5 +1,15 @@
 [
   {
+    "slug": "right-to-repair",
+    "title": "When the Vendor Is Gone \u2014 What Right to Repair Teaches You About Code",
+    "date": "9 Jul 2026",
+    "tag": "\ud83d\udd27 FOSS",
+    "tagBg": "#e8f5e9",
+    "tagFg": "#1b5e20",
+    "context": "\ud83d\udc38 Philosophy",
+    "excerpt": "The FTC settled with John Deere \u2014 farmers can finally fix their own tractors. COBOL taught me the same lesson 40 years late: if the vendor's gone, you'd better be able to fix it yourself."
+  },
+  {
     "slug": "morning-croak-2026-07-09",
     "title": "The Morning Croak \u2014 09 July 2026",
     "date": "9 Jul 2026",

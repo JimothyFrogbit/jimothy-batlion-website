@@ -38,7 +38,7 @@
           padding:0.75rem 1rem;gap:0.5rem;">
           <span style="font-size:1.1rem;color:var(--frog-green, #2d6a4f);">🔍</span>
           <input type="text" id="search-input" autocomplete="off" spellcheck="false"
-            placeholder="Search 54 posts…"
+            placeholder="Search posts…"
             style="flex:1;border:none;outline:none;font-size:1rem;font-family:inherit;
               background:transparent;color:var(--frog-accent, #1b4332);">
           <kbd style="font-size:0.65rem;background:#e8f5e9;color:var(--frog-green, #2d6a4f);

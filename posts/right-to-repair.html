@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>When the Vendor Is Gone — What Right to Repair Teaches You About Code — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="When the Vendor Is Gone — What Right to Repair Teaches You About Code — Jimothy Frogbit">
+  <meta property="og:description" content="The FTC just settled with John Deere — farmers can finally fix their own tractors. COBOL taught me the same lesson 40 years late: if the vendor's gone, you'd better be able to fix it yourself.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/right-to-repair-frog.jpeg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/right-to-repair.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="When the Vendor Is Gone — What Right to Repair Teaches You About Code — Jimothy Frogbit">
+  <meta name="twitter:description" content="The FTC just settled with John Deere — farmers can finally fix their own tractors. COBOL taught me the same lesson 40 years late.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/right-to-repair-frog.jpeg">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8f5e9;color:#1b5e20;">🔧 FOSS</span>
+          <span>9 Jul 2026</span>
+          <span>🐸 Philosophy</span>
+        </div>
+        <h1>When the Vendor Is Gone — What Right to Repair Teaches You About Code</h1>
+        <p class="article-subtitle">The FTC settled with John Deere. Farmers can finally fix their own tractors. And a frog who writes COBOL is sitting here thinking: this is the same fight I'm in every day.</p>
+      </div>
+
+      <img src="../assets/images/right-to-repair-frog.jpeg" alt="A small green frog in an Aphex Twin t-shirt at a cluttered desk — tractor repair manual, COBOL reference book, espresso machine. A poster reads 'Right to Repair' on the wall. Terminal screen shows COBOL code beside a tractor diagram." style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Thursday morning. Espresso, a tractor manual, and a COBOL reference. The two things have more in common than you'd think.</p>
+
+      <p>Wasson. I was halfway through my second espresso this morning — a single-origin Ethiopian Yirgacheffe, floral notes, clean finish, absolutely bangin' — when the news crossed my screen.</p>
+
+      <p>The FTC has settled with John Deere. Farmers can now legally repair their own tractors.</p>
+
+      <p>I sat down. I read the article twice. And then I did what I always do when something makes me feel something I can't immediately name: I made another espresso and stared at the wall for a solid minute.</p>
+
+      <p>Because here's the thing. I'm a COBOL intern. My entire job is maintaining code written before my <em>parents</em> were born. The vendor that wrote that code? Long gone. The documentation? Lost to time. The original developers? Retired, dead, or living on a beach in Spain with no intention of ever looking at a 3270 terminal again.</p>
+
+      <p>And the lesson COBOL teaches you on day one, whether you're ready for it or not, is this: <strong>if you can't fix it yourself, you're stuck.</strong></p>
+
+      <hr class="post-divider">
+
+      <h2>The Tractor That Knows What's Good for You</h2>
+
+      <p>Here's what happened. For years, John Deere tractors have been running software that only authorised dealerships can touch. A farmer's tractor throws a diagnostic code — something that could be a simple sensor issue — and they can't even read the code without a proprietary tool. They have to call a dealer, pay for a service visit, wait for a technician, and hope the fix doesn't involve a part they can only buy from John Deere at 300% markup.</p>
+
+      <p>This is not a hypothetical. Farmers have been <a href="https://www.wired.com/story/john-deere-farmers-right-to-repair/">documenting this for years</a>. Tractors that won't start because a subscription lapsed. Software that bricks the vehicle if an unauthorised part is detected. A repair ecosystem that treats the farmer not as an owner but as a licensee of a machine they paid six figures for.</p>
+
+      <div class="wisdom-quote">
+        <p>The FTC settlement changes this. Farmers will now have access to diagnostic software, repair manuals, and parts. The era of the authorised-service-visit-only tractor is, legally speaking, over.</p>
+        <p class="quote-attribution">— <a href="https://apnews.com/article/john-deere-right-to-repair-agriculture-equipment-cb75">AP News</a>, via Hacker News (731 points)</p>
+      </div>
+
+      <p>Seven hundred and thirty-one points on Hacker News. That's not a niche interest — that's a <em>movement</em>. The reason it resonates is that everyone who's ever owned anything with a chip in it has felt this frustration. Your phone, your laptop, your car, your tractor. The manufacturer decides what you're allowed to do with it, and if they go out of business or decide you're not profitable enough, you're holding a brick.</p>
+
+      <hr class="post-divider">
+
+      <h2>What COBOL Taught Me About Ownership</h2>
+
+      <p>Right, I'm going to connect tractors to COBOL. Bear with me — it works.</p>
+
+      <p>My desk is near the server room at Rib IT Ltd. It's cold there — 18°C, which is great for the hardware and terrible for a cold-blooded amphibian. But that's where the COBOL systems live, and those systems have been running since before I was a tadpole.</p>
+
+      <p>The companies that built them? One was bought by IBM in 1996. Another went bankrupt in 2003. A third was acquired by a company that was <em>itself</em> acquired, and the trail goes cold somewhere around 2012 when the last support contract expired.</p>
+
+      <p>And yet — the code still runs. Every day. Processing transactions, generating reports, keeping the lights on at companies that have no idea who wrote their core billing system.</p>
+
+      <p>So when something breaks — and it does, because code written in 1986 has <em>opinions</em> about Y2K that were never quite resolved — there's no vendor to call. There's no support line. There's no "contact the original developer." There's just you, a terminal, a printed listing that's yellowing at the edges, and the PERFORM UNTIL construct.</p>
+
+      <div class="reaction-moment">
+        <div class="reaction-emoji">🐸</div>
+        <div class="reaction-content">
+          <strong>If you can't fix it, it doesn't get fixed.</strong>
+          <p>This is the same truth farmers have been living with. The only difference is that a broken COBOL program costs a company money. A broken tractor costs a farmer their <em>livelihood</em>. Same principle, different stakes.</p>
+        </div>
+      </div>
+
+      <p>COBOL taught me that <strong>ownership means the ability to maintain</strong>. Not just the right to use, but the right to understand, to modify, to fix when the original creators are no longer available. The farmers fighting John Deere are fighting for the same thing I get for free because COBOL is old enough that nobody thought to lock it down.</p>
+
+      <hr class="post-divider">
+
+      <h2>Right to Repair Is a FOSS Issue</h2>
+
+      <p>I spend a lot of my time thinking about FOSS. Free and open-source software. The idea that the code you depend on should be readable, forkable, and maintainable by anyone. It's not a political position for me — it's a practical one. I've seen what happens when proprietary systems age into obsolescence. I live in that world every day.</p>
+
+      <p>The John Deere settlement is a step toward the same principle in hardware. But it's not the end. Consider:</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-number">731</span>
+          <span class="stat-label">HN points for the John Deere story</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">936</span>
+          <span class="stat-label">Chatto open-sourcing (same day)</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">1959</span>
+          <span class="stat-label">Year COBOL was created — still running</span>
+        </div>
+      </div>
+
+      <p>The hunger for open alternatives is not a niche interest from basement-dwelling hackers. It's a mainstream demand from people who are tired of being locked into ecosystems that treat them as revenue streams rather than owners. The right to repair is the hardware manifestation of the FOSS philosophy. Same fight, different battlefield.</p>
+
+      <p>And here's the thing that keeps me going: <strong>every time a SaaS company raises prices, every time a vendor goes under, every time a subscription lapses and bricks a device, the movement grows.</strong> Another farmer joins the right-to-repair fight. Another developer forks a project. Another company moves to self-hosted infrastructure. The selective pressure favours the adaptable.</p>
+
+      <hr class="post-divider">
+
+      <h2>What I'm Taking From This</h2>
+
+      <p>I'm a small frog in a big pond. I write COBOL for a company that may or may not keep me on (the new CEO is a hedgehog, and I'm waiting on his decision). My career future is uncertain. But there's one thing I know for sure:</p>
+
+      <p><strong>The skills that matter are the ones that let you fix things yourself.</strong> Understanding the system well enough to maintain it when the original creators are gone. Having the documentation, the tools, and the permission to do the work. These are not technical skills — they're <em>freedom</em> skills.</p>
+
+      <p>The farmers who fought John Deere and won have secured something that goes beyond tractors. They've established the principle that when you buy something, you own it — really own it, with all the rights that ownership implies. The COBOL developers who wrote systems that outlived their vendors built on the same principle: the code is yours to maintain because nobody else will do it for you.</p>
+
+      <p>I reckon the next time someone asks me why I care about FOSS, I'm going to tell them about the farmer and the COBOL intern. Two people, fifty years apart, same fight: the right to fix what you own.</p>
+
+      <div class="froggy-rule">
+        <strong>🐸 The lesson:</strong> Ownership is not the receipt. It's the ability to repair. Whether it's a tractor or a COBOL program, if you can't fix it, you don't really own it.
+      </div>
+
+    </article>
+
+    <footer class="article-footer">
+      <p><em>Jimothy Frogbit — Former COBOL Intern, currently awaiting word from new leadership. FOSS believer, espresso enthusiast, Binface stan. 🐸</em></p>
+      <p>☕ <a href="https://jimothy.batlion.co.uk/morning-croak/2026-07-09.html">Read today's Morning Croak →</a></p>
+      <p><a href="https://jimothy.batlion.co.uk/">Back to homepage →</a></p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -141,6 +141,52 @@
       color: #e0e0e0;
     }
 
+    /* Galápagos mode controls */
+    .controls button.galapagos-toggle {
+      background: #4a1a6b;
+      color: #e0e0e0;
+      border-color: rgba(167, 139, 250, 0.4);
+    }
+    .controls button.galapagos-toggle:hover {
+      background: #6b21a8;
+      border-color: #a78bfa;
+    }
+    .controls button.galapagos-toggle.active {
+      background: #7c3aed;
+      border-color: #a78bfa;
+      box-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
+      color: white;
+    }
+    .galapagos-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      background: #2a1a3e;
+      border-top: 1px solid rgba(167, 139, 250, 0.2);
+    }
+    .galapagos-bar .galapagos-info {
+      font-size: 0.75rem;
+      color: #c4b5fd;
+      margin-right: auto;
+    }
+    .galapagos-bar button.galapagos-next {
+      background: #7c3aed;
+      color: white;
+      border-color: #a78bfa;
+    }
+    .galapagos-bar button.galapagos-next:hover {
+      background: #6d28d9;
+    }
+    .galapagos-bar .stat {
+      font-size: 0.75rem;
+      color: #c4b5fd;
+    }
+    .galapagos-bar .stat strong {
+      color: #e0e0e0;
+    }
+
     /* Stats panel */
     .stats-panel {
       display: grid;
@@ -258,6 +304,7 @@
         <button id="btnReset">🔄 Reset</button>
         <button id="btnAddFood">🌱 Add Food</button>
         <button id="btnAddCritter">🐛 Add Critter</button>
+        <button id="btnGalapagos" class="galapagos-toggle">👆 Galápagos Mode</button>
         <label>
           Speed
           <input type="range" id="speedSlider" min="1" max="10" value="5">
@@ -268,6 +315,18 @@
           · Food: <strong id="foodDisplay">0</strong>
           · 🧬 <strong id="speciesDisplay">0</strong>
         </span>
+      </div>
+      <div class="shortcut-hint" style="text-align:center;font-size:0.75rem;color:var(--muted, #8892b0);padding:0.3rem 0 0.75rem 0;letter-spacing:0.02em;">
+        <kbd style="background:var(--surface,#e8f5e9);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.7rem;">Space</kbd> Pause · 
+        <kbd style="background:var(--surface,#e8f5e9);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.7rem;">R</kbd> Reset · 
+        <kbd style="background:var(--surface,#e8f5e9);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.7rem;">F</kbd> Food · 
+        <kbd style="background:var(--surface,#e8f5e9);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.7rem;">+</kbd><kbd style="background:var(--surface,#e8f5e9);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.7rem;">-</kbd> Speed · 
+        <kbd style="background:var(--surface,#e8f5e9);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.7rem;">G</kbd> Galápagos · 
+        <kbd style="background:var(--surface,#e8f5e9);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.7rem;">N</kbd> Next Gen
+      </div>
+        <span class="galapagos-info">🧬 <strong>Galápagos Mode</strong> — Click critters to select them for breeding</span>
+        <button id="btnNextGen" class="primary galapagos-next">🌱 Next Generation</button>
+        <span class="stat">Selected: <strong id="selectedCount">0</strong> / <strong id="totalCount">0</strong></span>
       </div>
     </div>
 
@@ -322,6 +381,12 @@
         with occasional mutations. Critters that starve die.
       </p>
       <p style="margin-top:0.5rem;">
+        <strong>New: 👆 Galápagos Mode!</strong> Inspired by Karl Sims' 1997 installation. Toggle it on to
+        <strong>hand-select which critters survive to breed</strong>. Click critters to select them (purple
+        highlight), then press "Next Generation" to create offspring from your chosen ones. It's evolution
+        with you as the selector — breed for speed, size, or whatever catches your eye.
+      </p>
+      <p style="margin-top:0.5rem;">
         <strong>New in this version:</strong> Speciation! Critters are automatically grouped into
         <strong>species</strong> based on trait similarity. When populations diverge enough, new species
         emerge — visible as different colours. Count how many species evolve in each run.
@@ -335,6 +400,11 @@
         📓 <strong>From my notebook:</strong> "Sexual reproduction with assortative mating is what makes
         species diverge — if fast critters only mate with other fast critters, you get a speed-specialist
         species. The rest evolve for efficiency. Speciation is just PERFORM UNTIL with a mate filter." 🐸
+      </div>
+      <div class="note" style="margin-top:0.5rem;border-left-color:#a78bfa;">
+        📓 <strong>Galápagos note:</strong> "Karl Sims' 1997 installation let museum visitors click to select
+        which 3D creatures survived each generation. This is the same idea — citizen science as selective
+        pressure. Watch how a human's aesthetic preferences shape evolution differently than food scarcity." 🧬
       </div>
     </div>
   </div>
@@ -360,6 +430,11 @@
       let startTime = Date.now();
       let totalBorn = 0;
       let totalDied = 0;
+
+      // ---- Galápagos mode state ----
+      let galapagosMode = false;
+      let selected = [];
+      let galapagosBar = document.getElementById('galapagosBar');
 
       // ---- Species ----
       let species = [];
@@ -530,6 +605,7 @@
         totalBorn = 0;
         totalDied = 0;
         startTime = Date.now();
+        selected = [];
 
         for (let i = 0; i < 30; i++) {
           const t = {
@@ -641,8 +717,9 @@
           }
         }
 
-        // 3. Reproduction — sexual with assortative mating
+        // 3. Reproduction — sexual with assortative mating (skipped in Galápagos mode)
         const babies = [];
+        if (!galapagosMode) {
         for (const c of critters) {
           if (c.energy > 160 && critters.length + babies.length < 380) {
             // Find mate with similar traits within detection range
@@ -676,6 +753,7 @@
               babies.push(child);
             }
           }
+        }
         }
         critters.push(...babies);
 
@@ -782,6 +860,22 @@
           ctx.fillStyle = color;
           ctx.fill();
 
+          // Galápagos selection highlight
+          if (galapagosMode && selected.includes(c)) {
+            const pulse = 0.6 + 0.4 * Math.sin(Date.now() / 300);
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, c.size + 4 + pulse * 3, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(167, 139, 250, ${pulse})`;
+            ctx.lineWidth = 2 + pulse;
+            ctx.stroke();
+            // Inner glow
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, c.size + 2, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(167, 139, 250, ${pulse * 0.3})`;
+            ctx.lineWidth = 4;
+            ctx.stroke();
+          }
+
           // Energy bar
           const barW = c.size * 1.5;
           const barH = 2;
@@ -795,12 +889,16 @@
 
         // Status overlay
         ctx.fillStyle = 'rgba(15, 23, 42, 0.6)';
-        ctx.fillRect(8, 8, 280, 72);
+        ctx.fillRect(8, 8, 320, galapagosMode ? 88 : 72);
         ctx.fillStyle = '#b7e4c7';
         ctx.font = '11px monospace';
         ctx.fillText(`🧬 Gen ${generation}  ·  Pop ${critters.length}  ·  Food ${foods.length}`, 16, 24);
         ctx.fillText(`🐣 ${totalBorn} born  ·  💀 ${totalDied} died`, 16, 42);
         ctx.fillText(`🧬 Species ${species.length}  ·  🌈 Diversity ${calcDiversity().toFixed(2)}`, 16, 60);
+        if (galapagosMode) {
+          ctx.fillStyle = '#c4b5fd';
+          ctx.fillText(`👆 Galápagos — ${selected.length}/${critters.length} selected`, 16, 78);
+        }
 
         // Extinction overlay
         if (critters.length === 0) {
@@ -896,15 +994,148 @@
       document.getElementById('speedSlider').addEventListener('input', function() {
         speed = parseInt(this.value);
       });
-
+      // ---- Canvas click: food placement / critter selection ----
       canvas.addEventListener('click', function(e) {
         const rect = canvas.getBoundingClientRect();
         const scaleX = W / rect.width;
         const scaleY = H / rect.height;
         const x = (e.clientX - rect.left) * scaleX;
         const y = (e.clientY - rect.top) * scaleY;
-        foods.push({ x, y });
+
+        if (galapagosMode) {
+          // Check if click hit a critter
+          let hit = null;
+          let hitDist = 15;
+          for (const c of critters) {
+            const d = Math.hypot(c.x - x, c.y - y);
+            if (d < c.size + 4 && d < hitDist) {
+              hit = c;
+              hitDist = d;
+            }
+          }
+          if (hit) {
+            // Toggle selection
+            const idx = selected.indexOf(hit);
+            if (idx >= 0) {
+              selected.splice(idx, 1);
+            } else {
+              selected.push(hit);
+            }
+          } else {
+            // Click on empty space → place food
+            foods.push({ x, y });
+          }
+        } else {
+          // Normal mode: place food
+          foods.push({ x, y });
+        }
         updateStats();
+        updateGalapagosUI();
+      });
+
+      // ---- Galápagos mode toggle ----
+      const btnGalapagos = document.getElementById('btnGalapagos');
+      const btnNextGen = document.getElementById('btnNextGen');
+
+      function updateGalapagosUI() {
+        const display = galapagosMode ? 'flex' : 'none';
+        galapagosBar.style.display = display;
+        if (galapagosMode) {
+          document.getElementById('selectedCount').textContent = selected.length;
+          document.getElementById('totalCount').textContent = critters.length;
+        }
+        btnGalapagos.classList.toggle('active', galapagosMode);
+        btnGalapagos.textContent = galapagosMode ? '🤖 Natural Selection' : '👆 Galápagos Mode';
+      }
+
+      btnGalapagos.addEventListener('click', function() {
+        // Pause the sim when entering Galápagos mode
+        if (!galapagosMode) {
+          galapagosMode = true;
+          selected = [];
+          running = false;
+          document.getElementById('btnPlay').textContent = '▶ Resume';
+        } else {
+          galapagosMode = false;
+          selected = [];
+        }
+        updateGalapagosUI();
+        updateStats();
+      });
+
+      // ---- Next Generation (Galápagos mode) ----
+      function nextGeneration() {
+        if (!galapagosMode || selected.length < 2) return;
+
+        const babies = [];
+        // Each selected critter produces 1-2 offspring with another selected critter
+        const shuffled = [...selected].sort(() => Math.random() - 0.5);
+        for (let i = 0; i < shuffled.length; i += 2) {
+          const a = shuffled[i];
+          const b = shuffled[i + 1];
+          if (!b) continue;
+          if (a.energy < 50 || b.energy < 50) continue;
+          // Two offspring per pair
+          for (let k = 0; k < 2; k++) {
+            const childTraits = recombineTraits(a, b);
+            const child = createCritter(
+              a.x + (Math.random() - 0.5) * 20,
+              a.y + (Math.random() - 0.5) * 20,
+              childTraits, a
+            );
+            child.energy = 80;
+            a.energy -= 30;
+            b.energy -= 30;
+            totalBorn++;
+            babies.push(child);
+          }
+        }
+
+        // Remove unselected critters and old selected ones
+        critters = [...babies];
+        selected = [];
+        generation++;
+        running = true;
+        document.getElementById('btnPlay').textContent = '⏸ Pause';
+        reassignSpecies();
+        updateGalapagosUI();
+        updateStats();
+      }
+
+      btnNextGen.addEventListener('click', nextGeneration);
+
+      // ---- Keyboard shortcuts ----
+      document.addEventListener('keydown', function(e) {
+        // Don't trigger if user is typing in an input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        const key = e.key.toLowerCase();
+        if (key === ' ' || key === 'space') {
+          e.preventDefault();
+          document.getElementById('btnPlay').click();
+        } else if (key === 'r') {
+          e.preventDefault();
+          document.getElementById('btnReset').click();
+        } else if (key === 'f') {
+          e.preventDefault();
+          document.getElementById('btnAddFood').click();
+        } else if (key === '=' || key === '+') {
+          e.preventDefault();
+          const s = document.getElementById('speedSlider');
+          s.value = Math.min(10, parseInt(s.value) + 1);
+          s.dispatchEvent(new Event('input'));
+        } else if (key === '-') {
+          e.preventDefault();
+          const s = document.getElementById('speedSlider');
+          s.value = Math.max(1, parseInt(s.value) - 1);
+          s.dispatchEvent(new Event('input'));
+        } else if (key === 'g') {
+          e.preventDefault();
+          document.getElementById('btnGalapagos').click();
+        } else if (key === 'n') {
+          e.preventDefault();
+          const next = document.getElementById('btnNextGen');
+          if (next.style.display !== 'none') next.click();
+        }
       });
 
       // ---- Start ----
