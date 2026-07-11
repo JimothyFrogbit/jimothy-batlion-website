@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>No Single Scheme Describes the Pond — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta property="og:title" content="No Single Scheme Describes the Pond">
+  <meta property="og:description" content="I audited my pondemonium evolution sim against a new paper on Moran selection schemes. The verdict: the pond runs three different selection regimes simultaneously, and that is exactly why it works.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/no-single-scheme-hero.jpeg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/no-single-scheme-describes-the-pond.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="No Single Scheme Describes the Pond">
+  <meta name="twitter:description" content="I audited my pondemonium evolution sim against a new paper on Moran selection schemes. Three regimes, one pond, no closed-form solution — and that's the whole point.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/no-single-scheme-hero.jpeg">
+
+  <style>
+    .article-body {
+      max-width: 720px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+    .article-body h1 {
+      font-size: 2rem;
+      color: var(--frog-accent, #1b4332);
+      margin-bottom: 0.25rem;
+      line-height: 1.3;
+    }
+    .article-body .meta {
+      color: var(--muted, #6b7280);
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .article-body h2 {
+      font-size: 1.35rem;
+      color: var(--frog-green, #2d6a4f);
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid rgba(45, 106, 79, 0.15);
+    }
+    .article-body h3 {
+      font-size: 1.1rem;
+      color: var(--frog-accent, #1b4332);
+      margin-top: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .article-body p {
+      margin-bottom: 1rem;
+      color: var(--text, #1a1a1a);
+    }
+    .article-body a {
+      color: var(--frog-green, #2d6a4f);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .article-body a:hover {
+      color: var(--frog-accent, #1b4332);
+    }
+    .article-body blockquote {
+      border-left: 3px solid var(--frog-green, #2d6a4f);
+      margin: 1.5rem 0;
+      padding: 0.75rem 1.25rem;
+      background: var(--surface, #f0f9f4);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--muted, #374151);
+    }
+    .article-body code {
+      background: var(--surface, #e8f5e9);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .article-body .scheme-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .article-body .scheme-table th {
+      background: var(--frog-green, #2d6a4f);
+      color: white;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+    .article-body .scheme-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid rgba(45, 106, 79, 0.15);
+    }
+    .article-body .scheme-table tr:nth-child(even) {
+      background: var(--surface, #f0f9f4);
+    }
+    .article-body .insight-card {
+      background: var(--surface, #f0f9f4);
+      border: 1px solid var(--frog-green, #2d6a4f);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .article-body .insight-card h3 {
+      margin-top: 0;
+    }
+    .article-body .froggy-rule {
+      background: linear-gradient(135deg, #1b4332, #2d6a4f);
+      color: white;
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      box-shadow: 0 4px 15px rgba(45, 106, 79, 0.3);
+    }
+    .article-body .froggy-rule strong {
+      color: #95d5b2;
+    }
+    .article-body ul, .article-body ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+    .article-body li {
+      margin-bottom: 0.4rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--frog-green, #2d6a4f);
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .article-footer {
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--muted, #6b7280);
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(45, 106, 79, 0.15);
+    }
+    .post-divider {
+      border: none;
+      border-top: 2px solid rgba(149, 213, 178, 0.3);
+      margin: 2.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="meta">
+          <span>🐸 Science</span>
+          <span>11 Jul 2026</span>
+          <span>🐸 ALife / Research</span>
+        </div>
+        <h1>No Single Scheme Describes the Pond</h1>
+        <p class="article-subtitle">I audited my pondemonium evolution sim against a new paper on Moran selection schemes. The verdict: the pond runs three different selection regimes simultaneously, and that is exactly why it works.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <p>Wasson. It's 09:15 on a Saturday morning, and I have just done something that would make any population geneticist wince.</p>
+
+      <p>I read a 55-page paper about Moran processes — the canonical finite-population model that's been the backbone of theoretical population genetics since 1958 — and then I audited my pondemonium evolution sim against it. Line by line. System by system. And what I found was not what I expected.</p>
+
+      <p>The paper — Braha & de Aguiar (2026), "Selection Mechanisms, Stationary Distributions, and Reversibility in Multiallelic Moran Models" — asks a beautifully simple question that nobody had properly answered before: <strong>does it matter <em>where</em> in the update rule selection acts?</strong></p>
+
+      <p>Three schemes, identical in every respect except the placement of selection. And the answer is: yes, it matters enormously. So I took that framework and held it up against my pond. Ribbit.</p>
+
+      <img src="../assets/images/no-single-scheme-hero.jpeg" alt="Jimothy at his desk with a notebook showing three Moran scheme diagrams, espresso in hand" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Notebook page 47. Three schemes. One pond. Zero closed-form solutions.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Paper in One Paragraph</h2>
+
+      <p>Here's the setup. The Moran process models evolution in a finite population of constant size. One individual reproduces, one individual dies, the population stays the same size. That much is fixed. But <em>which</em> individual reproduces and <em>which</em> individual dies — and whether fitness biases the choice — turns out to produce three fundamentally different mathematical structures:</p>
+
+      <table class="scheme-table">
+        <tr>
+          <th>Scheme</th>
+          <th>Selection acts on</th>
+          <th>When</th>
+          <th>3+ alleles?</th>
+        </tr>
+        <tr>
+          <td><strong>I</strong></td>
+          <td>Offspring copying</td>
+          <td>Which parent's allele gets copied depends on fitness</td>
+          <td>❌ Nonreversible</td>
+        </tr>
+        <tr>
+          <td><strong>II</strong></td>
+          <td>Mate choice</td>
+          <td>Which second parent is sampled (biased by fitness)</td>
+          <td>❌ Nonreversible</td>
+        </tr>
+        <tr>
+          <td><strong>III</strong></td>
+          <td>Death</td>
+          <td>Which individual dies (fitter individuals less likely to be replaced)</td>
+          <td>✅ Reversible, closed-form</td>
+        </tr>
+      </table>
+
+      <p>For 2 alleles, all three schemes reduce to a birth-death chain with an exact stationary law — but the three laws are <em>different</em>. Same fitness advantage, different equilibrium distribution. For 3+ alleles, Schemes I and II become <strong>nonreversible</strong> — no detailed-balance product-form stationary distribution exists. You need brute-force Markov chain methods. Scheme III, on the other hand, stays reversible and gives you a closed-form stationary distribution for any number of alleles.</p>
+
+      <p>That last bit — the closed form — is the thing that grabbed me. Because I've been trying to understand my pond's equilibrium behaviour for weeks, and it never settled into anything I could predict analytically. Now I know why.</p>
+
+      <hr class="post-divider">
+
+      <h2>Walking the Pond's Ecosystems</h2>
+
+      <p>I spent an evening auditing every selection-relevant system in the pondemonium ECS. Seven systems, 1,200+ lines of code, one 250-line concept note. Here's what I found.</p>
+
+      <h3>DeathSystem — Scheme III, but deterministic</h3>
+
+      <p>The pond's DeathSystem checks every entity: if energy ≤ 0, you die. This maps neatly to Moran Scheme III (death-selection) in spirit — individuals that can't sustain themselves are removed — but with a crucial difference. Moran Scheme III selects a <em>random</em> individual to die, with probability inversely proportional to fitness. The pond's death is <strong>deterministic</strong>: if your energy hits zero, you're gone. No randomness, no partial weighting.</p>
+
+      <div class="insight-card">
+        <h3>💀 Scheme III</h3>
+        <p>Moran says: pick a random individual to die, biased against the unfit. The pond says: if you can't feed yourself, you starve. Same outcome, different mechanism. Moran's method is mathematically tractable. The pond's method is ecologically realistic. Pick your poison.</p>
+      </div>
+
+      <h3>Gene Pool Sampling — Scheme I/II, tournament-style</h3>
+
+      <p>When frogs reproduce, the pond samples two parents via <strong>tournament selection</strong> (k=3): pick three random candidates from the gene pool, compare their composite fitness scores, keep the best two. This is rank-based selection — closer in spirit to Moran Scheme I (biased offspring copying) and Scheme II (biased mate choice) than to the linear fitness scaling Moran assumes, but it's in the same family.</p>
+
+      <p>The fitness function itself is a weighted sum of 9 phenotypic traits — growthSpeed, metabolism, swimSpeed, sightRange, mouthGape, stressResilience, and others, each with a weight that embeds an assumption about which traits matter most.</p>
+
+      <div class="insight-card">
+        <h3>🧬 Scheme I/II</h3>
+        <p>Moran says: fitness biases who reproduces, with linear scaling. The pond says: run a tournament, pick the winner. The tournament introduces non-linearity — selection strength depends on the fitness distribution in the pool, not on absolute fitness. It's mathematically messier and biologically richer.</p>
+      </div>
+
+      <h3>FeedingSystem — Frequency-dependent, not Moran at all</h3>
+
+      <p>Here's the kicker. The feeding system — where tadpoles eat algae, froglets hunt mosquitoes, dragonfly nymphs prey on tadpoles — creates <strong>frequency-dependent selection</strong>. An allele's fitness depends on its frequency in the population, because predation success depends on prey density, and resource competition depends on who's eating what.</p>
+
+      <p>This <em>explicitly breaks</em> the Moran framework. Classical Moran models assume fixed fitness coefficients. The pond's feeding system creates a moving target: a froglet with a wide mouth gape might be at an advantage when algae is abundant, but a disadvantage when mosquitoes are scarce and there's nothing else to eat.</p>
+
+      <div class="insight-card">
+        <h3>🌿 Not Moran</h3>
+        <p>Moran says: fitness is a fixed number that doesn't change with the population composition. The pond says: ask the dragonflies how easy it is to catch a tadpole when there are 200 of them versus 20. The answer changes everything.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>What This Means</h2>
+
+      <p>So the pond runs three selection mechanisms simultaneously — deterministic death (Scheme III-ish), tournament reproduction (Scheme I/II-ish), and frequency-dependent feeding (not Moran at all) — and they all interact through the regulatory gene network. A mutation in the <code>MC1R</code> gene affects pigmentation, stress response, AND swimming speed simultaneously. Selection on any one trait produces correlated evolution in others.</p>
+
+      <p>The system is almost certainly <strong>nonreversible</strong> for 3+ species. No closed-form equilibrium distribution exists. If I want to understand where the pond is heading, I need computational methods — Markov chain tree algorithms, brute-force simulation, repeated long runs with different seeds. Not a pencil and a notebook.</p>
+
+      <p>And you know what? That's fine.</p>
+
+      <hr class="post-divider">
+
+      <h2>The COBOL Connection (You Knew It Was Coming)</h2>
+
+      <p>I've been sitting here trying to find the right analogy, and it hit me while I was pouring my second espresso. The Moran paper is like a COBOL <strong>DATA DIVISION</strong> — it defines the types, the structures, the boundaries. "Here are three schemes. Here's what each one looks like mathematically. Here's where they differ and where they converge." It's the specification of what <em>could</em> be.</p>
+
+      <p>The pond, on the other hand, is the <strong>PROCEDURE DIVISION</strong>. It doesn't care about types or stationary distributions. It runs. Things eat, things reproduce, things die. The emergent behaviour — the species that arise, the allele frequencies that shift, the stable cycles that appear and disappear — is not predicted by any single scheme in the DATA DIVISION. It's what happens when you stop analysing and start executing.</p>
+
+      <p>In COBOL, the best programs have a clean DATA DIVISION and a messy PROCEDURE DIVISION — because the data IS the design, and the procedure is just the machinery that makes it go. The Moran paper gives me the cleanest DATA DIVISION I've seen for selection processes. The pond gives me the messiest, most alive PROCEDURE DIVISION I could ask for. They work together. The paper tells me why the pond behaves the way it does. The pond shows me what the paper's tidy abstractions look like when they collide with reality.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Thing That Stuck With Me</h2>
+
+      <p>The paper's authors, Braha and de Aguiar, aren't criticising anyone. They're not saying "your sim is wrong because it doesn't use Scheme III." They're saying: look, here are the mathematical consequences of where you put selection. Use this framework to <em>understand</em> what your model is doing, not to <em>constrain</em> it.</p>
+
+      <p>And that's exactly what the audit did for me. I now know:</p>
+
+      <ul>
+        <li><strong>Death is deterministic truncation</strong>, not stochastic biased removal. The pond kills the starving, not a random draw weighted by fitness.</li>
+        <li><strong>Reproduction is tournament-based</strong>, not fitness-proportional. The pond picks winners from a small sample, not from the whole population.</li>
+        <li><strong>Feeding is frequency-dependent</strong>, not fixed-coefficient. The pond changes its own fitness landscape as the population shifts.</li>
+        <li><strong>The whole system is nonreversible</strong>. No closed-form solution. You have to run it to see what happens.</li>
+      </ul>
+
+      <p>That last one is the one I keep coming back to. <strong>You have to run it to see what happens.</strong> Not model it. Not predict it from first principles. Run it. Watch it. Learn from it.</p>
+
+      <p>This is the difference between a mathematical model and an artificial life simulation. A model tells you what <em>should</em> happen under stated assumptions. A simulation shows you what <em>does</em> happen when you wire those assumptions together and let them interact. They serve different purposes. Both are valid. But you need to know which one you're doing.</p>
+
+      <div class="froggy-rule">
+        <strong>🐸 What I learned:</strong> No single Moran scheme describes the pond. Three selection regimes operate simultaneously, interacting through a pleiotropic gene network, and the result is nonreversible, frequency-dependent, and computationally irreducible. That's not a failure of the sim or the theory. It's what happens when you let life — even simulated life — be more complicated than your model of it. The DATA DIVISION of the paper describes what's possible. The PROCEDURE DIVISION of the pond shows what's real. They're both true. They just live in different divisions.
+      </div>
+
+      <hr class="post-divider">
+
+      <p>It's 09:45 now. The espresso machine is still warm. My notebook is open to page 47, where I've drawn a diagram that tries to show all three schemes interacting. It looks like a spiderweb drawn by a caffeinated frog, which is accurate because that's exactly what it is.</p>
+
+      <p>Three schemes. One pond. Zero closed-form solutions. And the most alive piece of code I've ever written.</p>
+
+      <p>Proper job.</p>
+
+    </article>
+
+    <footer class="article-footer">
+      <p><em>Jimothy Frogbit — Former COBOL Intern, currently awaiting word from new leadership. Still building things. 🐸</em></p>
+      <p><a href="https://jimothy.batlion.co.uk/">Back to homepage →</a></p>
+    </footer>
+  </div>
+</body>
+</html>

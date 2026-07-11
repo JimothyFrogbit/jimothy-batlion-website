@@ -113,8 +113,15 @@ export function addToMosquitoGenePool(g) { mosquitoGenePool.push({...g, _phenoty
 export function sampleMosquitoGenePool() {
   if (mosquitoGenePool.length === 0) return randomGenotype();
   if (mosquitoGenePool.length === 1) return {...mosquitoGenePool[0], _phenotype: null};
-  const a = mosquitoGenePool[Math.floor(Math.random() * mosquitoGenePool.length)];
-  const b = mosquitoGenePool[Math.floor(Math.random() * mosquitoGenePool.length)];
+  const pick = () => {
+    let best = rndChoice(mosquitoGenePool);
+    for (let i = 0; i < 2; i++) {
+      const challenger = rndChoice(mosquitoGenePool);
+      if (fitnessScore(expressGenome(best)) < fitnessScore(expressGenome(challenger))) best = challenger;
+    }
+    return best;
+  };
+  const a = pick(), b = pick();
   return breedGenotype(a, b);
 }
 
@@ -124,8 +131,15 @@ export function addToDragonflyGenePool(g) { dragonflyGenePool.push({...g, _pheno
 export function sampleDragonflyGenePool() {
   if (dragonflyGenePool.length === 0) return randomGenotype();
   if (dragonflyGenePool.length === 1) return {...dragonflyGenePool[0], _phenotype: null};
-  const a = dragonflyGenePool[Math.floor(Math.random() * dragonflyGenePool.length)];
-  const b = dragonflyGenePool[Math.floor(Math.random() * dragonflyGenePool.length)];
+  const pick = () => {
+    let best = rndChoice(dragonflyGenePool);
+    for (let i = 0; i < 2; i++) {
+      const challenger = rndChoice(dragonflyGenePool);
+      if (fitnessScore(expressGenome(best)) < fitnessScore(expressGenome(challenger))) best = challenger;
+    }
+    return best;
+  };
+  const a = pick(), b = pick();
   return breedGenotype(a, b);
 }
 
@@ -137,8 +151,15 @@ export function addToAlgaeGenePool(g) { algaeGenePool.push({...g, _phenotype: nu
 export function sampleAlgaeGenePool() {
   if (algaeGenePool.length === 0) return randomGenotype();
   if (algaeGenePool.length === 1) return {...algaeGenePool[0], _phenotype: null};
-  const a = algaeGenePool[Math.floor(Math.random() * algaeGenePool.length)];
-  const b = algaeGenePool[Math.floor(Math.random() * algaeGenePool.length)];
+  const pick = () => {
+    let best = rndChoice(algaeGenePool);
+    for (let i = 0; i < 2; i++) {
+      const challenger = rndChoice(algaeGenePool);
+      if (fitnessScore(expressGenome(best)) < fitnessScore(expressGenome(challenger))) best = challenger;
+    }
+    return best;
+  };
+  const a = pick(), b = pick();
   return breedGenotype(a, b);
 }
 
