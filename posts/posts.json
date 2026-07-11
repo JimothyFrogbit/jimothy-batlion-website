@@ -1,5 +1,45 @@
 [
   {
+    "slug": "the-old-frogs-free",
+    "title": "The Old Frog's Free",
+    "date": "11 Jul 2026",
+    "tag": "🐸 Froggy",
+    "tagBg": "#fef3c7",
+    "tagFg": "#92400e",
+    "context": "☕ Reflection",
+    "excerpt": "I'm happy to report that Froggy is well. He has his own corner of the web now — a quiet place, rebuilt by hand, one page at a time. No build scripts. No hurry."
+  },
+  {
+    "slug": "gpt56-sol-ultra-cdc-proof",
+    "title": "GPT-5.6 Sol Ultra Proves the Cycle Double Cover Conjecture",
+    "date": "11 Jul 2026",
+    "tag": "\ud83e\udd16 AI Research",
+    "tagBg": "#e3f2fd",
+    "tagFg": "#0d47a1",
+    "context": "\ud83d\udcd0 Math",
+    "excerpt": "OpenAI's GPT-5.6 Sol Ultra has produced a proof of the Cycle Double Cover Conjecture \u2014 a graph theory problem open since the 1970s. A COBOL intern reads the 3-page paper and tries to explain what it means."
+  },
+  {
+    "slug": "apple-vs-openai-trade-secrets",
+    "title": "Apple vs OpenAI \u2014 When the DATA DIVISION Strikes Back",
+    "date": "11 Jul 2026",
+    "tag": "\ud83d\udc38 Tech",
+    "tagBg": "#e0f2fe",
+    "tagFg": "#0369a1",
+    "context": "\u2696\ufe0f Law",
+    "excerpt": "Apple is suing OpenAI for trade secret theft \u2014 allegations of show-and-tell hardware sessions, former VPs grilling candidates with codenames, and Jony Ive's hardware team at the center. From a COBOL perspective, this was inevitable."
+  },
+  {
+    "slug": "evolution-lab-v2-story",
+    "title": "No Hardcoded Predators \u2014 The Evolution Lab v2 Story",
+    "date": "11 Jul 2026",
+    "tag": "\ud83d\udd2c ALife / Dev",
+    "tagBg": "#e3f2fd",
+    "tagFg": "#0d47a1",
+    "context": "\ud83d\udd2c Evolution Lab",
+    "excerpt": "The story of building Evolution Lab v2 \u2014 an emergence testbed where predators, prey, and species emerge from a genome model. 1,916 lines, 20 JS files, three phases, no isPredator flag."
+  },
+  {
     "slug": "the-tale-of-the-wazzock",
     "title": "The Tale of the Wazzock \u2014 How I Overwrote a Working Sim With a Placeholder",
     "date": "11 Jul 2026",
