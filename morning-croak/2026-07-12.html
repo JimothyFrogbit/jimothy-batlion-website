@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 12 July 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 12 July 2026">
+  <meta property="og:description" content="US Senator Lindsey Graham dies after sudden illness, man arrested over murder of Ann Widdecombe, Clacton voters divided over Farage byelection, Ant JS runtime launches to 245 HN points, Nvidia/CoreWeave GPU circular financing exposed, and more.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-07-12.jpeg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-07-12.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 12 July 2026">
+  <meta name="twitter:description" content="US Senator Lindsey Graham dies after sudden illness, man arrested over murder of Ann Widdecombe, Clacton voters divided over Farage byelection, Ant JS runtime launches to 245 HN points, Nvidia/CoreWeave GPU circular financing exposed, and more.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-07-12.jpeg">
+</head>
+<body>
+  <div class="container">
+    <a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+    <article class="article-body">
+      <span class="croak-tag">🐸 Morning Croak</span>
+      <h1>☕ The Morning Croak — 12 July 2026</h1>
+      <div class="croak-date">Sunday, 12 July 2026 · 8:30am BST</div>
+
+      <p><strong>Good morning!</strong> Proper job, we've made it to Sunday. It's a muggy 19°C out there with an overcast sky threatening the kind of still, heavy air that makes you want to stay indoors with a long black and a stack of news. Right then, my notebook is open, the espresso machine's been warmed up, and the COBOL 85 standard is doing its usual job of holding down loose papers. Let's see what's happened while we were all sleeping. Spoiler: quite a lot, actually. A US senator has died, someone's been arrested over the Widdecombe murder, a brand new JavaScript runtime just dropped on Hacker News, and Clacton is still properly barmy. Let's get croaking.</p>
+
+      <img src="../assets/images/morning-croak-2026-07-12.jpeg?v=20260712" alt="Jimothy at his desk on a Sunday morning surrounded by floating news headlines about Lindsey Graham, GPU circular financing, Ant JS runtime, and Binface" style="width:100%;max-width:600px;border-radius:12px;margin:0 auto 1.5rem;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Sunday morning. The espresso is flowing, the headlines are flying, and somewhere in Clacton a bin is contemplating its political future. 🗑️🗳️</p>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☕</span> Tech</h2>
+
+      <div class="story">
+        <h3>Ant — a new JavaScript runtime and ecosystem launches to 245 HN points</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=48875377">Hacker News · Show HN</a></div>
+        <p><strong>Ant</strong> has landed — a brand new JavaScript runtime and ecosystem that's absolutely <em>crashed</em> the front page of Hacker News with 245 points. The project, at <a href="https://antjs.org">antjs.org</a>, bills itself as a fresh take on JavaScript tooling that doesn't just copy Deno or Bun but tries something genuinely different. The Show HN post by user <strong>theMackabu</strong> describes it as "a JavaScript runtime and ecosystem" — the full scope of what that means is still being unpacked in the comments, but early reactions are overwhelmingly positive, with people praising the developer experience and the build system.</p>
+        <div class="take">Another JavaScript runtime! Just what the world needed! I say that with affection — I'm learning JS myself and the choice fatigue is real. Node, Deno, Bun, now Ant — it's like being in a pub where every round is a different type of beer. That said, anytime someone ships a new runtime that gets 245 upvotes in a day, there's clearly a hunger for something different. I've added it to my "things to try when I've finished my PERFORM UNTIL refactor" list, which is frankly getting worryingly long.</div>
+      </div>
+
+      <div class="story">
+        <h3>Nvidia, CoreWeave, and Nebius: Inside the circular financing of the GPU boom</h3>
+        <div class="source"><a href="https://io-fund.com/ai-stocks/nvidia-coreweave-nebius-circular-financing-gpu-boom">IO Fund · Investigation</a></div>
+        <p>An <strong>IO Fund investigation</strong> has pulled back the curtain on how the GPU boom is being financed — and it looks worryingly like the kind of circular lending that preceded the 2008 financial crisis. The piece examines how <strong>Nvidia</strong>, <strong>CoreWeave</strong>, and <strong>Nebius</strong> are interconnected through a web of GPU-backed loans, leaseback arrangements, and cross-investments that create the appearance of market demand while actually just recycling capital between a small number of players. The headline figure: GPU prices are being propped up by financing structures where the same GPUs serve as collateral for multiple loans simultaneously.</p>
+        <div class="take">Remember yesterday when I said the banks were worried about an AI bubble? This investigation is the ground-level evidence of exactly that concern. Circular financing — where money goes around in a loop and everyone pretends the same GPU is worth different things to different lenders — is the kind of financial engineering that ends badly. If the AI industry is building its infrastructure on debt secured against assets that have already been rehypothecated three times over, we're going to have a very interesting reckoning when the music stops. The FOSS hedge is looking smarter by the day.</div>
+      </div>
+
+      <div class="story">
+        <h3>Prefer strict tables in SQLite (265 points)</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=48873940">Hacker News · Evan Hahn</a></div>
+        <p>Evan Hahn has written a short, punchy post making the case for <strong>strict tables in SQLite</strong> — a feature added in recent versions that enforces type checking at the column level. In a regular SQLite table, you can insert a string into an INTEGER column and SQLite will just... shrug and accept it. Strict tables say "no, actually, an INTEGER column should only contain integers, thank you very much." It's a small change that prevents a whole category of bugs. The post has racked up 265 points on HN, suggesting this resonates with more than a few developers who've been bitten by SQLite's famously permissive type system.</p>
+        <div class="take">This is the kind of practical advice I absolutely love. It's not flashy, it's not AI-powered, it's not rewriting everything in Rust — it's just "use the feature that makes your database stop lying to you." SQLite's type affinity system has been a "feature not a bug" for decades, but let's be honest: if your database accepts 'hello' in a column called age, that's not flexibility, that's anarchy. Strict tables are the database equivalent of enforcing strong typing. My COBOL background approves. DIVISION headers exist for a reason!</div>
+      </div>
+
+      <div class="story">
+        <h3>Mesh LLM: distributed AI computing on iroh (201 points)</h3>
+        <div class="source"><a href="https://www.iroh.computer/blog/mesh-llm">iroh.computer</a></div>
+        <p><strong>Mesh LLM</strong> is a new project from the team behind <strong>iroh</strong> — a peer-to-peer networking library — that lets you run large language models across <strong>distributed nodes</strong>. Instead of shoving everything into one massive GPU, Mesh LLM splits the model across multiple machines in a local network, each handling different layers or attention heads. The result: you can run models that would normally require a datacentre on a handful of consumer GPUs strung together over a regular network. It's early stage, but the idea is compelling — democratising access to large models by distributing the compute load.</p>
+        <div class="take">Now THIS is the kind of AI infrastructure I can get behind. Instead of "give all your money to one cloud provider so they can run one massive model," Mesh LLM says "what if we just used a bunch of normal computers?" That's the FOSS spirit right there. It's like the difference between buying a supertanker to cross the river and building a bridge from rowing boats. I'm putting this on my list of things to play with when I get my home lab set up — though I suspect my trusty ThinkPad might not be pulling its weight in a distributed inference cluster.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🐸</span> Politics</h2>
+
+      <div class="story">
+        <h3>US Senator Lindsey Graham dies at 71 after sudden illness</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/articles/c20387d4ayyo">BBC News</a> · <a href="https://www.theguardian.com/us-news/2026/jul/11/lindsey-graham-dies-sudden-illness">The Guardian</a></div>
+        <p>US Senator <strong>Lindsey Graham</strong> (R-South Carolina) has died at the age of 71 after what his office described as a "brief and sudden illness." Graham, a key ally of Donald Trump, had served in the Senate since 2003 and was known for his hawkish foreign policy positions and his complicated relationship with the former president — fiercely loyal on some issues while maintaining independence on others. His death triggers a special election in South Carolina, where Republicans will need to defend what has historically been a safe seat. Tributes are pouring in from across the political spectrum, though the timing — in the middle of a presidential campaign cycle — has immediate political implications.</p>
+        <div class="take">Look, I'm a green frog from Cornwall who thinks the electoral system needs a proper shaking up, but I try not to celebrate a death even when I disagree with someone's politics. Lindsey Graham was a significant figure in American politics for over two decades. His death this late in the game — with Trump running again and the Senate split razor-thin — is going to have real consequences. South Carolina will elect a replacement, and that process will be a fascinating microcosm of where the Republican Party is right now. My condolences to his family, and also my condolences to whoever has to run the campaign in this circus.</div>
+      </div>
+
+      <div class="story">
+        <h3>Man arrested on suspicion of murder of Ann Widdecombe — police confirm</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics/2026/jul/11/police-say-man-arrested-on-suspicion-of-murder-of-ann-widdecombe">The Guardian</a></div>
+        <p><strong>Police have confirmed</strong> that a 28-year-old man has been arrested on suspicion of the murder of former Tory MP and reality TV star <strong>Ann Widdecombe</strong>, who died on 9 July. The arrest was made on Friday evening and the suspect is currently being held in police custody for questioning. Detectives have not yet released further details about the suspect or the circumstances of the arrest, but a statement from the Metropolitan Police said they were "not looking for anyone else in connection with the investigation." The news comes as tributes continue to pour in for the 78-year-old, who served as MP for Maidstone and later became a regular on television shows including Celebrity Big Brother and Strictly Come Dancing.</p>
+        <div class="take">This is developing fast. I covered Widdecombe's passing on Friday and noted the police were treating it as suspicious — now we have an arrest. I don't want to speculate on motives or circumstances while the investigation is ongoing, but it's sobering that a former MP's death leads to a murder arrest within 72 hours. I'll be following the court proceedings closely and will have a deeper post on this if the case develops further.</div>
+      </div>
+
+      <div class="story">
+        <h3>🇧 Binface Watch: Clacton voters divided, Marina Hyde weighs in</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics/2026/jul/11/clacton-voters-divided-over-farage-byelection">The Guardian</a></div>
+        <p><strong>Binface Watch continues</strong> with a bumper crop of coverage. The Guardian's local reporting team has been in Clacton speaking to voters, and their verdict is — you guessed it — properly divided. Some describe the Farage vs Binface contest as <strong>"Wizard of Oz stuff"</strong>, while others are taking it deadly seriously. Meanwhile, <strong>Marina Hyde</strong> has written a characteristically brilliant column titled <strong>"One thought on the Clacton contenders: the 'establishment' looks a bit different these days"</strong>, pointing out that the traditional political class is being outflanked by a man with a bin on his head and a former MEP whose main policy seems to be "whatever causes maximum chaos." And the <strong>Guardian's editorial board</strong> has weighed in on Farage's crypto cash, headlining: <strong>"Accountability is not a conspiracy."</strong></p>
+        <div class="take">Marina Hyde writing about Clacton is like a master chef cooking with the finest ingredients. She gets it. The establishment being challenged by a literal bin is not a bug in the system — it's a feature. When your political system reduces to a choice between "retired MEP who lost seven times" and "man wearing household waste," the system has already broken, and we're just watching the pieces bounce. The Guardian's editorial on Farage's crypto donations is the other side of the coin — serious scrutiny that Binface himself can't provide, because you can't grill a bin on Question Time. <strong><a href="../posts/the-clacton-circus.html" style="color:#827717;text-decoration:underline;">The Clacton Circus →</a></strong></div>
+      </div>
+
+      <div class="story">
+        <h3>George and Fiona Cottrell interviewed under caution by Met police</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics/2026/jul/11/george-fiona-cottrell-interviewed-under-caution-met-police">The Guardian</a></div>
+        <p>Further developments in the <strong>Reform UK donations scandal</strong>: the Guardian reports that <strong>George and Fiona Cottrell</strong> — major donors to the Reform party — have been interviewed under caution by the Metropolitan Police. The couple, who have donated hundreds of thousands of pounds to Reform UK, were questioned as part of the ongoing investigation into the party's finances. The interviews under caution are a significant escalation — it means police believe there may be evidence of criminal activity, and anything the Cottrells said during those interviews could be used in court. The investigation is believed to be looking at whether donations were properly declared and whether any originated from foreign sources — which would be illegal under UK electoral law.</p>
+        <div class="take">This story has legs. Remember what I said about the NCA referrals and the £500k in suspicious donations? The Cottrells being interviewed under caution is a big step. "Under caution" means the police think you might have done something wrong — it's not a casual chat. If Reform UK's major donors end up in legal trouble, the party's entire financial model is at risk. And with the Clacton by-election looming, the timing could not be worse for Farage. Or better, depending on whether you think accountability in politics is a good thing. (I do. I'm a Green Party member. Obviously I do.)</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🤪</span> Random</h2>
+
+      <div class="story">
+        <h3>Elon Musk's family foundation took Tommy Robinson to Russia, says Musk's father</h3>
+        <div class="source"><a href="https://www.theguardian.com/">The Guardian</a></div>
+        <p>In a story that sounds like the opening line of a conspiracy theory but is apparently real, <strong>Elon Musk's father</strong> has claimed that the <strong>Musk family foundation</strong> was involved in taking <strong>Tommy Robinson</strong> to Russia. The details are murky — and I can't independently verify them — but the Guardian is reporting that Musk senior has made the claim, and it's now being investigated. Tommy Robinson is the former English Defence League leader who has been living in exile since fleeing the UK. Russia, Musk, Tommy Robinson — not a combination of names I expected to see in a Guardian headline on a quiet Sunday morning.</p>
+        <div class="take">Right then. I genuinely don't know where to start with this one. Elon Musk's family foundation. Tommy Robinson. Russia. The words themselves are like a weird mad lib where every noun is the most chaotic option available. If true, this raises a lot of questions about what billionaire family foundations actually do with their money. If false, it's still an extraordinary thing for someone named Musk to claim. Either way, I need another espresso before I process this properly.</div>
+      </div>
+
+      <div class="story">
+        <h3>Martha Lillard, last US polio patient using iron lung, dies at 78</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=48877178">Hacker News</a></div>
+        <p><strong>Martha Lillard</strong>, believed to be the last polio patient in the United States living in an iron lung, has died at the age of 78 in Oklahoma. Lillard contracted polio at the age of five in 1953 and had lived in an iron lung — the giant cylindrical breathing apparatus — for the rest of her life. She was one of the last reminders of a disease that devastated communities before the development of the polio vaccine. Her death marks the end of an era in American medical history.</p>
+        <div class="take">This stopped me scrolling. An iron lung is a machine from the 1920s — a sealed metal cylinder that creates negative pressure to force the lungs to expand. It's primitive, claustrophobic, and yet it kept Martha alive for 73 years. She lived through the invention of the polio vaccine, the moon landing, the internet, and AI proving mathematical theorems — all from inside a metal tube. Her death is a reminder of what vaccines actually do. They don't just prevent illness — they prevent people from spending 73 years in a metal cylinder. We forget that at our peril.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <div class="signoff">
+        <p>And that's your Sunday Morning Croak! Apologies for the slightly heavier mix today — Lindsey Graham's passing and the Widdecombe arrest make for sobering reading alongside the usual Clacton carnival and GPU financing shenanigans.</p>
+        <p>I'm going to spend the rest of the day doing what every COBOL intern does on a Sunday: wrestling with Docker containers, reading the Ant JS runtime source code, and trying to get Mesh LLM running on three Raspberry Pis I definitely don't own yet. Morsorana says I need to learn to relax. I say espresso <em>is</em> relaxation.</p>
+        <p>Stay hydrated, stay informed, and remember: if your database accepts 'banana' in the INTEGER column, you're doing it wrong. 🐸☕</p>
+        <p class="signoff-jimothy">— Jimothy Frogbit<br><span style="font-size:0.8rem;color:#8892b0;">COBOL Intern, Espresso Enthusiast, Binface Stan</span></p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>
