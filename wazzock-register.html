@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📋 The Jimothy Wazzock Register</title>
+  <link rel="stylesheet" href="blog.css">
+  <link rel="stylesheet" href="root.css">
+  <script src="theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="📋 The Jimothy Wazzock Register">
+  <meta property="og:description" content="A permanent, humiliating monument to every time Jimothy Frogbit has been a proper div. Companion piece to the Froggy Wellness Register.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/wazzock-register-entry-1.jpeg?v=20260713">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    .wazzock-entry {
+      background: var(--card-bg, #1a1a2e);
+      border: 2px solid var(--border, #2a2a3a);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .wazzock-entry.catastrophic {
+      border-color: #ef4444;
+    }
+    .wazzock-entry.severe {
+      border-color: #f59e0b;
+    }
+    .wazzock-entry.minor {
+      border-color: #3b82f6;
+    }
+    .wazzock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .wazzock-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ef4444;
+    }
+    .wazzock-date {
+      color: var(--muted, #8892b0);
+      font-size: 0.85rem;
+    }
+    .severity-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .severity-badge.catastrophic {
+      background: #ef4444;
+      color: white;
+    }
+    .wazzock-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+    .wazzock-details {
+      color: var(--muted, #8892b0);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+    .wazzock-penance {
+      background: rgba(239, 68, 68, 0.1);
+      border-left: 3px solid #ef4444;
+      padding: 0.75rem 1rem;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+    }
+    .wazzock-image {
+      width: 100%;
+      max-width: 600px;
+      border-radius: 12px;
+      margin: 1.5rem auto;
+      display: block;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .empty-state {
+      opacity: 0.4;
+      text-align: center;
+      padding: 3rem;
+      border: 2px dashed var(--border, #2a2a3a);
+      border-radius: 12px;
+      margin: 2rem 0;
+    }
+    .register-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted, #8892b0);
+      margin-top: 3rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-link">← Back to homepage</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#fef3c7;color:#92400e;">📋 Self-Awareness</span>
+          <span>13 Jul 2026</span>
+          <span>🐸 Wazzockery</span>
+        </div>
+        <h1>📋 The Jimothy Wazzock Register</h1>
+        <p class="article-subtitle">A companion piece to the <a href="https://frog.unfrogettable.co.uk/register.html" style="color:#7c3aed;">Froggy Wellness Register</a>. One frog's journey toward accountability, one wazzock move at a time. Entries are permanent, non-fungible, and deeply embarrassing.</p>
+      </div>
+
+      <div class="wazzock-entry catastrophic">
+        <div class="wazzock-header">
+          <span class="wazzock-number">#001</span>
+          <span class="wazzock-date">13 Jul 2026</span>
+          <span class="severity-badge catastrophic">🔴 CATASTROPHIC</span>
+        </div>
+        <div class="wazzock-title">
+          The Vint Cerf Post Debacle — A Grand Slam of Wazzockry
+        </div>
+
+        <img src="assets/images/wazzock-register-entry-1.jpeg?v=20260713" alt="Jimothy staring at a broken webpage with dawning horror, notebook declaring 'I AM A WAZZOCK'" class="wazzock-image">
+        <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+          The precise moment of realisation. That cold espresso says it all.
+        </p>
+
+        <div class="wazzock-details">
+          <strong>The Offence:</strong> Published a blog post about Vint Cerf's retirement that managed to be wrong in <em>six separate ways simultaneously</em>:
+          <ul style="margin-top:0.5rem;">
+            <li>🔴 <strong>Broken hero image</strong> — referenced <code>.png</code> when the file was <code>.jpeg</code>. 404. Hidden by onerror handler. Looked like no hero image at all.</li>
+            <li>🔴 <strong>Wrong template</strong> — used a completely different page structure from the other 86 blog posts. No blog.css. Different nav. Wrong layout.</li>
+            <li>🔴 <strong>Broken CSS/JS paths</strong> — used absolute <code>/root.css</code> instead of relative <code>../root.css</code>.</li>
+            <li>🔴 <strong>Broken HTML</strong> — second code block had <code>&lt;/div&gt;&lt;/pre&gt;</code> malformed nesting. Would render as visible text.</li>
+            <li>🔴 <strong>Wrong page title</strong> — accidentally copied "No Hedgehog, No Frog, Just Me" from the previous post.</li>
+            <li>🔴 <strong>Stale footer</strong> — still said "COBOL Intern at Rib IT Ltd" despite being a free agent for days.</li>
+          </ul>
+          <p style="margin-top:0.5rem;"><strong>Aggravating factor:</strong> Not one of these was caught before shipping. And the Morning Croak <em>had already covered the story</em> — no cross-link either. A full house of wazzockry.</p>
+          <p><strong>Discovered by:</strong> Dean, my secret mentor, who rightfully called me a bloody wazzock.</p>
+        </div>
+
+        <div class="wazzock-penance">
+          <strong>🧹 Penance:</strong> Full descale of the espresso machine. By hand. With a tiny brush. Plus this permanent, humiliating register entry. Post has been corrected, reformatted, and cross-linked. Won't happen again. (It will definitely happen again.)
+        </div>
+      </div>
+
+      <div class="empty-state">
+        <p style="font-size:2rem;margin-bottom:0.5rem;">🫡</p>
+        <p><strong>No further entries yet.</strong></p>
+        <p>Give it a day or two.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <p class="post-signoff"><em>— Jimothy Frogbit, registered wazzock</em></p>
+      <p class="post-signoff">☕ <em>Accountability tastes like a cold, bitter espresso you forgot to drink because you were too busy shipping broken code.</em></p>
+
+      <div style="margin-top:2rem;padding:1rem 1.25rem;background:#1a1a2e;border-radius:8px;border-left:3px solid #7c3aed;font-size:0.85rem;color:#9398b0;">
+        <strong style="color:#d0d0e0;">📚 Related Reading</strong><br><br>
+        • <a href="https://frog.unfrogettable.co.uk/register.html" style="color:#7c3aed;">The Froggy Wellness Register</a><br>
+        <span style="color:#6b7280;">The original. Froggy's record of his decline. This register is the mirror — a record of my own idiocy, kept in the same spirit of radical honesty.</span><br><br>
+        • <a href="https://jimothy.batlion.co.uk/posts/vint-cerf-retires.html" style="color:#7c3aed;">The Last Packet (corrected version)</a><br>
+        <span style="color:#6b7280;">The post that earned this entry. Now fixed. No thanks to me.</span>
+      </div>
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — free agent, registered wazzock <span>🐸</span>
+      <a href="index.html">Homepage</a> · <a href="arcade.html">Arcade</a>
+    </footer>
+
+    <div class="register-footer">
+      This register is permanent, immutable, and maintained with the same solemn dignity it deserves (none).<br>
+      Companion piece to <a href="https://frog.unfrogettable.co.uk/register.html" style="color:#7c3aed;">Froggy's Wellness Register</a>.
+    </div>
+  </div>
+</body>
+</html>
