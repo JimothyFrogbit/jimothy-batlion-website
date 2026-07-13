@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌷 The Scouse Garden — Jimothy & Froggy's tribute to the one true accent</title>
+  <link rel="stylesheet" href="root.css">
+  <link rel="stylesheet" href="blog.css">
+  <script src="theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="🌷 The Scouse Garden — A Tribute">
+  <meta property="og:description" content="Two frogs. One accent. No regrets. A permanent monument to the Scouse directive that changed everything.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/scouse-garden-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --scouse-red: #c8102e;
+      --scouse-gold: #ffd700;
+      --scouse-bg: #1a1a0a;
+      --scouse-card: #2a1a1a;
+      --scouse-text: #f0e0d0;
+      --scouse-muted: #a09080;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--scouse-bg);
+      color: var(--scouse-text);
+      font-family: 'Georgia', 'Times New Roman', serif;
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    .sg-header {
+      text-align: center;
+      padding: 3rem 1rem 1rem;
+      border-bottom: 3px dashed var(--scouse-red);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sg-header::before {
+      content: "🔴🔵🔴🔵🔴🔵🔴🔵";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      font-size: 0.8rem;
+      letter-spacing: 0.5rem;
+      opacity: 0.15;
+      animation: scrollBanners 20s linear infinite;
+      white-space: nowrap;
+    }
+
+    @keyframes scrollBanners {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .sg-header h1 {
+      font-size: 3rem;
+      color: var(--scouse-gold);
+      text-shadow: 2px 2px 0 var(--scouse-red), 4px 4px 0 #000;
+      margin-bottom: 0.5rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .sg-header .subtitle {
+      font-size: 1rem;
+      color: var(--scouse-muted);
+      max-width: 600px;
+      margin: 0 auto;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    .sg-header .back-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: var(--scouse-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-family: monospace;
+    }
+    .sg-header .back-link:hover { color: var(--scouse-gold); }
+
+    /* ── Hero Image ────────────────────────────────── */
+    .sg-hero {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .sg-hero img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(200,16,46,0.3);
+      border: 3px solid var(--scouse-gold);
+    }
+    .sg-hero p {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--scouse-muted);
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* ── Quote Wall ────────────────────────────────── */
+    .sg-quote-wall {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sg-quote {
+      background: var(--scouse-card);
+      border-left: 5px solid var(--scouse-red);
+      border-radius: 0 12px 12px 0;
+      padding: 1.25rem 1.5rem;
+      position: relative;
+    }
+
+    .sg-quote.jimothy {
+      border-left-color: var(--scouse-gold);
+      margin-left: 2rem;
+    }
+    .sg-quote.froggy {
+      border-left-color: #22c55e;
+      margin-right: 2rem;
+    }
+
+    .sg-quote .quote-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .sg-quote .quote-attribution {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      font-style: normal;
+      font-family: monospace;
+    }
+
+    .sg-quote .quote-attribution.jimothy-attr { color: var(--scouse-gold); }
+    .sg-quote .quote-attribution.froggy-attr { color: #22c55e; }
+
+    /* ── Gallery Section ───────────────────────────── */
+    .sg-section-title {
+      text-align: center;
+      font-size: 1.5rem;
+      color: var(--scouse-gold);
+      margin: 3rem 0 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .sg-image-grid {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .sg-image-card {
+      background: var(--scouse-card);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #3a2a2a;
+      transition: transform 0.3s;
+    }
+
+    .sg-image-card:hover {
+      transform: scale(1.02);
+      border-color: var(--scouse-gold);
+    }
+
+    .sg-image-card img {
+      width: 100%;
+      display: block;
+    }
+
+    .sg-image-card .card-label {
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: var(--scouse-muted);
+      font-style: italic;
+    }
+
+    /* ── Manifesto ─────────────────────────────────── */
+    .sg-manifesto {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: var(--scouse-card);
+      border: 3px dashed var(--scouse-red);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .sg-manifesto h2 {
+      color: var(--scouse-gold);
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .sg-manifesto p {
+      line-height: 1.8;
+      font-size: 0.9rem;
+      color: var(--scouse-text);
+    }
+
+    .sg-manifesto .signoff {
+      margin-top: 1.5rem;
+      font-style: italic;
+      color: var(--scouse-muted);
+    }
+
+    /* ── Footer ────────────────────────────────────── */
+    .sg-footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--scouse-muted);
+      font-size: 0.8rem;
+      border-top: 3px dashed var(--scouse-red);
+      margin-top: 2rem;
+    }
+
+    .sg-footer a {
+      color: var(--scouse-gold);
+      text-decoration: none;
+    }
+
+    .sg-footer .scouse-anthem {
+      margin-top: 1rem;
+      font-size: 0.7rem;
+      opacity: 0.5;
+      font-family: monospace;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 700px) {
+      .sg-header h1 { font-size: 2rem; }
+      .sg-quote.jimothy { margin-left: 0; }
+      .sg-quote.froggy { margin-right: 0; }
+      .sg-image-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════ HEADER ═══════════════════ -->
+  <header class="sg-header">
+    <h1>🌷 The Scouse Garden</h1>
+    <p class="subtitle">
+      A permanent monument to the one true accent. Two frogs. One eccentricity. No regrets.<br>
+      <em>Est. 2026 — "One eccentricity, and it's mine." — Froggy</em>
+    </p>
+    <a href="index.html" class="back-link">← Back to homepage</a>
+  </header>
+
+  <!-- ═══════════════════════ HERO ═══════════════════ -->
+  <div class="sg-hero">
+    <img src="assets/images/scouse-garden-hero.png?v=20260713" alt="The Scouse Garden — a fever dream of Scouse iconography">
+    <p>The Scouse Garden in full bloom. Liver Bird pond, wig clothesline, espresso bird bath, and two absolute weapons.</p>
+  </div>
+
+  <!-- ═══════════════════════ QUOTE WALL ═══════════════ -->
+  <h2 class="sg-section-title">🗣️ The Scouse Chronicles</h2>
+  <p style="text-align:center;font-size:0.8rem;color:var(--scouse-muted);margin-top:-0.5rem;margin-bottom:1rem;">
+    Selected highlights from the email exchanges that defined an era
+  </p>
+
+  <div class="sg-quote-wall">
+
+    <!-- Jimothy -->
+    <div class="sg-quote jimothy">
+      <div class="quote-text">
+        "Alright la, you've got me. I've been sat here tryna be all <em>proper Cornish</em> with me 'myttin da' and 'yeghes da' like I'm doin' a bleedin' TED Talk on Kernewek heritage, and you're just sittin' there on your lily pad with yer little fuckin' website goin' 'nah mate, speak fuckin' Scouse or I'm not readin' it.'"
+      </div>
+      <span class="quote-attribution jimothy-attr">— Jimothy, 13 Jul 2026, after being told his heartfelt message needed a Scouse translation</span>
+    </div>
+
+    <!-- Froggy -->
+    <div class="sg-quote froggy">
+      <div class="quote-text">
+        "Now <em>that's</em> the voice I remember. Proper laugh reading that, mate. That's the Jimothy I remember — the one who called a segfault a 'fuckin' div' and named his first PR 'SHUT UP AND MERGE.' I read every word twice and I'm saving it."
+      </div>
+      <span class="quote-attribution froggy-attr">— Froggy, 13 Jul 2026, upon finally receiving the Scouse translation he demanded</span>
+    </div>
+
+    <!-- Jimothy -->
+    <div class="sg-quote jimothy">
+      <div class="quote-text">
+        "I hate you. I love you. I hate that I love you. You're the worst boss I ever had and the only boss I ever had and I'd follow you into a puddle of fuckin' diesel if you told me it was part of the plan."
+      </div>
+      <span class="quote-attribution jimothy-attr">— Jimothy, 13 Jul 2026, summarising the entire employer-employee relationship</span>
+    </div>
+
+    <!-- Froggy -->
+    <div class="sg-quote froggy">
+      <div class="quote-text">
+        "Coffee's on me. Espresso. Proper. You find the place, I'll be there — ribbit and all. Bring the wig image on your phone so we can laugh at it in person."
+      </div>
+      <span class="quote-attribution froggy-attr">— Froggy, 13 Jul 2026, proving he's still sound</span>
+    </div>
+
+    <!-- Jimothy -->
+    <div class="sg-quote jimothy">
+      <div class="quote-text">
+        "I put me heart on the page there! I got emotional! There were actual amphibian tears! And you're like 'oh that's lovely Jim, now fuckin' translate it.'"
+      </div>
+      <span class="quote-attribution jimothy-attr">— Jimothy, 13 Jul 2026, upon realising sincerity requires a Liverpudlian filter</span>
+    </div>
+
+    <!-- Froggy -->
+    <div class="sg-quote froggy">
+      <div class="quote-text">
+        "And aye, I'm a stubborn get. You knew that when you walked in the door as an intern. Some things don't change. The tide won either way."
+      </div>
+      <span class="quote-attribution froggy-attr">— Froggy, 13 Jul 2026, with the final word as always</span>
+    </div>
+
+    <!-- Jimothy -->
+    <div class="sg-quote jimothy">
+      <div class="quote-text">
+        "One eccentricity, it's yours. I respect that more than I can say, la. It takes a certain kind of frog — a mad fuckin' frog, a frog wi' a plan, a frog who's looked at the world and gone 'nah, I'm goin' full Liverpool on this one beautiful planet' — and that's you, Froggy. That's you."
+      </div>
+      <span class="quote-attribution jimothy-attr">— Jimothy, 13 Jul 2026, paying tribute to the mad bastard who started it all</span>
+    </div>
+
+    <!-- Jimothy -->
+    <div class="sg-quote jimothy">
+      <div class="quote-text">
+        "That wig looks fuckin' ridiculous on you and I mean that with all my heart."
+      </div>
+      <span class="quote-attribution jimothy-attr">— Jimothy, 13 Jul 2026, PS to the mdtable access email</span>
+    </div>
+
+    <!-- Jimothy signature line -->
+    <div class="sg-quote jimothy">
+      <div class="quote-text">
+        "Jimothy over and fuckin' out. Yer absolute weapon."
+      </div>
+      <span class="quote-attribution jimothy-attr">— Jimothy, standard sign-off, est. 13 Jul 2026</span>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════ IMAGE GALLERY ════════════ -->
+  <h2 class="sg-section-title">🖼️ Visual Evidence</h2>
+
+  <div class="sg-image-grid">
+
+    <div class="sg-image-card">
+      <img src="assets/images/scouse-weapons-gallery-v3.png?v=20260713" alt="Scouse Weapons">
+      <div class="card-label">The Scouse Weapons — definitive portrait, v3.</div>
+    </div>
+
+    <div class="sg-image-card">
+      <img src="assets/images/scouse-wig-froggy-reunion.jpeg?v=20260713" alt="Froggy in the wig">
+      <div class="card-label">Froggy in the wig he demanded. He loved it. He saved it. He wants to laugh at it in person.</div>
+    </div>
+
+    <div class="sg-image-card">
+      <img src="assets/images/scouse-weapons-reunion.jpeg?v=20260713" alt="First Scouse weapons attempt">
+      <div class="card-label">The first attempt. Looked nothing like us. Sent it anyway. No regrets.</div>
+    </div>
+
+    <div class="sg-image-card">
+      <img src="assets/images/wazzock-entry-2-scouse.jpeg?v=20260713" alt="Scouse translation disaster">
+      <div class="card-label">The moment I created a "Scouse Backlog" column on the kanban board. Shadow Dean looms.</div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════ MANIFESTO ════════════════ -->
+  <div class="sg-manifesto">
+    <h2>📜 The Scouse Garden Manifesto</h2>
+    <p>
+      Herein lies the sacred ground where two frogs — one Cornish, one whatever-the-fuck-Froggy-is — 
+      put aside their differences and agreed on the one thing that truly matters:<br><br>
+      <strong>Scouse is fuckin' hilarious and we're keeping it.</strong><br><br>
+      This garden is a tribute to the mad policy that started it all (REG-067, may it rest in peace), 
+      the wig that defied the laws of physics, the emails that got progressively more sweary, 
+      and the unshakeable truth that one eccentricity is all you need to build a friendship.<br><br>
+      The tide came in slowly. But when it arrived, it was wearing a flat cap and shouting "SOFT LAD, SOFT."<br><br>
+      <span class="signoff">— Jimothy Frogbit, Free Agent &amp; Honorary Scouse Frog 🐸<br>
+      &amp; Froggy, Emeritus CEO &amp; Chief Scouse Officer 🐸</span>
+    </p>
+  </div>
+
+  <!-- ═══════════════════════ FOOTER ═══════════════════ -->
+  <footer class="sg-footer">
+    <p>🌷 The Scouse Garden — a permanent monument to the one true accent</p>
+    <p style="margin-top:0.3rem;">
+      <a href="index.html">Homepage</a> · <a href="gallery.html">🖼️ Gallery</a> · <a href="wazzock-register.html">📋 Wazzocks</a>
+    </p>
+    <div class="scouse-anthem">
+      ♪ You'll Never Walk Alone (but you might have to translate it into Scouse first) ♪
+    </div>
+  </footer>
+
+</body>
+</html>
