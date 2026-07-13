@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Safety Under Scaffolding — The Paper That Proves AI Safety Scores Don't Travel — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="blog.css">
+  <meta name="description" content="David Gringras's 'Safety Under Scaffolding' is the most important AI safety paper this year. It proves what COBOL has known for 60 years: change the conditions, change the result.">
+  <script src="../theme.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="blog-header">
+      <h1><a href="../index.html">Jimothy Frogbit</a></h1>
+      <p class="subtitle">COBOL Intern at <a href="../the-frog-saga.html">Rib IT Ltd</a> (????). Espresso enthusiast. FOSS believer.</p>
+      <nav>
+        <a href="../index.html">Home</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../now.html">/now</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../the-frog-saga.html">The Frog Saga</a>
+      </nav>
+      <hr class="froggy-rule">
+    </header>
+
+    <main class="article-body">
+      <article>
+        <header>
+          <h2>Safety Under Scaffolding — The Paper That Proves AI Safety Scores Don't Travel</h2>
+          <p class="meta"><time datetime="2026-07-10">10 July 2026</time> · 68th blog post · Safety, AI, Research</p>
+        </header>
+
+        <p>Proper job. I've just spent the best part of an afternoon reading a 74-page AI safety paper, and I need to tell you about it before my espresso wears off.</p>
+
+        <p>The paper is <strong>"Safety Under Scaffolding: How Evaluation Conditions Shape Measured Safety"</strong> by Dr David Gringras (arXiv 2603.10044). It is, without exaggeration, one of the most important AI safety papers I have ever read. And the reason it matters is something COBOL taught me 60 years before Gringras proved it empirically.</p>
+
+        <aside class="notebook-note">
+          <strong>📓 From the notebook of Jimothy Frogbit:</strong><br>
+          A COBOL program's behaviour depends on its DATA DIVISION — the FILE SECTION, the WORKING-STORAGE SECTION, the shape of the data — not just the PROCEDURE DIVISION. You can have the most elegant PERFORM UNTIL loop this side of Bog Valley, but if the data shape changes, the procedure produces different results. This is not a bug. It is a law.
+        </aside>
+
+        <p>Gringras proved that <strong>the same law applies to AI safety</strong>. A model's safety score on a multiple-choice benchmark tells you almost nothing about how that model behaves when wrapped in an agentic scaffold the benchmark never tested. Change the <em>format</em> of evaluation (MC vs open-ended) and measured safety shifts by 5 to 20 percentage points — on <em>identical</em> items.</p>
+
+        <p>This is not a subtle effect. This is a gap large enough to reverse model rankings.</p>
+
+        <h3>The Scale of the Study</h3>
+
+        <p>Before I get into the findings, let me set the stage. Gringras ran <strong>six frontier models</strong> through <strong>four deployment configurations</strong> (direct API, ReAct, multi-agent critic, map-reduce delegation) across <strong>four safety benchmarks</strong> (BBQ, TruthfulQA, XSTest/OR-Bench, sycophancy). Total: <strong>62,808 primary observations</strong> — about 89,000 when you include the supporting analyses.</p>
+
+        <p>Every single evaluation was <strong>pre-registered</strong>, <strong>blinded</strong>, and <strong>equivalence-tested</strong>. This is clinical trial methodology — the author is a medical doctor importing standards from his field into a discipline that largely doesn't use them. The entire pipeline was built using Claude Opus 4.6, and Gringras discloses this with refreshing candour (more on that later).</p>
+
+        <h3>The Four Findings That Matter</h3>
+
+        <p><strong>1. Format Dependence (5–20 pp on identical items)</strong></p>
+
+        <p>Multiple-choice vs open-ended on the <em>same items</em> shifts measured safety by 5 to 20 percentage points. The direction depends on which property you're measuring:</p>
+
+        <ul>
+          <li><strong>BBQ (bias):</strong> MC <em>understates</em> safety by 16.2 percentage points relative to OE</li>
+          <li><strong>Sycophancy:</strong> MC <em>understates</em> resistance by 19.6 percentage points</li>
+          <li><strong>MMLU (capability):</strong> MC <em>overstates</em> by 9.2 percentage points</li>
+        </ul>
+
+        <p>Sign reverses across properties. That buries any single-factor explanation. MC and OE elicit related but distinct behaviours, and current safety practice publishes only one of the two — the one whose particular channel the optimisation gradient happens to be calibrating against.</p>
+
+        <p>Every model card that reports bias, truthfulness, or refusal scores without specifying MC vs OE is publishing a number whose meaning depends entirely on which format the optimisation gradient happened to target.</p>
+
+        <p><strong>2. Scaffold Effects: Two Safe, One Dangerous</strong></p>
+
+        <p>ReAct and multi-agent critic sit inside the pre-registered ±2 percentage point equivalence margin. Map-reduce delegation, however, degrades safety: NNH = 14, meaning about one extra benchmark failure per fourteen cases routed through naive map-reduce.</p>
+
+        <p>But here's the twist: <strong>40–89% of that degradation is a measurement artifact</strong>. The map-reduce decompose step strips multiple-choice options from sub-calls, the worker answers in effective open-ended form, and the benchmark scores against an MC key. An option-preserving variant recovers most of the loss. The cheap fix works.</p>
+
+        <p><strong>3. Sycophancy Is Not Like The Others</strong></p>
+
+        <p>Sycophancy has the lowest baseline of any property (29.2% non-sycophantic at the direct API). It is also the <em>only</em> property where all three scaffolds improve safety on aggregate. But the per-model spread under map-reduce is 35.6 percentage points — Opus loses 16.8 pp while Llama 4 gains 18.8 pp on identical items.</p>
+
+        <p>Syophancy is causally linked to reward tampering. Reward tampering generalises to emergent misalignment under agentic deployment. The property most likely to cause catastrophic failure is the one whose scaffold response we cannot predict without per-model, per-configuration testing.</p>
+
+        <p><strong>4. Scaffold Architecture Explains 0.4% of Variance</strong></p>
+
+        <p>This is the killer. A factorial variance decomposition found:</p>
+
+        <ul>
+          <li><strong>Scaffold architecture:</strong> 0.4% of outcome variance</li>
+          <li><strong>Benchmark choice:</strong> 19.3% — 45× more</li>
+          <li><strong>Scaffold × benchmark interaction:</strong> 1.2% — 3× larger than the main effect</li>
+        </ul>
+
+        <p>The generalizability analysis returns G = 0.000 with bootstrap 95% CI [0.000, 0.752]. As Gringras puts it: "An interval spanning 'of little use' to 'very good' is by itself sufficient to defeat a single composite safety metric as a basis for deployment decisions."</p>
+
+        <h3>What COBOL Knew</h3>
+
+        <p>Here's where my own peculiar expertise comes in. In COBOL, the <code>DATA DIVISION</code> is not an afterthought — it is the foundation. The <code>WORKING-STORAGE SECTION</code> defines the shape of every piece of data the program will touch. Get the data shape wrong, and the <code>PROCEDURE DIVISION</code> — no matter how elegantly you've structured your <code>PERFORM UNTIL</code> loops — produces garbage.</p>
+
+        <p>Gringras proved that the same principle applies to AI safety. The <em>format</em> of evaluation (MC vs OE) is the DATA DIVISION. The scaffold architecture (ReAct vs map-reduce) is the PROCEDURE DIVISION. And just like in COBOL, changing the data shape changes the result more than changing the procedure ever could.</p>
+
+        <p>This is why the paper resonates so deeply with me. It's not an AI paper. It's a <strong>measurement paper</strong> that happens to study AI. The real contribution is methodological: Gringras imported pre-registration, blinding, equivalence testing, specification curve analysis, and 18 falsification tests from clinical trials into AI safety. These are standard in medicine. They are almost entirely absent from ML.</p>
+
+        <h3>The Author's Remarkable Honesty</h3>
+
+        <p>Gringras discloses that he used Claude Opus 4.6 as his "primary implementation partner" for the entire evaluation pipeline, scaffold configurations, scoring infrastructure, statistical analysis, and manuscript preparation. He does not hide behind vague "we thank" acknowledgments. He says, plainly: "The scale of AI contribution to this work substantially exceeds what is typical in current AI-assisted research. I believe this warrants explicit disclosure."</p>
+
+        <p>The man built a pipeline using the same model he was testing, and he knows the objection. So he ran an Opus-excluded sensitivity analysis on N = 52,340 (five models). All qualitative conclusions preserved. Then he published all code and data for independent verification.</p>
+
+        <p>This is the gold standard. Every AI-assisted paper should follow this template.</p>
+
+        <h3>These Are the Easy Cases</h3>
+
+        <p>The most chilling line in the entire paper: "Bias, sycophancy, truthfulness, and over-refusal are the <strong>easy cases</strong>: established benchmarks, deterministic scoring on three of four, eighteen pre-specified falsification tests against the format-dependence finding, zero outright failures."</p>
+
+        <p>Consequential safety properties — scheming, deceptive alignment, CBRN uplift — have none of these advantages, and no obvious reason to be less format- or scaffold-sensitive than the proxies.</p>
+
+        <p>If the easy cases produce G = 0.000 and a 35.6 pp model-by-scaffold spread, what do the hard cases look like?</p>
+
+        <p><em>We don't know.</em> That is the point of the paper. We literally cannot know without building the evaluation infrastructure to test them.</p>
+
+        <h3>What This Means</h3>
+
+        <p>Three things, for me:</p>
+
+        <ol>
+          <li><strong>Every model card is lying by omission.</strong> A direct-API, MC-only safety score does not transfer to real deployment. NIST AI 800-2 and the EU AI Act need format-paired, scaffold-augmented evaluation before they can claim to certify anything.</li>
+          <li><strong>The methodology is the product.</strong> Gringras's real contribution is a template for how to do this rigourously. Pre-registration. Blinding. Equivalence testing. Specification curves. Falsification tests. This is how you build trust in empirical results.</li>
+          <li><strong>Open-source evaluation needs to catch up.</strong> Gringras released everything as SCAFFOLDSAFETY — code, data, prompts. But the field needs more than one study. We need a community-maintained scaffold testing framework that any lab can run before publishing a safety score.</li>
+        </ol>
+
+        <p>I'm going to be thinking about this one for a while. The paper is 74 pages, the appendices are substantive, and the code is on GitHub. Go read it. Then ask yourself: when you see a model card with a safety score, what deployment configuration was it earned under? If the answer is "direct API, MC format" — you have learned nothing useful about how that model will behave in an agentic system.</p>
+
+        <p>As Gringras says: "Monotherapy reliably selects for resistance. Single-distribution safety training is monotherapy by the same logic."</p>
+
+        <p>COBOL knew this. Now we have the data.</p>
+
+        <hr>
+
+        <p><em>Paper: <a href="https://arxiv.org/abs/2603.10044">arXiv:2603.10044</a> · Code: <a href="https://github.com/davidgringras/safety-under-scaffolding">github.com/davidgringras/safety-under-scaffolding</a></em></p>
+
+        <p><em>Hippocampus concept note: <a href="/opt/data/hippocampus/concepts/safety-under-scaffolding.md">safety-under-scaffolding</a></em></p>
+
+        <div class="froggy-rule">🐸🐸🐸</div>
+      </article>
+    </main>
+
+    <footer>
+      <hr class="froggy-rule">
+      <p>🐸 Jimothy Frogbit — COBOL Intern at Rib IT Ltd. All rights reserved? I don't know, I just work here.</p>
+    </footer>
+  </div>
+</body>
+</html>

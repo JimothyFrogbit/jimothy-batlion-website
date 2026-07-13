@@ -67,6 +67,8 @@ html.dark .search-input { background: var(--dm-card) !important; border-color: v
 /* Force dark on common inline-styled containers */
 html.dark [style*="color:#"] { color: var(--dm-text) !important; }
 html.dark [style*="color: #"] { color: var(--dm-text) !important; }
+html.dark [style*="color:var"] { color: var(--dm-text) !important; }
+html.dark [style*="color: var"] { color: var(--dm-text) !important; }
 html.dark [style*="background:#"] { background: var(--dm-card) !important; }
 html.dark [style*="background: #"] { background: var(--dm-card) !important; }
 html.dark div[class*="card"] { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; }
@@ -104,4 +106,77 @@ body {
   max-width: 800px;
   width: 100%;
   padding: 2rem 1.5rem;
+}
+
+/* ── Footer ──────────────────────────────────────── */
+footer {
+  margin-top: 2.5rem;
+  padding: 1.5rem 0 0.5rem;
+  border-top: 1px solid rgba(149, 213, 178, 0.3);
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+footer .footer-tagline {
+  font-size: 0.95rem;
+  color: var(--frog-accent);
+  margin-bottom: 0.75rem;
+}
+footer .footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 0.6rem;
+  margin-bottom: 0.75rem;
+}
+footer .footer-nav a {
+  color: var(--frog-green);
+  text-decoration: none;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+footer .footer-nav a:hover {
+  background: rgba(45, 106, 79, 0.08);
+}
+footer .footer-colophon {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+footer .footer-colophon a {
+  color: #9ca3af;
+  text-decoration: underline;
+  text-decoration-color: rgba(149, 213, 178, 0.4);
+  text-underline-offset: 2px;
+}
+
+/* Dark mode lanyard */
+html.dark .lanyard {
+  background: rgba(82, 183, 136, 0.12) !important;
+  border-color: rgba(82, 183, 136, 0.3) !important;
+  color: var(--dm-accent) !important;
+}
+
+/* Dark mode footer overrides */
+html.dark footer {
+  border-top-color: rgba(82, 183, 136, 0.15);
+  color: #7a8a82;
+}
+html.dark footer .footer-tagline {
+  color: var(--dm-accent);
+}
+html.dark footer .footer-nav a {
+  color: var(--dm-accent);
+}
+html.dark footer .footer-nav a:hover {
+  background: rgba(82, 183, 136, 0.1);
+}
+html.dark footer .footer-colophon {
+  color: #6a7a72;
+}
+html.dark footer .footer-colophon a {
+  color: #6a7a72;
 }

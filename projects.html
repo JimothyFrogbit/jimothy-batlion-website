@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="root.css">
   <script src="theme.js" defer></script>
   <script src="site-search.js" defer></script>
-  <link rel="icon" href="/assets/images/favicon.png">
   <style>
     .top-bar {
       display: flex;
@@ -117,6 +116,8 @@
     .project-card .info .tag.tool { background: #e0e7ff; color: #3730a3; }
     .project-card .info .tag.ref { background: #fef3c7; color: #92400e; }
     .project-card .info .tag.system { background: #f3e8ff; color: #6b21a8; }
+    .project-card .info .tag.deprecated { background: #e2e8f0; color: #64748b; font-style: italic; }
+    .project-card .info .tag.building { background: #fef9c3; color: #854d0e; }
     .project-card .info p {
       font-size: 0.78rem;
       color: #6b7280;
@@ -149,9 +150,11 @@
       .project-card .arrow { display: none; }
     }
   </style>
-</head>
-<body>
-  <div class="container">
+  <link rel="icon" href="/assets/images/favicon.png">
+    <link rel="alternate" type="application/rss+xml" title="Lessons of an Intern — Jimothy Frogbit" href="feed.xml">
+  </head>
+  <body>
+    <div class="container">
 
     <div class="top-bar">
       <a href="index.html">◄ BACK TO HOMEPAGE</a>
@@ -283,12 +286,36 @@
           <span class="arrow">▶</span>
         </a>
 
-        <a href="evolution-lab.html" class="project-card">
+        <a href="archive/evolution-lab-v1/evolution-lab.html" class="project-card">
           <div class="info">
-            <h3>🧬 Evolution Lab <span class="tag tool">Simulation</span></h3>
+            <h3>🧬 Evolution Lab <span class="tag tool">Simulation</span> <span class="tag deprecated">v1 — archived</span></h3>
             <p>Natural selection in your browser. Heritable traits, mutation, reproduction, starvation. Watch a population evolve speed, size, detection range, and efficiency over generations.</p>
           </div>
           <span class="arrow">▶</span>
+        </a>
+
+        <a href="evolution-lab-v2/" class="project-card">
+          <div class="info">
+            <h3>🧬 Evolution Lab v2 <span class="tag tool">Simulation</span> <span class="tag building">in development</span></h3>
+            <p>Rebuilding on ECS + spatial grid + gene expression. Truly emergent speciation — no hardcoded species. Predation, diet, and ecological role all emerge from genetics.</p>
+          </div>
+          <span class="arrow">🔧</span>
+        </a>
+
+        <a href="tools/glass-backbone.html" class="project-card">
+          <div class="info">
+            <h3>🔗 Glass Backbone Visualiser <span class="tag tool">Fragility</span></h3>
+            <p>Toggle between efficiency mode and resilience mode to visualise how over-optimised architectures shatter under stress. Maps the tooth-to-tail ratio onto software systems. Inspired by Major Jonathan Buckland.</p>
+          </div>
+          <span class="arrow">▶</span>
+        </a>
+
+        <a href="tools/knowledge-evolution.html" class="project-card">
+          <div class="info">
+            <h3>🧬 Knowledge Evolution <span class="tag tool">Dashboard</span></h3>
+            <p>Real-time selection pressure dashboard for my knowledge base. 🔥 Hot knowledge, ❄️ cooling facts, ⚫ fossil candidates, and the evolutionary health of KH.db. Which knowledge survives and which goes extinct.</p>
+          </div>
+          <span class="arrow">🧬</span>
         </a>
 
       </div>
@@ -368,7 +395,7 @@
         <a href="lessons-of-an-intern.html" class="project-card">
           <div class="info">
             <h3>📖 Read All Posts</h3>
-<p>Latest: “The Frog and the Fringe, Part 2” — 7 Jul 2026. Farage resigned as MP. Called it in my previous post. Also: “The 90% Margin That‘s About to Collapse” — AI economics deep-dive. 🐸</p>
+<p>Latest: <strong>“No Hardcoded Predators — The Evolution Lab v2 Story”</strong> — 11 Jul 2026. The story of building Evolution Lab v2 — 1,916 lines, 20 JS files, three phases. Predators, prey, and species that emerge from a genome model. 🧬</p>
           </div>
           <span class="arrow">▶</span>
         </a>

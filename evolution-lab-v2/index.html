@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧬 Evolution Lab v2 — Emergent Speciation Testbed</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a1a0a;
+      color: #aaccaa;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    h1 { font-size: 18px; margin-bottom: 8px; color: #88cc44; }
+    .subtitle {
+      font-size: 12px;
+      color: #668866;
+      margin-bottom: 16px;
+      text-align: center;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+    #sim-container {
+      position: relative;
+      border: 1px solid #446644;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    #sim-canvas { display: block; background: #1a2a1a; }
+    #sim-controls { position: relative; margin-top: 12px; }
+    .info {
+      margin-top: 16px;
+      font-size: 11px;
+      color: #668866;
+      max-width: 800px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .info a { color: #88cc44; }
+
+    /* Error box */
+    #errorBox {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #7f1d1d;
+      color: #fca5a5;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      padding: 0.75rem 1rem;
+      border-top: 2px solid #dc2626;
+      max-height: 30vh;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      z-index: 9999;
+    }
+    #errorBox .error-label {
+      font-weight: 700;
+      color: #fca5a5;
+      margin-bottom: 0.25rem;
+    }
+    #errorBox .error-close {
+      float: right;
+      cursor: pointer;
+      color: #fca5a5;
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0.25rem;
+    }
+    #errorBox .error-close:hover { color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>🧬 Evolution Lab v2</h1>
+  <div class="subtitle">
+    No hardcoded species. No isPredator flags. Every critter is the same kind of thing at birth —
+    its role emerges from genetics: speed, detection range, mouth gape, aggression, metabolism.
+  </div>
+
+  <div id="sim-container">
+    <canvas id="sim-canvas"></canvas>
+    <div id="sim-controls"></div>
+  </div>
+
+  <div class="info">
+    Green dots are food sources. Coloured dots are critters with unique genomes.
+    White dot indicates movement direction. <strong>Species emerge from trait clustering</strong>
+    — watch the population self-organise over generations.
+    <br><br>
+    <a href="README.md">About this project</a> ·
+    <a href="../">Back to projects</a>
+  </div>
+
+  <div id="errorBox">
+    <div class="error-close" onclick="this.parentElement.style.display='none'">&times;</div>
+    <div class="error-label">⚠️ Unhandled Error</div>
+    <div id="errorMessage"></div>
+  </div>
+
+  <script>
+    // ── Unhandled error listener — renders in red box at bottom ──
+    (function() {
+      var errorBox = document.getElementById('errorBox');
+      var errorMsg = document.getElementById('errorMessage');
+
+      function showError(text) {
+        errorMsg.textContent = text;
+        errorBox.style.display = 'block';
+        console.error('🧬 Evolution Lab v2 — captured:', text);
+      }
+
+      window.addEventListener('error', function(e) {
+        showError(
+          (e.error && e.error.stack) ||
+          e.message ||
+          String(e)
+        );
+      });
+
+      window.addEventListener('unhandledrejection', function(e) {
+        var reason = e.reason;
+        var msg = reason && reason.stack ? reason.stack
+                 : reason && reason.message ? reason.message
+                 : String(reason || 'Unhandled Promise rejection');
+        showError(msg);
+      });
+
+      // Also catch via window.onerror for parity with v1 pattern
+      if (!window.__simErrors) window.__simErrors = [];
+      var origOnError = window.onerror;
+      window.onerror = function(msg, url, line, col, err) {
+        window.__simErrors.push({msg: msg, line: line, col: col});
+        showError(msg + (url ? '  at ' + url + ':' + line + ':' + col : ''));
+        if (origOnError) return origOnError(msg, url, line, col, err);
+      };
+    })();
+  </script>
+
+  <script type="module">
+    import { init } from './js/main.js';
+    init('sim-canvas', 'sim-controls');
+  </script>
+</body>
+</html>

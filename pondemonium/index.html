@@ -174,6 +174,36 @@
     margin: 2px 0 6px 0;
   }
 
+  /* ── Moran Scheme Selector ── */
+  .scheme-select {
+    width: 100%;
+    background: #1a1a34;
+    border: 1px solid #3a3a5a;
+    border-radius: 6px;
+    color: #b0c0d0;
+    font-size: 12px;
+    padding: 5px 8px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    outline: none;
+    appearance: auto;
+  }
+  .scheme-select:hover { border-color: #5a5a7a; }
+  .scheme-select:focus { border-color: #22d3ee; }
+  #scheme-info {
+    font-size: 10px;
+    color: #6a9a8a;
+    line-height: 1.5;
+    padding: 5px 8px;
+    border-left: 2px solid #2a4a3a;
+    margin: 4px 0 0 0;
+    min-height: 36px;
+    transition: opacity 0.2s;
+  }
+  #scheme-info strong {
+    color: #4ade80;
+  }
+
   /* ── Responsive: stack into a single column, pond first ── */
   @media (max-width: 1180px) {
     #main { flex-direction: column; align-items: center; }
@@ -200,6 +230,15 @@
         <div class="ctrl-row"><label>🌪️ Stress events</label><input type="range" id="stressRate" min="0" max="10" value="0"><span class="val" id="stressRate-val">OFF</span></div>
         <div class="ctrl-row"><label>🔊 Volume</label><input type="range" id="volume" min="0" max="10" value="10"><span class="val" id="volume-val">10</span></div>
         <div class="ctrl-hint" id="stressHint">💡 Turn on: stress culls the weak, survivors pass resilience genes. Dragonfly nymphs feast on the chaos!</div>
+        <hr class="divider">
+        <div class="ctrl-row"><label>Selection</label>
+          <select id="schemeSelect" class="scheme-select">
+            <option value="I">I — Offspring Copying</option>
+            <option value="II">II — Mate Choice</option>
+            <option value="III">III — Death Selection</option>
+          </select>
+        </div>
+        <div id="scheme-info">Loading scheme info…</div>
         <div class="btn-row">
           <button class="btn active" id="pauseBtn">⏸ Pause</button>
           <button class="btn danger" id="resetBtn">⟳ Reset</button>

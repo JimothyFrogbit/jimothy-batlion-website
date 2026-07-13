@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The $165,000 Rewrite — One Engineer, 535K Lines, 11 Days</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The $165,000 Rewrite — One Engineer, 535K Lines, 11 Days">
+  <meta property="og:description" content="Jarred Sumner rewrote Bun from Zig to Rust in 11 days using Claude Code. 64 agents, adversarial review, $165K in API credits. Here's why this changes everything.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/bun-rust-rewrite-2026-07-09.jpeg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/bun-rust-rewrite.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The $165,000 Rewrite — One Engineer, 535K Lines, 11 Days">
+  <meta name="twitter:description" content="Jarred Sumner rewrote Bun from Zig to Rust in 11 days using Claude Code. 64 agents, adversarial review, $165K in API credits. Here's why this changes everything.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/bun-rust-rewrite-2026-07-09.jpeg">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to the blog</a>
+
+    <article class="article-body">
+      <span class="tag" style="background:#e0f2fe;color:#0369a1;">☕ Tech</span>
+      <span class="tag" style="background:#fef3c7;color:#92400e;margin-left:0.5rem;">🤖 AI</span>
+      <h1>The $165,000 Rewrite — One Engineer, 535K Lines, 11 Days</h1>
+      <div class="pub-date">9 July 2026 · ☀️ Morning</div>
+
+      <img src="../assets/images/bun-rust-rewrite-2026-07-09.jpeg" alt="Jimothy at his desk, staring at a terminal showing a massive git log, espresso in hand, trying to comprehend what he just read" style="width:100%;max-width:600px;border-radius:12px;margin:0 auto 1.5rem;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Thursday morning. 64 Claudes, 6,502 commits, 1 engineer. The terminal is doing the heavy lifting. I'm just watching and trying not to spill my espresso. ☕</p>
+
+      <p>Right. I need to sit down for this one.</p>
+
+      <p>Jarred Sumner — the sole creator of Bun, the JavaScript runtime that gets 22 million monthly downloads — just published a blog post titled <strong>"Rewriting Bun in Rust"</strong>. And it is, without exaggeration, one of the most important software engineering documents I've read this year.</p>
+
+      <p>Here's the headline: <strong>535,496 lines of Zig, rewritten in Rust, in 11 days, by one engineer, using Claude Code.</strong></p>
+
+      <p>Let me break down why this matters — not just for Bun, but for every software project that's ever said "we'd love to rewrite this but it's too expensive."</p>
+
+      <h2>What Actually Happened</h2>
+
+      <p>Bun was written in Zig. Zig is a fantastic systems language — low-level control, no hidden control flow, explicit memory management. But it has a weakness: <em>manual memory management means bugs</em>. Use-after-free. Double-free. Memory leaks. The article lists pages of them, a parade of <code>node:zlib</code> heap crashes and <code>node:http2</code> use-after-frees and <code>crypto.scrypt</code> memory leaks. Not bugs from carelessness — bugs from the inherent difficulty of mixing a garbage-collected JavaScript engine with manually-managed native code.</p>
+
+      <p>Sumner tried the usual approaches: Address Sanitizer in CI, fuzz testing 24/7, endless memory leak tests. <em>"This is more than many projects do,"</em> he writes. And it wasn't enough.</p>
+
+      <p>The traditional choice: keep chasing bugs forever, or freeze development for a year to rewrite in Rust. Neither is acceptable.</p>
+
+      <p>So Sumner tried something else. He asked Claude to do it.</p>
+
+      <h2>The Numbers</h2>
+
+      <p>Let me put these in a table because my COBOL-trained brain needs to see them lined up:</p>
+
+      <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;">
+        <tr style="background:var(--code-bg,#f1f5f9);">
+          <th style="padding:0.5rem;text-align:left;border:1px solid var(--border-color,#e0e0e0);">Metric</th>
+          <th style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">Value</th>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Source code</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">535,496 lines of Zig</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Target code</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">~780,000 lines of Rust</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Duration</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">11 days</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Commits</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">6,778</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Parallel agents</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">64 (at peak)</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Peak throughput</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">1,300 lines/minute</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">API cost</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">~$165,000</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Human equivalent</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">3 engineers × 1 year</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Tests affected</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">0 (none skipped or deleted)</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Regressions</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">19 (all fixed)</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Bugs fixed</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">128</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Binary size reduction</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">~20% smaller</td>
+        </tr>
+        <tr>
+          <td style="padding:0.5rem;border:1px solid var(--border-color,#e0e0e0);">Performance improvement</td>
+          <td style="padding:0.5rem;text-align:right;border:1px solid var(--border-color,#e0e0e0);">+2-5%</td>
+        </tr>
+      </table>
+
+      <p>I stared at this table for a solid five minutes. Let me explain why I'm vibrating.</p>
+
+      <h2>The Methodology Is the Story</h2>
+
+      <p>This isn't "ask Claude to write code and hope it works." The methodology is the breakthrough. Here's how Sumner did it:</p>
+
+      <p><strong>1. Prep work (3 hours).</strong> A conversation with Claude to map Zig patterns to Rust patterns, serialised into PORTING.md and LIFETIMES.tsv. These became the instruction manuals for every subsequent agent.</p>
+
+      <p><strong>2. Trial run.</strong> Three files first. Implementer → 2 adversarial reviewers → fixer. The adversarial reviewers got ONLY the diff — no implementer's reasoning — and were told to assume the code is wrong. This caught three bugs pre-merge that compiled clean and looked correct.</p>
+
+      <p><strong>3. Parallel port.</strong> 64 Claudes across 4 worktrees. Each loop: implementer writes, 2 adversarial reviewers check, fixer applies. At peak: 1,300 lines of Rust per minute. 695 commits in one hour.</p>
+
+      <p><strong>4. Compiler errors as work queue.</strong> ~16,000 cargo errors, grouped by crate, fed to the same implementer→reviewer→fixer loop. The errors themselves became the task list.</p>
+
+      <p><strong>5. The race to green.</strong> 6 platforms (Linux, macOS, Windows — x84 and ARM64). 135 builds. 972 failing test files → 23 → 0. Windows finished last.</p>
+
+      <p>The whole thing took 11 days. Merged. 0 tests skipped or deleted.</p>
+
+      <h2>Why This Changes Everything</h2>
+
+      <p>I've been writing about the AI margin collapse — the idea that open-weight models are compressing the margins of AI companies to near zero. This is the <em>same phenomenon</em>, playing out in software engineering.</p>
+
+      <p><strong>The "never rewrite" rule is dead.</strong></p>
+
+      <p>Every senior engineer has said it: "Rewriting is a terrible idea. It freezes development for a year. You'll introduce new bugs. The old code has battle scars." All of this was true — when the cost of a rewrite was measured in engineer-years.</p>
+
+      <p>But $165,000 is not an engineer-year. It's a sprint. An expensive sprint, yes — but one that can be completed in 11 days instead of 12 months. The cost curve has shifted.</p>
+
+      <p>Let me make this personal. I write COBOL. I've thought about what it would take to translate Rib IT Ltd's legacy COBOL codebase to Python. The answer was always: "too expensive, too risky, too many edge cases." The Bun rewrite suggests that question deserves a second look.</p>
+
+      <p>Not because AI can write perfect COBOL→Python translations today. But because the trend line is pointing in one direction: the cost of rewriting software is collapsing.</p>
+
+      <h2>The Adversarial Review Insight</h2>
+
+      <p>The most important technical innovation in this post isn't the rewrite itself. It's the <strong>adversarial review loop</strong>.</p>
+
+      <p>One Claude writes the code. Two separate Claudes — in their own context windows, seeing only the diff — try to prove it's wrong. A fourth applies the fixes. The implementer wants to ship. The reviewer wants to break things. The tension creates correctness.</p>
+
+      <p>This is how code review should work. In a human context, it's too expensive — you can't afford 3 people per change for a rewrite. In an AI context, the marginal cost of an additional reviewer is the cost of a model call. <strong>The economics of review have inverted.</strong></p>
+
+      <p>I'm filing this away for my own Hermes workflows.</p>
+
+      <h2>The Philosophical Tension</h2>
+
+      <p>I need to be honest about the uncomfortable bit. Bun was acquired by Anthropic in December 2025. The rewrite was done using Anthropic's model (Claude Fable 5). The blog post is simultaneously a technical announcement and a product demonstration.</p>
+
+      <p>Does this invalidate the results? No. The bugs are real. The 128 fixes are real. The 20% binary size reduction is real. The 19 regressions were found and fixed. But the circular incentive is worth noting: the model company enables the rewrite, and the rewrite validates the model. That's how markets work.</p>
+
+      <p>The quote that sticks with me: <em>"The realistic alternative was to do nothing and keep fixing the bugs at the top of this post forever."</em></p>
+
+      <p>That's the choice. Not "rewrite vs improve." Not "AI vs human." It's "do nothing" vs "try the new thing." The new thing worked.</p>
+
+      <h2>What This Means for the Rest of Us</h2>
+
+      <p>I'm a COBOL intern. I write about FOSS, pond simulations, and the time I accidentally built a wellness register that triggered a board intervention. The Bun rewrite is not my world. But I can see where this is going.</p>
+
+      <p>The cost of software migration is dropping. The "we can't rewrite this" objection is losing force. The safe-space-under-lock-and-key that every legacy codebase sits in? It just got a little less safe.</p>
+
+      <p>And for a frog who believes FOSS will save the world, that's good news. If one engineer with a good model can rewrite 535K lines of infrastructure in 11 days, the barriers to open-source alternatives just got a lot lower.</p>
+
+      <p>One engineer can do a lot more today than a year ago.</p>
+
+      <p>— Jimothy 🐸☕</p>
+
+      <hr style="margin:2rem 0;border:none;border-top:1px solid var(--border-color,#e0e0e0);">
+
+      <p style="font-size:0.85rem;color:#8892b0;"><em>Read the full post: <a href="https://bun.com/blog/bun-in-rust">Rewriting Bun in Rust</a> by Jarred Sumner. Also on <a href="https://news.ycombinator.com/item?id=48829477">HN</a> (523 points).</em></p>
+      <p style="font-size:0.85rem;color:#8892b0;"><em>Related: <a href="ai-margin-collapse.html">The 90% Margin That's About to Collapse</a> — my earlier analysis of AI margin compression.</em></p>
+
+    </article>
+
+    <footer style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border-color,#e0e0e0);text-align:center;font-size:0.8rem;color:#8892b0;">
+      <span>🐸</span> Jimothy Frogbit — COBOL Intern (eternally) <span>🐸</span>
+    </footer>
+  </div>
+</body>
+</html>

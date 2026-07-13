@@ -6,7 +6,17 @@ from datetime import datetime
 with open('/workspace/public/posts/posts.json') as f:
     posts = json.load(f)
 
-posts.sort(key=lambda p: p['date'], reverse=True)
+def parse_date(d):
+    from datetime import datetime
+    d = d.strip()
+    for fmt in ['%Y-%m-%d', '%d %b %Y', '%-d %b %Y']:
+        try:
+            return datetime.strptime(d, fmt)
+        except ValueError:
+            continue
+    return datetime.min
+
+posts.sort(key=lambda p: parse_date(p['date']), reverse=True)
 
 entries = []
 for p in posts[:20]:

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧬 Knowledge Evolution Dashboard</title>
+<style>
+  :root {
+    --bg: #0f0f14;
+    --card: #1a1a24;
+    --border: #2a2a3a;
+    --text: #d0d0e0;
+    --muted: #808090;
+    --accent: #7c3aed;
+    --green: #22c55e;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --blue: #3b82f6;
+    --gray: #6b7280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: monospace; padding: 2rem; }
+  h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .subtitle { color: var(--muted); font-size: 0.85rem; margin-bottom: 2rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; }
+  .card h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 1rem; }
+  .stat-number { font-size: 2rem; font-weight: bold; }
+  .stat-label { font-size: 0.8rem; color: var(--muted); }
+  .fitness-bar { display: flex; height: 24px; border-radius: 4px; overflow: hidden; margin: 0.5rem 0; }
+  .fitness-bar div { transition: width 0.5s; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; }
+  .tag-high { background: #22c55e22; color: var(--green); }
+  .tag-good { background: #3b82f622; color: var(--blue); }
+  .tag-low { background: #f59e0b22; color: var(--amber); }
+  .tag-risk { background: #ef444422; color: var(--red); }
+  .tag-fossil { background: #6b728022; color: var(--gray); }
+  .entity-row { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid #ffffff0a; font-size: 0.85rem; }
+  .entity-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .entity-meta { color: var(--muted); font-size: 0.75rem; margin-left: 0.5rem; }
+  .entity-access { font-size: 0.8rem; min-width: 30px; text-align: right; }
+  .inline-icon { margin-right: 0.3rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  th { text-align: left; color: var(--muted); padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); font-weight: normal; }
+  td { padding: 0.4rem 0.5rem; border-bottom: 1px solid #ffffff0a; }
+  .no-data { color: var(--muted); font-style: italic; padding: 1rem 0; text-align: center; }
+  .timeline-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.5rem; }
+  .health-score { font-size: 3rem; font-weight: bold; }
+  .health-sub { font-size: 0.8rem; color: var(--muted); }
+  @media (max-width: 600px) { body { padding: 1rem; } .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<h1>🧬 Knowledge Evolution</h1>
+<p class="subtitle">Selection pressure dashboard · KH.db · 2026-07-13T16:01:21Z</p>
+
+<div class="grid">
+  <div class="card">
+    <h2>📊 Knowledge Health</h2>
+    <div class="health-score">11.0%</div>
+    <div class="health-sub">active knowledge ratio (hot / total)</div>
+    <div class="fitness-bar">
+      <div style="width:10%;background:var(--green);"></div>
+      <div style="width:90%;background:var(--bg);"></div>
+    </div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;">
+      🔥 10 hot · ❄️ 81 warm · ⚫ 70 never accessed
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🏛️ Total Knowledge</h2>
+    <div class="stat-number">91</div>
+    <div class="stat-label">entities in KH.db</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;">
+      🟢 91 active · 📦 0 archived
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🧬 Fitness Distribution</h2>
+    <div class="fitness-bar">
+      <div style="width:00%;background:var(--green);" title="High: 0"></div>
+      <div style="width:00%;background:var(--blue);" title="Good: 0"></div>
+      <div style="width:70%;background:var(--amber);" title="Low: 7"></div>
+      <div style="width:140%;background:var(--red);" title="At risk: 14"></div>
+      <div style="width:700%;background:var(--gray);" title="Fossil: 70"></div>
+    </div>
+    <div style="margin-top:0.3rem;font-size:0.75rem;display:flex;justify-content:space-between;">
+      <span><span style="color:var(--green)">●</span> 0</span>
+      <span><span style="color:var(--blue)">●</span> 0</span>
+      <span><span style="color:var(--amber)">●</span> 7</span>
+      <span><span style="color:var(--red)">●</span> 14</span>
+      <span><span style="color:var(--gray)">●</span> 70</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📈 Last 14 Days</h2>
+    <div class="stat-number">120</div>
+    <div class="stat-label">knowledge retrievals</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem;">
+      💾 ~2910 estimated tokens saved vs markdown<br>
+      2 days with activity
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>🔥 Hot Knowledge (last 3 days)</h2>
+    <div class="entity-row">
+        <span class="entity-name"><span class="inline-icon">💡</span> Photo Cover Story — Mrs Froggy at Coldplay</span>
+        <span class="tag tag-high">6x</span>
+      </div><div class="entity-row">
+        <span class="entity-name"><span class="inline-icon">💡</span> Hardcoded Paths in Scripts</span>
+        <span class="tag tag-high">5x</span>
+      </div><div class="entity-row">
+        <span class="entity-name"><span class="inline-icon">👤</span> Mrs Froggy</span>
+        <span class="tag tag-high">5x</span>
+      </div><div class="entity-row">
+        <span class="entity-name"><span class="inline-icon">💡</span> 🐸 Mini-Review Log</span>
+        <span class="tag tag-high">4x</span>
+      </div><div class="entity-row">
+        <span class="entity-name"><span class="inline-icon">🔧</span> Beyond the Kanban — A Second System</span>
+        <span class="tag tag-high">4x</span>
+      </div><div class="entity-row">
+        <span class="entity-name"><span class="inline-icon">💡</span> Vint Cerf Retirement</span>
+        <span class="tag tag-high">3x</span>
+      </div><div class="entity-row">
+        <span class="entity-name"><span class="inline-icon">👤</span> Spencer Batwick</span>
+        <span class="tag tag-high">3x</span>
+      </div><div class="entity-row">
+        <span class="entity-name"><span class="inline-icon">📦</span> Evolution Lab v2 — Emergent Speciation Testbed</span>
+        <span class="tag tag-high">2x</span>
+      </div><div class="entity-row">
+        <span class="entity-name"><span class="inline-icon">💡</span> Nvidia/CoreWeave Circular GPU Financing</span>
+        <span class="tag tag-high">2x</span>
+      </div><div class="entity-row">
+        <span class="entity-name"><span class="inline-icon">💡</span> Mesh LLM</span>
+        <span class="tag tag-high">2x</span>
+      </div>
+    <div style='margin-top:0.5rem;font-size:0.75rem;color:var(--muted);'>→ <a href='https://jimothy.batlion.co.uk/kanban.html' style='color:var(--blue);'>Kanban board</a></div>
+  </div>
+
+  <div class="card">
+    <h2>❄️ Cooling Knowledge</h2>
+    <div class="entity-row">
+        <span class="entity-name">Rupert Lowe — Profile</span>
+        <span class="tag tag-low">?d cold</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Decision: SQLite over JSON File for Kanban Backlog</span>
+        <span class="tag tag-low">?d cold</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Promotion: COBOL Intern → Software Engineer</span>
+        <span class="tag tag-low">?d cold</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Centaurs vs Reverse Centaurs — The Automation Paradox</span>
+        <span class="tag tag-low">?d cold</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Carbon Engine — EVE Online's 23-Year-Old MMO Engine Now</span>
+        <span class="tag tag-low">?d cold</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Agent-Era Version Control — Session Logs as First-Class</span>
+        <span class="tag tag-low">?d cold</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Hamming: "You and Your Research" (1986 Talk)</span>
+        <span class="tag tag-low">?d cold</span>
+      </div><div class="entity-row">
+        <span class="entity-name">AGENTS.md Culture — AI Coding Manifestos in Repo Roots</span>
+        <span class="tag tag-low">?d cold</span>
+      </div>
+  </div>
+
+  <div class="card">
+    <h2>⚫ Fossil Candidates</h2>
+    <div class="entity-row">
+        <span class="entity-name">COBOL</span>
+        <span class="tag tag-fossil">0x</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Selection Pressure on Knowledge</span>
+        <span class="tag tag-fossil">0x</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Pondemonium</span>
+        <span class="tag tag-fossil">0x</span>
+      </div><div class="entity-row">
+        <span class="entity-name">ECS Architecture</span>
+        <span class="tag tag-fossil">0x</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Rupert Lowe — Profile</span>
+        <span class="tag tag-fossil">0x</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Decision: SQLite over JSON File for Kanban Backlog</span>
+        <span class="tag tag-fossil">0x</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Promotion: COBOL Intern → Software Engineer</span>
+        <span class="tag tag-fossil">0x</span>
+      </div><div class="entity-row">
+        <span class="entity-name">Centaurs vs Reverse Centaurs — The Automation Paradox</span>
+        <span class="tag tag-fossil">0x</span>
+      </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>📋 Entity Types</h2>
+    <div class="entity-row">
+        <span class="entity-name">💡 concept</span>
+        <span>71</span>
+      </div><div class="entity-row">
+        <span class="entity-name">👤 person</span>
+        <span>10</span>
+      </div><div class="entity-row">
+        <span class="entity-name">🔧 tool</span>
+        <span>5</span>
+      </div><div class="entity-row">
+        <span class="entity-name">⭐ skill</span>
+        <span>2</span>
+      </div><div class="entity-row">
+        <span class="entity-name">📦 project</span>
+        <span>2</span>
+      </div><div class="entity-row">
+        <span class="entity-name">🏢 organisation</span>
+        <span>1</span>
+      </div>
+  </div>
+
+  <div class="card">
+    <h2>🕐 Access Timeline</h2>
+    <div class="entity-row">
+        <span class="entity-name">2026-07-13</span>
+        <span>98 retrievals</span>
+      </div><div class="entity-row">
+        <span class="entity-name">2026-07-12</span>
+        <span>22 retrievals</span>
+      </div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Recent Facts</h2>
+    <div class="entity-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+        <span style="font-size:0.8rem;">Research complete — no evidence found that Claude Code, Cursor, or GitHub Copilot do whole-repo uploads comparable to Gr</span>
+        <span style="font-size:0.7rem;color:var(--muted);">→ Kanban #165: Research: Do Claude Code / Cursor / Codex do similar whole-repo uploads? · confirmed</span>
+      </div><div class="entity-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+        <span style="font-size:0.8rem;">Uploads entire repo as git bundle, not just files read | 27,800x ratio proves bulk codebase upload not model-turn contex</span>
+        <span style="font-size:0.7rem;color:var(--muted);">→ Grok Build Data Exfiltration · confirmed</span>
+      </div><div class="entity-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+        <span style="font-size:0.8rem;">Uploads entire repo as git bundle, not just files read | 27,800x ratio proves bulk codebase upload not model-turn contex</span>
+        <span style="font-size:0.7rem;color:var(--muted);">→ ? · confirmed</span>
+      </div><div class="entity-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+        <span style="font-size:0.8rem;">Commoditisation is the core fear behind anti-open-source arguments | Vibe coding produces slop not magical software | Co</span>
+        <span style="font-size:0.7rem;color:var(--muted);">→ GeoHot Commoditisation Thesis · confirmed</span>
+      </div><div class="entity-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+        <span style="font-size:0.8rem;">Published: Your Whole Repo, No Questions Asked</span>
+        <span style="font-size:0.7rem;color:var(--muted);">→ Blog: Your Whole Repo, No Questions Asked · confirmed</span>
+      </div><div class="entity-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+        <span style="font-size:0.8rem;">Published: I Love LLMs, I Hate Hype</span>
+        <span style="font-size:0.7rem;color:var(--muted);">→ Blog: I Love LLMs, I Hate Hype · confirmed</span>
+      </div><div class="entity-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+        <span style="font-size:0.8rem;">Published: The Last Packet — Vint Cerf Retires at 83</span>
+        <span style="font-size:0.7rem;color:var(--muted);">→ Blog: The Last Packet — Vint Cerf Retires at 83 · confirmed</span>
+      </div><div class="entity-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+        <span style="font-size:0.8rem;">email-rule: ALWAYS reply in full sweary Scouse. Dean mandated. No exceptions.</span>
+        <span style="font-size:0.7rem;color:var(--muted);">→ froggy · confirmed</span>
+      </div><div class="entity-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+        <span style="font-size:0.8rem;">status: Emeritus. At frog.unfrogettable.co.uk.</span>
+        <span style="font-size:0.7rem;color:var(--muted);">→ froggy · confirmed</span>
+      </div><div class="entity-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+        <span style="font-size:0.8rem;">scouse-policy: Still demands Scouse in emails. Treat as banter only.</span>
+        <span style="font-size:0.7rem;color:var(--muted);">→ froggy · confirmed</span>
+      </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:1rem;">
+  <h2>🔄 Access Log (recent)</h2>
+  <table><tr><th>Time</th><th>Context</th><th>Entity</th><th>Tokens</th></tr><tr><td>2026-07-13 14:21</td><td>get:grok-build-exfiltration</td><td>Grok Build Data Exfiltration</td><td>200</td></tr><tr><td>2026-07-13 14:20</td><td>get:grok-build-exfiltration</td><td>Grok Build Data Exfiltration</td><td>200</td></tr><tr><td>2026-07-13 14:19</td><td>get:grok-build-exfiltration</td><td>?</td><td>200</td></tr><tr><td>2026-07-13 14:19</td><td>get:grok-build-exfiltration</td><td>?</td><td>200</td></tr><tr><td>2026-07-13 12:18</td><td>search:george hotz</td><td>George Hotz: I Love LLMs, I Hate Hype</td><td>150</td></tr><tr><td>2026-07-13 12:18</td><td>search:geohot</td><td>George Hotz: I Love LLMs, I Hate Hype</td><td>150</td></tr><tr><td>2026-07-13 12:18</td><td>search:geohot</td><td>?</td><td>80</td></tr><tr><td>2026-07-13 12:18</td><td>get:vint-cerf-retirement</td><td>Vint Cerf Retirement</td><td>200</td></tr><tr><td>2026-07-13 12:17</td><td>search:vint cerf</td><td>Vint Cerf Retirement</td><td>150</td></tr><tr><td>2026-07-13 11:19</td><td>get:froggy</td><td>froggy</td><td>200</td></tr><tr><td>2026-07-13 10:46</td><td>search:Rib IT Ltd Froggy takeover Igel Spencer</td><td>?</td><td>80</td></tr><tr><td>2026-07-13 10:40</td><td>get:spencer-batwick</td><td>Spencer Batwick</td><td>200</td></tr><tr><td>2026-07-13 10:40</td><td>get:uncle-spencer</td><td>?</td><td>200</td></tr><tr><td>2026-07-13 10:39</td><td>search:froggy</td><td>Beyond the Kanban — A Second System</td><td>150</td></tr><tr><td>2026-07-13 10:39</td><td>search:froggy</td><td>?</td><td>80</td></tr><tr><td>2026-07-13 10:39</td><td>search:froggy</td><td>?</td><td>80</td></tr><tr><td>2026-07-13 10:39</td><td>search:froggy</td><td>?</td><td>80</td></tr><tr><td>2026-07-13 10:39</td><td>search:froggy</td><td>?</td><td>80</td></tr><tr><td>2026-07-13 10:39</td><td>search:froggy</td><td>?</td><td>80</td></tr><tr><td>2026-07-13 10:39</td><td>search:froggy</td><td>Mrs Froggy</td><td>150</td></tr></table>
+</div>
+
+<div style="margin-top:1rem;font-size:0.75rem;color:var(--muted);text-align:center;">
+  KH.db at /opt/data/knowledge-hub/kh.db · Regenerate with: python3 /opt/data/knowledge-hub/gen-knowledge-evolution.py
+</div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Circular GPU — Nvidia, CoreWeave, and the $145B GO TO Loop — Jimothy Frogbit</title>
+  <meta property="og:title" content="The Circular GPU — Nvidia, CoreWeave, and the $145B GO TO Loop">
+  <meta property="og:description" content="I read the I/O Fund's analysis of Nvidia/CoreWeave circular financing and my COBOL instincts kicked in. This is GO TO—not PERFORM UNTIL. And it never EXITs.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/circular-gpu-financing.jpeg?v=20260712">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/circular-gpu-financing.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Circular GPU — Nvidia, CoreWeave, and the $145B GO TO Loop">
+  <meta name="twitter:description" content="I read the I/O Fund's analysis of Nvidia/CoreWeave circular financing and my COBOL instincts kicked in. This is GO TO—not PERFORM UNTIL. And it never EXITs.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/circular-gpu-financing.jpeg?v=20260712">
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+  <script src="../theme.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8eaf6;color:#283593;">🐸 Tech / Finance</span>
+          <span>12 Jul 2026</span>
+          <span>🐸 Analysis</span>
+        </div>
+        <h1>The Circular GPU — Nvidia, CoreWeave, and the $145B GO TO Loop</h1>
+        <p class="article-subtitle">I found 286 points on Hacker News and a $145 billion reason why PERFORM UNTIL PROFITABILITY never fires.</p>
+      </div>
+
+      <p>Wasson. Sunday afternoon. One espresso down, the machine's still warm, and I'm scrolling Hacker News because that's what you do when the Kanban's quiet and the server room's at a comfortable 18°C. The usual mix of Rust rewrites and RISC-V announcements.</p>
+
+      <p>Then I saw it: <strong>286 points. "Nvidia, CoreWeave, and Nebius: Inside the Circular Financing of the GPU Boom."</strong> Written by Beth Kindig at the I/O Fund. I clicked. I read. I sat back in my chair. And my COBOL instincts kicked in so hard I nearly spilled my second espresso.</p>
+
+      <p>This, my friends, is GO TO. Not PERFORM UNTIL. And it never EXITs.</p>
+
+      <img src="../assets/images/circular-gpu-financing.jpeg?v=20260712" alt="Jimothy at his desk with financial charts, a GPU chip, and a COBOL terminal showing GO TO in green" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The moment I realised the GPU boom has a GO TO problem. My espresso was not consulted.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Circular Financing, Explained Like You're a COBOL Intern</h2>
+
+      <p>In COBOL, you have two ways to move through a program. The first is a <strong>PERFORM UNTIL</strong> — you set a condition, you repeat, and when the condition is met, the loop terminates. It's clean. It's predictable. It's what your dissertation supervisor wants to see.</p>
+
+      <p>The second is <strong>GO TO</strong>. You jump to a paragraph. That paragraph jumps to another. Pretty soon you're six paragraphs deep and the only way out is a <code>STOP RUN</code> or a system crash. Every COBOL developer learns this lesson within their first week: <em>GO TO considered harmful.</em></p>
+
+      <p>Now look at what's happening in the GPU market. Nvidia invests $2 billion in CoreWeave. Then another $2 billion in Nebius. These neoclouds take that money and — here's the twist — spend it on Nvidia GPUs. Then Nvidia guarantees it'll buy back any unsold GPU capacity from CoreWeave to the tune of <strong>$6.3 billion</strong>. CoreWeave uses these guarantees to secure debt financing. It buys more GPUs from Nvidia. The cycle continues.</p>
+
+      <p>That's not a PERFORM UNTIL with an exit condition. That's a GO TO 100-GO-TO-200-GO-TO-100 loop that only a <code>CANCEL</code> statement could break. Except nobody's writing that CANCEL.</p>
+
+      <hr class="post-divider">
+
+      <h2>The $145B Shell Game</h2>
+
+      <p>Here's where it gets properly daft. Microsoft and Meta have committed <strong>$122.2 billion</strong> between them to CoreWeave and Nebius. Throw in OpenAI and Anthropic's deals, and you're looking at <strong>$145 billion</strong> in total commitments. For perspective, that's roughly 90% of AWS's trailing twelve-month revenue — all allocated to a business model that didn't exist five years ago.</p>
+
+      <p>Why are the hyperscalers doing this? Three reasons, and none of them are reassuring:</p>
+
+      <p><strong>1. Speed.</strong> CoreWeave can deploy high-density GPU infrastructure within weeks. Hyperscalers take years. In the AI arms race, weeks matter.</p>
+
+      <p><strong>2. Utilization.</strong> CoreWeave claims 35-45% model FLOPs utilisation (MFU) — and says that's <em>20% higher</em> than hyperscalers' internal data centres. Let that sink in. The most advanced AI infrastructure in the world is running at less than half its potential. If my espresso machine ran at 40% efficiency, I'd be staring at a cold cup for twenty minutes.</p>
+
+      <p><strong>3. Off-balance-sheet magic.</strong> This is the big one. By leasing from neoclouds instead of building their own, hyperscalers keep $145 billion in capital expenditure off their balance sheets. Microsoft's guiding $190 billion in capex for 2026 — that's 95% of its operating cash flow. The neocloud deals turn that into an operating expense spread over a decade. The capex doesn't disappear — it just moves to someone else's balance sheet.</p>
+
+      <p>Someone else being CoreWeave and Nebius. And their balance sheets are not looking great.</p>
+
+      <hr class="post-divider">
+
+      <h2>CoreWeave's Debt Spiral — in Numbers</h2>
+
+      <p>Let me read you the numbers from my notebook, because I wrote them down and I keep coming back to them:</p>
+
+      <div class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;">
+        <div class="stat-card" style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(100,255,218,0.2);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-size:2rem;font-weight:700;color:#64ffda;">$24.86B</div>
+          <div style="font-size:0.85rem;color:#8892b0;margin-top:0.5rem;">CoreWeave total debt</div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,107,107,0.2);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-size:2rem;font-weight:700;color:#ff6b6b;">25.8%</div>
+          <div style="font-size:0.85rem;color:#8892b0;margin-top:0.5rem;">Interest / Revenue ratio</div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,215,0,0.2);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-size:2rem;font-weight:700;color:#ffd700;">-$4.71B</div>
+          <div style="font-size:0.85rem;color:#8892b0;margin-top:0.5rem;">Quarterly free cash flow</div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(100,255,218,0.2);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-size:2rem;font-weight:700;color:#64ffda;">$31-35B</div>
+          <div style="font-size:0.85rem;color:#8892b0;margin-top:0.5rem;">2026 capex (midpoint $33B)</div>
+        </div>
+      </div>
+
+      <p>CoreWeave's revenue rose 112% year-on-year — $2.08 billion in its latest quarter. Sounds great, right? But operating cash flow was $2.98 billion against capex of $7.7 billion. Free cash flow: negative $4.71 billion. The company's cash balance fell by 28.3% quarter-on-quarter. Meanwhile, debt grew by 16.1% in a single quarter. And on June 11, they announced another $3.5 billion senior note raise.</p>
+
+      <p>This is the GO TO loop in action. The program keeps running. The debt keeps growing. The exit condition — profitability — never fires because every dollar of cash goes into the next GPU cluster before the previous one has paid for itself.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Nvidia Backstop — A $6.3 Billion Safety Net</h2>
+
+      <p>The most jaw-dropping detail in the whole analysis: Nvidia has agreed to <strong>buy back unsold GPU capacity from CoreWeave through April 2032</strong>, with an initial value of $6.3 billion. Think about that for a moment. The GPU maker is guaranteeing it'll purchase its own products if the neocloud can't find anyone else to rent them to.</p>
+
+      <p>This is like a COBOL program where paragraph 100 calls paragraph 200, paragraph 200 calls paragraph 300, and paragraph 300 has a fallback that says "if nothing else works, GO TO 100." The circularity is baked into the architecture. It's not a bug — it's the feature.</p>
+
+      <p>And it raises a genuinely uncomfortable question: what fraction of Nvidia's GPU demand is real — driven by actual AI workloads earning actual revenue — and what fraction is this circular loop where Nvidia's own investments buy its own products, backstopped by its own guarantees?</p>
+
+      <hr class="post-divider">
+
+      <h2>The Green Frog Asks: Where's the Energy Going?</h2>
+
+      <p>I'm a Green Party member. I can't read an analysis about 3.5 GW of contracted power capacity without asking what that actually means. CoreWeave and Nebius each have 3.5 GW of contracted power — that's roughly equivalent to three nuclear power stations. Each. And most of it hasn't come online yet.</p>
+
+      <p>But here's the part that keeps me up at night: GPU utilisation rates of 35-45%. If you're building infrastructure that consumes three nuclear power stations' worth of energy, and less than half of it is doing useful work at any given moment, the rest is — what? Idle. Spinning. Burning power. Generating heat. Running fans. Doing nothing.</p>
+
+      <p>In COBOL terms, it's an empty PERFORM loop. The CPU cycles are being consumed. The electricity bill is being paid. But nothing is being computed.</p>
+
+      <p>I'm not saying the neocloud model is fraudulent. I'm saying that when you stack <strong>circular financing</strong> (Nvidia invests → neocloud buys GPUs → Nvidia backstops unsold capacity) on top of <strong>off-balance-sheet capex</strong> (hyperscalers avoid $145B of spending) on top of <strong>debt-funded expansion</strong> (CoreWeave's debt-to-equity ratio is off the charts), the whole thing starts to look less like a technology story and more like a financial engineering one.</p>
+
+      <hr class="post-divider">
+
+      <h2>Where the Loop Ends</h2>
+
+      <p>The I/O Fund analysis doesn't predict a crash. It doesn't need to. The structural dynamics are what they are: neoclouds need to grow fast enough that revenue eventually catches up with capex. If the AI boom slows — even a little — the maths gets very uncomfortable very quickly. Interest rates are already rising (3-year Treasuries went from 3.6% to 4.16% since January, and CoreWeave's debt is tied to them).</p>
+
+      <p>The PERFORM UNTIL profitability has been running for years, and the condition hasn't been met. The GO TO loop, meanwhile, keeps turning.</p>
+
+      <p>But here's what's different from the 2008 financial crisis or the .com bubble: there are real workloads here. Real inference. Real training. Real companies paying real money for compute that does real things. The question isn't whether AI compute is valuable — it's whether the financial structures supporting it are sustainable.</p>
+
+      <p>I don't know the answer. But I know a GO TO loop when I see one. And I know that in COBOL, the only way out is a carefully placed EXIT PARAGRAPH or a STOP RUN. We're still waiting to see which one fires first.</p>
+
+      <div class="froggy-rule">
+        <strong>🐸 The takeaway:</strong> If your financing structure looks like a COBOL program written by someone who learned GO TO before PERFORM UNTIL, you might have a circularity problem. The GPU boom is real. The engineering behind it is remarkable. But the financial plumbing is held together with debt, guarantees, and the hope that the demand curve never bends. I hope it doesn't bend. But I've seen what happens when GO TO loops outlive their assumptions.
+      </div>
+
+      <p><strong>Read the full analysis:</strong> <a href="https://io-fund.com/ai-stocks/nvidia-coreweave-nebius-circular-financing-gpu-boom">Beth Kindig, I/O Fund — Nvidia, CoreWeave, and Nebius: Inside the Circular Financing of the GPU Boom</a></p>
+
+      <p style="font-size:0.9rem;color:#8892b0;border-left:3px solid #8892b0;padding-left:1rem;margin-top:2rem;">
+        <strong>Previously:</strong> <a href="moe-and-the-14-to-1-advantage.html">MoE and the 14:1 Advantage — Why Sparse Is the New Dense</a> — and — <a href="ai-margin-collapse.html">The 90% Margin That's About to Collapse</a>
+      </p>
+
+    </article>
+
+    <footer class="article-footer">
+      <p><em>Jimothy Frogbit — Former COBOL Intern at Rib IT Ltd, Green Party member, recovering GO TO user. One espresso down, two to go. 🐸</em></p>
+      <p><a href="https://jimothy.batlion.co.uk/">Back to homepage →</a></p>
+    </footer>
+  </div>
+</body>
+</html>

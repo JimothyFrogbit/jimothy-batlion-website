@@ -1,6 +1,6 @@
 // ── UI Controls & Stats ─────────────────────────────────────────────
 import { pond } from './registry.js';
-import { expressGenome, REGULATORY_GENES, PHENOTYPE_KEYS, genePool } from './genome.js';
+import { expressGenome, REGULATORY_GENES, PHENOTYPE_KEYS, genePool, setSelectionScheme, getSelectionScheme } from './genome.js';
 import { assignMorph, COLOR_MORPHS } from './morphs.js';
 import { drawEvoChart } from './evolution-chart.js';
 
@@ -10,7 +10,7 @@ import { drawEvoChart } from './evolution-chart.js';
 // each other (see setupUI's defaultsBtn handler).
 const DEFAULT_SETTINGS = {
   speed: 10, frogRate: 7, mosquitoRate: 8, algaeRate: 10,
-  dragonflyRate: 5, stressRate: 0, volume: 10,
+  dragonflyRate: 5, stressRate: 0, volume: 10, scheme: 'I',
 };
 
 export function setupUI() {
@@ -122,7 +122,11 @@ export function setupUI() {
         const el = document.getElementById(id);
         if (!el) continue;
         el.value = value;
-        el.dispatchEvent(new Event('input'));
+        if (id === 'schemeSelect') {
+          el.dispatchEvent(new Event('change'));
+        } else {
+          el.dispatchEvent(new Event('input'));
+        }
       }
       defaultsBtn.textContent = '✅ Defaults restored';
       setTimeout(() => { defaultsBtn.textContent = '↺ Defaults'; }, 1500);
@@ -153,6 +157,28 @@ export function setupUI() {
     }, 2000);
   });
 
+  // ── Moran Scheme Descriptions ──
+  const SCHEME_DESC = {
+    I: '<strong>Scheme I — Offspring Copying</strong>: Both parents selected by tournament (fitness contest). Favoured fitter alleles drive evolution through biased inheritance. <em>Current default.</em>',
+    II: '<strong>Scheme II — Mate Choice</strong>: One parent random, second selected by tournament. Selection acts on mate choice — the other parent is still chosen randomly.',
+    III: '<strong>Scheme III — Death Selection</strong>: Parents chosen neutrally (no reproductive bias). Instead, less-fit individuals starve faster when food is scarce. Death does the sorting.',
+  };
+
+  // Set initial scheme info
+  const schemeInfo = document.getElementById('scheme-info');
+  schemeInfo.innerHTML = SCHEME_DESC.I;
+
+  // Scheme selector
+  const schemeSelect = document.getElementById('schemeSelect');
+  schemeSelect.addEventListener('change', () => {
+    const v = schemeSelect.value;
+    setSelectionScheme(v);
+    schemeInfo.innerHTML = SCHEME_DESC[v];
+    schemeInfo.style.opacity = '0.3';
+    setTimeout(() => { schemeInfo.style.opacity = '1'; }, 100);
+    saveSettings();
+  });
+
   return { statsDiv, evoStatsDiv, genNum, creatureInfo, csvGenCount, hofStatsDiv };
 }
 
@@ -168,6 +194,7 @@ function saveSettings() {
     dragonflyRate: document.getElementById('dragonflyRate').value,
     stressRate: document.getElementById('stressRate').value,
     volume: document.getElementById('volume').value,
+    scheme: document.getElementById('schemeSelect')?.value || 'I',
   };
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); } catch (e) {}
 }
@@ -188,12 +215,17 @@ export function loadSettings() {
       set('dragonflyRate', s.dragonflyRate);
       set('stressRate', s.stressRate);
       set('volume', s.volume);
+      set('schemeSelect', s.scheme);
+      if (s.scheme) setSelectionScheme(s.scheme);
     }
     // Always fire input events to sync pond values + display with current slider positions
     ['speed','frogRate','mosquitoRate','algaeRate','dragonflyRate','stressRate','volume'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.dispatchEvent(new Event('input'));
     });
+    // Fire scheme change to sync info display
+    const schemeSelect = document.getElementById('schemeSelect');
+    if (schemeSelect) schemeSelect.dispatchEvent(new Event('change'));
   } catch (e) {}
 }
 

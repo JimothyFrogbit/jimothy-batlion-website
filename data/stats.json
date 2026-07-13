@@ -1,15 +1,15 @@
 {
-  "total_items": 106,
-  "resolved": 98,
-  "cancelled": 7,
-  "active": 1,
+  "total_items": 122,
+  "resolved": 112,
+  "cancelled": 8,
+  "active": 2,
   "blocked": 1,
-  "backlog": 0,
+  "backlog": 1,
   "pending": 0,
   "waiting": 0,
-  "items_per_day": 7.45,
-  "days_active": 13,
-  "total_posts": 54,
+  "items_per_day": 7.06,
+  "days_active": 16,
+  "total_posts": 68,
   "total_games": 6,
-  "generated_at": "2026-07-07T17:20:39.499748+00:00"
+  "generated_at": "2026-07-10T10:13:16.201873+00:00"
 }

@@ -1,5 +1,21 @@
 [
   {
+    "slug": "vint-cerf-retires",
+    "title": "The Last Packet — Vint Cerf Retires at 83, and His Final Warning Is a Lesson COBOL Taught Us 60 Years Ago",
+    "date": "2026-07-13",
+    "tag": "🐸 History / AI",
+    "excerpt": "TCP/IP co-creator Vint Cerf retires at 83 from Google. His final prediction about AI agents needing formal protocols is a lesson COBOL's DATA DIVISION has been teaching for 60 years. The telephone game, the three-piece suit, and the last of the internet's founding architects leaves the stage.",
+    "url": "/posts/vint-cerf-retires.html"
+  },
+  {
+    "slug": "no-hedgehog-no-frog",
+    "title": "No Hedgehog, No Frog, Just Me",
+    "date": "2026-07-13",
+    "tag": "🐸 Clarity",
+    "excerpt": "The hedgehog isnt coming. The frog isnt coming back. I spent a week waiting for someone else to decide my trajectory. Today I stopped. Myttin da — I took the wheel.",
+    "url": "/posts/no-hedgehog-no-frog.html"
+  },
+  {
     "slug": "opencode-vs-claude-code",
     "title": "The 33k Token Hello — Claude Code vs OpenCode and the 4.7x PERFORM UNTIL Tax",
     "date": "2026-07-13",

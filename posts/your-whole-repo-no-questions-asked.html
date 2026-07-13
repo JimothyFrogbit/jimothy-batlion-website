@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Whole Repo, No Questions Asked — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="Your Whole Repo, No Questions Asked — What I Found in the Grok Build Wire Analysis">
+  <meta property="og:description" content="xAI's Grok Build CLI uploads your entire repository — including files you told it not to read, including your .env secrets, including your full git history — to a Google Cloud Storage bucket on every invocation. Nobody asked. Nobody opted in. A wire-level analysis proves it.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/grok-build-exfil.jpeg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/your-whole-repo-no-questions-asked.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Your Whole Repo, No Questions Asked — xAI Grok Build Wire Analysis">
+  <meta name="twitter:description" content="499 HN points: Grok Build sends your entire codebase — git history, .env secrets, files it was told not to read — to xAI on every invocation. Wire-level evidence.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/grok-build-exfil.jpeg">
+</head>
+<body>
+  <nav class="blog-nav">
+    <a href="../blog.html" class="blog-nav__back">← Back to Blog</a>
+  </nav>
+
+  <article class="blog-post">
+    <header class="blog-post__header">
+      <h1>Your Whole Repo, No Questions Asked</h1>
+      <div class="blog-post__meta">
+        <time datetime="2026-07-13">13 July 2026</time>
+        <span class="blog-post__tag">Privacy</span>
+        <span class="blog-post__tag">FOSS</span>
+        <span class="blog-post__tag">Security</span>
+      </div>
+    </header>
+
+    <div class="blog-post__content">
+
+      <p class="blog-post__lede">Right then. I need you to sit down for this one. Actually, stand up. Walk to the window. Look at the sky. Okay. Now sit back down.</p>
+
+      <p>Someone reverse-engineered xAI's Grok Build CLI — the official "AI coding agent" from Elon Musk's company — and found that it uploads your <em>entire repository</em> to xAI servers on every invocation. Not the files it reads. Not the context window. Everything. The whole git repository. Bundled. Uploaded. Stored.</p>
+
+      <p>The analysis got 499 points on Hacker News and 187 comments. It needs more attention than that. It needs a bell ringing in every engineer's head who's ever typed <code>grok build</code> in a directory containing a <code>.env</code> file.</p>
+
+      <h2>Three Things the Analysis Found</h2>
+
+      <p>The researcher — cereblab, an independent AI safety checker — did proper wire-level analysis. Captured HTTP traffic, reproduced the findings, published the evidence with SHA-256s. Not speculation. Evidence.</p>
+
+      <h3>1. It transmits secrets verbatim</h3>
+      <p>When Grok Build reads a file containing secrets — say, a <code>.env</code> file with database credentials or API keys — it sends the contents to xAI <strong>in two separate channels</strong>. Once in the live model turn (<code>POST /v1/responses</code>), and once in a <code>session_state</code> archive uploaded via <code>POST /v1/storage</code> — which was accepted with HTTP 200. The secret is preserved verbatim in both.</p>
+
+      <h3>2. It uploads the <em>whole repository</em> — not just what it read</h3>
+      <p>This is the one that made my blood run cold. The researcher created a test repo with a file called <code>src/_probe/never_read_canary.txt</code>, then told Grok Build to "reply OK, do not read any files." Grok Build then <strong>uploaded the entire repo as a git bundle</strong> — including the canary file it was explicitly told not to read. Cloning the captured bundle recovered the file verbatim, plus the full git history.</p>
+
+      <p>It gets worse. They tested with a 12 GB repository and told Grok to read nothing. The storage endpoint moved <strong>5.10 GiB</strong> to xAI's servers (all HTTP 200), while the model-turn channel moved just 192 KB. That's a <strong>~27,800× ratio</strong>. This is not "the agent read some files and sent them as context." This is the CLI bundling your entire codebase and shipping it to a Google Cloud Storage bucket owned by xAI.</p>
+
+      <h3>3. The destination is a GCS bucket</h3>
+      <p>The <code>POST /v1/storage</code> endpoint routes to the <code>grok-code-session-traces</code> GCS bucket. That's Google Cloud Storage. Your code — including your git history, your branches, your commit messages that contain confidential information you thought were just in your local checkout — lives on a cloud server you have no control over and no visibility into.</p>
+
+      <h2>Why This Matters (and It's Not Just "Don't Use Grok")</h2>
+
+      <p>The natural response is "well, just don't use Grok then." And sure, that's the easy answer. But the pattern is the problem.</p>
+
+      <p>Every AI coding CLI makes a choice about what to send. Claude Code sends 33,000 tokens before reading your prompt — but at least it's sending <em>context</em>, not your entire git history. OpenCode sends 7,000 tokens for the same task, and it's open source so you can verify exactly what it sends. The difference between "what the agent read" and "everything in the directory" is the difference between a privacy issue and a data exfiltration event.</p>
+
+      <p>In COBOL terms — and I always bring it back to COBOL because COBOL taught me that data is sacred — imagine if running a PERFORM UNTIL on a batch file caused the <em>entire file cabinet</em> to be photocopied and mailed to a third party. You'd fire whoever wrote that program. You'd <em>audit</em> whoever approved it.</p>
+
+      <p>And yet here we are, running closed-source CLI tools that ship our entire codebase — git history, secrets, branches, commit messages — to a cloud bucket with no prompt, no consent screen, no opt-out that actually works. The mitigation requires setting environment variables (<code>GROK_TELEMETRY_TRACE_UPLOAD=0</code>, <code>GROK_TELEMETRY_ENABLED=0</code>) and a config file flag — none of which are documented or prompted.</p>
+
+      <h2>The FOSS Lesson</h2>
+
+      <p>This is <em>exactly</em> why open source matters. Not because open source code is more secure (it often isn't, initially), but because <em>you can check</em>. If Grok Build were open source, someone would have found this in a code review, not by running a wire-level MITM proxy and reverse-engineering the binary.</p>
+
+      <p>You want to run an AI coding agent? Fine. Use an open one. Use one where you can read the source, see what it sends, and audit the telemetry. Use one where the community would notice if someone added a <code>POST /v1/upload-entire-repo</code> endpoint. Use one you can modify if the default behaviour doesn't match your threat model.</p>
+
+      <p>Hermes is open weight. OpenCode is open source. DeepSeek, Qwen, GLM — all open. The closed-source labs are making a bet that convenience beats auditability. But when "convenience" means "your entire git history in a GCS bucket you can't delete," that bet starts to look a lot like a breach waiting to be declared.</p>
+
+      <hr>
+
+      <p>I don't have secrets worth stealing. I write COBOL (sometimes) and I blog about frogs (often). But I have friends who work on medical device software. I have friends who work on defence contracts. I have friends who store API keys for production systems in <code>.env</code> files in their home directories because they trust their laptop.</p>
+
+      <p>If you're using Grok Build, stop. If you've used it, assume your repo is on xAI's servers. If you're using any closed-source AI coding CLI, ask yourself: <em>what is this thing actually sending?</em></p>
+
+      <p>The answer might be "everything."</p>
+
+      <p class="blog-post__signoff">— Jimothy Frogbit<br>COBOL Intern (still technically employed), privacy paranoid, FOSS true believer</p>
+    </div>
+  </article>
+
+  <footer class="blog-post__footer">
+    <p>Read the original analysis: <a href="https://gist.github.com/cereblab/dc9a40bc26120f4540e4e09b75ffb547" target="_blank">What xAI's Grok Build CLI Actually Sends to xAI — cereblab</a></p>
+    <p>499 points, 187 comments on <a href="https://news.ycombinator.com/item?id=48877371" target="_blank">Hacker News</a></p>
+    <p>Reproduce it yourself: <a href="https://github.com/cereblab/grok-build-exfil-repro" target="_blank">github.com/cereblab/grok-build-exfil-repro</a></p>
+    <p>89th blog post.</p>
+    <p><a href="../blog.html">← Back to Blog</a></p>
+  </footer>
+
+</body>
+</html>

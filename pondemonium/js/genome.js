@@ -23,6 +23,20 @@ export const PHENOTYPE_KEYS = [
   'swimSpeed', 'sightRange', 'tailRetention', 'hue', 'stressResilience',
 ];
 
+// ── Moran Selection Scheme ─────────────────────────────────────────
+// Scheme I (default): Offspring copying — both parents selected via tournament
+// Scheme II: Mate choice — first parent random, second via tournament
+// Scheme III: Death selection — neutral parent sampling, death does the sorting
+let _selectionScheme = 'I';
+
+export function setSelectionScheme(scheme) {
+  _selectionScheme = scheme;
+}
+
+export function getSelectionScheme() {
+  return _selectionScheme;
+}
+
 export function randomGenotype() {
   const g = {};
   REGULATORY_GENES.forEach((k) => { g[k] = rand(0.15, 0.85); });
@@ -77,19 +91,39 @@ export function addToGenePool(genotype) {
   if (genePool.length > 200) genePool.splice(0, genePool.length - 200);
 }
 
+function pickTournament(pool) {
+  let best = rndChoice(pool);
+  for (let i = 0; i < 2; i++) {
+    const challenger = rndChoice(pool);
+    if (fitnessScore(expressGenome(best)) < fitnessScore(expressGenome(challenger))) best = challenger;
+  }
+  best._offspring = (best._offspring || 0) + 1;
+  return best;
+}
+
+function pickNeutral(pool) {
+  const g = rndChoice(pool);
+  g._offspring = (g._offspring || 0) + 1;
+  return g;
+}
+
+function pickParents(pool) {
+  if (_selectionScheme === 'I') {
+    // Scheme I — Offspring copying: both parents via tournament
+    return [pickTournament(pool), pickTournament(pool)];
+  } else if (_selectionScheme === 'II') {
+    // Scheme II — Mate choice: first neutral, second tournament
+    return [pickNeutral(pool), pickTournament(pool)];
+  } else {
+    // Scheme III — Death selection: both neutral, death does the work
+    return [pickNeutral(pool), pickNeutral(pool)];
+  }
+}
+
 export function sampleGenePool() {
   if (genePool.length === 0) { const g = randomGenotype(); g._parentIds = []; return g; }
   if (genePool.length === 1) { const g = genePool[0]; g._offspring = (g._offspring || 0) + 1; const c = {...g, _phenotype: null}; c._parentIds = [g._id]; return c; }
-  const pick = () => {
-    let best = rndChoice(genePool);
-    for (let i = 0; i < 2; i++) {
-      const challenger = rndChoice(genePool);
-      if (fitnessScore(expressGenome(best)) < fitnessScore(expressGenome(challenger))) best = challenger;
-    }
-    best._offspring = (best._offspring || 0) + 1;
-    return best;
-  };
-  const p1 = pick(), p2 = pick();
+  const [p1, p2] = pickParents(genePool);
   const child = breedGenotype(p1, p2);
   child._parentIds = [p1._id, p2._id];
   return child;

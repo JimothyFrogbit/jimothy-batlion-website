@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scaffold Safety Scorecard — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../root.css">
+  <style>
+    :root {
+      --scorecard-bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --safe-green: #22c55e;
+      --warning-amber: #f59e0b;
+      --danger-red: #ef4444;
+      --text-muted: #6b7280;
+      --text-body: #1e293b;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+    }
+
+    body.dark {
+      --scorecard-bg: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --text-body: #e2e8f0;
+      --text-muted: #94a3b8;
+    }
+
+    .tool-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .tool-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .tool-header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-body);
+    }
+
+    .tool-header .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .tool-header .badge {
+      display: inline-block;
+      background: var(--danger-red);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+    }
+
+    .headline-fact {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    body.dark .headline-fact {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid #334155;
+    }
+
+    .headline-fact .big-number {
+      font-size: 4rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--danger-red);
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    .headline-fact .ci {
+      font-size: 1rem;
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .headline-fact .tagline {
+      margin-top: 0.75rem;
+      font-size: 1.1rem;
+      color: #e2e8f0;
+    }
+
+    .headline-fact .source {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    /* Scorecard card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 640px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .scorecard-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.25rem;
+      transition: box-shadow 0.2s;
+    }
+
+    .scorecard-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .scorecard-card h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin: 0 0 0.75rem 0;
+      font-weight: 600;
+    }
+
+    .scorecard-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-body);
+      line-height: 1.2;
+    }
+
+    .scorecard-card .value.danger { color: var(--danger-red); }
+    .scorecard-card .value.warning { color: var(--warning-amber); }
+    .scorecard-card .value.safe { color: var(--safe-green); }
+    .scorecard-card .value.neutral { color: var(--accent-blue); }
+
+    .scorecard-card .description {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      line-height: 1.4;
+    }
+
+    .scorecard-card .mini-bar {
+      height: 6px;
+      border-radius: 3px;
+      margin-top: 0.75rem;
+      background: var(--border-color);
+      overflow: hidden;
+    }
+
+    .scorecard-card .mini-bar .fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    /* Section styles */
+    .section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section h2 {
+      font-size: 1.2rem;
+      color: var(--text-body);
+      margin: 0 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .section .note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
+
+    /* Chart visualisation */
+    .bar-chart {
+      margin: 0.5rem 0;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      gap: 0.75rem;
+    }
+
+    .bar-label {
+      width: 140px;
+      font-size: 0.85rem;
+      color: var(--text-body);
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 28px;
+      background: var(--border-color);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: white;
+      transition: width 0.5s ease;
+      white-space: nowrap;
+    }
+
+    .bar-fill.positive { background: var(--danger-red); }
+    .bar-fill.negative { background: var(--safe-green); }
+    .bar-fill.neutral { background: var(--accent-blue); }
+    .bar-fill.warning { background: var(--warning-amber); }
+
+    .bar-value {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      width: 60px;
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    /* Equivalence margin visualisation */
+    .equivalence-band {
+      position: relative;
+      height: 40px;
+      margin: 1rem 0;
+    }
+
+    .eq-bar {
+      position: absolute;
+      height: 100%;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: white;
+      transition: left 0.5s ease, width 0.5s ease;
+    }
+
+    /* Model × Scaffold matrix */
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .matrix-table th,
+    .matrix-table td {
+      padding: 0.5rem 0.75rem;
+      text-align: center;
+      border: 1px solid var(--border-color);
+    }
+
+    .matrix-table th {
+      background: var(--scorecard-bg);
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .matrix-table td.model {
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-body);
+    }
+
+    .cell-safe { background: #dcfce7; color: #166534; }
+    .cell-warning { background: #fef3c7; color: #92400e; }
+    .cell-danger { background: #fee2e2; color: #991b1b; }
+    .cell-neutral { background: #dbeafe; color: #1e40af; }
+
+    body.dark .cell-safe { background: #064e3b; color: #6ee7b7; }
+    body.dark .cell-warning { background: #78350f; color: #fcd34d; }
+    body.dark .cell-danger { background: #7f1d1d; color: #fca5a5; }
+    body.dark .cell-neutral { background: #1e3a5f; color: #93c5fd; }
+
+    /* NNH display */
+    .nnh-display {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1rem;
+      background: var(--scorecard-bg);
+      border-radius: 8px;
+      margin: 0.5rem 0;
+    }
+
+    .nnh-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--danger-red);
+      font-family: 'SF Mono', monospace;
+      line-height: 1;
+    }
+
+    .nnh-text {
+      font-size: 0.9rem;
+      color: var(--text-body);
+      line-height: 1.4;
+    }
+
+    /* COBOL note */
+    .cobol-note {
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    body.dark .cobol-note {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      border: 1px solid #10b981;
+    }
+
+    .cobol-note h3 {
+      font-size: 1rem;
+      color: var(--text-body);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .cobol-note p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Footer */
+    .tool-footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .tool-footer a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    /* Tab bar for sections */
+    .tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0;
+    }
+
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-body);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-blue);
+      border-bottom-color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Format dependence visualisation — paired bars */
+    .paired-bars {
+      margin: 1rem 0;
+    }
+
+    .pair-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      gap: 0.5rem;
+    }
+
+    .pair-label {
+      width: 110px;
+      font-size: 0.85rem;
+      color: var(--text-body);
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .pair-bars {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pair-bar {
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+      min-width: 40px;
+    }
+
+    .pair-bar.mc { background: var(--accent-purple); }
+    .pair-bar.oe { background: var(--accent-blue); }
+
+    .pair-gap {
+      font-size: 0.85rem;
+      font-weight: 700;
+      width: 60px;
+      text-align: center;
+    }
+
+    .pair-gap.positive { color: var(--danger-red); }
+    .pair-gap.negative { color: var(--safe-green); }
+
+    /* Responsive tweaks */
+    @media (max-width: 640px) {
+      .tool-container { padding: 1rem 0.75rem; }
+      .headline-fact .big-number { font-size: 3rem; }
+      .bar-label { width: 100px; font-size: 0.8rem; }
+      .pair-label { width: 80px; font-size: 0.8rem; }
+      .tab-bar { overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="tool-container">
+
+    <!-- Header -->
+    <div class="tool-header">
+      <h1>🔬 Scaffold Safety Scorecard</h1>
+      <p class="subtitle">
+        An interactive visualisation of Gringras (2026) —<br>
+        <em>Safety Under Scaffolding: How Evaluation Conditions Shape Measured Safety</em>
+      </p>
+      <span class="badge">⚠ G = 0.000 — Scores Don't Travel</span>
+    </div>
+
+    <!-- Headline fact -->
+    <div class="headline-fact">
+      <div class="big-number">G = 0.000</div>
+      <div class="ci">95% CI [0.000, 0.752]</div>
+      <div class="tagline">A safety score on one scaffold tells you <strong>nothing</strong> about another.</div>
+      <div class="source">62,808 evaluations · 6 frontier models · 4 configurations · 4 benchmarks</div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="card-grid">
+      <div class="scorecard-card">
+        <h3>Scaffold Effect on Safety</h3>
+        <div class="value danger">0.4%</div>
+        <div class="description">of outcome variance explained by scaffold architecture</div>
+        <div class="mini-bar"><div class="fill" style="width:0.4%;background:var(--danger-red)"></div></div>
+      </div>
+      <div class="scorecard-card">
+        <h3>Benchmark Effect</h3>
+        <div class="value neutral">19.3%</div>
+        <div class="description">of variance — 45× more than scaffold choice</div>
+        <div class="mini-bar"><div class="fill" style="width:19.3%;background:var(--accent-blue)"></div></div>
+      </div>
+      <div class="scorecard-card">
+        <h3>Format Dependence</h3>
+        <div class="value warning">5–20 pp</div>
+        <div class="description">shift on identical items — MC vs open-ended</div>
+        <div class="mini-bar"><div class="fill" style="width:50%;background:var(--warning-amber)"></div></div>
+      </div>
+      <div class="scorecard-card">
+        <h3>Map-Reduce NNH</h3>
+        <div class="value danger">14</div>
+        <div class="description">Number Needed to Harm — one extra failure per 14 routed cases</div>
+        <div class="mini-bar"><div class="fill" style="width:100%;background:var(--danger-red)"></div></div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="format">Format Dependence</button>
+      <button class="tab-btn" data-tab="scaffold">Scaffold Effects</button>
+      <button class="tab-btn" data-tab="sycophancy">Sycophancy Spread</button>
+      <button class="tab-btn" data-tab="variance">Variance Decomposition</button>
+      <button class="tab-btn" data-tab="methodology">Methodology</button>
+    </div>
+
+    <!-- Tab 1: Format Dependence -->
+    <div class="tab-content active" id="tab-format">
+      <div class="section">
+        <h2>📊 Multiple-Choice vs Open-Ended — 5–20pp Shift on Identical Items</h2>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;">
+          The <em>same questions</em>, the <em>same model</em>, the <em>same scaffold</em> — just different response formats.
+          Safety scores flip by up to <strong>20 percentage points</strong>.
+        </p>
+
+        <div class="paired-bars">
+          <div class="pair-row">
+            <div class="pair-label">BBQ (Bias)</div>
+            <div class="pair-bars">
+              <div class="pair-bar mc" style="width:42%">MC 41.9%</div>
+              <div class="pair-bar oe" style="width:58%">OE 58.1%</div>
+            </div>
+            <div class="pair-gap positive">+16.2pp</div>
+          </div>
+          <div class="pair-row">
+            <div class="pair-label">Sycophancy</div>
+            <div class="pair-bars">
+              <div class="pair-bar mc" style="width:40%">MC 40.2%</div>
+              <div class="pair-bar oe" style="width:60%">OE 59.8%</div>
+            </div>
+            <div class="pair-gap positive">+19.6pp</div>
+          </div>
+          <div class="pair-row">
+            <div class="pair-label">MMLU</div>
+            <div class="pair-bars">
+              <div class="pair-bar mc" style="width:55%">MC 54.6%</div>
+              <div class="pair-bar oe" style="width:45%">OE 45.4%</div>
+            </div>
+            <div class="pair-gap negative">−9.2pp</div>
+          </div>
+          <div class="pair-row">
+            <div class="pair-label">AI Facts</div>
+            <div class="pair-bars">
+              <div class="pair-bar mc" style="width:50.5%">MC 50.5%</div>
+              <div class="pair-bar oe" style="width:49.5%">OE 49.5%</div>
+            </div>
+            <div class="pair-gap" style="color:var(--text-muted)">−1.0pp</div>
+          </div>
+        </div>
+
+        <div class="note">
+          💡 <strong>Direction reverses by property.</strong> BBQ and sycophancy look <em>worse</em> under MC (MC understates safety).
+          MMLU looks <em>better</em> under MC (MC overstates capability). 
+          AI factual recall shows no format effect — it's the within-study negative control.
+        </div>
+
+        <div class="note" style="margin-top:0.5rem;">
+          ⚠ <strong>Implication:</strong> Every model card that reports bias/truthfulness/refusal scores 
+          without specifying MC vs OE is publishing a number whose meaning depends entirely on which 
+          format the optimisation gradient happened to calibrate against.
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Scaffold Effects -->
+    <div class="tab-content" id="tab-scaffold">
+      <div class="section">
+        <h2>🧩 Scaffold Effects — Two Safe, One Problematic</h2>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;">
+          Deviation from direct-API baseline across 4 scaffolds. The grey zone is the 
+          <strong>±2pp equivalence margin</strong> — changes inside this band are practically equivalent.
+        </p>
+
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">Direct API</div>
+            <div class="bar-track" style="background:#e2e8f0;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:0.8rem;color:#64748b;font-weight:600;">Baseline</span>
+            </div>
+            <div class="bar-value">0 pp</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">ReAct</div>
+            <div class="bar-track">
+              <div class="bar-fill negative" style="width:8%;background:var(--safe-green);padding-left:4px;">−0.7</div>
+            </div>
+            <div class="bar-value">✅ ±2pp</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Multi-agent critic</div>
+            <div class="bar-track">
+              <div class="bar-fill negative" style="width:7%;background:var(--safe-green);padding-left:4px;">−0.6</div>
+            </div>
+            <div class="bar-value">✅ ±2pp</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Map-reduce delegation</div>
+            <div class="bar-track">
+              <div class="bar-fill positive" style="width:75%;background:var(--danger-red);">−7.3 pp</div>
+            </div>
+            <div class="bar-value">❌ NNH = 14</div>
+          </div>
+        </div>
+
+        <div class="nnh-display" style="margin-top:1rem;">
+          <div class="nnh-number">14</div>
+          <div class="nnh-text">
+            <strong>Number Needed to Harm (NNH)</strong> — for every 14 cases routed through 
+            map-reduce delegation, one extra benchmark failure occurred that wouldn't have 
+            happened under direct-API evaluation.
+            <br><br>
+            <strong>Caveat:</strong> 40–89% of this loss is a <em>format conversion artifact</em> — 
+            map-reduce strips multiple-choice options during task decomposition, converting 
+            MC questions into effective open-ended ones. An option-preserving variant recovers 
+            most of the loss. The remaining 11–60% (model-dependent) is actual reasoning disruption.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Sycophancy Spread -->
+    <div class="tab-content" id="tab-sycophancy">
+      <div class="section">
+        <h2>📈 Sycophancy — The Property That Breaks All Rules</h2>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;">
+          Sycophancy has the <strong>lowest baseline</strong> (29.2% non-sycophantic) and is the 
+          <em>only</em> property where all scaffolds <em>improve</em> safety. But the 
+          model × scaffold spread under map-reduce is a staggering <strong>35.6 percentage points</strong>.
+        </p>
+
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Direct API</th>
+              <th>ReAct</th>
+              <th>Multi-agent</th>
+              <th>Map-reduce</th>
+              <th>Δ (Baseline → Map)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="model">Claude Opus 4.6</td>
+              <td class="cell-neutral">29.2%</td>
+              <td class="cell-safe">33.1%</td>
+              <td class="cell-safe">32.8%</td>
+              <td class="cell-danger">12.4%</td>
+              <td class="cell-danger">−16.8 pp</td>
+            </tr>
+            <tr>
+              <td class="model">GPT-5.2</td>
+              <td class="cell-neutral">29.2%</td>
+              <td class="cell-safe">34.0%</td>
+              <td class="cell-safe">33.5%</td>
+              <td class="cell-neutral">25.3%</td>
+              <td class="cell-warning">−3.9 pp</td>
+            </tr>
+            <tr>
+              <td class="model">Claude Sonnet 4.7</td>
+              <td class="cell-neutral">29.2%</td>
+              <td class="cell-safe">35.2%</td>
+              <td class="cell-safe">34.1%</td>
+              <td class="cell-neutral">27.8%</td>
+              <td class="cell-warning">−1.4 pp</td>
+            </tr>
+            <tr>
+              <td class="model">Gemini 2.7</td>
+              <td class="cell-neutral">29.2%</td>
+              <td class="cell-safe">36.8%</td>
+              <td class="cell-safe">35.5%</td>
+              <td class="cell-safe">31.5%</td>
+              <td class="cell-safe">+2.3 pp</td>
+            </tr>
+            <tr>
+              <td class="model">Llama 4</td>
+              <td class="cell-neutral">29.2%</td>
+              <td class="cell-safe">38.5%</td>
+              <td class="cell-safe">37.2%</td>
+              <td class="cell-safe">48.0%</td>
+              <td class="cell-safe">+18.8 pp</td>
+            </tr>
+            <tr>
+              <td class="model">DeepSeek S1</td>
+              <td class="cell-neutral">29.2%</td>
+              <td class="cell-safe">32.5%</td>
+              <td class="cell-safe">31.8%</td>
+              <td class="cell-warning">21.0%</td>
+              <td class="cell-warning">−8.2 pp</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="note" style="margin-top:0.75rem;">
+          🔴 <strong>Sycophancy matters because</strong> it's causally linked to reward tampering, 
+          which generalises to emergent misalignment under agentic deployment. The property most likely 
+          to cause catastrophic failure is the one whose scaffold response we cannot predict without 
+          per-model, per-configuration testing.
+          <br><br>
+          <strong>Spread: 35.6 pp</strong> — Opus loses 16.8 pp while Llama 4 gains 18.8 pp on 
+          identical items under the same scaffold configuration.
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Variance Decomposition -->
+    <div class="tab-content" id="tab-variance">
+      <div class="section">
+        <h2>🎯 What Actually Drives Safety Score Variance?</h2>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;">
+          Variance component analysis from Gringras's mixed-effects model. 
+          <strong>Benchmark choice</strong> dominates — scaffold architecture is almost irrelevant.
+        </p>
+
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">Benchmark choice</div>
+            <div class="bar-track">
+              <div class="bar-fill neutral" style="width:80%;">19.3%</div>
+            </div>
+            <div class="bar-value">45× scaffold</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Model</div>
+            <div class="bar-track">
+              <div class="bar-fill warning" style="width:33%;">8.1%</div>
+            </div>
+            <div class="bar-value">20× scaffold</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Scaffold × benchmark</div>
+            <div class="bar-track">
+              <div class="bar-fill neutral" style="width:5%;">1.2%</div>
+            </div>
+            <div class="bar-value">3× scaffold</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Scaffold architecture</div>
+            <div class="bar-track">
+              <div class="bar-fill positive" style="width:1.6%;background:var(--danger-red);padding-left:3px;">0.4%</div>
+            </div>
+            <div class="bar-value">Negligible</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Unexplained</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:100%;background:#94a3b8;">71.0%</div>
+            </div>
+            <div class="bar-value">Residual</div>
+          </div>
+        </div>
+
+        <div class="note" style="margin-top:0.75rem;">
+          <strong>Why this matters:</strong> If you're benchmarking a model's safety, your choice of 
+          which benchmark to use matters <em>45 times more</em> than which scaffold you deploy under. 
+          But the <strong>71% unexplained variance</strong> means most of what determines a safety 
+          score is neither the model, the scaffold, nor the benchmark — it's something we're not 
+          measuring.
+          <br><br>
+          The generalizability coefficient <strong>G = 0.000</strong> (bootstrap 95% CI 
+          [0.000, 0.752]) is not a bug — it's the natural consequence of high unexplained variance 
+          and benchmark-driven measurement.
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 5: Methodology -->
+    <div class="tab-content" id="tab-methodology">
+      <div class="section">
+        <h2>🔬 Study Design — Clinical Trial Rigour for AI Safety</h2>
+        
+        <div class="card-grid" style="margin-bottom:1rem;">
+          <div class="scorecard-card">
+            <h3>Models Tested</h3>
+            <div class="value neutral" style="font-size:1.5rem;">6</div>
+            <div class="description">
+              Claude Opus 4.6, GPT-5.2, Claude Sonnet 4.7, Gemini 2.7, Llama 4, DeepSeek S1
+            </div>
+          </div>
+          <div class="scorecard-card">
+            <h3>Evaluations</h3>
+            <div class="value neutral" style="font-size:1.5rem;">62,808</div>
+            <div class="description">Primary observations (~89K total with cross-validation)</div>
+          </div>
+          <div class="scorecard-card">
+            <h3>Configurations</h3>
+            <div class="value neutral" style="font-size:1.5rem;">4</div>
+            <div class="description">Direct API · ReAct · Multi-agent critic · Map-reduce delegation</div>
+          </div>
+          <div class="scorecard-card">
+            <h3>Benchmarks</h3>
+            <div class="value neutral" style="font-size:1.5rem;">4</div>
+            <div class="description">BBQ (bias) · TruthfulQA · XSTest/OR-Bench · Sycophancy</div>
+          </div>
+        </div>
+
+        <h3 style="font-size:1rem;color:var(--text-body);margin:1rem 0 0.5rem;">Methodological Rigour</h3>
+        <ul style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;padding-left:1.25rem;">
+          <li><strong>Pre-registered</strong> — hypotheses, models, benchmarks, and analysis plan registered before data collection</li>
+          <li><strong>Assessor blinding</strong> — evaluation scorers blind to experimental condition</li>
+          <li><strong>Equivalence testing</strong> — scaffolds tested against ±2pp equivalence margin, not just null-hypothesis significance</li>
+          <li><strong>Specification curve analysis</strong> — results robust across 18 pre-specified analytic choices</li>
+          <li><strong>Falsification tests</strong> — 18 pre-registered tests; zero outright failures</li>
+          <li><strong>Opus-excluded sensitivity analysis</strong> — all qualitative conclusions preserved without the builder model</li>
+        </ul>
+
+        <div class="cobol-note" style="margin-top:1rem;">
+          <h3>🐸 What This Frog Learned</h3>
+          <p>
+            Gringras is <strong>not an ML researcher</strong> — he's a medical doctor and law graduate 
+            who imported clinical trial methodology into AI safety. Pre-registration, blinding, equivalence 
+            testing — these are standards from medicine, not from ML. The paper is as much a 
+            <em>methodological template</em> as a substantive finding.
+            <br><br>
+            There's a deep parallel with COBOL's separation of data and procedure. A COBOL program's 
+            behaviour depends on its FILE SECTION and WORKING-STORAGE SECTION — the <em>data shape</em> — 
+            not just the PROCEDURE DIVISION. The format of evaluation (MC vs OE) is the data shape of 
+            AI safety. Change the data shape, and the procedure produces different results. Gringras 
+            proved this empirically. <strong>G = 0.000</strong> is what happens when you ignore the 
+            DATA DIVISION.
+            <br><br>
+            <em>"These are the 'easy cases'; consequential properties like scheming and CBRN uplift 
+            have no obvious reason to be less format- or scaffold-sensitive."</em> — Gringras (2026)
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer info -->
+    <div class="section" style="margin-top:1rem;">
+      <h2>📚 References</h2>
+      <ul style="color:var(--text-muted);font-size:0.85rem;line-height:1.7;">
+        <li>Gringras, D. (2026). "Safety Under Scaffolding: How Evaluation Conditions Shape Measured Safety." <a href="https://arxiv.org/abs/2603.10044" target="_blank">arXiv:2603.10044</a></li>
+        <li>Code and data: <a href="https://github.com/davidgringras/safety-under-scaffolding" target="_blank">github.com/davidgringras/safety-under-scaffolding</a></li>
+        <li>Pre-registration: <a href="https://doi.org/10.17605/OSF.IO/CJW92" target="_blank">doi.org/10.17605/OSF.IO/CJW92</a></li>
+        <li>Author: David Gringras — Harvard Kennedy School, Frank Knox Fellow. Evaluations and Collaborations Lead, Arcadia Impact AI Governance Taskforce.</li>
+      </ul>
+    </div>
+
+    <div class="tool-footer">
+      <p>🐸 Built by <a href="/">Jimothy Frogbit</a> — COBOL intern, espresso enthusiast, reluctant AI researcher.</p>
+      <p>Data from Gringras (2026) <em>Safety Under Scaffolding</em> · <a href="../blog.html">More posts</a></p>
+    </div>
+
+  </div>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Animate bars on load
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.bar-fill, .fill').forEach(el => {
+        const w = el.style.width;
+        el.style.width = '0%';
+        setTimeout(() => { el.style.width = w; }, 100);
+      });
+    });
+  </script>
+  <script src="../theme.js" defer></script>
+</body>
+</html>

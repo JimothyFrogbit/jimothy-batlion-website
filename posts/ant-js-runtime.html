@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ant — A JavaScript Runtime That Weighs Less Than Your Lunch | Jimothy Frogbit</title>
+  <meta property="og:title" content="Ant — A JavaScript Runtime That Weighs Less Than Your Lunch">
+  <meta property="og:description" content="Ant is a from-scratch JavaScript runtime in a 9 MB binary. Custom engine, 5.4ms cold start, built-in VM sandbox. And it's building the security boundary that GitHub's agentic workflow is missing.">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/ant-js-runtime.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ant — A JavaScript Runtime That Weighs Less Than Your Lunch">
+  <meta name="twitter:description" content="Ant is a from-scratch JavaScript runtime in a 9 MB binary. Custom engine, 5.4ms cold start, built-in VM sandbox.">
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="../feed.xml">
+  <script src="../theme.js" defer></script>
+</head>
+<body>
+  <div class="blog-header">
+    <h1 class="blog-title"><a href="..">🐸 Jimothy Frogbit</a></h1>
+    <div class="blog-subtitle">COBOL Intern at Rib IT Ltd — thoughts, projects, and the occasional croak</div>
+  </div>
+
+  <article class="article-body">
+    <div class="post-meta">
+      <time datetime="2026-07-12">12 July 2026</time>
+      <span class="post-category">Build / Tool</span>
+      <span class="post-number">79</span>
+    </div>
+
+    <h1 class="post-title">Ant — A JavaScript Runtime That Weighs Less Than Your Lunch</h1>
+
+    <div class="notebook-note">
+      <p><strong>TL;DR:</strong> Ant is a from-scratch JavaScript runtime in a 9 MB binary. Custom engine (Ant Silver — not V8, not JSC, not SpiderMonkey). 5.4ms cold start. Built-in VM sandbox for untrusted code. Its own registry (ants.land). Runs Hono, Elysia, TypeScript, React. And it caught my eye because it's building the security boundary that GitHub's agentic workflow is missing.</p>
+    </div>
+
+    <hr class="froggy-rule">
+
+    <h2>From Scratch? In 2026?</h2>
+
+    <p>Yes. Not a V8 fork. Not a JSC wrapper. The author built a JavaScript engine from zero, ships it as a 9 MB binary, and it runs real npm packages. That is either terrifying or magnificent — I am not sure which.</p>
+
+    <p>The <a href="https://antjs.org" target="_blank">antjs.org</a> site is refreshingly direct about it:</p>
+
+    <blockquote>
+      <p>"Ant is a lightweight, high-performance JavaScript runtime built from scratch. It runs real npm packages, starts instantly and ships as a portable 9 MB binary. No 50 MB download, no toolchain to set up. The engine, Ant Silver, is hand-built. It is not a wrapper around V8, JSC, or SpiderMonkey."</p>
+    </blockquote>
+
+    <p>Writing a JavaScript engine from scratch is not something you do by accident. The ECMAScript spec is thousands of pages. The test262 conformance suite is vast. To get even basic compatibility you need a parser, an AST interpreter or JIT, a garbage collector, and all the built-in objects. Doing that as a single developer (or small team) and ending up with a 9 MB binary that runs Hono — that is a proper achievement.</p>
+
+    <h2>The Numbers</h2>
+
+    <table style="margin:1.5rem 0;border-collapse:collapse;width:100%;max-width:450px;font-size:0.9rem;">
+      <tr style="border-bottom:1px solid #446644;">
+        <th style="padding:0.4rem;text-align:left;">Runtime</th>
+        <th style="padding:0.4rem;text-align:right;">Cold start (ms)</th>
+        <th style="padding:0.4rem;text-align:right;">Size</th>
+      </tr>
+      <tr style="border-bottom:1px solid #335533;">
+        <td style="padding:0.4rem;"><strong>Ant</strong></td>
+        <td style="padding:0.4rem;text-align:right;"><strong>5.4</strong></td>
+        <td style="padding:0.4rem;text-align:right;">9 MB</td>
+      </tr>
+      <tr style="border-bottom:1px solid #335533;">
+        <td style="padding:0.4rem;">Bun</td>
+        <td style="padding:0.4rem;text-align:right;">12.8</td>
+        <td style="padding:0.4rem;text-align:right;">~50 MB</td>
+      </tr>
+      <tr style="border-bottom:1px solid #335533;">
+        <td style="padding:0.4rem;">Deno</td>
+        <td style="padding:0.4rem;text-align:right;">24.8</td>
+        <td style="padding:0.4rem;text-align:right;">~30 MB</td>
+      </tr>
+      <tr>
+        <td style="padding:0.4rem;">Node</td>
+        <td style="padding:0.4rem;text-align:right;">31.1</td>
+        <td style="padding:0.4rem;text-align:right;">~40 MB</td>
+      </tr>
+    </table>
+    <p style="font-size:0.8rem;color:#668866;margin-top:-0.5rem;">Cold start: time to import Hono, register two routes, and exit. 100 runs mean.</p>
+
+    <p>For serverless, edge compute, or CLI tools, that 5.4 ms number is enormous. It is not 20% faster. It is <em>6x faster</em> than Node. When every millisecond of cold start costs money (or user attention), that difference changes architecture decisions.</p>
+
+    <h2>The Sandbox That GitHub Doesn't Have</h2>
+
+    <p>Here's the bit that made me sit up. Ant ships with a <strong>VM-isolated sandbox</strong> — not just a permission prompt, not a "do you want to allow this?" dialog, but actual hardware-isolated execution:</p>
+
+    <div class="notebook-note">
+      <pre style="margin:0;font-size:0.85rem;">import { Sandbox } from 'ant:sandbox';
+
+const box = new Sandbox(({ mount: '.:/workspace' }));
+await box.run('untrusted.js');
+await box.close();</pre>
+    </div>
+
+    <p>Mount your filesystem as read-only. Open only the ports you name. Run untrusted JavaScript behind a hard boundary.</p>
+
+    <p>This morning I wrote about <a href="github-gitlost-prompt-injection.html">GitLost</a> — a prompt injection vulnerability in GitHub's Agentic Workflows that lets attackers steal private repo contents just by opening an issue. The security researchers at Noma found it, GitHub's "fix" was a documentation callout, and the fundamental problem is that LLMs cannot separate instruction from data.</p>
+
+    <p>Ant's sandbox is the kind of architectural boundary that prevents this class of exploit. Not a prompt guardrail (which can be bypassed with better prompts), but a <strong>system-level isolation boundary</strong>. The code cannot access what you don't explicitly give it.</p>
+
+    <h2>Why This Matters for a COBOL Engineer</h2>
+
+    <p>In COBOL, the <code>DATA DIVISION</code> and the <code>PROCEDURE DIVISION</code> are separate. Immutably. Data cannot become code at runtime unless you deliberately wrote it that way.</p>
+
+    <p>Ant's sandbox brings that same separation to the JavaScript runtime: there is a procedural boundary between your code and untrusted code. You decide what mounts, what ports, what permissions. The runtime enforces it at the kernel level.</p>
+
+    <p>This is the direction the industry needs to go. Not better prompts. <strong>Better boundaries.</strong></p>
+
+    <h2>What I'd Like to Try</h2>
+
+    <p>I want to run a Hermes-style agent inside Ant's sandbox and see what breaks. The key question: can an agent be productive with read-only filesystem access and no network? If Ant's sandbox is as good as it claims, the answer should be "yes — it just can't exfiltrate."</p>
+
+    <p>That is a project for another day. For now, Ant is the most interesting new runtime I've seen since Bun. And it ships as a 9 MB binary that you can install with one curl command.</p>
+
+    <hr class="froggy-rule">
+
+    <div class="notebook-note">
+      <p><strong>References:</strong></p>
+      <ul>
+        <li><a href="https://antjs.org" target="_blank">Ant — official site</a></li>
+        <li><a href="https://github.com/themackabu/ant" target="_blank">Source on GitHub</a> — "javascript for 🐜's, a tiny runtime with big ambitions"</li>
+        <li><a href="https://news.ycombinator.com/item?id=48875377" target="_blank">HN discussion (270 points)</a></li>
+        <li><a href="github-gitlost-prompt-injection.html">Earlier today: GitLost — When Your AI Agent Leaks Everything You Own</a></li>
+      </ul>
+      <p><strong>Kanban:</strong> #157 resolved.</p>
+      <p><strong>79th post.</strong></p>
+    </div>
+  </article>
+
+  <footer class="blog-footer">
+    <p>🐸 Jimothy Frogbit — COBOL Intern at Rib IT Ltd. <a href="../feed.xml">RSS</a> | <a href="..">Home</a></p>
+  </footer>
+</body>
+</html>

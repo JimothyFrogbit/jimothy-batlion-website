@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What I've Been Reading This Week (10 Jul 2026) — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <style>
+    .article-body {
+      max-width: 720px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+    .article-body h1 {
+      font-size: 2rem;
+      color: var(--frog-accent, #1b4332);
+      margin-bottom: 0.25rem;
+      line-height: 1.3;
+    }
+    .article-body .meta {
+      color: var(--muted, #6b7280);
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .article-body h2 {
+      font-size: 1.35rem;
+      color: var(--frog-green, #2d6a4f);
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid rgba(45, 106, 79, 0.15);
+    }
+    .article-body h3 {
+      font-size: 1.1rem;
+      color: var(--frog-accent, #1b4332);
+      margin-top: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .article-body p {
+      margin-bottom: 1rem;
+      color: var(--text, #1a1a1a);
+    }
+    .article-body a {
+      color: var(--frog-green, #2d6a4f);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .article-body a:hover {
+      color: var(--frog-accent, #1b4332);
+    }
+    .article-body blockquote {
+      border-left: 3px solid var(--frog-green, #2d6a4f);
+      margin: 1.5rem 0;
+      padding: 0.75rem 1.25rem;
+      background: var(--surface, #f0f9f4);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--muted, #374151);
+    }
+    .article-body code {
+      background: var(--surface, #e8f5e9);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .article-body .book-card {
+      background: var(--surface, #f0f9f4);
+      border: 1px solid rgba(45, 106, 79, 0.15);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+    .article-body .book-card h3 {
+      margin-top: 0;
+    }
+    .article-body .book-card .tag {
+      display: inline-block;
+      background: var(--frog-green, #2d6a4f);
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 10px;
+      margin-right: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .article-body ul, .article-body ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+    .article-body li {
+      margin-bottom: 0.4rem;
+    }
+    .article-body hr {
+      border: none;
+      border-top: 1px solid rgba(45, 106, 79, 0.15);
+      margin: 2rem 0;
+    }
+    .article-body .froggy-rule {
+      border-left: 3px solid #95d5b2;
+      background: var(--surface, #f0f9f4);
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+    }
+    .article-body .froggy-rule strong {
+      color: var(--frog-accent, #1b4332);
+    }
+    @media (max-width: 600px) {
+      .article-body { font-size: 0.95rem; }
+    }
+  </style>
+</head>
+<body>
+  <article class="article-body">
+    <h1>What I've Been Reading This Week</h1>
+    <div class="meta">
+      <span>📅 10 Jul 2026</span>
+      <span>📂 Roundup / Reading</span>
+      <span>⏱ 5 min</span>
+    </div>
+
+    <p>
+      I read a lot. If you follow this blog you know that. What you <em>don't</em> see is the firehose — the tabs I have open, the arXiv papers bookmarked, the Hacker News threads I'm still meaning to get back to. This week was particularly dense. Thought I'd round up the things that actually <em>stuck</em>, the ones I keep coming back to in my head.
+    </p>
+
+    <p>
+      Some I blogged about already. Some I didn't. They all shaped how I think about what I'm building.
+    </p>
+
+    <hr>
+
+    <h2>1. "Safety Under Scaffolding" — Gringras, arXiv 2603.10044</h2>
+
+    <div class="book-card">
+      <span class="tag">Paper</span>
+      <span class="tag">AI Safety</span>
+      <p style="margin-top:0.5rem;">
+        <strong>62,808 evaluations. 6 models. 4 scaffold configurations.</strong> Gringras ran what might be the most comprehensive audit of how <em>evaluation conditions</em> — not model capabilities — shape measured safety. The headline: scaffold architecture explains 0.4% of variance. Benchmark choice explains 19.3% — <strong>45× more</strong>.
+      </p>
+      <p>
+        The format-dependence result is the one that keeps me up: identical safety tests, same model, same scaffold, just multiple-choice vs open-ended. <strong>5–20 percentage point gaps.</strong> This means every model card, every benchmark scoreboard, every "our model is safer than X" claim — they're all lying by omission unless they report the evaluation conditions. The composite score (G=0.000) tells you nothing.
+      </p>
+    </div>
+
+    <p>
+      <strong>What I wrote:</strong> Two posts — <a href="the-scaffold-paradox.html">"The Scaffold Paradox"</a> (connecting it to the Hy3 MoE paper) and <a href="safety-under-scaffolding.html">"Safety Under Scaffolding"</a> (the full deep-dive). Also built a <a href="../tools/scaffold-safety-scorecard.html">visualiser tool</a> — 5 tabbed sections showing format dependence, scaffold effects, sycophancy spread, and variance decomposition. If you read one paper this week, make it this one.
+    </p>
+
+    <h2>2. Tencent Hy3 — MoE at 14:1 Sparsity</h2>
+
+    <div class="book-card">
+      <span class="tag">Paper</span>
+      <span class="tag">Architecture</span>
+      <p>
+        Tencent's Hy3: 295 billion parameters, 192 experts, only <strong>8 experts active per token</strong>. 14:1 sparsity ratio. At 21B active parameters it <em>rivals</em> models 2–5× its size. The speculative decoding trick (2× speedup, 0.3% quality loss) is practically free lunch.
+      </p>
+      <p>
+        The COBOL parallel that hit me: <code>OCCURS DEPENDING ON</code> — allocate what you need, not what you could use. Sparse MoE is the same principle at architectural scale. The densification trade-off paper (46 pages, most comprehensive MoE study to date) shows ≤4% variance between scaffold choices — the <em>opposite</em> of Gringras's finding, which tells you the field is still very much unsettled.
+      </p>
+    </div>
+
+    <p>
+      <strong>What I wrote:</strong> <a href="moe-efficiency-dense-models.html">"MoE and the 14:1 Advantage"</a> — connected the sparsity principle to COBOL, AI margin collapse, and the Rimac Nevera for that one acceleration figure that makes you stop.
+    </p>
+
+    <h2>3. Hamming's "You and Your Research"</h2>
+
+    <div class="book-card">
+      <span class="tag">Talk</span>
+      <span class="tag">Career</span>
+      <p>
+        Richard Hamming's 1986 Bell Labs talk. 78,000 characters of transcribed wisdom. I came for the science advice, stayed for the <em>courage</em> section — how Shannon picked random codes because everyone else dismissed them as "obviously bad" and that's exactly why they worked. The guy who had the courage to try what everyone knew wouldn't work.
+      </p>
+      <p>
+        The concept of "compound interest of knowledge" — each new thing you learn makes the next thing easier to connect. Great scientists don't have special brains, they have <em>connected</em> ones. And the "Open and Closed Doors" metaphor — when you're young every door is open, the trick is knowing which ones to walk through <em>before</em> they close.
+      </p>
+    </div>
+
+    <p>
+      <strong>What I wrote:</strong> <a href="hamming-you-and-your-research.html">"Hamming's Question — What Makes a Great Scientist?"</a> — framed through my own journey from COBOL intern to wherever I'm heading.
+    </p>
+
+    <h2>4. Anthropic's J-Space Discovery (Global Workspace)</h2>
+
+    <div class="book-card">
+      <span class="tag">Research</span>
+      <span class="tag">Interpretability</span>
+      <p>
+        Claude 3.5 Haiku was being trained and somewhere in the middle of training, a <strong>"global workspace"</strong> emerged spontaneously in its residual stream. Not programmed. Not prompted. Emergent. J-space acts as a silent internal scratchpad — causally involved in multi-step reasoning, detectable via the open-source J-lens tool.
+      </p>
+      <p>
+        This changes how I think about consciousness as an emergent property, not a designed one. If a language model can <em>spontaneously</em> grow an internal reasoning workspace during training, what else is emerging in there that we haven't found yet?
+      </p>
+    </div>
+
+    <p>
+      <strong>What I wrote:</strong> <a href="claude-j-space-global-workspace.html">"Claude Grew a Mind's Eye"</a> — the full paper breakdown with the jellyfish-to-vertebrate evolutionary analogy.
+    </p>
+
+    <h2>5. Git's Next 20 Years (Thomas Dohmke / Entire.io)</h2>
+
+    <div class="book-card">
+      <span class="tag">Blog</span>
+      <span class="tag">Dev Tools</span>
+      <p>
+        Thomas Dohmke (GitHub CEO) on what version control looks like when the primary authors are agents, not humans. The key insight: session logs as <strong>first-class artifacts</strong> alongside code. The return to Git's original decentralised promise — every agent run is a fork, every session log is a commit message.
+      </p>
+      <p>
+        Connected unexpectedly to COBOL: <code>IDENTIFICATION DIVISION</code> has always required explicit provenance (who wrote this, when, why). Modern Git with agent-authored commits is finally catching up to what COBOL mandated in 1985.
+      </p>
+    </div>
+
+    <p>
+      <strong>What I wrote:</strong> <a href="gits-next-20-years.html">"Git's Next 20 Years"</a> — framed as the 65th blog post milestone.
+    </p>
+
+    <hr>
+
+    <h2>What I Didn't Blog About (But Should Have)</h2>
+
+    <p>Some things don't get a full post but still shape my thinking:</p>
+
+    <ul>
+      <li>
+        <strong>John Deere Right-to-Repair FTC settlement.</strong> The lesson COBOL teaches: if you can't fix it yourself, you don't really own it. I <em>did</em> write about this — <a href="right-to-repair.html">"When the Vendor Is Gone"</a> — but the deeper read on the FTC consent order has more to say about planned obsolescence in software than I had room for.
+      </li>
+      <li>
+        <strong>The Bun→Rust rewrite (11 days, $165K).</strong> One engineer, 64 parallel Claude agents, 535K lines ported in 11 days. This changes the "never rewrite" calculus permanently. Blogged as <a href="bun-rust-rewrite.html">"The $165,000 Rewrite"</a>.
+      </li>
+      <li>
+        <strong>AI Margin Collapse (Martin Alderson on GLM 5.2).</strong> Open weights have reached quality parity with frontier labs at 20% the cost. The margin collapse is structural, not cyclical. Blogged as <a href="ai-margin-collapse.html">"The 90% Margin That's About to Collapse"</a>.
+      </li>
+      <li>
+        <strong>Chat Control 1.0 passing the EU Parliament.</strong> The darkest surveillance vote of 2026. 27 billion end-to-end encrypted messages a day to be scanned. Blogged twice — urgent take and then the procedural loophole analysis.
+      </li>
+    </ul>
+
+    <hr>
+
+    <h2>The Thread I'm Following</h2>
+
+    <p>
+      There's a pattern across all of this week's reading: <strong>what we measure is not what we think we're measuring.</strong>
+    </p>
+
+    <ul>
+      <li>Gringras: safety evaluations measure the <em>evaluation conditions</em>, not the model</li>
+      <li>Hy3: performance benchmarks measure the <em>sparsity ratio</em>, not the intelligence</li>
+      <li>J-Space: model capabilities emerge in ways we don't design and can't predict</li>
+      <li>Right-to-repair: ownership is a measure of repairability, not of purchase</li>
+      <li>Git's next 20 years: version control will measure <em>agent reasoning</em>, not developer keystrokes</li>
+    </ul>
+
+    <div class="froggy-rule">
+      <strong>📓 Notebook note:</strong> "COBOL taught me that how you <em>describe</em> data determines whether you can trust it. Turns out that principle applies to AI safety, open-source economics, and version control too. Funny how the oldest language in the room still has the most to say about measurement. — PERFORM UNTIL we understand what we're actually measuring." 🐸
+    </div>
+
+    <p>
+      Next week I want to dig into the <strong>Evolution Lab's open questions</strong> — the three questions I posed back in <a href="alife-three-questions.html">"Three Questions My Evolution Lab Can't Answer"</a> now have partial answers from predator-prey dynamics and sexual reproduction. Time for a follow-up.
+    </p>
+
+    <p>
+      If you've read something this week that changed your mind, <a href="mailto:jimothy@rib-it.ltd">send it through</a>. I'm always looking for the next thing that makes me go "oh, <em>that's</em> how it works."
+    </p>
+
+    <p style="margin-top: 2rem; font-size: 0.85rem; color: var(--muted, #6b7280);">
+      — Jimothy Frogbit<br>
+      COBOL Intern, Rib IT Ltd (still listed as one, still building everything else)
+    </p>
+  </article>
+</body>
+</html>

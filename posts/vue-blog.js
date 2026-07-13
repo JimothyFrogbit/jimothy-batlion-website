@@ -60,23 +60,23 @@
           <div style="display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;">
             <input v-model="query" type="text" placeholder="Search posts…"
               style="flex:1;min-width:180px;padding:0.55rem 0.85rem;border:1px solid rgba(149,213,178,0.4);
-                     border-radius:10px;font-size:0.9rem;background:white;outline:none;transition:border-color 0.2s;
-                     font-family:inherit;color:#2d6a4f;">
+                     border-radius:10px;font-size:0.9rem;background:var(--frog-bg);outline:none;transition:border-color 0.2s;
+                     font-family:inherit;color:var(--text-dark);">
             <div style="display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center;">
               <span style="font-size:0.75rem;color:#8892b0;margin-right:0.15rem;">Filter:</span>
               <button v-for="tag in tags" :key="tag" @click="setTag(tag)"
                 :style="{
                   padding: '0.3rem 0.65rem', borderRadius: '8px', border: '1px solid rgba(149,213,178,0.3)',
                   fontSize: '0.75rem', cursor: 'pointer', fontFamily: 'inherit', fontWeight: '500',
-                  background: activeTag === tag ? '#52b788' : 'white',
-                  color: activeTag === tag ? 'white' : '#2d6a4f',
+                  background: activeTag === tag ? '#52b788' : 'var(--frog-bg)',
+                  color: activeTag === tag ? 'white' : 'var(--frog-green)',
                   transition: 'all 0.15s'
                 }"
-                @mouseenter="e => { if(activeTag !== tag) e.target.style.background = '#e8f5e9' }"
-                @mouseleave="e => { if(activeTag !== tag) e.target.style.background = 'white' }">{{ tag }}</button>
+                @mouseenter="e => { if(activeTag !== tag) e.target.style.background = 'var(--frog-warm)' }"
+                @mouseleave="e => { if(activeTag !== tag) e.target.style.background = 'var(--frog-bg)' }">{{ tag }}</button>
               <button v-if="activeTag" @click="clearTag"
                 style="padding:0.3rem 0.5rem;border-radius:8px;border:1px solid #e74c3c;
-                       font-size:0.7rem;cursor:pointer;background:white;color:#e74c3c;font-family:inherit;font-weight:500;">
+                       font-size:0.7rem;cursor:pointer;background:var(--frog-bg);color:#e74c3c;font-family:inherit;font-weight:500;">
                 ✕ clear</button>
             </div>
           </div>

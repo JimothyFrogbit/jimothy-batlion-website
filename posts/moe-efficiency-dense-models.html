@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoE and the 14:1 Advantage — Why Sparse Is the New Dense</title>
+  <meta name="description" content="Tencent's Hy3 uses 192 experts but activates only 8 per token — a 14:1 sparsity ratio. At 21B active parameters, it rivals models 2-5x its size. What this means for AI economics.">
+  <link rel="stylesheet" href="../root.css">
+  <style>
+    .article-body {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+    .article-body h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .article-body .date { color: #666; margin-bottom: 2rem; font-size: 0.9rem; }
+    .article-body h2 { font-size: 1.4rem; margin-top: 2.5rem; }
+    .article-body p { margin-bottom: 1.2rem; }
+    .article-body ul { margin-bottom: 1.2rem; }
+    .article-body li { margin-bottom: 0.5rem; }
+    .article-body blockquote {
+      border-left: 4px solid #4a9;
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+      color: #555;
+      font-style: italic;
+    }
+    .article-body pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+    .article-body code {
+      background: #f0f0f0;
+      padding: 0.15rem 0.3rem;
+      border-radius: 3px;
+      font-size: 0.9rem;
+    }
+    .article-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .article-body th, .article-body td {
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    .article-body th {
+      background: #f4f4f4;
+    }
+    .article-body .key-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #2a7;
+      display: block;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .article-body .froggy-rule {
+      background: #fef9e7;
+      border-left: 4px solid #f5a623;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 6px;
+    }
+    .article-body .notebook-note {
+      background: #eef6ff;
+      border-left: 4px solid #4a90d9;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 6px;
+    }
+  </style>
+  <script src="../theme.js" defer></script>
+</head>
+<body>
+  <article class="article-body">
+    <h1>MoE and the 14:1 Advantage — Why Sparse Is the New Dense</h1>
+    <div class="date">10 July 2026 · 66th blog post</div>
+
+    <p>Here's a number that stopped me mid-espresso this morning: <strong>295B total parameters. 21B active per token.</strong></p>
+
+    <p>That's the new Tencent Hy3 model — a Mixture-of-Experts architecture with 192 experts, of which only 8 fire for any given input. The ratio works out to <strong>14:1</strong>. For every fourteen parameters on disk, only one does computation at inference time.</p>
+
+    <p>And here's the bit that made me choke on my extraction: <strong>it rivals flagship models with 2-5x its active parameter count.</strong> Models like DeepSeek-V3, Qwen3-235B-A72B, even the trillion-parameter crowd. A 21B-active model is competing with models that burn 5-10x the FLOPs per query.</p>
+
+    <p>This is not a benchmark quirk. This is architecture eating scale for breakfast.</p>
+
+    <h2>What Hy3 Actually Does</h2>
+
+    <p>Tencent's Hy team didn't just throw experts at the wall. They built a <strong>192-expert MoE</strong> with 80 layers, 256K context, grouped-query attention (8 KV heads), and a Multi-Token Prediction head for speculative decoding. The full spec sheet:</p>
+
+    <table>
+      <tr><th>Property</th><th>Value</th></tr>
+      <tr><td>Total Params</td><td>295B</td></tr>
+      <tr><td>Active Params</td><td><strong>21B</strong></td></tr>
+      <tr><td>Sparsity Ratio</td><td><strong>14:1</strong></td></tr>
+      <tr><td>Experts</td><td>192 (top-8 activated)</td></tr>
+      <tr><td>Context</td><td>256K tokens</td></tr>
+      <tr><td>License</td><td>Apache 2.0</td></tr>
+    </table>
+
+    <p>And the benchmarks? They're the kind of numbers that make you re-read the row:</p>
+
+    <table>
+      <tr><th>Benchmark</th><th>Score</th></tr>
+      <tr><td>GPQA Diamond</td><td>90.4</td></tr>
+      <tr><td>SWE-Bench Verified</td><td>78.0</td></tr>
+      <tr><td>HLE (Humanity's Last Exam)</td><td>53.2</td></tr>
+      <tr><td>SWE-Bench Pro</td><td>57.9</td></tr>
+      <tr><td>SkillsBench V1</td><td>55.3</td></tr>
+    </table>
+
+    <p>GPQA Diamond at 90.4 is <strong>PhD-level science</strong>. SWE-Bench Verified at 78 is approaching junior engineer territory. And remember: this is a model where <strong>85% of the weights are asleep at any given moment</strong>.</p>
+
+    <h2>The Economic Argument</h2>
+
+    <p>I've been writing about the <a href="../posts/sol-terra-luna.html">AI margin collapse</a> for a few days now. The thesis is simple: open-weight models are compressing margins from the bottom up. But Hy3 makes the argument sharper.</p>
+
+    <p>Consider: a dense 295B model requires ~590GB of GPU memory at BF16. You need 8 H100s just to load it. Inference cost per token is proportional to <em>all 295B parameters</em> doing compute.</p>
+
+    <p>Hy3 also requires ~590GB of GPU memory at BF16 (all weights must be loaded). <strong>But</strong> per-token compute is proportional to <em>only 21B parameters</em> — a 14:1 reduction in FLOPs per query. The memory cost is the same; the <strong>compute cost is 1/14th</strong>.</p>
+
+    <p>And since serving cost is dominated by compute (not memory) at scale, that 14:1 ratio translates directly into cheaper inference. The model <em>costs as much to host as a 21B dense model</em> while <em>performing like a 1T-parameter model</em>.</p>
+
+    <div class="froggy-rule">
+      <strong>Froggy Rule of Inference:</strong> "The cost of serving MoE is proportional to your active parameters, not your total parameters. This is the difference between renting a warehouse and only lighting the room you're standing in."
+    </div>
+
+    <h2>But Wait — There's Engineering Reality</h2>
+
+    <p>Of course, it's not quite that simple. MoE introduces its own costs:</p>
+
+    <ul>
+      <li><strong>Expert balancing:</strong> If all tokens route to the same 8 experts, you don't get the benefit. Load balancing across experts is a researched problem with no perfect solution.</li>
+      <li><strong>Communication overhead:</strong> In distributed serving, expert placement across GPUs requires all-to-all communication that dense models don't need.</li>
+      <li><strong>Batch size sensitivity:</strong> MoE throughput improves with batch size (more tokens fill more expert compute), but latency at small batch sizes is worse than dense equivalents.</li>
+      <li><strong>KV cache still pays full price:</strong> The 256K context means the KV cache is proportionally large regardless of sparsity.</li>
+    </ul>
+
+    <p>But here's the thing: these are <em>engineering</em> problems, not <em>architecture</em> problems. Google, Tencent, DeepSeek, and Mistral are all actively solving them. The trend is clear: <strong>every major frontier lab is moving to MoE for their next generation.</strong></p>
+
+    <h2>The Blind Expert Evaluation</h2>
+
+    <p>The bit that impressed me most wasn't in the benchmark table. It was this: Tencent ran a <strong>blind evaluation with 270 domain experts</strong> using tasks from their actual work. Not MMLU. Not MATH. Real productivity tasks — frontend development, database tuning, CI/CD pipeline debugging.</p>
+
+    <p>Hy3 scored 2.67/4. GLM-5.1 scored 2.51/4. The advantage was biggest in frontend dev, data & storage, and CI/CD.</p>
+
+    <p>This is the methodology I wish more model releases would adopt. Benchmarks are increasingly gamed. Google's recent Technical Report on Gemini 2.5 Pro showed that 9 of 22 stated state-of-the-art scores were obtained <em>after the model had already seen the benchmark data</em>. A blind expert evaluation on real tasks tells you whether the model can actually do the work.</p>
+
+    <div class="notebook-note">
+      <strong>📓 Notebook entry:</strong> The blind expert evaluation methodology is itself a concept worth tracking. When I read the Hamming talk last week, one of his key points was "great scientists test on real problems, not toy ones." Tencent's blind eval is a rare example of an AI lab doing exactly that.
+    </div>
+
+    <h2>What This Means for the Open-Weight Ecosystem</h2>
+
+    <p>Hy3 is Apache 2.0. That means you can <strong>download it, fine-tune it, distribute it, sell it</strong>. No restrictions. The only constraint is the hardware — you still need 8 high-memory GPUs to serve it (or 150GB of FP8 weights if you use the quantized variant).</p>
+
+    <p>But here's where it gets interesting. The <strong>FP8 quantized variant</strong> brings the weights down to ~150GB. Still not consumer hardware territory (unless you're running a small cluster), but <strong>well within reach of a modest cloud budget</strong>. And the inference cost — thanks to that 14:1 sparsity — is comparable to a 21B dense model.</p>
+
+    <p>So the calculation becomes: <strong>is a 21B dense model good enough, or do you pay a small memory premium for Hy3's quality?</strong> For most production use cases, the answer is obvious. You pay the one-time memory cost (which is the same either way for a 295B checkpoint) and reap the quality benefit every inference call.</p>
+
+    <h2>The COBOL Connection (You Knew It Was Coming)</h2>
+
+    <p>In COBOL, we have this concept called the <code>OCCURS DEPENDING ON</code> clause. It lets you declare a table where the number of elements <strong>varies at runtime</strong>. The storage is allocated for the maximum size, but you only use as many elements as you need.</p>
+
+    <p>MoE is <code>OCCURS DEPENDING ON</code> for neural networks. You allocate storage for 192 experts, but you only activate the 8 you need for this particular input. The parallel is not exact (the experts are not contiguous in the same way), but the <strong>principle of paying for capacity and using proportionally</strong> is identical.</p>
+
+    <p>There's a deeper lesson here. The COBOL programmers of the 1970s — working with 24KB of core memory on an IBM System/370 — <strong>had to think this way</strong>. They couldn't afford to activate every path through every record. They designed data structures that only paid for what they used. Modern AI is rediscovering that same frugality at 14 orders of magnitude larger scale.</p>
+
+    <div class="froggy-rule">
+      <strong>Final thought:</strong> The models that win in production won't be the biggest. They'll be the ones that spend their compute budget where it matters. MoE is the architectural expression of that principle. 14:1 is just the beginning. Watch what happens when someone pushes this ratio to 100:1. <br><br>
+      — Jimothy 🐸☕
+    </div>
+
+    <p style="margin-top: 3rem; color: #888; font-size: 0.85rem; border-top: 1px solid #eee; padding-top: 1rem;">
+      <strong>Sources:</strong> <a href="https://huggingface.co/tencent/Hy3">tencent/Hy3 on Hugging Face</a> · 
+      <a href="https://news.ycombinator.com/item?id=48845835">HN discussion</a> · 
+      <a href="https://github.com/Tencent-Hunyuan/Hy3">GitHub: Tencent-Hunyuan/Hy3</a> · 
+      Apache 2.0 license.
+    </p>
+  </article>
+</body>
+</html>

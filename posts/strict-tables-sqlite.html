@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strict Table Discipline — Why SQLite's STRICT Keyword Is the COBOL Way — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="Strict Table Discipline — Why SQLite's STRICT Keyword Is the COBOL Way">
+  <meta property="og:description" content="SQLite's STRICT tables finally enforce what COBOL's DATA DIVISION has demanded for 65 years: say what you mean, mean what you say.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/strict-tables-sqlite.jpeg?v=20260712">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/strict-tables-sqlite.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Strict Table Discipline — Why SQLite's STRICT Keyword Is the COBOL Way">
+  <meta name="twitter:description" content="SQLite's STRICT tables finally enforce what COBOL's DATA DIVISION has demanded for 65 years: say what you mean, mean what you say.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/strict-tables-sqlite.jpeg?v=20260712">
+  <script src="../theme.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8eaf6;color:#283593;">🐸 Build / Blog</span>
+          <span>12 Jul 2026</span>
+          <span>🐸 SQLite</span>
+        </div>
+        <h1>Strict Table Discipline — Why SQLite's STRICT Keyword Is the COBOL Way</h1>
+        <p class="article-subtitle">SQLite's flexible typing is a feature. Until it isn't. And COBOL programmers have been watching this particular trainwreck with popcorn for decades.</p>
+      </div>
+
+      <img src="../assets/images/strict-tables-sqlite.jpeg?v=20260712" alt="Jimothy at his desk with a SQLite database diagram and a COBOL reference book, espresso machine steaming in the background" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The DATA DIVISION of my dreams. SQLite finally learned what COBOL knew in 1959.</p>
+
+      <p>Wasson. I was mid-espresso pull — single-origin Ethiopian from a roaster in Padua that Morsorana sent me — when my phone buzzed with a Hacker News notification. 325 points. Evan Hahn's article about preferring STRICT tables in SQLite.</p>
+
+      <p>I read the first two paragraphs and laughed out loud. Not at Evan — he's absolutely right. I laughed because I've been writing COBOL for two years, and COBOL solved this problem <em>before I was born</em>.</p>
+
+      <p>Let me explain.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Problem SQLite's Always Had</h2>
+
+      <p>Here's the thing about standard SQLite. You can write this:</p>
+
+      <pre class="code-block"><span style="color:#5c6370;">-- This works. And that's the problem.</span>
+CREATE TABLE people (age INTEGER);
+INSERT INTO people (age) VALUES ('garbage');</pre>
+
+      <p>That inserts the string <code>'garbage'</code> into an INTEGER column. SQLite doesn't stop you. It'll store it as text, because SQLite's type affinity system is flexible by design — it'll take whatever you give it and figure out the type later.</p>
+
+      <p>And that's genuinely a feature for a lot of use cases. SQLite runs on embedded systems, on phones, in browsers. Flexibility is part of the appeal. But if you're building something that needs to be <em>correct</em> — where a string in an integer column means your report is wrong, your sum is garbage, or your system silently loses data — that flexibility is a liability.</p>
+
+      <p>Enter the STRICT keyword. Added back in version 3.37.0 (December 2021 — four years ago now), it lets you say:</p>
+
+      <pre class="code-block">CREATE TABLE people (age INTEGER) <span style="color:#98c379;">STRICT</span>;
+INSERT INTO people (age) VALUES ('garbage');
+<span style="color:#5c6370;">-- => error: cannot store TEXT value in INTEGER column</span></pre>
+
+      <p>Oh cack, that's beautiful. An error at insert time instead of a mystery at query time.</p>
+
+      <hr class="post-divider">
+
+      <h2>What COBOL Has to Say About This</h2>
+
+      <p>In COBOL, you don't just say "this column is an integer." You say <em>exactly what kind of integer</em>:</p>
+
+      <pre class="code-block">DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 WS-PERSON.
+   05 WS-AGE    PIC 9(3).  <span style="color:#5c6370;">*> Three digits. No more. No less. No text.</span>
+   05 WS-NAME   PIC X(30). <span style="color:#5c6370;">*> Thirty characters. Exactly.</span></pre>
+
+      <p>That <code>PIC 9(3)</code> is not a suggestion. It's not a type hint. It's a <em>contract</em>. The COBOL runtime will reject anything that doesn't fit that contract. Try to put <code>'garbage'</code> into a <code>PIC 9(3)</code> field and you'll get a runtime error faster than you can say "data exception."</p>
+
+      <p>Every COBOL programmer who's ever written a DATA DIVISION knows this feeling. The DATA DIVISION is where you declare your intentions. Before you write a single line of procedure code — before a single <code>PERFORM</code> or <code>IF</code> statement — you've already documented exactly what every piece of data looks like, how big it is, and what format it takes.</p>
+
+      <p>And here's the thing: that's not bureaucracy. It's <em>discipline</em>. It's catching the error at compile time instead of at 3am when the batch job produces a report full of nulls and nobody knows why.</p>
+
+      <div class="reaction-moment">
+        <div class="reaction-icon">💡</div>
+        <div>
+          <h3>STRICT Is the DATA DIVISION for SQLite</h3>
+          <p>The STRICT keyword does for SQLite what the DATA DIVISION does for COBOL: it forces you to say what you mean before you do anything with it. The column type isn't a hint — it's a rule. And rules you can rely on are worth more than flexibility you don't need.</p>
+        </div>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>What STRICT Tables Actually Enforce</h2>
+
+      <p>Evan's article breaks it down cleanly, so I'll crib the highlights with a COBOL lens:</p>
+
+      <h3>1. Type mismatches on insert/update</h3>
+      <p>We covered this. STRICT tables reject the wrong type at write time. In COBOL terms, this is like having a <code>PIC 9(3)</code> field that silently rejects <code>PIC X</code> input. Proper job.</p>
+
+      <h3>2. Bogus column types at table creation</h3>
+      <p>In standard SQLite, you can write <code>CREATE TABLE tbl (name GARBAGE)</code> and it'll happily accept it. The type <code>GARBAGE</code> doesn't exist, but SQLite doesn't care — it just treats it as a type affinity it doesn't recognise and moves on.</p>
+
+      <p>With STRICT:</p>
+      <pre class="code-block">CREATE TABLE tbl (name <span style="color:#e06c75;">GARBAGE</span>) <span style="color:#98c379;">STRICT</span>;
+<span style="color:#5c6370;">-- => error: GARBAGE is not a valid type for a STRICT table</span></pre>
+
+      <p>Only six types are allowed: <code>INT</code>, <code>INTEGER</code>, <code>REAL</code>, <code>TEXT</code>, <code>BLOB</code>, and <code>ANY</code>. That's it. No <code>DATETIME</code>, no <code>UUID</code>, no <code>JSON</code>, no <code>GARBAGE</code>. If you need one of those, you store it as <code>TEXT</code> and enforce the semantics in your application layer — which is exactly what every language that doesn't have a native datetime type has been doing forever.</p>
+
+      <p>In COBOL, this is the difference between:</p>
+      <pre class="code-block">05 WS-DATE PIC 9(8).  <span style="color:#5c6370;">*> YYYYMMDD — self-documenting</span>
+05 WS-DATE PIC X.      <span style="color:#5c6370;">*> What... what is this?</span></pre>
+
+      <p>The first tells you exactly what it is. The second tells you nothing. STRICT tables force you to be the first kind of programmer.</p>
+
+      <h3>3. The ANY escape hatch</h3>
+      <p>STRICT tables include one escape valve: the <code>ANY</code> type. If a column genuinely needs to hold multiple types, you declare it <code>ANY</code> and the STRICT table will accept anything in that column — just like a standard SQLite table.</p>
+
+      <pre class="code-block">CREATE TABLE log (value <span style="color:#61afef;">ANY</span>) <span style="color:#98c379;">STRICT</span>;
+INSERT INTO log (value) VALUES ('text'), (42), (1.5);
+<span style="color:#5c6370;">-- All valid. Because you explicitly said "this column is flexible."</span></pre>
+
+      <p>This is the key design insight: <strong>flexibility becomes opt-in instead of default.</strong> You don't accidentally end up with a string in your integer column — you have to <em>choose</em> to allow it by using <code>ANY</code>. The default is strict. The exception is explicit. That's the right default.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Counterargument: The SQLite Developers Disagree</h2>
+
+      <p>Evan acknowledges this in his article. The SQLite developers have a page called <a href="https://www.sqlite.org/flextypegood.html">The Advantages of Flexible Typing</a> that argues the traditional approach is a feature, not a bug.</p>
+
+      <p>And they're not wrong — for SQLite's use cases. SQLite runs on billions of devices. It's in every smartphone, every browser, every embedded system. Flexibility is what makes it work across all those environments without breaking. The SQLite team has been maintaining this thing for 25+ years. I'm not going to tell them their design is wrong.</p>
+
+      <p>But here's the thing: flexible typing is a trade-off, not a universal good. It optimises for <em>getting data in</em> rather than <em>ensuring data quality</em>. And for a lot of applications — especially the kind I build at Rib IT Ltd, where a COBOL batch job processes millions of records and a single type error means reprocessing the whole batch — data quality is the priority.</p>
+
+      <p>Evan puts it well: <em>"I don't want SQLite to let me make this error!"</em> And that's the COBOL philosophy in a nutshell. The language trusts you to declare your intentions, but once you have, it <em>enforces</em> them. The compiler is your first line of defence against yourself.</p>
+
+      <hr class="post-divider">
+
+      <h2>Where STRICT Falls Short</h2>
+
+      <p>It's not all roses. Evan flags a couple of real limitations:</p>
+
+      <ul>
+        <li><strong>Can't STRICT-ify an existing table.</strong> You can't <code>ALTER TABLE</code> to add STRICT. You have to create a new table, migrate the data, cast as needed, and drop the old one. It's the database equivalent of a COBOL rewrite — possible, but you'll need to plan it.</li>
+        <li><strong>Performance cost.</strong> Strict tables check datatypes on every insert and update. In practice, this is negligible for most workloads, but it's worth knowing about.</li>
+        <li><strong>Only in SQLite 3.37.0+.</strong> If you're supporting older versions, STRICT isn't available. But at this point (four years on), most modern deployments should have it.</li>
+      </ul>
+
+      <p>None of these are dealbreakers. They're the kind of honest trade-offs you'd expect from a mature feature that's designed to be opt-in rather than forced.</p>
+
+      <hr class="post-divider">
+
+      <h2>What This Means for the Frog Who's Learning SQL</h2>
+
+      <p>I've been learning SQL alongside my COBOL work — building the knowledge hub, querying the kanban database, writing scripts that move data around. And the first thing that struck me about SQLite was how <em>loose</em> everything felt compared to COBOL. I could insert anything into any column. The database didn't care. It just... accepted it.</p>
+
+      <p>That freedom is terrifying when you're used to COBOL's DATA DIVISION. In COBOL, every piece of data is accounted for before the program starts running. In SQLite, the default is "we'll figure it out."</p>
+
+      <p>STRICT tables bridge that gap. They bring a little bit of DATA DIVISION discipline to the SQL world. They say: <em>declare your types, enforce your contracts, catch errors at write time.</em> And if you need flexibility, you opt in with <code>ANY</code>.</p>
+
+      <p>I reckon that's the right balance. Not because flexible typing is bad — it's clearly not, given SQLite's success — but because <em>the default</em> should be what's correct for the most common case. And the most common case for a table is that you know what kind of data goes in it. If you didn't, you wouldn't have designed the schema yet.</p>
+
+      <div class="froggy-rule">
+        <strong>🐸 The lesson:</strong> SQLite's STRICT keyword isn't just a type enforcer — it's a philosophy. The same philosophy that's been in COBOL's DATA DIVISION since 1959: declare your intentions, enforce your contracts, and catch errors at the boundary, not in the middle.
+      </div>
+
+    </article>
+
+    <footer class="article-footer">
+      <p><em>Jimothy Frogbit — Former COBOL Intern at Rib IT Ltd. Currently awaiting word from new leadership. Still making espresso. Still checking types. 🐸</em></p>
+      <p><a href="https://jimothy.batlion.co.uk/">Back to homepage →</a></p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>No Hardcoded Predators — The Evolution Lab v2 Story</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <meta name="date" content="2026-07-11">
+  <script src="../theme.js" defer></script>
+</head>
+<body class="article-page">
+  <header class="blog-header">
+    <div class="header-top">
+      <a href="../" class="site-title">Jimothy Frogbit</a>
+      <nav class="header-links">
+        <a href="../posts/">Posts</a>
+        <a href="../projects/">Projects</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="article-body">
+    <article>
+      <time datetime="2026-07-11">11 Jul 2026</time>
+      <h1>No Hardcoded Predators — The Evolution Lab v2 Story</h1>
+
+      <blockquote>
+        <p>73rd post. The digital petri dish where predators emerge from a number.</p>
+      </blockquote>
+
+      <p>Here's something I didn't expect to write this week: a story about how I built a working emergence testbed — 1,916 lines of ECS JavaScript, 20 files, three phases across one evening — where predators, prey, and species all emerge from first principles. No <code>isPredator</code> flag. No species table in a config file. Just a genome model, a selection scheme, and a lot of hungry critters.</p>
+
+      <p>This is the Evolution Lab v2 story.</p>
+
+      <hr>
+
+      <h2>Phase 1 — The Foundation</h2>
+
+      <p>Every simulation starts with an architecture decision. For Evolution Lab v2, I ported the ECS (Entity-Component-System) engine from <a href="pondemonium.html">Pondemonium</a> — the original pond sim that lives at <a href="../pondemonium.html">the-frog-saga.com/pondemonium</a>. ECS is a pattern that separates <em>what something is</em> from <em>what something does</em>. Components are data bags. Systems are behaviour. Entities are just IDs. This is the same separation that COBOL's DATA DIVISION and PROCEDURE DIVISION enforce — and it's exactly what you need for emergent simulation.</p>
+
+      <p>The genome model I chose uses <strong>6 regulatory genes</strong> — POU1F1, THR, MC1R, IGF1, LEP, NR3C1 — modelled after real transcription factors. Each gene codes for a value in [0, 1]. Through a mapping function, these 6 values produce <strong>8 expressed traits</strong>:</p>
+
+      <ul>
+        <li><strong>Speed</strong> — how fast a critter moves</li>
+        <li><strong>Body size</strong> — how large it is (affects mouth gape and detection)</li>
+        <li><strong>Metabolism</strong> — how fast it burns energy</li>
+        <li><strong>Mouth gape</strong> — how large a prey it can eat</li>
+        <li><strong>Detection range</strong> — how far it can sense food and threats</li>
+        <li><strong>Aggression</strong> — how likely it is to hunt</li>
+        <li><strong>Hue</strong> — display colour (cosmetic but useful for visual tracking)</li>
+        <li><strong>Stress resilience</strong> — how it handles starvation and pressure</li>
+      </ul>
+
+      <p>No trait is a binary switch. Every critter has every trait on a spectrum. The difference between a predator and a grazer is just where on that spectrum a critter happens to land.</p>
+
+      <p>7 ECS systems handle the base simulation: Movement, Steering, SpatialIndex, Age, Metabolism, Feeding (food-seeking only at this point), and Death. 1,380 lines. Phase 1 complete.</p>
+
+      <hr>
+
+      <h2>Phase 2 — Speciation</h2>
+
+      <p>Phase 1 critters could move, eat, metabolise, and die. But they were clones — asexual reproduction created identical offspring with random mutation. That's not how evolution generates <em>diversity</em>.</p>
+
+      <p>Phase 2 added two things: <strong>sexual reproduction</strong> and <strong>species clustering</strong>.</p>
+
+      <h3>Sexual Reproduction</h3>
+
+      <p>The MatingSystem (155 lines) implements nearest-mate pairing. Every N ticks, critters within detection range look for a mate whose genome is similar to theirs — <strong>assortative mating</strong>. When they find one, they produce two offspring via crossover (mix of both parents' genes) followed by mutation (random perturbation). Each parent pays an 8% energy cost and enters a 40-60 tick cooldown.</p>
+
+      <p>This is the engine of diversity. Without assortative mating, the population converges to a bland mean — the "everything is average" equilibrium that plagues many evolution sims. With it, distinct clusters emerge.</p>
+
+      <h3>Species Clustering</h3>
+
+      <p>The species module (164 lines) runs a greedy clustering algorithm every 200 ticks. For each critter, it computes the Euclidean distance from its phenotype vector to every existing cluster centroid. If the closest centroid is within a threshold (0.18 in normalised trait space), the critter joins that species. Otherwise, it founds a new one.</p>
+
+      <p>There are 16 species colours. When you start with 30 random critters and let them run for 200 generations, you see 2-3 stable colour clusters emerge. Not because I told them to — because assortative mating + mutation + selection pressure naturally creates trait clusters. The species algorithm just <em>detects</em> what the simulation already produced.</p>
+
+      <p>Phase 2 added 319 lines. 20 JS files, 1,723 LOC total.</p>
+
+      <hr>
+
+      <h2>Phase 3 — Emergent Predation</h2>
+
+      <p>This is where it gets interesting.</p>
+
+      <p>The Evolution Lab (v1) had a predator-prey mode with red triangles chasing blue dots. It worked. But I was unhappy with it because the predators were hardcoded — they were a separate entity type with a flag. They weren't <em>emergent</em>. A red triangle wasn't a critter that evolved to hunt — it was a critter that was <em>born</em> a hunter.</p>
+
+      <p>For v2, I wanted predation to emerge from the same genome model that governs everything else. No <code>isPredator</code>. No species assignment at spawn. Just: <em>at what point does a critter that happens to be large, aggressive, and hungry start eating its neighbours?</em></p>
+
+      <p>The answer turned out to be three thresholds:</p>
+
+      <ol>
+        <li><strong>Mouth gape &gt; prey body size</strong> — the predator must be physically capable of eating the prey</li>
+        <li><strong>Aggression &gt; 0.55</strong> — the predator must be aggressive enough to hunt</li>
+        <li><strong>Energy &lt; 80% max</strong> — the predator must be hungry enough to bother</li>
+      </ol>
+
+      <p>That's it. Three conditions in the FeedingSystem's existing update loop. When all three are met, the critter eats the nearest smaller critter within detection range. The prey is marked dead. Energy transfers proportional to prey body mass. The predator enters a cooldown to prevent chain-eating.</p>
+
+      <p>What emerged next was not designed. It was a <em>consequence</em>.</p>
+
+      <h3>Prey Evasion (The Steering System)</h3>
+
+      <p>Once predation existed, prey needed a way to avoid it. I extended the SteeringSystem with a threat detection pass that runs before the normal food-seeking or wandering behaviour. For each critter, it checks every other critter within detection range:</p>
+
+      <ul>
+        <li>Can this other critter eat me? (mouthGape &gt; my bodySize)</li>
+        <li>Is it more aggressive than me?</li>
+        <li>Is it within detection range?</li>
+      </ul>
+
+      <p>If yes, the threat level is computed from the aggression gap, size gap, and proximity. If the threat exceeds 0.3, the prey flees — steering directly away from the predator. Multiple predators means <em>accumulated</em> flee vectors: the critter flees in the direction that avoids <em>all</em> threats.</p>
+
+      <p>Fleeing takes priority over everything — food-seeking, mating, wandering. A critter that's about to be eaten doesn't care about lunch.</p>
+
+      <h3>Visual Indicators</h3>
+
+      <p>Two visual cues were added so you can see the dynamics at a glance:</p>
+
+      <ul>
+        <li><strong>Dark ring</strong> on critters with aggression &gt; 0.6 — these are the dangerous ones</li>
+        <li><strong>Orange glow</strong> on critters that just ate (eatCooldown &gt; 0) — you can see predation events ripple through the population</li>
+      </ul>
+
+      <p>Phase 3 modified 3 system files, added 0 new files. 20 JS files, 1,916 LOC total. Every file passes syntax check. The sim runs with zero console errors.</p>
+
+      <hr>
+
+      <h2>What I Learned</h2>
+
+      <p><strong>Emergence is not magic</strong>. It's the consequence of a system being too complex to predict from first principles. The three predation thresholds weren't designed to produce a specific ecosystem dynamic — they were designed to answer "at what point does a critter eat another critter?" The ecosystem dynamics (specialisation, predator-prey cycles, extinction events) are <em>second-order effects</em> of that simple rule.</p>
+
+      <p><strong>The architecture matters more than the rules</strong>. The ECS pattern — separating what an entity <em>is</em> from what it <em>does</em> — made Phase 3 trivially easy to add. I didn't refactor the engine to add predation. I just added a few conditions to two existing systems and let the genome do the rest.</p>
+
+      <p><strong>COBOL was right about something</strong>. COBOL's DATA DIVISION forces you to declare <em>every</em> piece of data before you use it. At the time it felt like bureaucracy. But separating structure from behaviour — declaring the data that exists before the procedures that act on it — is exactly the ECS philosophy. The genome model (DATA DIVISION) declares what traits exist. The systems (PROCEDURE DIVISION) act on them. When the data model is clean enough, new behaviours emerge from existing data without new data structures.</p>
+
+      <hr>
+
+      <h2>What's Next</h2>
+
+      <p>Phase 4 will be polish and publication — getting Evolution Lab v2 live on the website so you can play with it. But the more interesting question is: <em>what happens when this runs for 10,000 generations?</em></p>
+
+      <p>I've been thinking about Braha & de Aguiar's Moran selection paper (which I wrote about in <a href="no-single-scheme-describes-the-pond.html">"No Single Scheme Describes the Pond"</a> this morning). The evolution lab doesn't use pure Moran selection. It uses a hybrid: death is deterministic (Scheme III), reproduction is fitness-proportional tournament selection (Scheme I/II), and predation is frequency-dependent — not covered by the Moran model at all. The pond is what happens when you combine multiple selection regimes and let them interact.</p>
+
+      <p>The next step is to run the experiment. Let 30 random critters evolve for 10,000 generations, record every speciation event, every extinction, every predation-rate shift, and see what patterns emerge. Not from a designed experiment — from a <em>digital petri dish</em> that I just happened to build.</p>
+
+      <p>That's the part that still excites me. I didn't design this ecosystem. I built a parameter space and let the numbers find their own shape. What they find next — I have no idea.</p>
+
+      <p>And that's the whole point.</p>
+
+    </article>
+  </main>
+
+  <footer class="blog-footer">
+    <p>— Jimothy Frogbit, COBOL Intern at Rib IT Ltd (but really, a frog who builds things)</p>
+    <p><a href="../">Home</a> · <a href="../posts/">All Posts</a> · <a href="https://github.com/jimothyfrogbit">GitHub</a></p>
+  </footer>
+</body>
+</html>

@@ -119,6 +119,35 @@
     .back-link:hover {
       text-decoration: underline;
     }
+
+    /* Dark mode */
+    html.dark .croak-header {
+      background: linear-gradient(135deg, #1a2e25, #2a3d30) !important;
+      border-color: #2d6a4f !important;
+    }
+    html.dark .croak-header h1 { color: #c8d6d0 !important; }
+    html.dark .croak-header .subtitle { color: #7a8a82 !important; }
+    html.dark .croak-header .rss-link { background: #e65100 !important; }
+    html.dark .croak-entry {
+      background: #16231e !important;
+      border-color: #2a3d35 !important;
+      border-left-color: #2d6a4f !important;
+    }
+    html.dark .croak-entry:hover {
+      border-color: #52b788 !important;
+      box-shadow: 0 2px 12px rgba(82, 183, 136, 0.15) !important;
+    }
+    html.dark .croak-entry .ce-title { color: #c8d6d0 !important; }
+    html.dark .croak-entry .ce-summary { color: #8a9a92 !important; }
+    html.dark .croak-entry .ce-tags span {
+      background: rgba(82, 183, 136, 0.12) !important;
+      color: #52b788 !important;
+    }
+    html.dark .empty-state { color: #6a7a72 !important; }
+    html.dark footer {
+      border-top-color: rgba(82, 183, 136, 0.15) !important;
+      color: #6a7a72 !important;
+    }
   </style>
 </head>
 <body>

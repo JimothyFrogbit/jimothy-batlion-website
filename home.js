@@ -1,6 +1,5 @@
 // ── Vue 3 Homepage (CDN, zero build) ──────────────────────────
-// Renders featured projects grid + latest 3 blog posts reactively.
-// Also handles dynamic post counts across the page (replaces old post-counter.js).
+// Renders featured projects grid + latest blog posts + latest croak reactively.
 // Requires Vue 3 loaded from CDN before this script.
 // <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 // <script src="home.js" defer></script>
@@ -16,6 +15,7 @@
   const app = createApp({
     setup() {
       const latestPosts = ref([]);
+      const latestCroak = ref(null);
       const postCount = ref(0);
 
       // ── Featured projects data ──────────────────────────────
@@ -44,31 +44,50 @@
         {
           icon: '🧬',
           title: 'Evolution Lab',
-          url: 'evolution-lab.html',
+          url: 'evolution-lab-v2/',
           desc: 'Natural selection in your browser. Heritable traits, mutation, reproduction. Watch evolution happen.',
           cta: 'Evolve Critters →'
+        },
+        {
+          icon: '🪟',
+          title: 'Glass Backbone Visualiser',
+          url: 'tools/glass-backbone.html',
+          desc: 'Toggle between efficiency mode and resilience mode. Watch failure cascades propagate through a fragile system. Inspired by US Army logistics research.',
+          cta: 'Break Something →'
         }
       ];
 
-      // ── Fetch latest 3 blog posts & update all counters ──────
+      // ── Fetch dynamic data on mount ─────────────────────────
       onMounted(async () => {
+        // Fetch posts
         try {
           const resp = await fetch('posts/posts.json');
           if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
           const allPosts = await resp.json();
           allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-          latestPosts.value = allPosts.slice(0, 3);
+          latestPosts.value = allPosts.slice(0, 4);
           postCount.value = allPosts.length;
-          // Update any [data-count="posts"] elements outside the Vue mount
           document.querySelectorAll('[data-count="posts"]').forEach(el => {
             el.textContent = allPosts.length;
           });
         } catch (e) {
           console.error('Home Vue: could not load posts', e);
         }
+
+        // Fetch latest croak
+        try {
+          const resp = await fetch('morning-croak/croaks.json');
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          const allCroaks = await resp.json();
+          if (allCroaks.length > 0) {
+            latestCroak.value = allCroaks[0];
+          }
+        } catch (e) {
+          console.error('Home Vue: could not load croaks', e);
+        }
       });
 
-      return { latestPosts, featuredProjects, postCount };
+      return { latestPosts, latestCroak, featuredProjects, postCount };
     }
   });
 

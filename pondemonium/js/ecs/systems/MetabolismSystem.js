@@ -15,6 +15,7 @@
 
 import { EcsSystem } from '../engine.js';
 import { MATURATION_SLOWDOWN } from '../balance.js';
+import { fitnessScore, expressGenome, getSelectionScheme } from '../../genome.js';
 
 export class MetabolismSystem extends EcsSystem {
   constructor() {
@@ -78,7 +79,19 @@ export class MetabolismSystem extends EcsSystem {
       // ── If satiation depleted, drain energy ──
       if (energy.satiation < 0) {
         const drain = energyDrainMin + (energyDrainMax - energyDrainMin) * (energy.metabolism || 1.0);
-        energy.energy -= drain * dt;
+        let extraDrain = 0;
+        // Scheme III: Death selection — less-fit individuals drain faster when starving
+        if (getSelectionScheme() === 'III' && energy.energy < energy.maxEnergy * 0.5) {
+          const genomeStore = world.getStore('Genome');
+          if (genomeStore) {
+            const genome = genomeStore.get(eid);
+            if (genome && genome.genotype) {
+              const fitness = fitnessScore(expressGenome(genome.genotype));
+              extraDrain = (1 - fitness) * 0.15; // up to 15% extra drain for the least fit
+            }
+          }
+        }
+        energy.energy -= (drain + extraDrain) * dt;
         energy.satiation = 0;
       }
 
