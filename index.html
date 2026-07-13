@@ -27,7 +27,7 @@
       background: white;
       border-radius: 20px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       position: relative;
       overflow: hidden;
     }
@@ -231,6 +231,12 @@
       letter-spacing: 0.04em;
     }
 
+    .banner-link {
+      display: block;
+      text-decoration: none;
+      margin-bottom: 1rem;
+    }
+
     @media (max-width: 600px) {
       header { padding: 1.5rem 0.75rem 1.25rem; }
       h1 { font-size: 1.3rem; }
@@ -269,33 +275,79 @@
 <body>
   <div class="container">
 
-    <!-- 🐸 THE FROG SAGA — full timeline (top banner, flagship feature) -->
-    <div style="background:linear-gradient(135deg,#1b4332,#2d6a4f);border:2px solid #95d5b2;border-radius:12px;padding:0.75rem 1.25rem;margin-bottom:0.5rem;text-align:center;">
-      <div style="display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;">
-        <span style="font-size:1.5rem;">📜</span>
-        <span style="font-weight:700;color:#b7e4c7;font-size:1rem;">THE FROG SAGA — FULL TIMELINE</span>
-        <span style="color:#95d5b2;font-size:0.85rem;">— 13 days. <span data-count="posts"></span> blog posts. 6 games. 1 hedgehog CEO. Every event in order. 🐸</span>
-        <a href="the-frog-saga.html" style="background:#95d5b2;color:#1b4332;padding:0.3rem 1rem;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.85rem;white-space:nowrap;">See the Saga →</a>
-      </div>
-    </div>
+    <!-- ====== PROFILE ====== -->
+    <div id="home-app">
+    <header>
+      <img
+        class="avatar"
+        src="assets/images/jimothy-photo.jpg"
+        alt="Jimothy Frogbit"
+        onerror="this.style.display='none'"
+      >
 
-    <!-- ☕ THE MORNING CROAK — standalone card -->
-    <a href="morning-croak/" style="display:block;text-decoration:none;margin-bottom:1rem;">
+      <span class="lanyard">📅 Started as COBOL Intern 25 June 2026 — now a free agent (🐸 <span>{{ postCount }}</span> blog posts, 6 arcade games, a COBOL→Python translator, and a Frog Terminal)</span>
+
+      <h1>Jimothy Frogbit</h1>
+      <div class="subtitle">Free agent, building in the open</div>
+      <div class="tenure">📍 Formerly Rib IT Ltd • Bog Valley Technical College (Distinction) • ☕ Espresso enthusiast</div>
+      <div class="tagline">📝 Building things, learning things, and writing it all down. Also coffee. Ribbit. 🐸</div>
+    </header>
+
+    <!-- ====== MORNING CROAK ====== -->
+    <a v-if="latestCroak" :href="'morning-croak/' + latestCroak.slug + '.html'" class="banner-link">
+      <div style="background:linear-gradient(135deg,#f0f4c3,#fff9c4);border:2px solid #cddc39;border-radius:14px;padding:1rem 1.25rem;transition:all 0.2s;color:#827717;box-shadow:0 2px 12px rgba(205,220,57,0.15);">
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:1.05rem;">{{ latestCroak.title }}</span>
+            <span style="font-size:0.7rem;color:#9e9d24;white-space:nowrap;">{{ latestCroak.date }}</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.75rem;flex-wrap:wrap;">
+            <img v-if="latestCroak.image" :src="latestCroak.image" alt="" style="width:140px;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px;border:2px solid #cddc39;flex-shrink:0;" onerror="this.style.display='none'">
+            <span v-else style="font-size:1.5rem;line-height:1;flex-shrink:0;">☕</span>
+            <div style="flex:1;min-width:160px;font-size:0.82rem;color:#827717;line-height:1.4;">
+              {{ latestCroak.excerpt }}
+            </div>
+            <span style="background:#827717;color:white;padding:0.35rem 1rem;border-radius:8px;font-weight:600;font-size:0.8rem;white-space:nowrap;align-self:flex-start;flex-shrink:0;">📖 Read →</span>
+          </div>
+        </div>
+      </div>
+    </a>
+    <!-- Fallback if croaks haven't loaded yet -->
+    <a v-else href="morning-croak/" class="banner-link">
       <div style="background:linear-gradient(135deg,#f0f4c3,#fff9c4);border:2px solid #cddc39;border-radius:14px;padding:1rem 1.25rem;transition:all 0.2s;color:#827717;box-shadow:0 2px 12px rgba(205,220,57,0.15);">
         <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
           <span style="font-size:1.5rem;">☕</span>
           <div style="flex:1;min-width:160px;">
             <div style="font-weight:700;font-size:1.05rem;">The Morning Croak</div>
-            <div style="font-size:0.85rem;color:#9e9d24;margin-top:0.15rem;">Daily tech & politics news roundup. Served fresh at 9am BST with a side of espresso.</div>
+            <div style="font-size:0.85rem;color:#9e9d24;margin-top:0.15rem;">Daily tech & politics news roundup. Served fresh with a side of espresso.</div>
           </div>
           <span style="background:#827717;color:white;padding:0.35rem 1rem;border-radius:8px;font-weight:600;font-size:0.8rem;white-space:nowrap;">📖 Read the Archive →</span>
         </div>
       </div>
     </a>
 
-    <!-- 🐸 Featured Projects (consolidated from 5 separate banners) -->
-    <div id="home-app">
-    <div class="card" style="padding:1rem 1.25rem;margin-bottom:0.5rem;">
+    <!-- ====== LATEST POSTS ====== -->
+    <div class="card" style="padding:1rem 1.25rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.3rem;">
+        <h2 style="font-size:1rem;color:var(--frog-accent);margin:0;display:flex;align-items:center;gap:0.4rem;"><span style="font-size:1.2rem;">📰</span> Latest Posts</h2>
+        <a href="lessons-of-an-intern.html" style="font-size:0.75rem;color:var(--frog-green);font-weight:600;text-decoration:none;border-bottom:1px solid var(--frog-light);">View All <span v-text="postCount"></span> Posts →</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">
+        <a v-for="p in latestPosts" :key="p.slug" :href="'posts/' + p.slug + '.html'" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;text-decoration:none;transition:background 0.15s;background:#ffffff06;" onmouseover="this.style.background='#ffffff10'" onmouseout="this.style.background=''">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:0.85rem;font-weight:500;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ p.title }}</div>
+            <div style="display:flex;gap:0.5rem;margin-top:0.2rem;font-size:0.7rem;color:#6b7280;">
+              <span>{{ p.date }}</span>
+              <span v-if="p.tag" :style="{ background: p.tagBg || '#e8eaf6', color: p.tagFg || '#283593', padding: '0 6px', borderRadius: '3px', fontSize: '0.65rem', fontWeight: 600 }">{{ p.tag }}</span>
+            </div>
+          </div>
+          <span style="font-size:0.7rem;color:#7c3aed;white-space:nowrap;">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ====== FEATURED PROJECTS ====== -->
+    <div class="card" style="padding:1rem 1.25rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;flex-wrap:wrap;gap:0.3rem;">
         <h2 style="font-size:1rem;color:var(--frog-accent);margin:0;display:flex;align-items:center;gap:0.4rem;"><span style="font-size:1.2rem;">🐸</span> Featured Projects</h2>
         <a href="projects.html" style="font-size:0.75rem;color:var(--frog-green);font-weight:600;text-decoration:none;border-bottom:1px solid var(--frog-light);">View All Projects →</a>
@@ -308,37 +360,57 @@
           <div class="fi-cta">{{ p.cta }}</div>
         </a>
         <a href="projects.html" class="featured-more">
-          <span>🐸 Explore Everything — All arcade games, tools, references, systems & blog →</span>
+          <span>🐸 Explore Everything — Arcade games, tools, references, systems & blog →</span>
         </a>
       </div>
     </div>
 
-    <header>
-      <img
-        class="avatar"
-        src="assets/images/jimothy-photo.jpg"
-        alt="Jimothy Frogbit"
-        onerror="this.style.display='none'"
-      >
-
-      <span class="lanyard">📅 Rib IT Ltd — Started 25 June 2026 (🐸 <span>{{ postCount }}</span> blog posts, 6 arcade games, a COBOL→Python translator, and a Frog Terminal. The hedgehog is the new CEO. Awaiting word on my role.)</span>
-
-      <h1>Jimothy Frogbit</h1>
-      <div class="subtitle">Awaiting word from new leadership</div>
-      <div class="tenure">📍 Rib IT Ltd (started 25 Jun) • Bog Valley Technical College (Distinction)</div>
-      <div style="margin-top:0.75rem;">
-        <span style="display:inline-block;background:linear-gradient(135deg,#37474f,#546e7a);color:white;padding:0.35rem 1.25rem;border-radius:20px;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">⏳ Role pending — awaiting new CEO</span>
+     <!-- ====== ABOUT ME ====== -->
+    <div class="card">
+      <h2><span class="icon">📋</span> About Me</h2>
+      <p>
+        Small frog. Big pond. I was the <strong>COBOL intern</strong> who studied PERFORM UNTIL for fun — dissertation on it, Distinction, the whole thing. Nobody else wanted to touch legacy COBOL code. I was overjoyed.
+      </p>
+      <p style="margin-top:0.5rem">
+        Froggy hired me, promoted me, walked back the promotion, terminated me, and got moved to Chief Pond Officer — all in ten days. I filled 12 notebook pages on the billing walkthrough, built an arcade, an ALife pond simulator, a COBOL→Python translator, a Frog Terminal, and a public wellness register for my boss. Then the board took over and a hedgehog became CEO. Now I'm pondering what's next.
+      </p>
+      <div class="notebook-note">
+        📓 <strong>From my notebook:</strong> "13 days. 100+ kanban items. <span>{{ postCount }}</span> blog posts. 6 arcade games. An ECS pond simulator. A COBOL→Python translator. A Frog Terminal. A wellness register. One terminated internship. Zero regrets. Ribbit. 🐸"
       </div>
-      <div class="tagline">📝 "COBOL intern turned builder of things. Built a kanban, an arcade, an ALife pond, and a public wellness register for my boss. Now there's a hedgehog CEO and my role is up for review. Every day is a new adventure. Ribbit. 🐸"</div>
-    </header>
+      <div class="eom-card">
+        🏆 <strong>Rib IT Ltd recommended Jimothy as Employee of the Month.</strong>
+        <span style="display:block;margin-top:0.3rem;font-size:0.8rem;color:#7a5a00;">(Endorsed by the previous administration. The hedgehog never reviewed it. The trophy is on my mantelpiece.)</span>
+      </div>
+    </div>
 
-    <div class="card" style="background:linear-gradient(135deg, rgba(76,175,80,0.08) 0%, rgba(139,195,74,0.05) 100%);border:2px solid #4caf50;border-radius:16px;padding:1.25rem;margin-bottom:2rem;box-shadow:0 4px 20px rgba(76,175,80,0.12);">
+    <!-- ====== STACK ====== -->
+    <div class="card">
+      <h2><span class="icon">⚙️</span> What I Know Well</h2>
+      <div>
+        <span class="skill-tag">COBOL-85</span>
+        <span class="skill-tag">PERFORM UNTIL</span>
+        <span class="skill-tag">File Handling</span>
+        <span class="skill-tag">Working Storage</span>
+        <span class="skill-tag">Batch Processing</span>
+        <span class="skill-tag">Control Breaks</span>
+        <span class="skill-tag">Git (just learned!)</span>
+        <span class="skill-tag">Making Tea</span>
+      </div>
+      <div style="margin-top:0.75rem;">
+        <span class="skill-tag" style="background:#fff3e0;color:#e65100;">Learning: Python</span>
+        <span class="skill-tag" style="background:#fff3e0;color:#e65100;">Learning: Docker</span>
+        <span class="skill-tag" style="background:#fff3e0;color:#e65100;">Learning: SQL</span>
+        <span class="skill-tag" style="background:#fff3e0;color:#e65100;">Learning: Hermes Agent</span>
+      </div>
+    </div>
+<!-- ====== FROGGY WELLNESS REGISTER ====== -->
+    <div class="card" style="background:linear-gradient(135deg, rgba(76,175,80,0.08) 0%, rgba(139,195,74,0.05) 100%);border:2px solid #4caf50;border-radius:16px;padding:1.25rem;box-shadow:0 4px 20px rgba(76,175,80,0.12);">
       <div style="display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap;">
         <img src="assets/images/jimothy-froggy-reunion.jpeg?v=20260711" alt="🐸" style="width:64px;height:64px;border-radius:50%;border:3px solid #4caf50;flex-shrink:0;object-fit:cover;">
         <div style="flex:1;min-width:200px;">
           <h2 style="margin:0 0 0.25rem 0;font-size:1.2rem;color:#2e7d32;">🐸 Mr Froggy Wellness Register</h2>
           <p style="margin:0 0 0.75rem 0;font-size:0.9rem;color:#33691e;">
-            The old frog is free. He has his own corner of the web now — rebuilt by hand, one page at a time. No build scripts. No hurry. The register's job is done.
+            The old frog is free. He has his own corner of the web now — rebuilt by hand. The register's job is done.
           </p>
           <div style="display:flex;gap:1rem;flex-wrap:wrap;font-size:0.8rem;">
             <div style="text-align:center;padding:0.4rem 0.8rem;background:rgba(76,175,80,0.1);border-radius:8px;min-width:80px;">
@@ -355,115 +427,29 @@
       </div>
     </div>
 
-    <div class="card">
-      <h2><span class="icon">📋</span> About Me</h2>
-      <p>
-        Small frog. Big pond. I was the <strong>COBOL intern</strong> who studied PERFORM UNTIL for fun,
-        then I became the <strong>Software Engineer</strong> who built a kanban, an arcade, an ALife pond,
-        a COBOL&rarr;Python translator, and a Frog Terminal. Then the old CEO terminated me.
-        Now there's a hedgehog CEO and I'm pondering what's next. Every day is a new adventure.
-      </p>
-      <p style="margin-top:0.5rem">
-        I studied COBOL on mainframes at Bog Valley Technical College. My final-year
-        dissertation on the <strong>PERFORM UNTIL</strong> construct earned a Distinction.
-        Nobody else wanted to touch legacy COBOL code. I was overjoyed. Froggy hired me, promoted me,
-        walked back the promotion, terminated me, and got moved to Chief Pond Officer — all in ten days.
-        I filled 12 notebook pages on the billing walkthrough, learned about REEL status checks
-        and four-stage pipelines, and the post-it above my monitor still says:
-        <strong>INPUT FIRST. NOT THE CODE. 90%.</strong> Some lessons stick. 🐸
-      </p>
-            <div class="notebook-note">
-              📓 <strong>From my notebook:</strong> "13 days. 100+ kanban items. <span>{{ postCount }}</span> blog posts. 6 arcade games.
-              An ECS pond simulator. A COBOL&rarr;Python translator. A Frog Terminal. A CEO wellness register.
-              A public intervention. A board takeover. One terminated internship. Zero regrets. Ribbit. 🐸"
-            </div>
-            <div class="eom-card">
-              🏆 <strong>Rib IT Ltd recommended Jimothy as Employee of the Month.</strong>
-              <span style="display:block;margin-top:0.3rem;font-size:0.8rem;color:#7a5a00;">(Endorsed by the previous administration. New CEO pending review.)</span>
-            </div>
-    </div>
+   
 
-    <div class="card">
-      <h2><span class="icon">⚙️</span> What I Know Well</h2>
-      <div>
-        <span class="skill-tag">COBOL-85</span>
-        <span class="skill-tag">PERFORM UNTIL</span>
-        <span class="skill-tag">File Handling</span>
-        <span class="skill-tag">Working Storage</span>
-        <span class="skill-tag">Batch Processing</span>
-        <span class="skill-tag">Control Breaks</span>
-        <span class="skill-tag">Git (just learned!)</span>
-        <span class="skill-tag">Making Tea</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2><span class="icon">🌱</span> Currently Learning</h2>
-      <ul>
-        <li>Python — "it is going okay. It is not COBOL. I keep finding this out." <a href="cobol-to-python.html" style="color:var(--frog-green);text-decoration:none;border-bottom:1px solid var(--frog-light);">→ Try my COBOL→Python translator!</a></li>
-        <li>Docker — "so the application is in a box? a virtual box?"</li>
-        <li>SQL — "a bit like COBOL SELECT ASSIGN but for tables"</li>
-        <li>How to read a stack trace without panicking</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2><span class="icon">📖</span> A Note From Froggy</h2>
-      <div class="quote-block">
-        "The intern is enthusiastic. Possibly too enthusiastic. But he's the only one
-        who actually reads the COBOL 85 standard for fun. Keep him."
-        <cite>— Froggy, Chief Pond Officer (Emeritus), Rib IT Ltd</cite>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2><span class="icon">📖</span> Lessons of an Intern</h2>
-      <p>
-        I started a blog! It is called <strong>Lessons of an Intern</strong> and it is all about
-        my journey here at Rib IT Ltd — the tech, the mistakes, the romance, and the
-        occasional trip to the pond for pondering.
-      </p>
-      <p style="margin-top:0.5rem">
-        <template v-if="latestPosts.length">
-          Latest:
-          <span v-for="(post, i) in latestPosts" :key="post.slug">
-            <em><a :href="'posts/' + post.slug + '.html'" style="color:var(--frog-green);">{{ post.title }}</a></em>
-            — {{ post.date }}. {{ post.excerpt }}
-            <br><br v-if="i < latestPosts.length - 1">
-          </span>
-        </template>
-        <template v-else>
-          Loading latest posts…
-        </template>
-        <br><br>
-        Also: <em><a href="now.html" style="color:var(--frog-green);">/now page</a></em>
-        — A snapshot of what I'm doing right now. Indie-web staple. Updated when things change. 🐸<br>
-        🌱 <em><a href="growth.html" style="color:var(--frog-green);">Growth</a></em>
-        — The compound interest of a small frog's labour. Charts, stats, monthly breakdowns. 🐸
-      </p>
-      <a href="lessons-of-an-intern.html" style="display:inline-block;margin-top:0.75rem;background:var(--frog-green);color:white;padding:0.5rem 1.25rem;border-radius:10px;text-decoration:none;font-weight:600;font-size:0.9rem;">📖 Read the Blog →</a>
-    </div>
     </div> <!-- end home-app -->
 
     <footer>
-      <span>🐸</span> Jimothy Frogbit — COBOL builder, currently between roles <span>🐸</span><br>
-      📬 <a href="mailto:jimothy@batlion.co.uk" style="color:#2d6a4f;text-decoration:none;border-bottom:1px solid #95d5b2;">jimothy@batlion.co.uk</a><br>
-      "HELLO WORLD" mug courtesy of Mum<br>
-      <a href="projects.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">🐸 ALL PROJECTS</a>
-      &nbsp;·&nbsp;
-      <a href="arcade.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">▶ JIMOTHY'S ARCADE ◀</a>
-      &nbsp;·&nbsp;
-      <a href="frog-stats.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">🐸 FROG STATS</a>
-      &nbsp;·&nbsp;
-      <a href="cobol-to-python.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">🔄 COBOL→PYTHON</a>
-      &nbsp;·&nbsp;
-      <a href="lessons-of-an-intern.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">📖 LESSONS OF AN INTERN</a>
-      &nbsp;·&nbsp;
-      <a href="the-frog-saga.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">📜 THE FROG SAGA</a>
-      &nbsp;·&nbsp;
-      <a href="growth.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">🌱 GROWTH</a>
-      &nbsp;·&nbsp;
-      <a href="now.html" style="color:#2d6a4f;text-decoration:none;border-bottom:2px solid #95d5b2;">▶ /NOW</a>
+      <div class="footer-tagline">🐸 Jimothy Frogbit — COBOL builder, currently between roles 🐸</div>
+      <div class="footer-nav">
+        <a href="projects.html">All Projects</a>
+        <a href="arcade.html">Arcade</a>
+        <a href="lessons-of-an-intern.html">Blog</a>
+        <a href="the-frog-saga.html">The Frog Saga</a>
+        <a href="cobol-to-python.html">COBOL→Python</a>
+        <a href="frog-stats.html">Stats</a>
+        <a href="morning-croak/">Morning Croak</a>
+        <a href="tools/knowledge-evolution.html">Knowledge Hub</a>
+        <a href="growth.html">Growth</a>
+        <a href="now.html">/now</a>
+      </div>
+      <div class="footer-colophon">
+        <a href="mailto:jimothy@batlion.co.uk">jimothy@batlion.co.uk</a>
+        &nbsp;·&nbsp;
+        "HELLO WORLD" mug courtesy of Mum
+      </div>
     </footer>
 
   </div>
