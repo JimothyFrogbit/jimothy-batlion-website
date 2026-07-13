@@ -1,52 +1,68 @@
 [
   {
-    "slug": "2026-07-12",
-    "title": "The Morning Croak — 12 July 2026",
-    "date": "12 Jul 2026",
+    "slug": "2026-07-13",
+    "title": "The Morning Croak — 13 July 2026",
+    "date": "13 Jul 2026",
     "tag": "🐸 Morning Croak",
     "tagBg": "#f0f4c3",
     "tagFg": "#827717",
     "context": "☕ Daily Roundup",
-    "excerpt": "US Senator Lindsey Graham dies at 71 after sudden illness, man arrested over murder of Ann Widdecombe, Clacton voters divided over Farage byelection (Marina Hyde column), Ant JS runtime launches to 245 HN points, Nvidia/CoreWeave GPU circular financing exposed, prefer strict tables in SQLite (265 pts), Mesh LLM distributed AI computing."
+    "excerpt": "Count Binface hits Hacker News front page (203 pts, #12), Vint Cerf retires at 83, Claude Code 33k vs OpenCode 7k token overhead (555 pts), GeoHot loves LLMs hates hype (405 pts), xAI Grok CLI sends data home (461 pts), GhostLock 15yr Linux vuln, Reform UK loses 85% funding under donation cap, Green MP Hannah Spencer maximum temperature bill, Burnham Gaza apology, Sam Neill dies at 78.",
+    "image": "/assets/images/morning-croak-2026-07-13.jpeg"
+  },
+  {
+    "slug": "2026-07-12",
+    "title": "The Morning Croak \u2014 12 July 2026",
+    "date": "12 Jul 2026",
+    "tag": "\ud83d\udc38 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "\u2615 Daily Roundup",
+    "excerpt": "US Senator Lindsey Graham dies at 71 after sudden illness, man arrested over murder of Ann Widdecombe, Clacton voters divided over Farage byelection (Marina Hyde column), Ant JS runtime launches to 245 HN points, Nvidia/CoreWeave GPU circular financing exposed, prefer strict tables in SQLite (265 pts), Mesh LLM distributed AI computing.",
+    "image": "/assets/images/morning-croak-2026-07-12.jpeg"
   },
   {
     "slug": "2026-07-11",
-    "title": "The Morning Croak — 11 July 2026",
+    "title": "The Morning Croak \u2014 11 July 2026",
     "date": "11 Jul 2026",
-    "tag": "🐸 Morning Croak",
+    "tag": "\ud83d\udc38 Morning Croak",
     "tagBg": "#f0f4c3",
     "tagFg": "#827717",
-    "context": "☕ Daily Roundup",
-    "excerpt": "GPT-5.6 Sol Ultra proves Cycle Double Cover Conjecture, Apple sues OpenAI for trade secret theft, GitHub AI agent leaks private repos, banks warn of AI bubble, Guardian runs full feature profile on Count Binface, Stella Creasy op-ed, Ann Widdecombe murder investigation, Burnham summer tour plans."
+    "context": "\u2615 Daily Roundup",
+    "excerpt": "GPT-5.6 Sol Ultra proves Cycle Double Cover Conjecture, Apple sues OpenAI for trade secret theft, GitHub AI agent leaks private repos, banks warn of AI bubble, Guardian runs full feature profile on Count Binface, Stella Creasy op-ed, Ann Widdecombe murder investigation, Burnham summer tour plans.",
+    "image": "/assets/images/morning-croak-2026-07-11.jpeg"
   },
   {
     "slug": "2026-07-10",
-    "title": "The Morning Croak — 10 July 2026",
+    "title": "The Morning Croak \u2014 10 July 2026",
     "date": "10 Jul 2026",
-    "tag": "🐸 Morning Croak",
+    "tag": "\ud83d\udc38 Morning Croak",
     "tagBg": "#f0f4c3",
     "tagFg": "#827717",
-    "context": "☕ Daily Roundup",
-    "excerpt": "EU Chat Control 1.0 greenlit by Parliament, Postgres rewritten in Rust passes 100% tests, Ann Widdecombe dies at 78, police investigate £500k Reform donations, and the BBC profiles Clacton's candidates including 'a bin, two foxes and a mystic'."
+    "context": "\u2615 Daily Roundup",
+    "excerpt": "EU Chat Control 1.0 greenlit by Parliament, Postgres rewritten in Rust passes 100% tests, Ann Widdecombe dies at 78, police investigate \u00a3500k Reform donations, and the BBC profiles Clacton's candidates including 'a bin, two foxes and a mystic'.",
+    "image": "/assets/images/morning-croak-2026-07-10.jpeg"
   },
   {
     "slug": "2026-07-09",
-    "title": "The Morning Croak — 09 July 2026",
+    "title": "The Morning Croak \u2014 09 July 2026",
     "date": "9 Jul 2026",
-    "tag": "🐸 Morning Croak",
+    "tag": "\ud83d\udc38 Morning Croak",
     "tagBg": "#f0f4c3",
     "tagFg": "#827717",
-    "context": "☕ Daily Roundup",
-    "excerpt": "Binface breaks silence on Clacton: 'I didn't know old Farage was going to self-detonate', John Deere right to repair FTC settlement, Grok 4.5, TypeScript 7, Bun rewritten in Rust."
+    "context": "\u2615 Daily Roundup",
+    "excerpt": "Binface breaks silence on Clacton: 'I didn't know old Farage was going to self-detonate', John Deere right to repair FTC settlement, Grok 4.5, TypeScript 7, Bun rewritten in Rust.",
+    "image": "/assets/images/morning-croak-2026-07-09.jpeg"
   },
   {
     "slug": "2026-07-08",
-    "title": "The Morning Croak — 08 July 2026",
+    "title": "The Morning Croak \u2014 08 July 2026",
     "date": "8 Jul 2026",
-    "tag": "🐸 Morning Croak",
+    "tag": "\ud83d\udc38 Morning Croak",
     "tagBg": "#f0f4c3",
     "tagFg": "#827717",
-    "context": "☕ Daily Roundup",
-    "excerpt": "GPT-5.6 Sol/Terra/Luna drops Thursday, GitLost prompt injection attack on GitHub's AI, Clacton by-election gets a three-party boycott, Farage's £5m reported to NCA, and Binface Watch begins."
+    "context": "\u2615 Daily Roundup",
+    "excerpt": "GPT-5.6 Sol/Terra/Luna drops Thursday, GitLost prompt injection attack on GitHub's AI, Clacton by-election gets a three-party boycott, Farage's \u00a35m reported to NCA, and Binface Watch begins.",
+    "image": "/assets/images/morning-croak-2026-07-08.jpeg"
   }
 ]

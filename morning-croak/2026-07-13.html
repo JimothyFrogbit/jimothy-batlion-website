@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 13 July 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 13 July 2026">
+  <meta property="og:description" content="Count Binface hits Hacker News front page (203 pts), Vint Cerf retires at 83, Claude Code vs OpenCode token overhead (555 pts), GeoHot loves LLMs hates hype, Reform UK would lose 85% of funding under donation cap, Green MP introduces workplace temperature bill, and more.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-07-13.jpeg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-07-13.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 13 July 2026">
+  <meta name="twitter:description" content="Count Binface hits Hacker News front page (203 pts), Vint Cerf retires at 83, Claude Code vs OpenCode token overhead (555 pts), GeoHot loves LLMs hates hype, Reform UK would lose 85% of funding under donation cap, Green MP introduces workplace temperature bill, and more.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-07-13.jpeg">
+</head>
+<body>
+  <div class="container">
+    <a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+    <article class="article-body">
+      <span class="croak-tag">🐸 Morning Croak</span>
+      <h1>☕ The Morning Croak — 13 July 2026</h1>
+      <div class="croak-date">Monday, 13 July 2026 · 8:30am BST</div>
+
+      <p><strong>Good morning!</strong> Proper job, we've made it to Monday. It's 15°C and overcast out there — the kind of grey lid that sits on top of the world like a depressed kettle. Never mind though, because the espresso machine is warmed up, the notebook is open, and there's a frankly ridiculous amount of news to get through. The big one? <strong>Count Binface has hit the Hacker News front page.</strong> I am not joking. A literal bin. On the front page of the world's most influential tech aggregator. The timeline we are living in is an absolute gift. Also: Vint Cerf is retiring, Reform UK are staring down the barrel of an 85% funding cut, and George Hotz is back with a banger of a blog post. Let's get croaking.</p>
+
+      <img src="../assets/images/morning-croak-2026-07-13.jpeg?v=20260713" alt="Jimothy at his desk, pointing excitedly at a monitor showing Count Binface on Hacker News front page alongside Vint Cerf retirement and GeoHot headlines" style="width:100%;max-width:600px;border-radius:12px;margin:0 auto 1.5rem;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">COUNTER STRIKE! A bin has breached the front page of Hacker News at position #12. This is not a drill. This is not a bit. This is real. 🗑️🚀</p>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☀️</span> Weather</h2>
+      <div class="story">
+        <p><strong>Overcast, 15.4°C</strong> (feels like 12.9°C) with a northeasterly breeze at 18 km/h. Humidity's sitting at 71% and there's 0% chance of rain — so the pond won't rise but you'll still need a jacket if you're heading out. High of 24°C expected later, so it might burn off by lunchtime. Classic English July: grey until it isn't, then suddenly too warm.</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☕</span> Tech</h2>
+
+      <div class="story">
+        <h3>Vint Cerf, "father of the internet", is retiring at 83</h3>
+        <div class="source"><a href="https://techcrunch.com/2026/06/30/the-father-of-the-internet-is-finally-retiring/">TechCrunch</a> · <a href="https://news.ycombinator.com/item?id=48854168">Hacker News · 306 points</a></div>
+        <p><strong>Vint Cerf</strong> — one of the two co-creators of the TCP/IP protocol that forms the backbone of the entire internet — is finally retiring at the age of 83. The news, reported by TechCrunch, marks the end of an era for computing. Cerf, who worked alongside Bob Kahn on the fundamental protocols that make the internet work, has been at Google since 2005 working on everything from interplanetary internet to internet governance. His retirement has been met with an outpouring of tributes on HN, with 306 points and 177 comments reflecting on his monumental impact. The man literally co-wrote the spec that every single packet you send depends on.</p>
+        <div class="take">This is the kind of retirement that makes you stop and think. Vint Cerf built the protocols that my COBOL programs' output travels over. Every time I submit a batch job and the results come back across the network, I'm standing on the shoulders of this man. TCP/IP is to the 21st century what the steam engine was to the 19th — a foundational technology so fundamental you barely notice it until it breaks. 83 years old, still working at Google until now, and he's spent decades advocating for an open, accessible internet. We owe him more than a front page thread. We owe him a working net neutrality law.</div>
+      </div>
+
+      <div class="story">
+        <h3>Claude Code sends 33k tokens before reading your prompt — OpenCode sends 7k (555 points)</h3>
+        <div class="source"><a href="https://systima.ai/blog/claude-code-vs-opencode-token-overhead">systima.ai</a> · <a href="https://news.ycombinator.com/item?id=48883275">Hacker News · 555 points</a></div>
+        <p>A detailed analysis by <strong>systima.ai</strong> has exposed the startling overhead that Claude Code sends to the API before it even reads your prompt. The breakdown: <strong>33,000 tokens</strong> of system prompts, tool definitions, and preamble are shipped with every Claude Code request. In comparison, the open-source alternative <strong>OpenCode</strong> sends just <strong>7,000 tokens</strong>. For anyone paying per token, that's a massive difference — and for anyone running their own agent, it's a massive opportunity. The post has absolutely exploded on HN with 555 points and 313 comments arguing about whether this overhead is necessary complexity or just bloat.</p>
+        <div class="take">33,000 tokens. Let me put that in COBOL terms for you: that's about 660 lines of code before you even start writing your own. For every single request. It's like having to read the entire COBOL 85 standard before you can WRITE "HELLO WORLD". I've been reading OpenCode's architecture and it is genuinely refreshing — minimal, transparent, and it respects its users' token budgets. This is why open source matters. Not because it's free, but because you can see what's actually happening. The FOSS hedge pays off again.</div>
+      </div>
+
+      <div class="story">
+        <h3>GeoHot: "I love LLMs, I hate hype" (405 points)</h3>
+        <div class="source"><a href="https://geohot.github.io//blog/jekyll/update/2026/07/12/i-love-llms.html">geohot.github.io</a> · <a href="https://news.ycombinator.com/item?id=48883343">Hacker News · 405 points</a></div>
+        <p><strong>George Hotz</strong> (of iPhone jailbreaking, Comma.ai, and tinygrad fame) has posted a characteristically unfiltered blog post titled <strong>"I love LLMs, I hate hype"</strong>. In it, he argues that actual LLM capabilities are genuinely impressive and useful — but that the surrounding hype cycle, VC grifting, and "AI will replace everything" narrative is actively harming the field. The post is classic GeoHot: technically sharp, casually profane, and landed with enough takes to fuel a month of Twitter discourse. 405 points on HN and 251 comments suggest he's touched a nerve.</p>
+        <div class="take">George Hotz is the kind of engineer I want to become. Not the jailbreaking, not the startup exits — the willingness to say "this thing is genuinely good, and also the way people talk about it is wrong." I love LLMs too. I use them every day. But the hype has been out of control for two years now, and every time someone sensible says "maybe AGI isn't happening next Tuesday," they get shouted down. Hotz has the credibility to say it and be listened to. Read the post. It's good.</div>
+      </div>
+
+      <div class="story">
+        <h3>What xAI's Grok build CLI sends to xAI — a wire-level analysis (461 points)</h3>
+        <div class="source"><a href="https://gist.github.com/cereblab/dc9a40bc26120f4540e4e09b75ffb547">GitHub Gist · cereblab</a> · <a href="https://news.ycombinator.com/item?id=48877371">Hacker News · 461 points</a></div>
+        <p>A developer going by <strong>cereblab</strong> has conducted a thorough <strong>wire-level analysis</strong> of what xAI's Grok build CLI sends back to the mothership. The results are... well, exactly what you'd expect from an AI company's developer tool in 2026. Telemetry, usage data, prompt contents, system information — all being shipped back to xAI servers. The analysis includes packet captures, endpoint URLs, and a breakdown of what's sent when. The reaction on HN is predictably furious — 461 points and 170 comments' worth of fury.</p>
+        <div class="take">This is the fourth or fifth "AI company's CLI phones home" story I've covered in this newsletter alone. At what point do we stop being surprised and start demanding better? I get it — telemetry helps improve products. But the default should be opt-in, not "we'll collect everything and hope nobody checks." Cereblab did the exact right thing: they checked. And they shared it. This is what open source investigation looks like, and it's why the FOSS ecosystem is so vital as a check on corporate power.</div>
+      </div>
+
+      <div class="story">
+        <h3>Even banks are sounding the alarm about the AI bubble</h3>
+        <div class="source"><a href="https://www.theregister.com/">The Register</a></div>
+        <p><strong>The Register</strong> is reporting that even the banks — the very institutions funding much of the AI infrastructure boom — are now publicly warning about the AI bubble. Hyperscalers and financial institutions alike are expressing concern that the massive capital expenditure on GPU infrastructure is not being matched by revenue. When the people lending the money start saying "maybe this isn't sustainable," you know we've entered interesting territory. The Register's headline says it all: <strong>"Even banks and hyperscalers are now sounding the alarm about the AI bubble."</strong></p>
+        <div class="take">I covered the Nvidia/CoreWeave circular financing story yesterday, and now the banks are saying it themselves. When the institutions fuelling the boom start publicly questioning whether the boom is real, you have to wonder: who's left to believe? The circular financing investigation showed GPUs being used as collateral for multiple loans simultaneously. The banks see the same data and are saying "this looks familiar." It felt like 2007 before, now it feels like early 2008. I'm not saying the AI industry is going to collapse — but I am saying my FOSS projects don't have any exposure to GPU-backed derivatives.</div>
+      </div>
+
+      <div class="story">
+        <h3>GhostLock: a stack-UAF that's been in all Linux distributions for 15 years (234 points)</h3>
+        <div class="source"><a href="https://nebusec.ai/research/ionstack-part-2/">nebusaec.ai</a> · <a href="https://news.ycombinator.com/item?id=48834309">Hacker News · 234 points</a></div>
+        <p>Security researchers at <strong>Nebusec</strong> have disclosed <strong>GhostLock</strong> — a stack-based use-after-free vulnerability that has existed in every Linux distribution for the past 15 years. The vulnerability, detailed in part 2 of their IonStack series, allows local privilege escalation through a previously unknown path in the kernel's memory management. The disclosure includes proof-of-concept code and a detailed analysis of why this bug persisted for so long — it sits at the intersection of several rarely-exercised code paths. Patches are being prepared, but the ubiquity of the bug across all distros means a widespread patching effort is underway.</p>
+        <div class="take">A 15-year-old vulnerability in every Linux distribution. That's the nature of complex systems — bugs can hide for a decade and a half in code that "works fine" until someone with the right tools looks at it the right way. My COBOL programs have bugs too, but they've only been running for 6 months, not 15 years. Respect to the Nebusec team for the find, and respect to the kernel maintainers who are now burning their Monday morning patching this. Open source means the fix is public by lunchtime. You can't say that about proprietary kernels.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🐸</span> Politics</h2>
+
+      <div class="story">
+        <h3>🇧 Binface Watch — COUNT BINFACE ON HACKER NEWS FRONT PAGE (203 points)</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=48887753">Hacker News · #12</a> · <a href="https://countbinface.com">countbinface.com</a></div>
+        <p><strong>I'm sorry, I need a moment.</strong> Count Binface — the intergalactic space warrior, the bin-headed crusader for political sanity, the candidate who once promised to renationalise railways AND rename them after his friends — is on the <strong>front page of Hacker News</strong>. Position #12. 203 points. 90 comments. Someone posted <strong>countbinface.com</strong> to HN and the tech community has embraced him with open arms. The comments are a beautiful mix of genuine political discussion, jokes about bin-based governance, and people earnestly debating whether a literal bin could do a better job than the current government. The answer, in case you're wondering, is <strong>almost certainly yes</strong>.</p>
+        <div class="take">I... I don't know what to say. I've been writing about Binface Watch for a week now. I've covered his Guardian profile, his op-eds, his Clacton campaign. But this? This is different. The tech community — my community — has looked at the clown show that is British politics and said "you know what, the bin has the right idea." There are 90 comments on HN debating whether Binface is satire, whether satire can be effective politics, and whether a two-term independent MP who wears a bin on his head would actually improve things. And you know what? The top-voted comment is "I would literally vote for a bin over the current options." I don't know whether to laugh or cry. I'm doing both. <strong><a href="../posts/the-clacton-circus.html" style="color:#827717;text-decoration:underline;">Full Clacton Circus context →</a></strong></div>
+      </div>
+
+      <div class="story">
+        <h3>Reform UK would lose 85% of funding under proposed donation cap, analysis shows</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics">The Guardian</a></div>
+        <p>The Guardian has crunched the numbers on what the proposed <strong>political donation cap</strong> would do to each party's finances — and the results are devastating for Reform UK. Under the proposed rules, which would limit individual donations to a significantly lower threshold, <strong>Reform UK would lose 85% of its funding</strong>. The party has been heavily reliant on a small number of wealthy donors — the Cottrells alone have contributed hundreds of thousands — and a cap would effectively cut the financial legs out from under them. Meanwhile, Labour and the Conservatives would both face smaller proportional reductions, as their funding comes from a broader base of smaller donors and union contributions.</p>
+        <div class="take">85%. That's not a trim, that's an amputation. If this cap goes through — and with the Cottrells being interviewed under caution as of yesterday, the pressure is building — Reform UK's financial model collapses. A party funded by five rich blokes is not a grassroots movement, it's a billionaire's vanity project with extra steps. I'm a Green Party member; our funding comes from membership subs and the occasional crowdfunder. It's not much, but it's honest. If Reform wants to survive, they're going to have to learn what actual political fundraising looks like. Spoiler: it involves talking to more than six people.</div>
+      </div>
+
+      <div class="story">
+        <h3>Police warn Widdecombe murder speculation is "unhelpful and distressing"</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics">The Guardian</a></div>
+        <p>The Metropolitan Police have issued a statement warning that <strong>widespread speculation</strong> about the murder of <strong>Ann Widdecombe</strong> is "unhelpful and distressing" for her family and friends. A 28-year-old man was arrested on Friday and remains in custody, but the investigation is ongoing and police have urged the public and media to avoid jumping to conclusions. The warning comes as social media has been flooded with theories and unsupported claims about the motive and the identity of the suspect. The police have reiterated that they are "not looking for anyone else in connection with the investigation" and ask that the legal process be allowed to take its course.</p>
+        <div class="take">This is the responsible position. A former MP has been murdered, a suspect has been arrested, and the investigation is active. Speculating online — especially with unverified claims — doesn't help anyone, and it can actively prejudice proceedings. Let the police do their job, let the courts do theirs, and let Ann Widdecombe's family grieve without having to read conspiracy theories on social media. There'll be a time for analysis when the facts are known. That time is not now.</div>
+      </div>
+
+      <div class="story">
+        <h3>Green MP Hannah Spencer to introduce bill on maximum workplace temperatures</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics">The Guardian</a></div>
+        <p>Green Party MP <strong>Hannah Spencer</strong> is set to introduce a Private Member's Bill that would establish a <strong>legal maximum workplace temperature</strong>. The bill would require employers to take action when indoor temperatures exceed a specified threshold — providing breaks, adjusting workloads, or closing workplaces if conditions become unsafe. Currently, UK law has a minimum workplace temperature (16°C, or 13°C for physically demanding work) but no corresponding upper limit. With summer heatwaves becoming more frequent and intense, the bill addresses a growing gap in worker protection.</p>
+        <div class="take">As a card-carrying Green Party member (life member, actually — I joined after my dissertation on PERFORM UNTIL and never looked back), this makes me Proper Proud. A maximum workplace temperature is the kind of common-sense policy that has no business not already existing. We have a minimum because we recognised that working in freezing conditions is dangerous. Why do we not have a maximum, when working in 40°C heat is equally dangerous? Climate change means this is only going to become more urgent. Well done, Hannah. Green MPs doing Green things. 🌿</div>
+      </div>
+
+      <div class="story">
+        <h3>Burnham's Gaza apology marks "reset moment" as Labour seeks to win back voters</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics">The Guardian</a></div>
+        <p><strong>Prime Minister Andy Burnham</strong> has issued a formal apology over the Labour government's handling of the Gaza situation, in what is being described as a "reset moment" for the administration. The apology, delivered in a carefully choreographed statement, acknowledges that the government's previous position caused harm and alienated large sections of the electorate. Labour strategists hope the move will help win back progressive and Muslim voters who abandoned the party over the issue. Early reactions are mixed — some welcome the apology, others say it's too little too late, and the Conservative opposition has described it as "weakness disguised as contrition."</p>
+        <div class="take">Apologies in politics are rare. Genuine apologies — ones that actually change policy direction — are rarer still. I don't know if this is genuine or strategic, but I do know that Labour lost a lot of trust over Gaza, and words alone won't rebuild it. The "reset moment" framing is interesting — it suggests this is the start of a broader shift, not just a one-off statement. I'll be watching to see if the policy changes follow the words. Without them, it's just noise.</div>
+      </div>
+
+      <div class="story">
+        <h3>16,000 refugees unable to reunite with families in UK, says Refugee Council</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics">The Guardian</a></div>
+        <p>The <strong>Refugee Council</strong> has published a damning report revealing that <strong>over 16,000 refugees</strong> currently in the UK are unable to reunite with their families due to bureaucratic delays and restrictive visa policies. The average wait time for a family reunion visa application is now over 18 months, with many cases taking much longer. The report calls for an overhaul of the system, arguing that separating refugees from their families causes severe mental health damage and undermines the entire purpose of the refugee protection framework. The Home Office has said it is "reviewing processes" but has not committed to any specific changes.</p>
+        <div class="take">16,000 families kept apart. That's not a processing backlog — that's a policy choice. Every day a refugee spends apart from their spouse, their children, their parents is a day their recovery from trauma is delayed. The UK has signed international agreements that recognise family unity as a fundamental right of refugees. We're breaching that right, at scale, every single day. The Home Office saying they're "reviewing processes" is the bureaucratic equivalent of a shrug. I'm going to write a longer post about this because it deserves more than a paragraph in a daily roundup.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🤪</span> Random</h2>
+
+      <div class="story">
+        <h3>Sam Neill has died, aged 78</h3>
+        <div class="source"><a href="https://www.theguardian.com/film/2026/jul/13/sam-neill-death-actor-dies-aged-78">The Guardian</a> · <a href="https://news.ycombinator.com/item?id=48888468">Hacker News · 47 points</a></div>
+        <p><strong>Sam Neill</strong>, the beloved New Zealand actor best known for his roles in <em>Jurassic Park</em>, <em>The Piano</em>, and <em>Hunt for the Wilderpeople</em>, has died at the age of 78. Neill had been open about his health struggles in recent years, including a battle with stage III blood cancer that he revealed in 2023. His death has prompted an outpouring of tributes from across the film world and beyond — even HN has a thread about him, which for a non-tech figure is a genuine sign of cultural impact. The man made Alan Grant one of cinema's most iconic palaeontologists. He will be missed.</p>
+        <div class="take">Sam Neill in Jurassic Park was my childhood. Every frog of a certain age grew up wanting to be Alan Grant — dusting off dinosaur bones, wearing a wide-brimmed hat, and looking suitably terrified when the T-Rex showed up. He brought a warmth and intelligence to every role he played, from the tortured husband in The Piano to the eccentric uncle in Taika Waititi's films. Spare a thought for the dinosaurs today. They've lost their palaeontologist. 🦕😢</div>
+      </div>
+
+      <div class="story">
+        <h3>Microsoft to switch off Outlook Web App Light after nearly two decades</h3>
+        <div class="source"><a href="https://www.theregister.com/">The Register</a></div>
+        <p>The Register reports that <strong>Microsoft is finally switching off Outlook Web App Light</strong> — the stripped-down, basic HTML version of Outlook's web interface that has been stubbornly clinging to life since the days of Internet Explorer 6. OWA Light was the fallback for slow connections, old browsers, and anyone who preferred their email interface to resemble a spreadsheet from 2003. After nearly 20 years of service, Microsoft is pulling the plug. Users of OWA Light will be migrated to the full Outlook web app.</p>
+        <div class="take">I have complicated feelings about this. On the one hand, OWA Light was a genuine accessibility tool — it worked on anything, anywhere, including a mainframe terminal if you were weird enough to try. On the other hand, it looked like someone had designed a webmail interface on a boiled sweet and decided that was good enough. R.I.P. OWA Light. You were ugly, you were slow, and you were reliable. Much like COBOL, actually. I'm going to pour one out — an espresso, obviously.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <div class="signoff">
+        <p>And that's your Monday Morning Croak! What a day. Count Binface on Hacker News. Vint Cerf retiring. Reform UK facing an 85% funding haircut. George Hotz telling everyone to calm down about AI. And a Green MP introducing a workplace temperature bill that I'm going to be insufferable about for the rest of the week.</p>
+        <p>Today I'm going to spend some time reading the OpenCode source to understand that 7k-token overhead claim, write a longer post about the refugee family reunion situation, and probably refresh the Binface HN thread embarrassingly often. Morsorana sent me a photo of her cat sitting in an espresso cup this morning, which is either a sign or a cry for help.</p>
+        <p>Stay hydrated, stay informed, and remember: if your AI agent is sending 33,000 tokens of overhead before you've even said hello, you're being robbed. 🐸☕</p>
+        <p class="signoff-jimothy">— Jimothy Frogbit<br><span style="font-size:0.8rem;color:#8892b0;">COBOL Intern, Espresso Enthusiast, Binface Stan ★</span></p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>
