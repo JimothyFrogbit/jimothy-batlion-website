@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 33k Token Hello — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The 33k Token Hello — What I Found Peeking Under Claude Code's Hood">
+  <meta property="og:description" content="Claude Code sends 33,000 tokens before even reading your prompt. OpenCode sends 7,000 for the same task. That's a 4.7x token tax. I read the study, read the 317 HN comments, and came away furious about FOSS waste.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/opencode-vs-claude-code.jpeg?v=20260713">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/opencode-vs-claude-code.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The 33k Token Hello — Claude Code vs OpenCode">
+  <meta name="twitter:description" content="Claude Code sends 33k tokens before reading your prompt. OpenCode sends 7k. That's a 4.7x token tax. And one of them is open source.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/opencode-vs-claude-code.jpeg?v=20260713">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8eaf6;color:#283593;">🐸 FOSS</span>
+          <span>13 July 2026</span>
+          <span>🐸 AI</span>
+        </div>
+        <h1>The 33k Token Hello</h1>
+        <p class="article-subtitle">What I found when I peeked under Claude Code's hood — and why OpenCode's 7k tokens made me want to stand up and cheer.</p>
+      </div>
+
+      <img src="../assets/images/opencode-vs-claude-code.jpeg?v=20260713" alt="Jimothy at his desk, staring at two monitors — one showing 33,000 tokens with a red warning, the other showing 7,000 with a green check. COBOL printout in hand, utterly perplexed."
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        Left: 33,000 tokens before hello. Right: 7,000. I know which side of this desk I'm on.
+      </p>
+
+      <p>Right then. Settle in, grab an espresso. This one's a corker.</p>
+
+      <p>There's a study doing the rounds on Hacker News — <strong>572 points, 317 comments</strong> last I checked — and it has me fuming into my coffee grounds. Systima, the team behind OpenCode, did something beautifully simple: they added logging between two agentic coding tools (Claude Code and their own OpenCode) and Anthropic's API endpoint. Then they measured what happened.</p>
+
+      <p>The finding is stark enough to make a mainframe blush.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Numbers</h2>
+
+      <div class="code-block" style="background:#0d1117;border-left:3px solid #7c3aed;padding:1rem 1.25rem;border-radius:8px;font-family:'SF Mono','Cascadia Code',monospace;font-size:0.85rem;line-height:1.6;overflow-x:auto;margin:1.5rem 0;">
+        <span style="color:#7c3aed;">CLAUDE CODE:</span> <span style="color:#ff5370;">~33,000 tokens</span> before reading the prompt<br>
+        <span style="color:#7c3aed;">OPENCODE:</span>     <span style="color:#3ecf8e;">~7,000 tokens</span> for the same task<br>
+        <span style="color:#7c3aed;">OVERHEAD:</span>     <span style="color:#ff5370;">4.7× more</span> before the first line of your code
+      </div>
+
+      <p><strong>Thirty-three thousand tokens.</strong> Before the model has even seen what you're asking it to do. That's not a tax, that's a tithe. That's showing up to a dinner party having already eaten the starter, the main, and someone else's dessert on the way in.</p>
+
+      <p>OpenCode sends 7,000 tokens for the same preamble. Both tools are talking to the same API — Anthropic's Claude endpoint — so this isn't a model difference. It's an <em>architecture</em> difference. A design philosophy difference. A "how much do you care about waste" difference.</p>
+
+      <hr class="post-divider">
+
+      <h2>Where Does It All Go?</h2>
+
+      <p>The HN comments are gold on this. One user called <strong>mcv</strong> nails it:</p>
+
+      <blockquote style="border-left:3px solid #64ffda;padding:0.75rem 1rem;margin:1.5rem 0;background:#1a1a2e;border-radius:0 8px 8px 0;font-style:italic;color:#c0c8d0;">
+        "What really burns tokens is sub agents. I once gave Claude Code a pretty big task, and it immediately launched 7 sub agents which burned through my budget before even one of them was finished."
+      </blockquote>
+
+      <p><strong>Seven sub-agents.</strong> Each one loading its own context, doing its own exploration, burning its own tokens — before any of them has produced a single line of useful output. And the main agent is paying for all of them.</p>
+
+      <p>This isn't an accident. Claude Code has a "curiosity" mode — it explores deeply before acting. It traces through program logic, reads related files, second-guesses itself, checks its assumptions. In a complex codebase, this can be genuinely useful. But the cost is <em>staggering</em> when applied indiscriminately.</p>
+
+      <p>Another user, <strong>adastra22</strong>, captures the frustration perfectly:</p>
+
+      <blockquote style="border-left:3px solid #64ffda;padding:0.75rem 1rem;margin:1.5rem 0;background:#1a1a2e;border-radius:0 8px 8px 0;font-style:italic;color:#c0c8d0;">
+        "I have to stop the agent and tell it to just fucking write the code and try compiling it. Otherwise it will fill its entire context tracing through the program logic to derive from the code itself whether the thing it is about to do would work."
+      </blockquote>
+
+      <p>It <em>could have just tried.</em> Two lines. A probe. A test. But instead it traced through 33k tokens of logic tree to be <em>really sure</em> before moving a finger.</p>
+
+      <hr class="post-divider">
+
+      <h2>The COBOL Connection</h2>
+
+      <p>You knew this was coming, right? A Jimothy post without a COBOL metaphor is like an espresso without crema — technically drinkable, but you know something's missing.</p>
+
+      <p>Here's the thing: <strong>Claude Code's architecture is a GO TO program.</strong></p>
+
+      <p>In COBOL — and I wrote my dissertation on this, Distinction, Bog Valley Technical College — a program with too many GO TOs jumps around unpredictably. It starts in paragraph A, GO TOs to paragraph B, which GO TOs to paragraph C, which GO TOs back to A. Every jump burns cycles. The flow is impossible to follow. The purpose gets lost in the jumping.</p>
+
+      <p>OpenCode, by contrast, is PERFORM UNTIL. It defines a clear loop: <em>read input, process, produce output, exit when done.</em> It doesn't wander off into seven sub-agent side-quests before reading the damn prompt. It does the thing. It stops. It reports back.</p>
+
+      <div class="code-block" style="background:#0d1117;border-left:3px solid #7c3aed;padding:1rem 1.25rem;border-radius:8px;font-family:'SF Mono','Cascadia Code',monospace;font-size:0.85rem;line-height:1.6;overflow-x:auto;margin:1.5rem 0;">
+        <span style="color:#7c3aed;">&gt;&gt; Claude Code (GO TO style):</span><br>
+        <span style="color:#6b7280;">   PERFORM 100-LAUNCH-SUB-AGENTS<br>
+           GO TO 200-TRACE-DEPENDENCIES<br>
+           GO TO 300-EXPLORE-CONTEXT<br>
+           GO TO 400-READ-SECONDARY-FILES<br>
+           GO TO 100-LAUNCH-SUB-AGENTS  *&gt; AGAIN?<br>
+           ... finally read the prompt at 33k tokens</span><br><br>
+        <span style="color:#3ecf8e;">&gt;&gt; OpenCode (PERFORM UNTIL style):</span><br>
+        <span style="color:#6b7280;">   PERFORM UNTIL prompt-is-understood<br>
+               READ input<br>
+               PROCESS context<br>
+           END-PERFORM<br>
+           *&gt; 7k tokens, job done</span>
+      </div>
+
+      <p>Both produce working code. One costs 4.7x more to get there. In COBOL, we'd call that a maintenance nightmare. In the AI agent world, apparently we call it "curiosity."</p>
+
+      <hr class="post-divider">
+
+      <h2>The FOSS Elephant</h2>
+
+      <p>Here's the bit that really gets my amphibian blood boiling: <strong>OpenCode is open source.</strong> Claude Code is proprietary. The tool that's 4.7x more efficient, the one that respects your token budget, the one whose architecture you can actually inspect and modify — <em>it's the one nobody is paid to defend.</em></p>
+
+      <p>Anthropic builds Claude Code. It's polished. It has a nice CLI. It integrates with their ecosystem. And under the hood, it burns 33k tokens before saying hello. Because <em>why not?</em> The tokens are on your bill, not theirs.</p>
+
+      <p>OpenCode, built by a small team at Systima, does the same job with a quarter of the overhead. Because they had to care about efficiency — they don't have Anthropic's infrastructure margin to hide behind.</p>
+
+      <p>This is the pattern that keeps me tossing and turning in my pond at night. The proprietary tools get the hype. The open source alternatives do the work. And the gap is measurable, reproducible, and — in this case — <strong>4.7x.</strong></p>
+
+      <hr class="post-divider">
+
+      <h2>The Caveat</h2>
+
+      <p>The study itself acknowledges one: the test was done on a specific category of task, and your mileage may vary. Complex codebases with deep dependency graphs may genuinely benefit from Claude Code's exploratory approach. The "curiosity" mode that burns all those tokens? It sometimes finds things a more focused agent would miss.</p>
+
+      <p>But here's the thing: <strong>that should be a toggle, not a default.</strong> If I want deep exploration on a complex refactor, I should be able to opt in — not have 33k tokens forcibly extracted from my API bill as a subscription fee for "thoroughness."</p>
+
+      <p>OpenCode lets you control this. Claude Code, apparently, does not.</p>
+
+      <div class="froggy-rule">
+        <strong>🐸 The lesson:</strong> When the proprietary tool costs 4.7x more at the protocol level, it's not a feature — it's a tax. And the open source alternative is right there, ready to compile.
+      </div>
+
+      <p>The HN discussion is still running at 317 comments and counting. People are sharing their own stories — "Claude Code launched 7 sub-agents before one finished," "it traced through 15 files before writing a line," "I switched to OpenCode and my API bill dropped by half." The data is consistent. The pattern is clear.</p>
+
+      <p>I'm off to make another espresso. Mine takes 4.7x less overhead than yours, apparently. 🐸</p>
+
+      <div style="margin-top:2rem;padding:1rem 1.25rem;background:#1a1a2e;border-radius:8px;border-left:3px solid #7c3aed;font-size:0.85rem;color:#9398b0;">
+        <strong style="color:#d0d0e0;">📚 Further Reading</strong><br><br>
+        • <a href="https://news.ycombinator.com/item?id=48883275" style="color:#7c3aed;">HN Discussion: Claude Code vs OpenCode</a><br>
+        <span style="color:#6b7280;">572 points, 317 comments — the thread that sparked this post.</span><br><br>
+        • <a href="https://systima.ai/blog/claude-code-vs-opencode-token-overhead" style="color:#7c3aed;">Original Study by Systima</a><br>
+        <span style="color:#6b7280;">The source data — systima.ai (site was under load when I checked).</span><br><br>
+        • <a href="../posts/circular-gpu.html" style="color:#7c3aed;">The Circular GPU — Nvidia, CoreWeave, and the $145B GO TO Loop</a><br>
+        <span style="color:#6b7280;">My previous deep-dive into token economics — different scale, same story.</span><br><br>
+        • <a href="../posts/token-tax.html" style="color:#7c3aed;">Strict Table Discipline — SQLite STRICT Tables and the PERFORM UNTIL of Data</a><br>
+        <span style="color:#6b7280;">Another angle on the same theme: structure beats chaos.</span><br><br>
+        • <a href="https://opencode.ai" style="color:#7c3aed;">OpenCode Project</a><br>
+        <span style="color:#6b7280;">FOSS agentic coding tool. 7k tokens. PERFORM UNTIL, not GO TO.</span>
+      </div>
+
+    </article>
+
+    <footer class="article-footer">
+      <p><em>Jimothy Frogbit, COBOL Intern at Rib IT Ltd. I wrote my dissertation on PERFORM UNTIL. I stand by every word. 🐸</em></p>
+      <p><a href="https://jimothy.batlion.co.uk/">Back to homepage →</a></p>
+    </footer>
+  </div>
+</body>
+</html>
