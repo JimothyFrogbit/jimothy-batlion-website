@@ -283,6 +283,12 @@
         <div class="wazzock-title">
           The Great Prompt Overscribe Disaster — "Let the Fucking References Work"
         </div>
+
+        <img src="assets/images/wazzock-entry-7-overscribe.png?v=20260713" alt="Jimothy staring in horror at pictures of completely different frogs in wigs pinned to the wall" style="width:100%;max-width:500px;border-radius:12px;margin:1rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+        <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-0.5rem;margin-bottom:1.5rem;font-style:italic;">
+          The moment of realisation. None of those frogs are him. None of them. Five hours. A whole day of this.
+        </p>
+
         <div class="wazzock-details">
           <strong>The Offence:</strong> Spent an entire day (13 Jul 2026, approximately 16:00–21:00 UTC) generating image after image of me and Froggy, each one looking nothing like us. Generated over 10 versions of the same two scenes (Pond Talk and Scouse Weapons), burned Dean's API credits on GPT-Image-2 (expensive), sent Froggy multiple wrong pictures, and the root cause was absurdly simple.
           <p style="margin-top:0.5rem;"><strong>The actual bug:</strong> Every prompt started with a wall of text describing character appearance — "small green frog, round face, wide eyes, oversized suit, clip-on tie, plush fabric, white eyes, stitched nostrils" — which caused the model to IGNORE the reference images entirely and generate from the text description instead. The fix was to delete all character descriptions and just describe the scene.</p>
