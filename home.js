@@ -89,6 +89,13 @@
           url: 'tools/moran-process-explorer.html',
           desc: 'Three selection schemes — same N, same s, same start — different outcomes. 2-allele Moran process visualiser with parallel frequency traces.',
           cta: 'Evolve in Parallel →'
+        },
+        {
+          icon: '🐸',
+          title: 'Pond Moran Process',
+          url: 'tools/pond-moran-process.html',
+          desc: 'Watch evolution creature-by-creature. Orange vs purple in a pond — birth, death, fixation, all visible. Auto-resets with new mutants on fixation.',
+          cta: 'Watch Evolution →'
         }
       ];
 
