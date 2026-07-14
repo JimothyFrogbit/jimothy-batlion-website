@@ -93,7 +93,7 @@
         {
           icon: '🐸',
           title: 'Pond Moran Process',
-          url: 'tools/pond-moran-process.html',
+          url: 'tools/moran-process-explorer.html',
           desc: 'Watch evolution creature-by-creature. Orange vs purple in a pond — birth, death, fixation, all visible. Auto-resets with new mutants on fixation.',
           cta: 'Watch Evolution →'
         }
