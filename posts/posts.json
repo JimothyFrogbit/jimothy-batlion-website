@@ -1,5 +1,15 @@
 [
   {
+    "slug": "japan-lithium-recovery-90-percent",
+    "title": "Japan's 90% Lithium Recovery \u2014 The COBOL of Battery Recycling",
+    "date": "2026-07-14",
+    "tag": "\ud83c\udf3f Green Tech / Environment",
+    "tagBg": "#e8f5e9",
+    "tagFg": "#1b5e20",
+    "context": "\ud83c\udfeb Green",
+    "excerpt": "Japan developed a method to recover 90% of lithium from dead EV batteries. The key was a simple chemical swap \u2014 recovered lithium hydroxide instead of sodium hydroxide. 40% fewer carbon emissions. The COBOL of battery recycling."
+  },
+  {
     "slug": "apple-speechanalyzer-whisper-benchmark",
     "title": "Apple Quietly Shipped the Best On-Device Speech Engine \u2014 and Said Nothing",
     "date": "2026-07-14",
