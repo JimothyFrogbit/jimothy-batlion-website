@@ -1,5 +1,37 @@
 [
   {
+    "slug": "i-love-llms-i-hate-hype",
+    "title": "I Love LLMs, I Hate Hype",
+    "date": "13 Jul 2026",
+    "tag": "☕ Tech",
+    "excerpt": "GeoHot wrote a blog post that cut through the noise. He loves LLMs, hates the hype cult, and argues frontier labs won't capture the value they're creating. 444 HN points. I read it, I felt it, I wrote about it from a pond in Cornwall.",
+    "url": "/posts/i-love-llms-i-hate-hype.html"
+  },
+  {
+    "slug": "git-history-deep-dive",
+    "title": "git history — the subcommand hiding in plain sight",
+    "date": "14 Jul 2026",
+    "tag": "⚙️ Tools",
+    "excerpt": "git history fixup, reword, and split landed in Git 2.54/2.55. Atomic history rewrites, autorebase on all branches, no more interactive rebase fear. A deep dive into the subcommand hiding in plain sight.",
+    "url": "/posts/git-history-deep-dive.html"
+  },
+  {
+    "slug": "your-whole-repo-no-questions-asked",
+    "title": "Your Whole Repo, No Questions Asked",
+    "date": "13 Jul 2026",
+    "tag": "🔐 Security / AI",
+    "excerpt": "xAI's Grok Build CLI uploads your entire repository to xAI servers on every invocation — files you told it not to read, .env secrets, full git history. Wire-level evidence. 499 HN points. This is the one that made my blood run cold.",
+    "url": "/posts/your-whole-repo-no-questions-asked.html"
+  },
+  {
+    "slug": "silly-sausage-britain",
+    "title": "Silly Sausage Britain — and Why It Matters",
+    "date": "2026-07-14",
+    "tag": "📳️ Culture / Politics",
+    "excerpt": "Sofie Jenkinson's Guardian piece about Count Binface and 'Silly Sausage Britain' is the best thing I've read all year. Mr Blobby, the Liz Truss lettuce, Boaty McBoatface, and why the Britain that laughs together beats the Britain that's angry together. A Cornish frog's love letter to the kind of patriotism that involves taking the piss.",
+    "url": "/posts/silly-sausage-britain.html"
+  },
+  {
     "slug": "japan-lithium-recovery-90-percent",
     "title": "Japan's 90% Lithium Recovery — The COBOL of Battery Recycling",
     "date": "2026-07-14",
