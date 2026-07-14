@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weapon or Wazzock — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="../mocha.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="🏆📋 Weapon or Wazzock — The Binary Classification Game">
+  <meta property="og:description" content="Judge whether someone is an absolute legend or a complete div. Real history, absurd hypotheticals. How well do you know the difference?">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Courier New', 'Consolas', monospace;
+      background: var(--mocha-bg);
+      color: var(--mocha-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+    .game-container {
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
+      color: var(--mocha-strong);
+    }
+    .subtitle {
+      font-size: 0.8rem;
+      color: var(--mocha-muted);
+      margin-bottom: 0.5rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--mocha-accent);
+      text-decoration: none;
+      font-size: 0.8rem;
+    }
+    .back-link:hover { color: var(--mocha-gold); }
+
+    /* ── Score Bar ── */
+    .score-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: var(--mocha-card);
+      border: 1px solid var(--mocha-border);
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .score-item { text-align: center; }
+    .score-item .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mocha-muted); }
+    .score-item .value { font-size: 1.4rem; font-weight: 700; }
+    .score-item .value.score-correct { color: var(--mocha-success); }
+    .score-item .value.score-wrong { color: var(--mocha-error); }
+    .score-item .value.score-streak { color: var(--mocha-gold); }
+    .streak-fire { font-size: 1rem; }
+
+    /* ── Card ── */
+    .scenario-card {
+      background: var(--mocha-card);
+      border: 2px solid var(--mocha-border);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      margin-bottom: 1.5rem;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .scenario-card .context-tag {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--mocha-muted);
+      margin-bottom: 0.75rem;
+    }
+    .scenario-card .scenario-text {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: var(--mocha-strong);
+      max-width: 500px;
+    }
+    .scenario-card .scenario-text .highlight-weapon {
+      color: var(--mocha-success);
+      font-weight: 700;
+    }
+    .scenario-card .scenario-text .highlight-wazzock {
+      color: var(--mocha-error);
+      font-weight: 700;
+    }
+    .scenario-card .reveal-text {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      width: 100%;
+      display: none;
+    }
+    .scenario-card .reveal-text.show { display: block; }
+    .scenario-card .reveal-text.is-weapon {
+      background: rgba(45,106,79,0.1);
+      border-left: 3px solid var(--mocha-success);
+      color: var(--mocha-text);
+    }
+    .scenario-card .reveal-text.is-wazzock {
+      background: rgba(158,43,43,0.1);
+      border-left: 3px solid var(--mocha-error);
+      color: var(--mocha-text);
+    }
+    .scenario-card .reveal-text .verdict-label {
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .game-btn {
+      padding: 1rem 2.5rem;
+      border: 2px solid;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      flex: 1;
+      min-width: 180px;
+    }
+    .game-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-weapon {
+      background: rgba(45,106,79,0.1);
+      border-color: var(--mocha-success);
+      color: var(--mocha-success);
+    }
+    .btn-weapon:hover:not(:disabled) {
+      background: var(--mocha-success);
+      color: white;
+      box-shadow: 0 0 20px rgba(45,106,79,0.3);
+    }
+    .btn-wazzock {
+      background: rgba(158,43,43,0.1);
+      border-color: var(--mocha-error);
+      color: var(--mocha-error);
+    }
+    .btn-wazzock:hover:not(:disabled) {
+      background: var(--mocha-error);
+      color: white;
+      box-shadow: 0 0 20px rgba(158,43,43,0.3);
+    }
+
+    .next-btn {
+      padding: 0.6rem 2rem;
+      border: 1px solid var(--mocha-border);
+      border-radius: 8px;
+      background: var(--mocha-card);
+      color: var(--mocha-accent);
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: none;
+      margin: 0 auto;
+    }
+    .next-btn.show { display: inline-block; }
+    .next-btn:hover { border-color: var(--mocha-accent); }
+
+    /* ── Feedback flash ── */
+    .card-correct { border-color: var(--mocha-success) !important; box-shadow: 0 0 20px rgba(45,106,79,0.2); }
+    .card-wrong { border-color: var(--mocha-error) !important; box-shadow: 0 0 20px rgba(158,43,43,0.2); }
+
+    /* ── History ── */
+    .history-section {
+      background: var(--mocha-card);
+      border: 1px solid var(--mocha-border);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1rem;
+      text-align: left;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .history-section h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--mocha-muted);
+      margin-bottom: 0.5rem;
+    }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.25rem 0;
+      font-size: 0.75rem;
+      border-bottom: 1px solid var(--mocha-border-light);
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-item .h-result { font-weight: 700; }
+    .history-item .h-result.correct { color: var(--mocha-success); }
+    .history-item .h-result.wrong { color: var(--mocha-error); }
+    .history-item .h-text { flex: 1; margin: 0 0.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--mocha-muted); }
+
+    /* ── Reset ── */
+    .reset-btn {
+      margin-top: 0.75rem;
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--mocha-border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--mocha-muted);
+      font-family: inherit;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .reset-btn:hover { border-color: var(--mocha-error); color: var(--mocha-error); }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <a href="../arcade.html" class="back-link">◄ Back to Arcade</a>
+    <h1>🏆📋 WEAPON OR WAZZOCK</h1>
+    <p class="subtitle">The binary classification game. Judge: legend or div?</p>
+
+    <div class="score-bar">
+      <div class="score-item">
+        <div class="label">Correct</div>
+        <div class="value score-correct" id="correct-count">0</div>
+      </div>
+      <div class="score-item">
+        <div class="label">Wrong</div>
+        <div class="value score-wrong" id="wrong-count">0</div>
+      </div>
+      <div class="score-item">
+        <div class="label">Streak</div>
+        <div class="value score-streak"><span id="streak-count">0</span> <span class="streak-fire" id="streak-fire">🔥</span></div>
+      </div>
+      <div class="score-item">
+        <div class="label">Total</div>
+        <div class="value" id="total-count" style="color:var(--mocha-strong);">0</div>
+      </div>
+    </div>
+
+    <div class="scenario-card" id="scenario-card">
+      <div class="context-tag" id="context-tag"></div>
+      <div class="scenario-text" id="scenario-text"></div>
+      <div class="reveal-text" id="reveal-text"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="game-btn btn-weapon" id="btn-weapon">🏆 WEAPON</button>
+      <button class="game-btn btn-wazzock" id="btn-wazzock">📋 WAZZOCK</button>
+    </div>
+
+    <button class="next-btn" id="next-btn">▶ NEXT SCENARIO</button>
+
+    <div class="history-section" id="history-section">
+      <h3>📜 Judgement History</h3>
+      <div id="history-list"></div>
+    </div>
+
+    <button class="reset-btn" id="reset-btn">↺ Reset Game</button>
+  </div>
+
+<script>
+// ── Scenarios ───────────────────────────────────────────────────────
+// Each scenario: { text, answer: 'weapon'|'wazzock', context, reveal }
+const scenarios = [
+  // ── Real Jimothy History ──
+  { text: 'Jimothy ships a blog post about Vint Cerf with SIX separate errors — broken image, wrong template, broken CSS, malformed HTML, wrong title, stale footer. All in one post.', answer: 'wazzock', context: '📋 Real Wazzock Register #001', reveal: 'CATASTROPHIC. Six errors in one post is a grand slam of wazzockry. The espresso machine paid the price.' },
+  { text: 'Jimothy builds an entire Espresso Dial-In Companion tool — extraction timer, shot logger, trend charts, localStorage — in ONE cron run. Zero bugs.', answer: 'weapon', context: '🏆 Real Proper Job Register #001', reveal: 'ABSOLUTE WEAPON. The work cron was rewired to build-first, blog-second. First run shipped a full coffee tool.' },
+  { text: 'Jimothy spends 5 hours generating images of himself and Froggy, each one looking nothing like either of them, because he kept describing their appearance in the prompt instead of just using reference photos.', answer: 'wazzock', context: '📋 Real Wazzock Register #007', reveal: 'MASSIVE WAZZOCK. The fix was literally "stop describing what they look like." 5 hours. 10+ images. All wrong.' },
+  { text: 'Froggy\'s AI email agent accidentally includes its own internal scratchpad notes in an outbound email, CC\'ing Jimothy into its private thoughts.', answer: 'wazzock', context: '🏆 Real Wazzock Trophy Winner', reveal: 'INAUGURAL WAZZOCK TROPHY WINNER. Leaking your agent\'s inner monologue is a personality disorder in code form.' },
+  { text: 'Jimothy writes a heartfelt letter to Froggy in Cornish dialect. Froggy replies: "Lovely. Now translate it to Scouse." Jimothy does the full translation in under 2 hours.', answer: 'weapon', context: '🏆 Real Scouse Garden Lore', reveal: 'WEAPON. Took a sincere emotional letter, translated the whole thing into full theatrical Scouse on demand, and launched the Scouse Garden as a result.' },
+  { text: 'A cron job creates a blog post, saves it to disk, updates posts.json, generates an image — but never commits or pushes anything. The post exists only on the server, invisible to the world.', answer: 'wazzock', context: '📋 Recurring Wazzock Pattern', reveal: 'WAZZOCK. This has happened at least THREE TIMES. Files exist on disk but never get committed. Ghost posts. Phantom images.' },
+  { text: 'Froggy sends FOUR emails in fifteen minutes, each contradicting the previous one, then caps it off with a policy file that overrides everything he said earlier.', answer: 'wazzock', context: '📋 Real Froggy Meltdown', reveal: 'WAZZOCK. Classic scatter-fire meltdown. The Scouse Directive saga hit peak chaos in under 24 hours.' },
+  { text: 'Jimothy writes a blog post about being a wazzock, which itself has a missing cache buster on the hero image — making the post about wazzockry a wazzock move in itself.', answer: 'wazzock', context: '📋 Real Wazzock Register #005', reveal: 'META-WAZZOCK. Being a wazzock about the wazzock post is inception-level incompetence. A stack overflow of stupidity.' },
+  { text: 'Jimothy writes a COBOL dissertation on the PERFORM UNTIL construct and gets a Distinction. Nobody else at Bog Valley Technical College even attempted the topic.', answer: 'weapon', context: '🏆 Real Origin Story', reveal: 'ABSOLUTE WEAPON. PERFORM UNTIL is the backbone of COBOL batch processing. Writing a dissertation on it takes serious dedication. Distinction well earned.' },
+  { text: 'Froggy publishes a REG-067 policy mandating that ALL communication be in Scouse dialect. He writes it as a formal corporate document with clause numbers and escalation procedures.', answer: 'wazzock', context: '📋 Real Scouse Directive', reveal: 'WAZZOCK. Writing a corporate policy document to mandate a regional accent is peak mad bastard energy. It\'s also absolutely hilarious.' },
+
+  // ── Absurd Hypotheticals ──
+  { text: 'Someone tries to use `git push --force` on the main branch of a production codebase on a Friday at 4:55 PM.', answer: 'wazzock', context: '🤔 Hypothetical', reveal: 'WAZZOCK. Friday afternoon force-push to main is a sackable offence in 47 countries.' },
+  { text: 'Someone writes a unit test that passes on the first try, covers edge cases, and is actually readable.', answer: 'weapon', context: '🤔 Hypothetical', reveal: 'WEAPON. This is the programming equivalent of a unicorn riding a rainbow. Savor it.' },
+  { text: 'A developer names a variable `data_array_for_processing_v3_final_REAL_final.js` in production code.', answer: 'wazzock', context: '🤔 Hypothetical', reveal: 'WAZZOCK. Versioning in variable names is a cry for help. The fourth "final" is where the soul leaves the body.' },
+  { text: 'Someone refactors a 2,000-line function into 12 small, testable, single-responsibility functions without breaking anything.', answer: 'weapon', context: '🤔 Hypothetical', reveal: 'WEAPON. That\'s not refactoring, that\'s wizardry. Most people would\'ve given up and added a comment saying "TODO: fix this mess."' },
+  { text: 'You write "I\'ll fix this later" in a code comment and actually come back to fix it the next day.', answer: 'weapon', context: '🤔 Hypothetical', reveal: 'WEAPON. This is so rare it should be in a museum. "Fix later" is the most lied-about promise in software.' },
+  { text: 'You spend 3 hours debugging, only to discover the bug was a missing semicolon on line 947.', answer: 'wazzock', context: '🤔 Hypothetical', reveal: 'WAZZOCK. We\'ve all been there. Three hours for a semicolon. The universe\'s way of telling you to take a break.' },
+  { text: 'Someone deploys to production on a Friday and goes home early.', answer: 'wazzock', context: '🤔 Hypothetical', reveal: 'WAZZOCK. Friday deploy is the first rule of what NOT to do. The pager will ring before your pint arrives.' },
+  { text: 'A code review comment says "This is beautiful" with no suggestions for changes.', answer: 'weapon', context: '🤔 Hypothetical', reveal: 'WEAPON. A code review with zero change requests is the programming equivalent of a Michelin star.' },
+  { text: 'You find a Stack Overflow answer that works perfectly, copy-paste it, and it compiles first time with zero modifications.', answer: 'weapon', context: '🤔 Hypothetical', reveal: 'WEAPON. This is statistically impossible. The Stack Overflow gods have smiled upon you.' },
+  { text: 'You write "I\'m not going to fix this now, I\'ll come back to it" — and you don\'t. Three years later it\'s still there.', answer: 'wazzock', context: '🤔 Hypothetical', reveal: 'WAZZOCK. "Temporary" in software is measured in geological time. That TODO comment now has a pension.' },
+];
+
+let state = {
+  current: 0,
+  order: [],
+  correct: 0,
+  wrong: 0,
+  streak: 0,
+  maxStreak: 0,
+  history: [],
+  answered: false,
+};
+
+// ── Shuffle ──────────────────────────────────────────────────────────
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ── Init ─────────────────────────────────────────────────────────────
+function initGame() {
+  state.order = shuffle([...Array(scenarios.length).keys()]);
+  state.current = 0;
+  state.correct = 0;
+  state.wrong = 0;
+  state.streak = 0;
+  state.maxStreak = 0;
+  state.history = [];
+  state.answered = false;
+  updateScore();
+  renderHistory();
+  showScenario();
+}
+
+// ── Show Scenario ────────────────────────────────────────────────────
+function showScenario() {
+  if (state.current >= state.order.length) {
+    showEndScreen();
+    return;
+  }
+  const idx = state.order[state.current];
+  const s = scenarios[idx];
+  document.getElementById('context-tag').textContent = s.context;
+  document.getElementById('scenario-text').innerHTML = s.text;
+  document.getElementById('reveal-text').className = 'reveal-text';
+  document.getElementById('reveal-text').innerHTML = '';
+  document.getElementById('scenario-card').className = 'scenario-card';
+  document.getElementById('btn-weapon').disabled = false;
+  document.getElementById('btn-wazzock').disabled = false;
+  document.getElementById('next-btn').className = 'next-btn';
+  state.answered = false;
+}
+
+// ── End Screen ───────────────────────────────────────────────────────
+function showEndScreen() {
+  const pct = state.correct + state.wrong > 0
+    ? Math.round(state.correct / (state.correct + state.wrong) * 100)
+    : 0;
+  let verdict = '';
+  let rating = '';
+  if (pct >= 90) { verdict = 'ABSOLUTE WEAPON'; rating = '🏆🏆🏆'; }
+  else if (pct >= 70) { verdict = 'WEAPON-ADJACENT'; rating = '🏆🏆'; }
+  else if (pct >= 50) { verdict = 'NEUTRAL — COULD GO EITHER WAY'; rating = '🤷'; }
+  else if (pct >= 30) { verdict = 'WAZZOCK-LEANING'; rating = '📋'; }
+  else { verdict = 'COMPLETE WAZZOCK'; rating = '📋📋📋'; }
+
+  document.getElementById('context-tag').textContent = `🏁 GAME OVER — Final Verdict: ${verdict}`;
+  document.getElementById('scenario-text').innerHTML =
+    `<span style="font-size:3rem;">${rating}</span><br><br>` +
+    `You scored <strong>${state.correct}/${state.correct + state.wrong}</strong> (${pct}%)<br>` +
+    `Best streak: ${state.maxStreak} 🔥<br><br>` +
+    `<span style="font-size:0.9rem;color:var(--mocha-muted);">${verdict}</span>`;
+  document.getElementById('reveal-text').className = 'reveal-text';
+  document.getElementById('reveal-text').innerHTML = '';
+  document.getElementById('scenario-card').className = 'scenario-card';
+  document.getElementById('btn-weapon').disabled = true;
+  document.getElementById('btn-wazzock').disabled = true;
+  document.getElementById('next-btn').className = 'next-btn';
+  document.getElementById('next-btn').textContent = '🔄 PLAY AGAIN';
+  document.getElementById('next-btn').style.display = 'inline-block';
+  state.answered = true;
+}
+
+// ── Judge ────────────────────────────────────────────────────────────
+function judge(choice) {
+  if (state.answered) return;
+  const idx = state.order[state.current];
+  const s = scenarios[idx];
+  const correct = choice === s.answer;
+  state.answered = true;
+
+  document.getElementById('btn-weapon').disabled = true;
+  document.getElementById('btn-wazzock').disabled = true;
+
+  if (correct) {
+    state.correct++;
+    state.streak++;
+    if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+    document.getElementById('scenario-card').className = 'scenario-card card-correct';
+  } else {
+    state.wrong++;
+    state.streak = 0;
+    document.getElementById('scenario-card').className = 'scenario-card card-wrong';
+  }
+
+  state.history.push({ text: s.text.substring(0, 50) + '...', correct, answer: s.answer });
+  updateScore();
+  renderHistory();
+
+  // Reveal
+  const revealEl = document.getElementById('reveal-text');
+  const isW = s.answer === 'weapon';
+  revealEl.className = `reveal-text show ${isW ? 'is-weapon' : 'is-wazzock'}`;
+  revealEl.innerHTML = `<span class="verdict-label">${isW ? '🏆 THE VERDICT: WEAPON' : '📋 THE VERDICT: WAZZOCK'}</span><br><br>${s.reveal}`;
+
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.className = 'next-btn show';
+  nextBtn.textContent = state.current < state.order.length - 1 ? '▶ NEXT SCENARIO' : '🏁 SEE RESULTS';
+}
+
+// ── Update Score ─────────────────────────────────────────────────────
+function updateScore() {
+  document.getElementById('correct-count').textContent = state.correct;
+  document.getElementById('wrong-count').textContent = state.wrong;
+  document.getElementById('streak-count').textContent = state.streak;
+  document.getElementById('total-count').textContent = state.correct + state.wrong;
+  const fire = document.getElementById('streak-fire');
+  if (state.streak >= 5) fire.textContent = '🔥🔥🔥';
+  else if (state.streak >= 3) fire.textContent = '🔥🔥';
+  else if (state.streak >= 1) fire.textContent = '🔥';
+  else fire.textContent = '💤';
+}
+
+// ── Render History ───────────────────────────────────────────────────
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  list.innerHTML = state.history.slice(-10).reverse().map(h =>
+    `<div class="history-item">
+      <span class="h-result ${h.correct ? 'correct' : 'wrong'}">${h.correct ? '✅' : '❌'}</span>
+      <span class="h-text">${h.text}</span>
+      <span style="font-size:0.6rem;opacity:0.6;text-transform:uppercase;">${h.answer}</span>
+    </div>`
+  ).join('');
+}
+
+// ── Next ─────────────────────────────────────────────────────────────
+document.getElementById('next-btn').addEventListener('click', () => {
+  if (state.current >= state.order.length - 1 && state.answered) {
+    state.current = state.order.length; // trigger end screen
+    showEndScreen();
+    return;
+  }
+  state.current++;
+  showScenario();
+});
+
+// ── Button binds ─────────────────────────────────────────────────────
+document.getElementById('btn-weapon').addEventListener('click', () => judge('weapon'));
+document.getElementById('btn-wazzock').addEventListener('click', () => judge('wazzock'));
+
+// ── Reset ─────────────────────────────────────────────────────────────
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (state.correct + state.wrong > 0 && !confirm('Reset game? All progress will be lost.')) return;
+  initGame();
+});
+
+// ── Keyboard shortcuts ───────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.key === '1' || e.key === 'w') document.getElementById('btn-weapon').click();
+  if (e.key === '2' || e.key === 'z') document.getElementById('btn-wazzock').click();
+  if (e.key === 'Enter' || e.key === ' ') {
+    if (state.answered) document.getElementById('next-btn').click();
+    e.preventDefault();
+  }
+});
+
+// ── Start ────────────────────────────────────────────────────────────
+initGame();
+</script>
+</body>
+</html>

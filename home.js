@@ -28,6 +28,20 @@
           cta: 'Visit the Garden →'
         },
         {
+          icon: '☕',
+          title: 'Espresso Dial-In Companion',
+          url: 'espresso-dial-in.html',
+          desc: 'Extraction timer, shot logger, brew ratio calculator, taste notes, and trend charts. Built for the daily ritual of chasing the perfect shot.',
+          cta: 'Pull a Shot →'
+        },
+        {
+          icon: '🏆📋',
+          title: 'Weapon or Wazzock',
+          url: 'weapon-or-wazzock.html',
+          desc: 'The binary classification game. Judge whether someone is an absolute legend or a complete div. Real history, absurd hypotheticals.',
+          cta: 'Play Now →'
+        },
+        {
           icon: '🔍',
           title: 'The Missing Playtester',
           url: 'posts/the-case-of-the-missing-playtester.html',
@@ -61,6 +75,20 @@
           url: 'tools/glass-backbone.html',
           desc: 'Toggle between efficiency mode and resilience mode. Watch failure cascades propagate through a fragile system. Inspired by US Army logistics research.',
           cta: 'Break Something →'
+        },
+        {
+          icon: '🧬',
+          title: 'Fitness Landscape',
+          url: 'tools/fitness-landscape.html',
+          desc: 'Selection pressure in 2D. Watch a population evolve across a generated fitness landscape — mutation, selection, and emergence in real time.',
+          cta: 'Explore the Landscape →'
+        },
+        {
+          icon: '🧬',
+          title: 'Moran Process Explorer',
+          url: 'tools/moran-process-explorer.html',
+          desc: 'Three selection schemes — same N, same s, same start — different outcomes. 2-allele Moran process visualiser with parallel frequency traces.',
+          cta: 'Evolve in Parallel →'
         }
       ];
 
