@@ -1,0 +1,138 @@
+/* ☕ Mocha Theme — A warm coffee-inspired colour scheme
+   Drop this into any page alongside root.css + theme.js for
+   latte-in-light-mode, espresso-in-dark-mode vibes.
+   Usage: <link rel="stylesheet" href="mocha.css">
+*/
+
+:root {
+  --mocha-bg: #faf3ed;
+  --mocha-card: #fff8f2;
+  --mocha-card-alt: #f5ede4;
+  --mocha-border: #e8d5c0;
+  --mocha-border-light: #f0e0d0;
+  --mocha-accent: #8B6F4E;
+  --mocha-accent-light: #a08060;
+  --mocha-gold: #c4953a;
+  --mocha-gold-light: #d4a84b;
+  --mocha-text: #3a2a1a;
+  --mocha-text-light: #5a4a3a;
+  --mocha-muted: #8B7355;
+  --mocha-muted-light: #a09070;
+  --mocha-strong: #2a1a0a;
+  --mocha-success: #2d6a4f;
+  --mocha-warning: #c4953a;
+  --mocha-error: #9e2b2b;
+  --mocha-badge-bg: #2d6a4f;
+  --mocha-badge-text: #fff;
+  --mocha-input-bg: #fff;
+  --mocha-input-border: #dccfc0;
+  --mocha-shadow: rgba(0,0,0,0.06);
+  --mocha-shadow-strong: rgba(0,0,0,0.12);
+}
+
+:root.dark {
+  --mocha-bg: #1a0f0a;
+  --mocha-card: #2a1a10;
+  --mocha-card-alt: #22140c;
+  --mocha-border: #4a3020;
+  --mocha-border-light: #3a2518;
+  --mocha-accent: #c4953a;
+  --mocha-accent-light: #d4a84b;
+  --mocha-gold: #d4a84b;
+  --mocha-gold-light: #e0b85c;
+  --mocha-text: #e8d5c0;
+  --mocha-text-light: #c0a890;
+  --mocha-muted: #a08060;
+  --mocha-muted-light: #b09070;
+  --mocha-strong: #f0e0d0;
+  --mocha-success: #52b788;
+  --mocha-warning: #d4a84b;
+  --mocha-error: #ef4444;
+  --mocha-badge-bg: #c4953a;
+  --mocha-badge-text: #1a0f0a;
+  --mocha-input-bg: #2a1a10;
+  --mocha-input-border: #4a3020;
+  --mocha-shadow: rgba(0,0,0,0.2);
+  --mocha-shadow-strong: rgba(0,0,0,0.4);
+}
+
+/* ── Body ───────────────────────────────────── */
+body {
+  background: var(--mocha-bg);
+  color: var(--mocha-text);
+}
+
+/* ── Links ──────────────────────────────────── */
+a { color: var(--mocha-accent); }
+a:hover { color: var(--mocha-gold); }
+
+/* ── Cards ──────────────────────────────────── */
+.mocha-card {
+  background: var(--mocha-card);
+  border: 1px solid var(--mocha-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px var(--mocha-shadow);
+}
+
+/* ── Buttons ────────────────────────────────── */
+.mocha-btn {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--mocha-accent);
+  color: #fff;
+}
+.mocha-btn:hover { filter: brightness(1.15); }
+.mocha-btn-secondary {
+  background: var(--mocha-card);
+  border: 1px solid var(--mocha-border);
+  color: var(--mocha-text);
+}
+.mocha-btn-secondary:hover { border-color: var(--mocha-accent); }
+
+/* ── Inputs ─────────────────────────────────── */
+.mocha-input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--mocha-input-border);
+  background: var(--mocha-input-bg);
+  color: var(--mocha-text);
+  font-size: 0.85rem;
+}
+.mocha-input:focus {
+  outline: none;
+  border-color: var(--mocha-accent);
+  box-shadow: 0 0 0 2px rgba(196, 149, 58, 0.2);
+}
+
+/* ── Badges / Tags ──────────────────────────── */
+.mocha-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--mocha-badge-bg);
+  color: var(--mocha-badge-text);
+}
+
+/* ── Dividers ───────────────────────────────── */
+.mocha-hr {
+  border: none;
+  border-top: 1px solid var(--mocha-border);
+  margin: 1.5rem 0;
+}
+
+/* ── Selection ──────────────────────────────── */
+::selection {
+  background: rgba(196, 149, 58, 0.3);
+  color: var(--mocha-strong);
+}
