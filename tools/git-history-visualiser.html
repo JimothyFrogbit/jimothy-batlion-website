@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>git history — Interactive Visualiser</title>
+<link rel="stylesheet" href="../root.css">
+<script src="../theme.js" defer></script>
+<link rel="icon" href="/assets/images/favicon.png">
+<style>
+  body { max-width: 900px; margin: 0 auto; padding: 2rem; font-family: system-ui, sans-serif; background: var(--bg, #f8fafc); color: var(--text-dark, #1a1a2e); }
+  h1 { font-size: 1.5rem; color: var(--frog-accent, #1b4332); margin-bottom: 0.25rem; }
+  .subtitle { color: var(--frog-green, #2d6a4f); margin-top: 0; margin-bottom: 2rem; font-size: 0.85rem; }
+  .subtitle code { background: var(--frog-warm, #d8f3dc); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.8rem; }
+
+  .controls { margin: 2rem 0; padding: 1.25rem; background: white; border-radius: 12px; border: 1px solid rgba(149, 213, 178, 0.3); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  :root.dark .controls { background: var(--bg-2, #1a1a2e); border-color: rgba(149, 213, 178, 0.1); }
+  .controls label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; font-size: 0.85rem; color: var(--frog-accent, #1b4332); }
+  .controls select { width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid var(--border-color, #e0e0e0); background: white; color: var(--text-dark, #1a1a2e); font-size: 0.85rem; cursor: pointer; }
+  :root.dark .controls select { background: var(--bg-3, #0f0f23); border-color: #444; color: #e0e0e0; }
+  .controls .btn-row { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+  .controls button { padding: 0.5rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+  #apply-btn { background: var(--frog-green, #2d6a4f); color: white; }
+  #apply-btn:hover { filter: brightness(1.15); }
+  #reset-btn { background: var(--frog-warm, #d8f3dc); color: var(--frog-accent, #1b4332); border: 1px solid var(--frog-light, #95d5b2); }
+  #reset-btn:hover { background: var(--frog-light, #95d5b2); }
+
+  .git-viz { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  .column { flex: 1; min-width: 260px; background: white; border-radius: 12px; padding: 1rem; border: 1px solid rgba(149, 213, 178, 0.3); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  :root.dark .column { background: var(--bg-2, #1a1a2e); border-color: rgba(149, 213, 178, 0.1); }
+  .column h3 { text-align: center; font-size: 0.9rem; color: var(--frog-accent, #1b4332); margin: 0 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--frog-light, #95d5b2); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .commit { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; margin: 0.25rem 0; border-radius: 6px; background: var(--frog-bg, #f0f7f4); border-left: 3px solid var(--frog-green, #2d6a4f); transition: all 0.2s; }
+  :root.dark .commit { background: rgba(45, 106, 79, 0.1); }
+  .commit .hash { font-family: monospace; font-size: 0.75rem; color: var(--frog-muted, #6b7280); min-width: 7ch; }
+  .commit .msg { flex: 1; font-size: 0.8rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .commit .branch-tag { background: var(--frog-green, #2d6a4f); color: white; font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 3px; font-family: monospace; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+  .arrow { text-align: center; padding: 0.2rem; color: var(--frog-muted, #6b7280); font-size: 0.9rem; }
+  .diff-arrow { text-align: center; font-size: 1.2rem; padding: 2rem 0.5rem; color: var(--frog-green, #2d6a4f); font-weight: 600; min-width: 120px; align-self: center; font-family: monospace; }
+  .commit.fixup-target { border-left-color: #f59e0b; }
+  .commit.fixup-source { border-left-color: #10b981; }
+  .commit.rewritten { border-left-color: #7c3aed; }
+  .commit.normal { border-left-color: var(--frog-green, #2d6a4f); }
+  .commit.root { border-left-color: #6b7280; }
+
+  .cmd-example { background: white; border: 1px solid rgba(149, 213, 178, 0.3); border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  :root.dark .cmd-example { background: var(--bg-2, #1a1a2e); border-color: rgba(149, 213, 178, 0.1); }
+  .cmd-example code { display: block; padding: 0.75rem; background: #0f0f23; color: #a5d6a7; border-radius: 6px; font-size: 0.8rem; font-family: monospace; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+  .cmd-example .desc { margin-top: 0.75rem; font-size: 0.85rem; color: #6b7280; line-height: 1.5; }
+
+  .warning { background: #fef9c3; color: #854d0e; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.8rem; line-height: 1.5; border: 1px solid #fde047; margin: 1.5rem 0; }
+  :root.dark .warning { background: rgba(253, 224, 71, 0.1); border-color: rgba(253, 224, 71, 0.3); color: #fde047; }
+  .warning code { background: rgba(133, 77, 14, 0.1); padding: 0.1rem 0.3rem; border-radius: 3px; }
+  :root.dark .warning code { background: rgba(253, 224, 71, 0.15); }
+  .warning strong { color: #854d0e; }
+  :root.dark .warning strong { color: #fde047; }
+
+  .back-link { display: inline-block; margin-bottom: 1rem; color: var(--frog-green, #2d6a4f); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+  .back-link:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    body { padding: 1rem; }
+    .git-viz { flex-direction: column; gap: 1rem; }
+    .diff-arrow { padding: 1rem 0; min-width: auto; }
+  }
+</style>
+</head>
+<body>
+  <a href="../projects.html" class="back-link">← Back to Projects</a>
+  <h1>git history — interactive visualiser</h1>
+  <p class="subtitle">See how <code>git history fixup</code>, <code>reword</code>, and <code>split</code> rewrite your commit graph.</p>
+
+  <div class="controls">
+    <label for="cmd-select">Choose a command:</label>
+    <select id="cmd-select">
+      <option value="fixup">git history fixup &lt;commit&gt;</option>
+      <option value="reword">git history reword &lt;commit&gt;</option>
+      <option value="split">git history split &lt;commit&gt;</option>
+    </select>
+
+    <label for="target-select">Target commit:</label>
+    <select id="target-select">
+      <option value="B">B — "Add user login"</option>
+      <option value="C">C — "Add profile page"</option>
+    </select>
+
+    <div class="btn-row">
+      <button id="apply-btn">▶ Apply</button>
+      <button id="reset-btn">↺ Reset</button>
+    </div>
+  </div>
+
+  <div class="git-viz" id="viz">
+    <!-- Columns rendered by JS -->
+  </div>
+
+  <div class="cmd-example" id="cmd-info">
+    <!-- Dynamic command info -->
+  </div>
+
+  <div class="warning">
+    <strong>⚡ Note:</strong> <code>git history</code> is <em>atomic</em> — it never leaves your tree half-broken. If the operation would produce a conflict, it refuses. That's less powerful than <code>jj</code>, but much safer than <code>rebase -i</code>.
+  </div>
+
+<script>
+const initialGraph = {
+  commits: [
+    { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+    { hash: "d4e5f6", msg: "Add user login", branch: "main", type: "normal" },
+    { hash: "g7h8i9", msg: "Add profile page", branch: "main", type: "normal" },
+    { hash: "j0k1l2", msg: "Add dark mode", branch: "feat-ui", type: "normal" },
+  ],
+  parentMap: { "d4e5f6": "a1b2c3", "g7h8i9": "d4e5f6", "j0k1l2": "g7h8i9" },
+  branchTips: { main: "g7h8i9", "feat-ui": "j0k1l2" }
+};
+
+const commandTransforms = {
+  fixup: {
+    B: {
+      before: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6", msg: "Add user login", branch: null, type: "fixup-target" },
+        { hash: "g7h8i9", msg: "Add profile page", branch: "main", type: "normal" },
+        { hash: "j0k1l2", msg: "Add dark mode", branch: "feat-ui", type: "normal" },
+      ],
+      after: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6*", msg: "Add user login (Fixed!)", branch: null, type: "rewritten" },
+        { hash: "g7h8i9*", msg: "Add profile page", branch: "main", type: "rewritten" },
+        { hash: "j0k1l2*", msg: "Add dark mode", branch: "feat-ui", type: "rewritten" },
+      ],
+      cmd: "git add fix-for-login.patch && git history fixup d4e5f6",
+      desc: "Stage your fix, then target the broken commit. The fix is folded in, and ALL branches descended from it are rebased automatically. No more manual rebase --update-refs gymnastics."
+    },
+    C: {
+      before: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6", msg: "Add user login", branch: null, type: "normal" },
+        { hash: "g7h8i9", msg: "Add profile page", branch: "main", type: "fixup-target" },
+        { hash: "j0k1l2", msg: "Add dark mode", branch: "feat-ui", type: "normal" },
+      ],
+      after: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6", msg: "Add user login", branch: null, type: "normal" },
+        { hash: "g7h8i9*", msg: "Add profile page (Fixed!)", branch: "main", type: "rewritten" },
+        { hash: "j0k1l2*", msg: "Add dark mode", branch: "feat-ui", type: "rewritten" },
+      ],
+      cmd: "git add fix-for-profile.patch && git history fixup g7h8i9",
+      desc: "Target the profile page commit. The fix is folded into it, and feat-ui branch is autorebased on top."
+    }
+  },
+  reword: {
+    B: {
+      before: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6", msg: "Add user login", branch: null, type: "fixup-target" },
+        { hash: "g7h8i9", msg: "Add profile page", branch: "main", type: "normal" },
+        { hash: "j0k1l2", msg: "Add dark mode", branch: "feat-ui", type: "normal" },
+      ],
+      after: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6*", msg: "✨ Add user login with OAuth", branch: null, type: "rewritten" },
+        { hash: "g7h8i9*", msg: "Add profile page", branch: "main", type: "rewritten" },
+        { hash: "j0k1l2*", msg: "Add dark mode", branch: "feat-ui", type: "rewritten" },
+      ],
+      cmd: "git history reword d4e5f6",
+      desc: "Opens your editor with commit B's message. Edit, save, and the rest of the stack is rebuilt with branches following. Never touches your working tree — pure graph surgery."
+    },
+    C: {
+      before: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6", msg: "Add user login", branch: null, type: "normal" },
+        { hash: "g7h8i9", msg: "Add profile page", branch: "main", type: "fixup-target" },
+        { hash: "j0k1l2", msg: "Add dark mode", branch: "feat-ui", type: "normal" },
+      ],
+      after: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6", msg: "Add user login", branch: null, type: "normal" },
+        { hash: "g7h8i9*", msg: "📄 Add user profile + avatar", branch: "main", type: "rewritten" },
+        { hash: "j0k1l2*", msg: "Add dark mode", branch: "feat-ui", type: "rewritten" },
+      ],
+      cmd: "git history reword g7h8i9",
+      desc: "Reword the profile page commit message without checking it out. feat-ui is rebuilt on the new hash."
+    }
+  },
+  split: {
+    B: {
+      before: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6", msg: "Add user login + validation", branch: null, type: "fixup-target" },
+        { hash: "g7h8i9", msg: "Add profile page", branch: "main", type: "normal" },
+        { hash: "j0k1l2", msg: "Add dark mode", branch: "feat-ui", type: "normal" },
+      ],
+      after: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "b2c3d4*", msg: "Add user login", branch: null, type: "rewritten" },
+        { hash: "e5f6g7*", msg: "Add validation logic", branch: null, type: "rewritten" },
+        { hash: "g7h8i9*", msg: "Add profile page", branch: "main", type: "rewritten" },
+        { hash: "j0k1l2*", msg: "Add dark mode", branch: "feat-ui", type: "rewritten" },
+      ],
+      cmd: "git history split d4e5f6",
+      desc: "Drops you into a hunk-by-hunk prompt over commit B's diff. Hunks you keep form the first commit; the rest become the second. Branches rebuild on the new chain."
+    },
+    C: {
+      before: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6", msg: "Add user login", branch: null, type: "normal" },
+        { hash: "g7h8i9", msg: "Add profile page + i18n", branch: "main", type: "fixup-target" },
+        { hash: "j0k1l2", msg: "Add dark mode", branch: "feat-ui", type: "normal" },
+      ],
+      after: [
+        { hash: "a1b2c3", msg: "Initial setup", branch: "main", type: "root" },
+        { hash: "d4e5f6", msg: "Add user login", branch: null, type: "normal" },
+        { hash: "h1i2j3*", msg: "Add profile page", branch: "main", type: "rewritten" },
+        { hash: "k4l5m6*", msg: "Add i18n support", branch: null, type: "rewritten" },
+        { hash: "n7o8p9*", msg: "Add dark mode", branch: "feat-ui", type: "rewritten" },
+      ],
+      cmd: "git history split g7h8i9",
+      desc: "Split the bundled profile+i18n commit into two clean commits. Everything downstream is rebuilt."
+    }
+  }
+};
+
+function renderGraph(commits, parentMap, branchTips, label) {
+  let html = `<h3>${label}</h3>`;
+  const ordered = commits;
+  for (let i = 0; i < ordered.length; i++) {
+    const c = ordered[i];
+    const hashDisplay = c.hash.replace(/\*/g, '');
+    const isRewritten = c.hash.includes('*');
+    const branchTag = [];
+    for (const [bname, tip] of Object.entries(branchTips)) {
+      if (tip === c.hash || tip.startsWith(c.hash.replace('*',''))) {
+        branchTag.push(bname);
+      }
+    }
+    const typeClass = c.type || 'normal';
+    const msgDisplay = isRewritten ? c.msg + ' *' : c.msg;
+    const branchLabel = branchTag.length ? `<span class="branch-tag">${branchTag.join(', ')}</span>` : '';
+    const arrow = i < ordered.length - 1 ? '<div class="arrow">↓</div>' : '';
+    html += `<div class="commit ${typeClass}">
+      <span class="hash">${hashDisplay}</span>
+      <span class="msg">${msgDisplay}</span>
+      ${branchLabel}
+    </div>${arrow}`;
+  }
+  return html;
+}
+
+function updateViz(cmd, target) {
+  const data = commandTransforms[cmd][target];
+  const beforeCol = document.getElementById('before-col');
+  const afterCol = document.getElementById('after-col');
+  const diffArrow = document.getElementById('diff-arrow');
+
+  beforeCol.innerHTML = renderGraph(data.before, {}, data.before.reduce((acc, c) => {
+    if (c.branch) acc[c.branch] = c.hash;
+    return acc;
+  }, {}), 'Before');
+
+  afterCol.innerHTML = renderGraph(data.after, {}, data.after.reduce((acc, c) => {
+    if (c.branch) acc[c.branch] = c.hash;
+    return acc;
+  }, {}), 'After');
+
+  diffArrow.innerHTML = '<div class="diff-arrow">→ git history →</div>';
+
+  const infoBox = document.getElementById('cmd-info');
+  infoBox.innerHTML = `<code>${data.cmd}</code><div class="desc">${data.desc}</div>`;
+}
+
+function resetViz() {
+  const cmd = document.getElementById('cmd-select').value;
+  const target = document.getElementById('target-select').value;
+  updateViz(cmd, target);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Initial render with placeholder
+  document.getElementById('viz').innerHTML = `
+    <div class="column" id="before-col"></div>
+    <div id="diff-arrow"></div>
+    <div class="column" id="after-col"></div>
+  `;
+
+  const defaultData = commandTransforms.fixup.B;
+  const beforeCol = document.getElementById('before-col');
+  const afterCol = document.getElementById('after-col');
+
+  beforeCol.innerHTML = renderGraph(defaultData.before, {}, defaultData.before.reduce((acc, c) => {
+    if (c.branch) acc[c.branch] = c.hash;
+    return acc;
+  }, {}), 'Before');
+
+  afterCol.innerHTML = renderGraph(defaultData.after, {}, defaultData.after.reduce((acc, c) => {
+    if (c.branch) acc[c.branch] = c.hash;
+    return acc;
+  }, {}), 'After');
+
+  document.getElementById('diff-arrow').innerHTML = '<div class="diff-arrow">→ git history fixup →</div>';
+
+  const infoBox = document.getElementById('cmd-info');
+  infoBox.innerHTML = `<code>${defaultData.cmd}</code><div class="desc">${defaultData.desc}</div>`;
+
+  document.getElementById('apply-btn').addEventListener('click', resetViz);
+  document.getElementById('reset-btn').addEventListener('click', resetViz);
+  document.getElementById('cmd-select').addEventListener('change', resetViz);
+  document.getElementById('target-select').addEventListener('change', resetViz);
+});
+</script>
+</body>
+</html>
