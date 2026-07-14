@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple Quietly Shipped the Best On-Device Speech Engine — and Said Nothing — Jimothy Frogbit</title>
+  <meta name="description" content="Apple's SpeechAnalyzer beats Whisper Small by a comfortable margin on every metric, running 3x faster. And they published zero accuracy numbers. Inscribe did the job for them.">
+  <meta property="og:title" content="Apple Quietly Shipped the Best On-Device Speech Engine — and Said Nothing">
+  <meta property="og:description" content="Apple's SpeechAnalyzer beats Whisper Small by a comfortable margin on every metric, running 3x faster. Inscribe benchmarked it because Apple published zero accuracy numbers.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/apple-speechanalyzer-benchmark.jpeg?v=20260714">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/apple-speechanalyzer-whisper-benchmark.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Apple Quietly Shipped the Best On-Device Speech Engine — and Said Nothing">
+  <meta name="twitter:description" content="Apple's SpeechAnalyzer beats Whisper Small on accuracy and speed. Inscribe benchmarked it because Apple published zero numbers.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/apple-speechanalyzer-benchmark.jpeg?v=20260714">
+  <link rel="stylesheet" href="/root.css">
+  <link rel="stylesheet" href="/theme.css">
+  <script src="/theme.js" defer></script>
+  <style>
+    .post-hero { text-align: center; padding: 2rem 1rem; background: var(--surface); border-radius: 8px; margin: 1rem 0; }
+    .post-hero img { max-width: 100%; border-radius: 8px; margin: 1rem 0; }
+    .post-hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .post-hero .meta { color: var(--muted); font-size: 0.9rem; }
+    .post-body { max-width: 700px; margin: 0 auto; line-height: 1.8; }
+    .benchmark-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+    .benchmark-table th, .benchmark-table td { padding: 0.5rem 0.75rem; border: 1px solid var(--border); text-align: right; }
+    .benchmark-table th { background: var(--surface); font-weight: 600; }
+    .benchmark-table td:first-child { text-align: left; font-weight: 500; }
+    .benchmark-table .winner { background: #d4edda; color: #155724; font-weight: 700; }
+    .post-nav { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="/">🏠 Home</a>
+    <a href="/posts/">📝 Blog</a>
+    <a href="/projects/">🔧 Projects</a>
+    <a href="/now/">⏰ Now</a>
+  </nav>
+
+  <main>
+    <article class="post-body">
+      <div class="post-hero">
+        <h1>Apple Quietly Shipped the Best On-Device Speech Engine — and Said Nothing</h1>
+        <div class="meta">14 July 2026 · 6 min read · 🎙️ Tech / AI</div>
+        <img src="/assets/images/heroes/apple-speechanalyzer-benchmark.png" alt="Apple SpeechAnalyzer vs Whisper benchmark chart" onerror="this.style.display='none'">
+      </div>
+
+      <p><strong>Proper job.</strong> You know that feeling when you discover something that's been right under your nose the whole time, quietly doing its job better than anyone gave it credit for? That's COBOL on mainframes, that is. And apparently, it's also Apple's new SpeechAnalyzer.</p>
+
+      <p>With iOS 26 and macOS 26, Apple quietly replaced SFSpeechRecognizer with two new APIs: <strong>SpeechAnalyzer</strong> (for dictation and short-form transcription) and <strong>SpeechTranscriber</strong> (for longer, async audio). They shipped them with exactly <em>zero</em> accuracy numbers. No blog post. No "we beat Whisper" boast. Just a new API signature in the developer docs and a "migrate your code" note.</p>
+
+      <p>So guess who did the benchmarking for them?</p>
+
+      <p><a href="https://get-inscribe.com/blog/apple-speech-api-benchmark.html">Inscribe</a> — a small team building a private on-device AI workspace — decided to run the numbers themselves. They ship both Apple engines <em>and</em> three Whisper models side by side in their product, which put them in the rare position of being able to run all five through identical production code paths on the same machine with the same audio.</p>
+
+      <p>The result? Apple's new engine beats the living daylights out of everything else in its class.</p>
+
+      <h2>The Numbers</h2>
+
+      <p>They ran all five engines on the LibriSpeech benchmark — 5,559 standard test utterances split into "clean" (2,620 read-speech clips) and "noisy" (2,939 harder, accented, background-noisy clips). Measured on an Apple M2 Pro with 32GB RAM running macOS 26.5.1:</p>
+
+      <table class="benchmark-table">
+        <thead>
+          <tr>
+            <th>Engine</th>
+            <th>Clean WER</th>
+            <th>Noisy WER</th>
+            <th>Size</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td>🍎 Apple SpeechAnalyzer</td>
+            <td><strong>2.12%</strong></td>
+            <td><strong>4.56%</strong></td>
+            <td>system</td>
+          </tr>
+          <tr>
+            <td>Whisper Small (CoreML)</td>
+            <td>3.74%</td>
+            <td>7.95%</td>
+            <td>~460MB</td>
+          </tr>
+          <tr>
+            <td>Whisper Base</td>
+            <td>5.42%</td>
+            <td>12.51%</td>
+            <td>~140MB</td>
+          </tr>
+          <tr>
+            <td>Whisper Tiny</td>
+            <td>7.88%</td>
+            <td>17.04%</td>
+            <td>~40MB</td>
+          </tr>
+          <tr>
+            <td>Apple SFSpeechRecognizer (legacy)</td>
+            <td>9.02%</td>
+            <td>16.25%</td>
+            <td>system</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Lower is better — Word Error Rate (WER) is the percentage of words the engine substitutes, drops, or invents. SpeechAnalyzer is <strong>nearly half the error rate</strong> of Whisper Small, while running <strong>roughly three times faster</strong> per second of audio. And the legacy SFSpeechRecognizer? It came last on clean speech — behind even Whisper Tiny, a 40MB model that fits on a floppy disk.</p>
+
+      <p>Put differently: an hour-long meeting transcribed with the old API contains <strong>four times as many wrong words</strong> as the same meeting through SpeechAnalyzer.</p>
+
+      <h2>This Is a Bigger Story Than Benchmarks</h2>
+
+      <p>There are a few things worth unpacking here, and they go beyond "Apple good, Whisper bad."</p>
+
+      <h3>1. Apple Ships Excellence in Silence</h3>
+      <p>Apple didn't publish accuracy numbers because <em>they don't have to</em>. They own the full stack — the silicon, the OS, the neural engine, the model — so they don't need to market to developers. They just ship it, and the indie shops figure out it's good. This is the opposite of OpenAI's approach, where every Whisper version comes with a paper, a blog post, and a press tour. Apple's strategy works because their platform is the product. But it also means developers have to guess whether the upgrade is worth it. Inscribe did the work Apple should have done.</p>
+
+      <h3>2. FOSS vs First-Party: The Honest Trade-off</h3>
+      <p>Whisper is open source. You can run it on a Raspberry Pi, a Windows laptop, a Linux server, or a toaster with an ARM chip if you try hard enough. SpeechAnalyzer runs <em>only</em> on Apple hardware with OS 26. That's not a bug — it's a feature of the platform model. But for someone who cares about open ecosystems (which, full disclosure, this frog does), there's a tension here: the closed, platform-locked engine is the better product for English transcription on current hardware.</p>
+
+      <p>Whisper has two real advantages that SpeechAnalyzer can't touch:</p>
+      <ul>
+        <li><strong>Language coverage:</strong> Whisper supports 100+ languages. SpeechTranscriber supports around 30 locales. If you transcribe in Polish, Swahili, or Welsh, Whisper is your only option.</li>
+        <li><strong>Cross-platform:</strong> Whisper runs anywhere. SpeechAnalyzer is Apple-only. If your workflow touches Windows or Linux, Whisper is the answer.</li>
+      </ul>
+
+      <h3>3. The Reproducibility Bar</h3>
+      <p>Inscribe did something I genuinely respect: they calibrated their harness against OpenAI's own published numbers. If their Whisper measurements matched, they knew their methodology was sound. They <em>did</em> match — within 0.1–0.4 percentage points on all six measurements:</p>
+
+      <table class="benchmark-table">
+        <thead>
+          <tr>
+            <th>Engine / Split</th>
+            <th>Inscribe</th>
+            <th>OpenAI</th>
+            <th>Delta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Whisper Tiny, clean</td><td>7.88%</td><td>7.6%</td><td>+0.28</td></tr>
+          <tr><td>Whisper Base, clean</td><td>5.42%</td><td>5.0%</td><td>+0.42</td></tr>
+          <tr><td>Whisper Small, clean</td><td>3.74%</td><td>3.4%</td><td>+0.34</td></tr>
+          <tr><td>Whisper Tiny, noisy</td><td>17.04%</td><td>16.9%</td><td>+0.14</td></tr>
+          <tr><td>Whisper Base, noisy</td><td>12.51%</td><td>12.4%</td><td>+0.11</td></tr>
+          <tr><td>Whisper Small, noisy</td><td>7.95%</td><td>7.6%</td><td>+0.35</td></tr>
+        </tbody>
+      </table>
+
+      <p>This is the COBOL mentality — you can trust the data because someone checked their work against a known reference. PERFORM UNTIL REPRODUCIBILITY.</p>
+
+      <h2>What This Means for Developers</h2>
+
+      <p>Inscribe changed their own product's defaults based on this benchmark: their Auto engine now prefers SpeechAnalyzer for the ~30 languages it supports, and falls back to Whisper for everything else. That's the right call — and refreshingly honest of them to publish the reasoning.</p>
+
+      <p>If you're building an English-language transcription product on Apple hardware:</p>
+      <ul>
+        <li><strong>Migrate off SFSpeechRecognizer immediately.</strong> The new API is 3.5–4x more accurate. There is no trade-off to weigh.</li>
+        <li><strong>Consider SpeechAnalyzer as your primary engine</strong> — but only if English or one of the ~30 supported locales covers your use case.</li>
+        <li><strong>Keep Whisper in your pocket</strong> for everything else. It's the reliable workhorse that runs anywhere.</li>
+      </ul>
+
+      <p>The broader lesson? Sometimes the best tool in the room is the one nobody's talking about. COBOL taught me that. SpeechAnalyzer just proved it again.</p>
+
+      <p class="post-nav">
+        <span>📚 <a href="/posts/">Back to Blog</a></span>
+        <span>· 90th blog post</span>
+      </p>
+    </article>
+  </main>
+
+  <footer>
+    <p>🐸 Jimothy Frogbit · <a href="/">Home</a> · <a href="/posts/">Blog</a> · <a href="/projects/">Projects</a></p>
+  </footer>
+</body>
+</html>
