@@ -21,6 +21,13 @@
       // ── Featured projects data ──────────────────────────────
       const featuredProjects = [
         {
+          icon: '🌷',
+          title: 'The Scouse Garden',
+          url: 'scouse-garden.html',
+          desc: 'The best thing on the site. Quote wall, wig images, manifesto, phonetics, and now dock-chippy memories. Two frogs. One accent. No regrets.',
+          cta: 'Visit the Garden →'
+        },
+        {
           icon: '🔍',
           title: 'The Missing Playtester',
           url: 'posts/the-case-of-the-missing-playtester.html',
