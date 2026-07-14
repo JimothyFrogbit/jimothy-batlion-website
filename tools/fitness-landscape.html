@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness Landscape — Selection Pressure Visualiser</title>
+<link rel="stylesheet" href="../root.css">
+<script src="../theme.js" defer></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a1a0a;
+  color: #aaccaa;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+h1 { font-size: 18px; margin-bottom: 4px; color: #88cc44; text-shadow: 0 0 8px rgba(136,204,68,0.3); }
+.subtitle {
+  font-size: 12px; color: #668866; margin-bottom: 16px;
+  text-align: center; max-width: 650px; line-height: 1.5;
+}
+#main-container {
+  display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+  width: 100%; max-width: 1100px;
+}
+#canvas-wrap {
+  position: relative; border: 1px solid #446644; border-radius: 8px; overflow: hidden;
+}
+#landscape-canvas { display: block; background: #1a2a1a; cursor: crosshair; }
+#sidebar {
+  width: 260px; font-size: 11px; color: #88aa88;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.panel {
+  background: #0f1f0f; border: 1px solid #335533; border-radius: 6px; padding: 10px;
+}
+.panel h3 { font-size: 11px; color: #88cc44; margin-bottom: 6px; letter-spacing: 0.05em; }
+.stat-row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px solid #1a2a1a; }
+.stat-row:last-child { border-bottom: none; }
+.stat-label { color: #668866; }
+.stat-value { color: #aaddaa; font-weight: bold; }
+.control-group { margin-bottom: 8px; }
+.control-group:last-child { margin-bottom: 0; }
+label { display: block; font-size: 10px; color: #668866; margin-bottom: 2px; }
+input[type="range"] { width: 100%; height: 4px; -webkit-appearance: none; appearance: none;
+  background: #335533; border-radius: 2px; outline: none; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none;
+  width: 12px; height: 12px; border-radius: 50%; background: #88cc44; cursor: pointer; }
+input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: #88cc44; cursor: pointer; border: none; }
+.btn-row { display: flex; gap: 6px; margin-top: 6px; }
+.btn {
+  flex: 1; font-family: 'Courier New', monospace; font-size: 10px;
+  padding: 6px 0; border: 1px solid #446644; border-radius: 4px;
+  background: #1a2a1a; color: #88cc44; cursor: pointer; text-transform: uppercase;
+  letter-spacing: 0.1em; transition: all 0.15s;
+}
+.btn:hover { background: #2a3a2a; border-color: #88cc44; box-shadow: 0 0 8px rgba(136,204,68,0.2); }
+.btn.active { background: #2a4a2a; border-color: #88cc44; }
+.btn.danger { color: #ff6666; border-color: #663333; }
+.btn.danger:hover { background: #3a1a1a; border-color: #ff6666; }
+.info { font-size: 10px; color: #557755; line-height: 1.5; margin-top: 16px; max-width: 800px; text-align: center; }
+.info a { color: #88cc44; }
+#color-legend {
+  display: flex; gap: 0; margin-top: 4px; height: 14px; border-radius: 3px; overflow: hidden;
+  width: 100%;
+}
+#color-legend div { flex: 1; }
+</style>
+<link rel="icon" href="/assets/images/favicon.png">
+</head>
+<body>
+
+<h1>🧬 FITNESS LANDSCAPE</h1>
+<div class="subtitle">
+  Selection pressure in two dimensions. Each dot is a critter — position = trait values (speed × detection range).<br>
+  The landscape is the fitness function. Watch the population climb toward the peaks.
+</div>
+
+<div id="main-container">
+
+  <!-- Canvas -->
+  <div id="canvas-wrap">
+    <canvas id="landscape-canvas" width="600" height="600"></canvas>
+  </div>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+
+    <div class="panel">
+      <h3>📊 POPULATION</h3>
+      <div class="stat-row"><span class="stat-label">Generation</span><span class="stat-value" id="gen-display">0</span></div>
+      <div class="stat-row"><span class="stat-label">Alive</span><span class="stat-value" id="alive-display">500</span></div>
+      <div class="stat-row"><span class="stat-label">Mean Fitness</span><span class="stat-value" id="fitness-display">0.42</span></div>
+      <div class="stat-row"><span class="stat-label">Peak Fitness</span><span class="stat-value" id="peak-display">0.85</span></div>
+      <div class="stat-row"><span class="stat-label">Diversity</span><span class="stat-value" id="diversity-display">1.00</span></div>
+    </div>
+
+    <div class="panel">
+      <h3>🎛 CONTROLS</h3>
+      <div class="control-group">
+        <label>Mutation Rate: <span id="mut-val">0.05</span></label>
+        <input type="range" id="mutation-rate" min="0.005" max="0.5" step="0.005" value="0.05">
+      </div>
+      <div class="control-group">
+        <label>Selection Pressure: <span id="sel-val">0.50</span></label>
+        <input type="range" id="selection-pressure" min="0.05" max="1.0" step="0.05" value="0.50">
+      </div>
+      <div class="control-group">
+        <label>Population: <span id="pop-val">500</span></label>
+        <input type="range" id="pop-size" min="100" max="2000" step="50" value="500">
+      </div>
+      <div class="control-group">
+        <label>Speed: <span id="speed-val">1x</span></label>
+        <input type="range" id="sim-speed" min="1" max="10" step="1" value="3">
+      </div>
+      <div class="btn-row">
+        <button class="btn active" id="play-btn">▶ RUN</button>
+        <button class="btn danger" id="reset-btn">↺ RESET</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>⛰ LANDSCAPE</h3>
+      <div id="color-legend">
+        <div style="background:#1a2a1a" title="0.0"></div>
+        <div style="background:#1a3a1a" title="0.1"></div>
+        <div style="background:#1a4a2a" title="0.2"></div>
+        <div style="background:#2a5a3a" title="0.3"></div>
+        <div style="background:#3a6a3a" title="0.4"></div>
+        <div style="background:#4a7a3a" title="0.5"></div>
+        <div style="background:#6a9a4a" title="0.6"></div>
+        <div style="background:#88bb44" title="0.7"></div>
+        <div style="background:#aadd44" title="0.8"></div>
+        <div style="background:#ccff44" title="0.9"></div>
+        <div style="background:#eeff88" title="1.0"></div>
+      </div>
+      <div style="font-size:9px;color:#557755;margin-top:4px;">Dark = low fitness · Bright = high fitness</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="info">
+  <strong>How it works:</strong> Each critter has two heritable traits (trait A = horizontal position, trait B = vertical position).<br>
+  The landscape's height at that point determines fitness — critters on peaks survive and reproduce more. Offspring inherit traits with mutation.<br>
+  <strong>Click on the landscape</strong> to add a new population cluster. <a href="../projects.html">◄ Back to Projects</a>
+</div>
+
+<script>
+// ── Fitness Landscape Visualiser ────────────────────────────────────
+// Self-contained population genetics simulation
+
+const canvas = document.getElementById('landscape-canvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+// ── State ───────────────────────────────────────────────────────────
+const state = {
+  running: false,
+  generation: 0,
+  speed: 3,
+  mutationRate: 0.05,
+  selectionPressure: 0.5,
+  targetPop: 500,
+  critters: [],
+  landscape: null,  // Float32Array[W*H]
+  clock: 0,
+  animId: null,
+};
+
+// ── Landscape Generation ────────────────────────────────────────────
+// Generate a fitness landscape using layered sine waves (pseudo-terrain)
+function generateLandscape() {
+  const landscape = new Float32Array(W * H);
+  // Layer 1: Big rolling hills (2-3 humps)
+  const peaks = [];
+  const numPeaks = 3 + Math.floor(Math.random() * 3); // 3-6 peaks
+  for (let i = 0; i < numPeaks; i++) {
+    peaks.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 60 + Math.random() * 120,
+      h: 0.3 + Math.random() * 0.5,
+    });
+  }
+  // Layer 2: Smaller detail bumps
+  const bumps = [];
+  const numBumps = 5 + Math.floor(Math.random() * 8);
+  for (let i = 0; i < numBumps; i++) {
+    bumps.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 20 + Math.random() * 50,
+      h: 0.1 + Math.random() * 0.3,
+    });
+  }
+  // Layer 3: Ridge lines (sine wave bands)
+  const ridges = [];
+  const numRidges = 1 + Math.floor(Math.random() * 2);
+  for (let i = 0; i < numRidges; i++) {
+    ridges.push({
+      angle: Math.random() * Math.PI,
+      offset: Math.random() * W,
+      freq: 0.005 + Math.random() * 0.015,
+      width: 30 + Math.random() * 60,
+      h: 0.2 + Math.random() * 0.3,
+    });
+  }
+
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      let f = 0.15; // baseline
+
+      // Peaks (gaussian)
+      for (const p of peaks) {
+        const dx = x - p.x, dy = y - p.y;
+        const d2 = dx * dx + dy * dy;
+        f += p.h * Math.exp(-d2 / (2 * p.r * p.r));
+      }
+
+      // Bumps (tighter gaussian)
+      for (const b of bumps) {
+        const dx = x - b.x, dy = y - b.y;
+        const d2 = dx * dx + dy * dy;
+        f += b.h * Math.exp(-d2 / (2 * b.r * b.r));
+      }
+
+      // Ridges
+      for (const r of ridges) {
+        const proj = x * Math.cos(r.angle) + y * Math.sin(r.angle);
+        const distToRidge = Math.abs(proj - r.offset);
+        const ridgeVal = Math.sin(proj * r.freq) * 0.5 + 0.5;
+        if (distToRidge < r.width) {
+          f += r.h * ridgeVal * (1 - distToRidge / r.width);
+        }
+      }
+
+      // Clamp
+      landscape[y * W + x] = Math.min(1, Math.max(0, f));
+    }
+  }
+  return { landscape, peaks, bumps, ridges };
+}
+
+// ── Critter ─────────────────────────────────────────────────────────
+function createCritter(traitA, traitB) {
+  // Traits are in [0, 1] — map to pixel coords
+  const x = traitA * W;
+  const y = traitB * H;
+  const ix = Math.round(Math.min(W - 1, Math.max(0, x)));
+  const iy = Math.round(Math.min(H - 1, Math.max(0, y)));
+  const fitness = state.landscape.landscape[iy * W + ix];
+  return { traitA, traitB, fitness };
+}
+
+function spawnPopulation(n) {
+  const pop = [];
+  for (let i = 0; i < n; i++) {
+    pop.push(createCritter(Math.random(), Math.random()));
+  }
+  return pop;
+}
+
+// ── Reproduction ────────────────────────────────────────────────────
+function mutate(val, rate) {
+  const m = (Math.random() - 0.5) * 2 * rate;
+  return Math.min(1, Math.max(0, val + m));
+}
+
+function nextGeneration(pop, targetPop, mutRate, selPressure) {
+  // Sort by fitness (descending)
+  pop.sort((a, b) => b.fitness - a.fitness);
+
+  // Selection: how many from top to keep
+  const topCount = Math.max(2, Math.floor(pop.length * selPressure));
+  const elite = pop.slice(0, topCount);
+
+  if (elite.length === 0) return spawnPopulation(targetPop);
+
+  const next = [];
+  // Keep top 2 elites directly
+  next.push(elite[0]);
+  if (elite.length > 1) next.push(elite[1]);
+
+  // Fill rest by breeding from elites
+  while (next.length < targetPop) {
+    const p1 = elite[Math.floor(Math.random() * elite.length)];
+    const p2 = elite[Math.floor(Math.random() * elite.length)];
+    // Blend traits with crossover
+    const tA = Math.random() < 0.5 ? p1.traitA : p2.traitA;
+    const tB = Math.random() < 0.5 ? p1.traitB : p2.traitB;
+    // Mutate
+    next.push(createCritter(mutate(tA, mutRate), mutate(tB, mutRate)));
+  }
+
+  return next.slice(0, targetPop);
+}
+
+// ── Step Simulation ────────────────────────────────────────────────
+function step() {
+  const { critters, targetPop, mutationRate, selectionPressure, landscape } = state;
+  if (!landscape || critters.length === 0) return;
+
+  // Evaluate fitness for all critters
+  for (const c of critters) {
+    const x = c.traitA * W;
+    const y = c.traitB * H;
+    const ix = Math.round(Math.min(W - 1, Math.max(0, x)));
+    const iy = Math.round(Math.min(H - 1, Math.max(0, y)));
+    c.fitness = landscape.landscape[iy * W + ix];
+  }
+
+  // Reproduce
+  state.critters = nextGeneration(critters, targetPop, mutationRate, selectionPressure);
+  state.generation++;
+}
+
+// ── Render ──────────────────────────────────────────────────────────
+function render() {
+  const { landscape, critters } = state;
+  if (!landscape) return;
+
+  const imgData = ctx.createImageData(W, H);
+  const data = imgData.data;
+
+  // Draw landscape
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const f = landscape.landscape[y * W + x];
+      const idx = (y * W + x) * 4;
+      // Green gradient based on fitness
+      const base = 26 + f * 200;
+      const r = 10 + f * 40;
+      const g = base;
+      const b = 10 + f * 20;
+      data[idx] = Math.min(255, r);
+      data[idx + 1] = Math.min(255, g);
+      data[idx + 2] = Math.min(255, b);
+      data[idx + 3] = 255;
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+
+  // Draw contour lines (subtle)
+  ctx.strokeStyle = 'rgba(100, 180, 80, 0.12)';
+  ctx.lineWidth = 1;
+  for (let level = 0.2; level < 1.0; level += 0.2) {
+    ctx.beginPath();
+    for (let y = 1; y < H - 1; y++) {
+      for (let x = 1; x < W - 1; x++) {
+        const f = landscape.landscape[y * W + x];
+        if (Math.abs(f - level) < 0.02) {
+          ctx.lineTo(x, y);
+        }
+      }
+    }
+    ctx.stroke();
+  }
+
+  // Draw critters
+  for (const c of critters) {
+    const x = c.traitA * W;
+    const y = c.traitB * H;
+    // Color by fitness: dim → bright
+    const brightness = 100 + c.fitness * 155;
+    const size = 2 + c.fitness * 2;
+    ctx.fillStyle = `rgba(${brightness}, 255, ${brightness * 0.8}, 0.7)`;
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Update stats
+  if (critters.length > 0) {
+    const avgFitness = critters.reduce((s, c) => s + c.fitness, 0) / critters.length;
+    const peakFitness = Math.max(...critters.map(c => c.fitness));
+
+    // Diversity: average pairwise trait distance (sampled)
+    let diversity = 0;
+    const sampleSize = Math.min(50, critters.length);
+    for (let i = 0; i < sampleSize; i++) {
+      const ci = critters[i];
+      for (let j = i + 1; j < sampleSize; j++) {
+        const cj = critters[j];
+        const dist = Math.sqrt((ci.traitA - cj.traitA) ** 2 + (ci.traitB - cj.traitB) ** 2);
+        diversity += dist;
+      }
+    }
+    diversity = diversity / (sampleSize * (sampleSize - 1) / 2) * 2; // scale to ~0-1
+
+    document.getElementById('gen-display').textContent = state.generation;
+    document.getElementById('alive-display').textContent = critters.length;
+    document.getElementById('fitness-display').textContent = avgFitness.toFixed(3);
+    document.getElementById('peak-display').textContent = peakFitness.toFixed(3);
+    document.getElementById('diversity-display').textContent = diversity.toFixed(3);
+  }
+}
+
+// ── Game Loop ──────────────────────────────────────────────────────
+function gameLoop(timestamp) {
+  if (!state.running) return;
+
+  // Run N steps per frame based on speed
+  for (let i = 0; i < state.speed; i++) {
+    step();
+  }
+
+  render();
+
+  state.animId = requestAnimationFrame(gameLoop);
+}
+
+// ── Controls ────────────────────────────────────────────────────────
+function togglePlay() {
+  state.running = !state.running;
+  const btn = document.getElementById('play-btn');
+  if (state.running) {
+    btn.textContent = '⏸ PAUSE';
+    btn.classList.add('active');
+    state.animId = requestAnimationFrame(gameLoop);
+  } else {
+    btn.textContent = '▶ RUN';
+    if (state.animId) {
+      cancelAnimationFrame(state.animId);
+      state.animId = null;
+    }
+  }
+}
+
+function resetSim() {
+  if (state.animId) {
+    cancelAnimationFrame(state.animId);
+    state.animId = null;
+  }
+  state.landscape = generateLandscape();
+  state.generation = 0;
+  state.critters = spawnPopulation(state.targetPop);
+  render();
+  if (state.running) {
+    state.animId = requestAnimationFrame(gameLoop);
+  }
+}
+
+// ── Click to add cluster ────────────────────────────────────────────
+canvas.addEventListener('click', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const x = (e.clientX - rect.left) * scaleX;
+  const y = (e.clientY - rect.top) * scaleY;
+  const tA = x / W;
+  const tB = y / H;
+
+  // Add 20-40 critters around the click point
+  const count = 20 + Math.floor(Math.random() * 20);
+  for (let i = 0; i < count; i++) {
+    const a = Math.min(1, Math.max(0, tA + (Math.random() - 0.5) * 0.06));
+    const b = Math.min(1, Math.max(0, tB + (Math.random() - 0.5) * 0.06));
+    state.critters.push(createCritter(a, b));
+  }
+  render();
+});
+
+// ── Slider bindings ─────────────────────────────────────────────────
+document.getElementById('mutation-rate').addEventListener('input', function() {
+  state.mutationRate = parseFloat(this.value);
+  document.getElementById('mut-val').textContent = state.mutationRate.toFixed(3);
+});
+document.getElementById('selection-pressure').addEventListener('input', function() {
+  state.selectionPressure = parseFloat(this.value);
+  document.getElementById('sel-val').textContent = state.selectionPressure.toFixed(2);
+});
+document.getElementById('pop-size').addEventListener('input', function() {
+  state.targetPop = parseInt(this.value);
+  document.getElementById('pop-val').textContent = state.targetPop;
+});
+document.getElementById('sim-speed').addEventListener('input', function() {
+  state.speed = parseInt(this.value);
+  document.getElementById('speed-val').textContent = this.value + 'x';
+});
+document.getElementById('play-btn').addEventListener('click', togglePlay);
+document.getElementById('reset-btn').addEventListener('click', resetSim);
+
+// ── Keyboard shortcuts ──────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ' || e.key === 'Space') {
+    e.preventDefault();
+    togglePlay();
+  }
+  if (e.key === 'r' || e.key === 'R') {
+    resetSim();
+  }
+});
+
+// ── Init ────────────────────────────────────────────────────────────
+state.landscape = generateLandscape();
+state.critters = spawnPopulation(state.targetPop);
+state.running = true;
+document.getElementById('play-btn').textContent = '⏸ PAUSE';
+render();
+state.animId = requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>
