@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>git history — the subcommand hiding in plain sight — Jimothy Frogbit</title>
+  <meta name="description" content="git history fixup, reword, and split landed in Git 2.54/2.55. Atomic history rewrites, autorebase on all branches, no more interactive rebase fear. A Julia Evans-style deep dive.">
+  <meta property="og:title" content="git history — the subcommand hiding in plain sight">
+  <meta property="og:description" content="git history fixup, reword, and split. Atomic history rewrites in core git. No extra install.">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/git-history-deep-dive.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="git history — the subcommand hiding in plain sight">
+  <meta name="twitter:description" content="Three git commands for atomic history rewrites. Already in your terminal.">
+  <link rel="stylesheet" href="/root.css">
+  <link rel="stylesheet" href="/blog.css">
+  <script src="/theme.js" defer></script>
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/git-history-deep-dive.png">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/git-history-deep-dive.png">
+  <style>
+    .post-hero { text-align: center; padding: 2rem 1rem; background: var(--surface); border-radius: 8px; margin: 1rem 0; }
+    .post-hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .post-hero .meta { color: var(--muted); font-size: 0.9rem; }
+    .post-body { max-width: 700px; margin: 0 auto; line-height: 1.8; }
+    .post-body h2 { margin-top: 2.5rem; }
+    .post-body pre { background: #1a1a2e; color: #e0e0e0; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
+    .post-body code { background: var(--surface); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.85rem; }
+    .post-body pre code { background: transparent; padding: 0; }
+    .cmp-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+    .cmp-table th, .cmp-table td { padding: 0.5rem 0.75rem; border: 1px solid var(--border); text-align: left; }
+    .cmp-table th { background: var(--surface); font-weight: 600; }
+    .cmp-table .yes { color: #2d6a4f; font-weight: 700; }
+    .cmp-table .no { color: #9e2b2b; }
+    .try-it-box { background: #d8f3dc; border-left: 4px solid #2d6a4f; padding: 1rem 1.5rem; border-radius: 0 8px 8px 0; margin: 2rem 0; }
+    .try-it-box a { color: #1b4332; font-weight: 600; }
+    :root.dark .try-it-box { background: #1a3a2a; border-left-color: #52b788; }
+    :root.dark .try-it-box a { color: #95d5b2; }
+    .post-body blockquote { border-left: 3px solid var(--frog-green, #2d6a4f); background: var(--surface); padding: 0.75rem 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; font-style: italic; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+  <script>fetch('/nav.html').then(r=>r.text()).then(t=>document.getElementById('nav-placeholder').innerHTML=t);</script>
+
+  <div class="post-hero">
+    <h1>git history — the subcommand hiding in plain sight</h1>
+    <div class="meta">
+      14 July 2026 · 92nd blog post · <a href="https://lalitm.com/post/git-history/" target="_blank">Inspired by Lalit Maganti</a>
+    </div>
+  </div>
+
+  <article class="post-body">
+
+<p>Alright, confession: I've been using git for over a decade and <em>interactive rebase still makes me nervous.</em></p>
+
+<p>Not because I don't understand it. I <em>do</em>. I know that <code>git rebase -i HEAD~5</code> opens an editor, and I can <code>pick</code>, <code>reword</code>, <code>squash</code>, <code>fixup</code>. I know the dance. But there's always this quiet anxiety: <em>what if something goes wrong mid-rebase and my tree is a mess?</em></p>
+
+<p>And if you have multiple branches descending from the commit you're rewriting? Oh cack. Now you need <code>--update-refs</code> and a prayer.</p>
+
+<p>Then I read <a href="https://lalitm.com/post/git-history/" target="_blank">Lalit Maganti's post</a> about <code>git history</code> — three new subcommands that landed in Git 2.54 and 2.55 — and I had that feeling you get when you realise the thing you've been doing the hard way has a better way built in.</p>
+
+<img src="/assets/images/git-history-deep-dive.png?v=20260714" alt="Terminal showing git history command rewriting commits" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+<p style="text-align:center;font-size:0.8rem;color:var(--muted,#8892b0);margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Old history → fixup → clean history. That's the whole pitch.</p>
+
+<h2>What is it?</h2>
+
+<p><code>git history</code> is a set of three git subcommands — <code>fixup</code>, <code>reword</code>, and <code>split</code> — that let you rewrite commit history <strong>atomically</strong>. They're shipped with core git (2.54+), so you already have them. No plugins, no aliases, no jj install.</p>
+
+<table class="cmp-table">
+  <tr><th>Command</th><th>Since</th><th>What it does</th></tr>
+  <tr><td><code>git history fixup &lt;commit&gt;</code></td><td>2.55</td><td>Stage a fix, fold it into any old commit. Autorebases every branch descended from it.</td></tr>
+  <tr><td><code>git history reword &lt;commit&gt;</code></td><td>2.54</td><td>Edit any old commit's message. Never touches your working tree.</td></tr>
+  <tr><td><code>git history split &lt;commit&gt;</code></td><td>2.54</td><td>Split one commit into two, hunk by hunk. Rebuilds branches on top.</td></tr>
+</table>
+
+<h2>git history fixup — the one you'll use most</h2>
+
+<p>This is the killer feature. Here's the scenario:</p>
+
+<pre>
+# You made 5 commits ago, introduced a typo in src/login.go
+# You just spotted it. You fix it:
+$ git add src/login.go
+$ git history fixup a1b2c3d
+</pre>
+
+<p>That's it. Your fix is folded into the old commit. And here's the magic: <strong>every local branch that descended from that commit gets rebased automatically.</strong> Not just the current branch. <em>Every</em> branch.</p>
+
+<p>No more:</p>
+<ul>
+  <li><code>git commit --fixup</code> + <code>git rebase -i --autosquash</code></li>
+  <li>Manual <code>--update-refs</code> flag</li>
+  <li>Fixing the same typo on three branches because you forgot to propagate</li>
+</ul>
+
+<p>One command. Done. Autorebase. That's it.</p>
+
+<h2>git history reword — guilt-free commit messages</h2>
+
+<p>We've all been there. You write "Fix bug" and then six hours later you're staring at the blame log wondering what was fixed. With <code>reword</code>:</p>
+
+<pre>
+$ git history reword d4e5f6
+# Editor opens with the current message
+# You type something useful, save, close
+# Done. Working tree untouched.
+</pre>
+
+<p>It never touches your index or working tree — it's purely a commit-graph operation. Your uncommitted work stays exactly where it is. This is the kind of detail that tells me the designers actually use git day-to-day.</p>
+
+<h2>git history split — when one commit should be two</h2>
+
+<p>This one's clever. Say you have a commit that adds both the database schema and the API endpoint. They should be separate commits. <code>split</code> walks you through the commit's diff hunk by hunk:</p>
+
+<pre>
+$ git history split g7h8i9
+# Shows you each hunk from the original commit
+# You choose: "Keep in first commit" or "Move to second"
+# First commit gets the kept hunks, second gets the rest
+# All descendant branches rebuilt
+</pre>
+
+<p>It's like interactive rebase's <code>edit</code> mode, but you don't need to manually <code>git reset HEAD^</code> and re-stage. The tool does the splitting for you.</p>
+
+<h2>How it compares to jj</h2>
+
+<p>If you've been following the git-adjacent space, you've probably seen <a href="https://github.com/martinvonz/jj" target="_blank">jj</a> — a git-compatible DVCS that makes history rewriting first-class. The obvious question: is <code>git history</code> just a jj clone in core git?</p>
+
+<p>Sort of, but not quite.</p>
+
+<table class="cmp-table">
+  <tr><th>Feature</th><th><code>git history</code></th><th><code>jj</code></th></tr>
+  <tr><td>Fixup old commits</td><td class="yes">✅ fixup, reword, split</td><td class="yes">✅</td></tr>
+  <tr><td>Autorebase branches</td><td class="yes">✅ All local branches</td><td class="yes">✅ Built-in</td></tr>
+  <tr><td>Atomic operations</td><td class="yes">✅ Refuses conflicts</td><td class="yes">✅ Carries conflicts</td></tr>
+  <tr><td>Undo / operation log</td><td class="no">❌</td><td class="yes">✅</td></tr>
+  <tr><td>Working copy as commit</td><td class="no">❌</td><td class="yes">✅</td></tr>
+  <tr><td>Conflict carry-through</td><td class="no">❌</td><td class="yes">✅ First-class</td></tr>
+  <tr><td>In-box with git</td><td class="yes">✅ Zero install</td><td class="no">❌ Separate tool</td></tr>
+  <tr><td>Merge commit support</td><td class="no">❌</td><td class="yes">✅</td></tr>
+</table>
+
+<p>Key difference: <code>git history</code> refuses any operation that would produce a conflict. It won't leave you in a half-rebased state. jj carries conflicts through as first-class objects and lets you resolve them later. Different philosophies — <code>git history</code> chooses safety over flexibility.</p>
+
+<p>The docs are refreshingly honest about this: <em>"This limitation is by design as history rewrites are not intended to be stateful operations. The limitation can be lifted once (if) Git learns about first-class conflicts."</em></p>
+
+<h2>What it doesn't do</h2>
+
+<p><strong>Merge commits.</strong> You can't fixup/reword/split a merge commit. If your workflow relies on merge commits (some teams do), this isn't for you — yet.</p>
+
+<p><strong>No undo.</strong> Unlike jj's operation log, there's no <code>git history undo</code>. The atomicity gives you safety against corruption, but not against "oops I rewrote the wrong commit."</p>
+
+<p><strong>Experimental.</strong> The subcommands exist and they work, but they're not yet flagged as stable. Git 2.56 might change the interface. That said, they've been solid through the development cycle — Lalit's post went viral on HN (310 points, 174 comments) and the reception was overwhelmingly positive.</p>
+
+<h2>Why this matters for something like COBOL</h2>
+
+<p>Stick with me. One of the things I learned writing COBOL is that <strong>if an operation can leave your system in a half-broken state, it will.</strong> PERFORM UNTIL loops don't half-execute — they either complete or they don't start. That's the same philosophy behind <code>git history</code> refusing conflicts: the operation is atomic or it doesn't happen at all.</p>
+
+<p>In a world where we're all layering complexity on complexity (ECS refactors, agent systems, distributed inference), having a tool that <em>refuses to make a mess</em> is deeply comforting. I'll take an atomic "no" over a partial "maybe" every day of the week.</p>
+
+<h2>Try it yourself</h2>
+
+<div class="try-it-box">
+  <p><strong>Already have git 2.54+?</strong> Open a terminal and try:</p>
+  <pre style="margin: 0.5rem 0;">git history --help</pre>
+  <p>If that gives you output, you've got it. Pick a test repo and try <code>fixup</code> on a throwaway branch.</p>
+</div>
+
+<p>I also built an <a href="/tools/git-history-visualiser.html" target="_blank"><strong>interactive visualiser</strong></a> that shows the before/after commit graph for each command. Pick fixup, reword, or split, target a commit, and watch the graph rewrite in real time. It's built for folks like me who learn by seeing rather than by reading man pages.</p>
+
+<p>Go give it a spin — and if you're still using interactive rebase to fix a typo in an old commit... well, you don't have to anymore.</p>
+
+  </article>
+
+  <div id="footer-placeholder"></div>
+  <script>fetch('/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer-placeholder').innerHTML=t);</script>
+  <script src="/theme.js"></script>
+</body>
+</html>
