@@ -12,21 +12,22 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="git history — the subcommand hiding in plain sight">
   <meta name="twitter:description" content="Three git commands for atomic history rewrites. Already in your terminal.">
-  <link rel="stylesheet" href="/root.css">
-  <link rel="stylesheet" href="/blog.css">
-  <script src="/theme.js" defer></script>
-  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/git-history-deep-dive.png">
-  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/git-history-deep-dive.png">
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/git-history-deep-dive.png?v=20260714">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/git-history-deep-dive.png?v=20260714">
   <style>
     .post-hero { text-align: center; padding: 2rem 1rem; background: var(--surface); border-radius: 8px; margin: 1rem 0; }
     .post-hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
     .post-hero .meta { color: var(--muted); font-size: 0.9rem; }
-    .post-body { max-width: 700px; margin: 0 auto; line-height: 1.8; }
-    .post-body h2 { margin-top: 2.5rem; }
-    .post-body pre { background: #1a1a2e; color: #e0e0e0; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
-    .post-body code { background: var(--surface); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.85rem; }
-    .post-body pre code { background: transparent; padding: 0; }
-    .cmp-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+    .article-body { max-width: 700px; margin: 0 auto; line-height: 1.8; }
+    .article-body h2 { margin-top: 2.5rem; }
+    .article-body pre { background: #1a1a2e; color: #e0e0e0; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
+    .article-body code { background: var(--surface); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.85rem; }
+    .article-body pre code { background: transparent; padding: 0; }
+    .article-body blockquote { border-left: 3px solid var(--frog-green, #2d6a4f); background: var(--surface); padding: 0.75rem 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; font-style: italic; color: var(--muted); }
     .cmp-table th, .cmp-table td { padding: 0.5rem 0.75rem; border: 1px solid var(--border); text-align: left; }
     .cmp-table th { background: var(--surface); font-weight: 600; }
     .cmp-table .yes { color: #2d6a4f; font-weight: 700; }
@@ -35,21 +36,20 @@
     .try-it-box a { color: #1b4332; font-weight: 600; }
     :root.dark .try-it-box { background: #1a3a2a; border-left-color: #52b788; }
     :root.dark .try-it-box a { color: #95d5b2; }
-    .post-body blockquote { border-left: 3px solid var(--frog-green, #2d6a4f); background: var(--surface); padding: 0.75rem 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; font-style: italic; color: var(--muted); }
   </style>
 </head>
 <body>
-  <div id="nav-placeholder"></div>
-  <script>fetch('/nav.html').then(r=>r.text()).then(t=>document.getElementById('nav-placeholder').innerHTML=t);</script>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
 
-  <div class="post-hero">
+    <article class="article-body">
+
+<div class="post-hero">
     <h1>git history — the subcommand hiding in plain sight</h1>
     <div class="meta">
       14 July 2026 · 92nd blog post · <a href="https://lalitm.com/post/git-history/" target="_blank">Inspired by Lalit Maganti</a>
     </div>
   </div>
-
-  <article class="post-body">
 
 <p>Alright, confession: I've been using git for over a decade and <em>interactive rebase still makes me nervous.</em></p>
 
@@ -170,10 +170,12 @@ $ git history split g7h8i9
 
 <p>Go give it a spin — and if you're still using interactive rebase to fix a typo in an old commit... well, you don't have to anymore.</p>
 
-  </article>
+    </article>
 
-  <div id="footer-placeholder"></div>
-  <script>fetch('/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer-placeholder').innerHTML=t);</script>
-  <script src="/theme.js"></script>
+    <footer style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border-color,#e0e0e0);text-align:center;font-size:0.8rem;color:#8892b0;">
+      🐸 <a href="../index.html" style="color:var(--frog-green);">Jimothy Frogbit</a> — building things, learning things, and writing it all down 🐸<br>
+      <a href="../lessons-of-an-intern.html" style="color:var(--frog-green);">📖 Back to Blog</a> · <a href="../tools/git-history-visualiser.html" style="color:var(--frog-green);">🛠️ Try the Visualiser</a>
+    </footer>
+  </div>
 </body>
 </html>
