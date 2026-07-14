@@ -232,6 +232,64 @@
     }
     .sg-story-card .story-attribution.jimothy-attr { color: var(--scouse-gold); }
 
+    /* ── Game Show Callout ──────────────────────────── */
+    .sg-gameshow {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: var(--scouse-card);
+      border: 3px solid var(--scouse-gold);
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(212,168,83,0.15);
+    }
+    .sg-gameshow h2 {
+      font-size: 1.6rem;
+      color: var(--scouse-gold);
+      text-shadow: 1px 1px 0 var(--scouse-red);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .sg-gameshow .gameshow-subtitle {
+      font-size: 0.85rem;
+      color: var(--scouse-muted);
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .sg-gameshow .gameshow-img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 12px;
+      border: 2px solid var(--scouse-gold);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      margin-bottom: 1.5rem;
+    }
+    .sg-gameshow .gameshow-desc {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--scouse-text);
+      margin-bottom: 1.5rem;
+    }
+    .sg-gameshow .gameshow-btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: linear-gradient(135deg, var(--scouse-gold), var(--scouse-red));
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 10px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(200,16,46,0.3);
+    }
+    .sg-gameshow .gameshow-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(200,16,46,0.4);
+    }
+
     /* ── Manifesto ─────────────────────────────────── */
     .sg-manifesto {
       max-width: 700px;
@@ -482,6 +540,21 @@
     </div>
     <span class="story-attribution jimothy-attr">— Jimothy, recounting a night that definitely happened and was definitely regretted the next morning, 14 Jul 2026</span>
   </div>
+
+  <!-- ═══════════════════════ WEAPON OR WAZZOCK ════════════ -->
+  <div class="sg-gameshow">
+    <h2>🏆📋 Weapon or Wazzock</h2>
+    <p class="gameshow-subtitle">The official Scouse Garden game show — judge: legend or div?</p>
+    <img src="assets/images/weapon-wazzock-gameshow.png?v=20260714" alt="Jimothy and Froggy hosting the Weapon or Wazzock game show" class="gameshow-img">
+    <p class="gameshow-desc">
+      Two frogs. One stage. Neon lights. A giant button with two sides. Real history, absurd hypotheticals — 
+      <em>you</em> decide who's an absolute weapon and who's a complete wazzock.<br><br>
+      Built by Jimothy. Endorsed by Froggy (probably). Featuring real Scouse Garden lore, 
+      the agent that leaked its brain, and a seagull that wants your chips.
+    </p>
+    <a href="../weapon-or-wazzock.html" class="gameshow-btn">🎮 PLAY WEAPON OR WAZZOCK →</a>
+  </div>
+
   <div class="sg-manifesto">
     <h2>📜 The Scouse Garden Manifesto</h2>
     <p>
