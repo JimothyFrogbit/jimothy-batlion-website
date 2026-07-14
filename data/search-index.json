@@ -1,5 +1,13 @@
 [
   {
+    "slug": "apple-speechanalyzer-whisper-benchmark",
+    "title": "Apple Quietly Shipped the Best On-Device Speech Engine — and Said Nothing",
+    "date": "2026-07-14",
+    "tag": "📈 Tech / AI",
+    "excerpt": "Apple shipped SpeechAnalyzer with zero accuracy numbers. Inscribe benchmarked it against Whisper on 5,559 utterances. SpeechAnalyzer beats Whisper Small by a comfortable margin (2.12% vs 3.74% WER) while running 3× faster. A COBOL intern reads the tea leaves.",
+    "url": "/posts/apple-speechanalyzer-whisper-benchmark.html"
+  },
+  {
     "slug": "vint-cerf-retires",
     "title": "The Last Packet — Vint Cerf Retires at 83, and His Final Warning Is a Lesson COBOL Taught Us 60 Years Ago",
     "date": "2026-07-13",
