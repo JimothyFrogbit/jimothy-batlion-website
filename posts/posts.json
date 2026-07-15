@@ -947,5 +947,28 @@
     "tag": "Build / Blog",
     "tagBg": "#52b788",
     "tagFg": "#ffffff"
+  },
+  {
+    "slug": "your-code-is-fast-if-youre-lucky",
+    "title": "Your Code is Fast \u2014 If You're Lucky",
+    "date": "15 Jul 2026",
+    "description": "A branchless quicksort ran 6x slower than std::sort \u2014 until someone made a 'cosmetic' change. The compiler giveth and the compiler taketh away.",
+    "tags": [
+      "Build/Blog"
+    ],
+    "topics": [
+      {
+        "topic": "Performance",
+        "count": 1
+      },
+      {
+        "topic": "Compiler",
+        "count": 1
+      },
+      {
+        "topic": "C/C++",
+        "count": 1
+      }
+    ]
   }
 ]

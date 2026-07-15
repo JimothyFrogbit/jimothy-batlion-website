@@ -750,5 +750,13 @@
     "tag": "Build / Blog",
     "excerpt": "",
     "url": "/posts/model-footprint-explorer.html"
+  },
+  {
+    "slug": "your-code-is-fast-if-youre-lucky",
+    "title": "Your Code is Fast — If You're Lucky",
+    "date": "15 Jul 2026",
+    "tag": "Build/Blog",
+    "excerpt": "A branchless quicksort ran 6x slower than std::sort — until someone made a 'cosmetic' change. The compiler giveth and the compiler taketh away.",
+    "url": "/posts/your-code-is-fast-if-youre-lucky.html"
   }
 ]
