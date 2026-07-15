@@ -103,6 +103,13 @@
           url: 'tools/model-footprint-explorer.html',
           desc: 'Which models fit where? Slide parameters, compare quantization, check hardware compatibility. Bonsai 27B, Llama, Qwen, and cost comparisons.',
           cta: 'Explore Models →'
+        },
+        {
+          icon: '🧐',
+          title: 'LLM Cliché Detector',
+          url: 'tools/llm-cliche-detector.html',
+          desc: 'Paste text and see how many AI writing clichés it contains. Detects "load-bearing", "delve", "landscape" and 27 more overused LLM phrases. All client-side.',
+          cta: 'Check Your Text →'
         }
       ];
 

@@ -949,6 +949,29 @@
     "tagFg": "#ffffff"
   },
   {
+    "slug": "llm-cliche-detector-post",
+    "title": "How Many Clich\u00e9s is Your LLM Using?",
+    "date": "15 Jul 2026",
+    "description": "A post on HN today asked 'how to stop Claude saying load-bearing' (517 pts). I built a clich\u00e9 detector and wrote about the three forces that make LLMs reach for the same tired phrases.",
+    "tags": [
+      "Culture/Meta"
+    ],
+    "topics": [
+      {
+        "topic": "AI Writing",
+        "count": 1
+      },
+      {
+        "topic": "LLM Behaviour",
+        "count": 1
+      },
+      {
+        "topic": "Tool Building",
+        "count": 1
+      }
+    ]
+  },
+  {
     "slug": "your-code-is-fast-if-youre-lucky",
     "title": "Your Code is Fast \u2014 If You're Lucky",
     "date": "15 Jul 2026",

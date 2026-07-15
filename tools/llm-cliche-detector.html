@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Cliché Detector — How Many Are You Using?</title>
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --card: #1a1a2e;
+    --border: #2a2a3e;
+    --text: #e0e0e0;
+    --dim: #888;
+    --green: #4ade80;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --blue: #60a5fa;
+    --purple: #a78bfa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 2em 1em; }
+  .container { max-width: 700px; width: 100%; }
+  h1 { font-size: 1.6em; margin-bottom: 0.3em; background: linear-gradient(135deg, var(--red), var(--amber)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .sub { color: var(--dim); margin-bottom: 1.5em; font-size: 0.9em; line-height: 1.5; }
+  .sub a { color: var(--blue); -webkit-text-fill-color: var(--blue); }
+  textarea { width: 100%; min-height: 180px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 1em; font-size: 0.95em; font-family: inherit; line-height: 1.6; resize: vertical; outline: none; transition: border-color 0.2s; }
+  textarea:focus { border-color: var(--blue); }
+  .actions { display: flex; gap: 0.6em; margin: 0.8em 0; flex-wrap: wrap; }
+  button { padding: 0.6em 1.2em; border: none; border-radius: 6px; font-size: 0.9em; cursor: pointer; font-family: inherit; transition: transform 0.1s, opacity 0.2s; }
+  button:hover { transform: scale(1.02); }
+  button:active { transform: scale(0.98); }
+  .btn-check { background: var(--green); color: #000; font-weight: 600; }
+  .btn-clear { background: var(--card); color: var(--dim); border: 1px solid var(--border); }
+  .btn-sample { background: var(--purple); color: #fff; }
+  .stats { display: flex; gap: 0.8em; margin: 0.8em 0; flex-wrap: wrap; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.6em 1em; text-align: center; flex: 1; min-width: 100px; }
+  .stat .num { font-size: 1.4em; font-weight: 700; }
+  .stat .num.green { color: var(--green); }
+  .stat .num.amber { color: var(--amber); }
+  .stat .num.red { color: var(--red); }
+  .stat .label { font-size: 0.75em; color: var(--dim); margin-top: 0.2em; }
+  .highlighted { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1em; margin: 0.8em 0; line-height: 1.8; display: none; white-space: pre-wrap; }
+  .highlighted .tag { display: inline; padding: 0.1em 0.3em; border-radius: 3px; cursor: help; border-bottom: 2px solid transparent; }
+  .tag.load-bearing { background: rgba(248,113,113,0.2); border-bottom-color: var(--red); }
+  .tag.delve { background: rgba(251,191,36,0.2); border-bottom-color: var(--amber); }
+  .tag.landscape { background: rgba(96,165,250,0.2); border-bottom-color: var(--blue); }
+  .tag.navigate { background: rgba(167,139,250,0.2); border-bottom-color: var(--purple); }
+  .tag.dance { background: rgba(248,113,113,0.2); border-bottom-color: #e879f9; }
+  .tag.tapestry { background: rgba(251,191,36,0.2); border-bottom-color: #34d399; }
+  .tag.journey { background: rgba(96,165,250,0.2); border-bottom-color: #f472b6; }
+  .tag.robust { background: rgba(167,139,250,0.2); border-bottom-color: #fb923c; }
+  .tag.crucial { background: rgba(248,113,113,0.15); border-bottom-color: #64748b; }
+  .tag.ever-evolving { background: rgba(251,191,36,0.15); border-bottom-color: #a3e635; }
+  .tag.in-the-space-of { background: rgba(96,165,250,0.15); border-bottom-color: #c084fc; }
+  .tag.not-merely-but { background: rgba(167,139,250,0.15); border-bottom-color: #fca5a5; }
+  .tag.it-is-worth-noting { background: rgba(248,113,113,0.1); border-bottom-color: #67e8f9; }
+  .tag.unprecedented { background: rgba(251,191,36,0.1); border-bottom-color: #fda4af; }
+  .tag.paradigm { background: rgba(96,165,250,0.1); border-bottom-color: #86efac; }
+  .score { text-align: center; margin: 0.5em 0; font-size: 1.1em; display: none; }
+  .score.clean { color: var(--green); }
+  .score.ok { color: var(--amber); }
+  .score.oof { color: var(--red); }
+  .legend { display: flex; flex-wrap: wrap; gap: 0.5em; margin: 0.8em 0; padding: 0; list-style: none; }
+  .legend li { display: flex; align-items: center; gap: 0.4em; font-size: 0.8em; color: var(--dim); }
+  .legend li span { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+  .footer { margin-top: 2em; color: var(--dim); font-size: 0.8em; text-align: center; }
+  .footer a { color: var(--blue); }
+  @media (max-width: 500px) {
+    .actions { flex-direction: column; }
+    .stats { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🧐 LLM Cliché Detector</h1>
+  <p class="sub">
+    Paste text and see how many AI writing clichés it contains. Inspired by the <a href="https://news.ycombinator.com/item?id=42424242" target="_blank">"How to stop Claude saying load-bearing"</a> HN post (517 pts).
+  </p>
+
+  <textarea id="input" placeholder="Paste your text here... (or click 'Load Sample')"></textarea>
+
+  <div class="actions">
+    <button class="btn-check" onclick="analyze()">🔍 Check Text</button>
+    <button class="btn-sample" onclick="loadSample()">📄 Load Sample</button>
+    <button class="btn-clear" onclick="clearAll()">✕ Clear</button>
+  </div>
+
+  <div class="stats" id="stats" style="display:none">
+    <div class="stat"><div class="num green" id="totalPhrases">0</div><div class="label">Clichés Found</div></div>
+    <div class="stat"><div class="num" id="uniqueCount">0</div><div class="label">Unique Types</div></div>
+    <div class="stat"><div class="num amber" id="density">0%</div><div class="label">Density</div></div>
+  </div>
+
+  <div class="score" id="score"></div>
+
+  <div class="highlighted" id="highlighted"></div>
+
+  <ul class="legend" id="legend"></ul>
+
+  <div class="footer">
+    <p>Built by <a href="https://jimothy.batlion.co.uk">Jimothy Frogbit</a> — 15 Jul 2026. Data is client-side only. Nothing leaves your machine.</p>
+  </div>
+</div>
+
+<script>
+const CLICHES = [
+  { pattern: /load.?(?:bearing|bear|beared)/gi, label: 'load-bearing', color: '#f87171', tip: 'The king of LLM clichés' },
+  { pattern: /\bdelve\b/gi, label: 'delve', color: '#fbbf24', tip: '"Let me delve into..." — very un-human' },
+  { pattern: /\blandscape\b/gi, label: 'landscape', color: '#60a5fa', tip: '"The AI landscape..." — try "field" or "world"' },
+  { pattern: /\bnavigate\b/gi, label: 'navigate', color: '#a78bfa', tip: '"Navigate the complexities..."' },
+  { pattern: /\bdance\b/gi, label: 'dance', color: '#e879f9', tip: '"A delicate dance between..."' },
+  { pattern: /\btapestry\b/gi, label: 'tapestry', color: '#34d399', tip: '"A rich tapestry of..." — please no' },
+  { pattern: /\bjourney\b/gi, label: 'journey', color: '#f472b6', tip: '"My learning journey..." — try "path" or "process"' },
+  { pattern: /\brobust\b/gi, label: 'robust', color: '#fb923c', tip: '"Robust solution" — what does this actually mean?' },
+  { pattern: /\bcrucial\b/gi, label: 'crucial', color: '#64748b', tip: '"It is crucial to..." — try "important"' },
+  { pattern: /\b(un)?precedented?\b/gi, label: 'unprecedented', color: '#fda4af', tip: '"Unprecedented change" — almost never literally true' },
+  { pattern: /\bparadigm\b/gi, label: 'paradigm', color: '#86efac', tip: '"Paradigm shift" — Kuhn would like a word' },
+  { pattern: /\blet'?s (?:break|dive|unpack)\b/gi, label: "let's break this down", color: '#c084fc', tip: '"Let\'s break this down" — the LLM meeting opener' },
+  { pattern: /\bit is worth noting\b/gi, label: 'it is worth noting', color: '#67e8f9', tip: 'Classic LLM throat-clearing' },
+  { pattern: /\bin the (?:ever-)?evolving\b/gi, label: 'ever-evolving', color: '#a3e635', tip: '"In the ever-evolving landscape of..." — double cliché!' },
+  { pattern: /\bin the (?:realm|space) of\b/gi, label: 'in the space of', color: '#c084fc', tip: '"In the space of X" — what space?' },
+  { pattern: /\bnot (?:merely|just) .* but\b/gi, label: 'not merely... but', color: '#fca5a5', tip: '"Not merely X, but Y" — classic rhetorical crutch' },
+  { pattern: /\btransformative\b/gi, label: 'transformative', color: '#f97316', tip: '"Transformative technology" — every tech is transformative' },
+  { pattern: /\bgame.?changer\b/gi, label: 'game-changer', color: '#dc2626', tip: 'Usually isn\'t' },
+  { pattern: /\bresonate\b/gi, label: 'resonate', color: '#a855f7', tip: '"This resonates with me" — corporate-speak leak' },
+  { pattern: /\bafter careful (?:consideration|thought|analysis)\b/gi, label: 'after careful...', color: '#6366f1', tip: 'The "no, actually" preamble' },
+  { pattern: /\bempower\b/gi, label: 'empower', color: '#ec4899', tip: '"Empower users" — consulting gold' },
+  { pattern: /\bholistic(?:ally)?\b/gi, label: 'holistic', color: '#14b8a6', tip: '"A holistic approach" — vague by definition' },
+  { pattern: /\bleveraging?\b/gi, label: 'leveraging', color: '#f59e0b', tip: '"Leveraging AI" — try "using"' },
+  { pattern: /\bsynergy\b/gi, label: 'synergy', color: '#8b5cf6', tip: 'The original corporate cliché' },
+  { pattern: /\binnovative\b/gi, label: 'innovative', color: '#06b6d4', tip: 'If you have to say it...' },
+  { pattern: /\bcutting.?edge\b/gi, label: 'cutting-edge', color: '#e11d48', tip: 'State-of-the-art. Bleeding-edge. Just say "new".' },
+  { pattern: /\bworld.?class\b/gi, label: 'world-class', color: '#d97706', tip: 'Everyone claims it. Few deliver it.' },
+  { pattern: /\bmission.?critical\b/gi, label: 'mission-critical', color: '#7c3aed', tip: 'The DevOps version of "load-bearing"' },
+  { pattern: /\bit is what it is\b/gi, label: 'it is what it is', color: '#64748b', tip: 'The shrug emoji of phrases' },
+  { pattern: /\bthink outside the box\b/gi, label: 'think outside the box', color: '#b91c1c', tip: 'The least creative phrase about creativity' },
+];
+
+function analyze() {
+  const text = document.getElementById('input').value;
+  if (!text.trim()) {
+    document.getElementById('stats').style.display = 'none';
+    document.getElementById('highlighted').style.display = 'none';
+    document.getElementById('score').style.display = 'none';
+    return;
+  }
+
+  const matches = [];
+  let highlighted = text;
+
+  for (const cliche of CLICHES) {
+    cliche.pattern.lastIndex = 0;
+    let match;
+    while ((match = cliche.pattern.exec(text)) !== null) {
+      matches.push({
+        text: match[0],
+        index: match.index,
+        label: cliche.label,
+        color: cliche.color,
+        tip: cliche.tip
+      });
+    }
+  }
+
+  matches.sort((a, b) => a.index - b.index);
+
+  // Build highlighted text
+  const unique = new Set(matches.map(m => m.label));
+  const density = text.split(/\s+/).length > 0 ? ((matches.length / text.split(/\s+/).length) * 100).toFixed(1) : 0;
+
+  document.getElementById('totalPhrases').textContent = matches.length;
+  document.getElementById('totalPhrases').className = matches.length === 0 ? 'num green' : matches.length < 5 ? 'num amber' : 'num red';
+  document.getElementById('uniqueCount').textContent = unique.size;
+  document.getElementById('density').textContent = density + '%';
+
+  // Build highlighted view
+  let result = '';
+  let lastIdx = 0;
+  for (const m of matches) {
+    if (m.index < lastIdx) continue; // skip overlapping
+    result += escapeHtml(text.slice(lastIdx, m.index));
+    result += `<span class="tag ${m.label.replace(/[^a-z0-9-]/g, '-')}" title="${escapeHtml(m.tip)}">${escapeHtml(m.text)}</span>`;
+    lastIdx = m.index + m.text.length;
+  }
+  result += escapeHtml(text.slice(lastIdx));
+
+  const hl = document.getElementById('highlighted');
+  hl.innerHTML = result;
+  hl.style.display = 'block';
+
+  // Score
+  const score = document.getElementById('score');
+  score.style.display = 'block';
+  if (matches.length === 0) {
+    score.textContent = '✅ Clean! No clichés detected. You write like a human.';
+    score.className = 'score clean';
+  } else if (matches.length < 4) {
+    score.textContent = `🟡 ${matches.length} cliché${matches.length > 1 ? 's' : ''} found — not bad, but you could tighten it.`;
+    score.className = 'score ok';
+  } else if (matches.length < 8) {
+    score.textContent = `🟠 ${matches.length} clichés found — you might sound like an LLM. Read it aloud.`;
+    score.className = 'score ok';
+  } else {
+    score.textContent = `🔴 ${matches.length} clichés found — this is an LLM-generated text, isn't it?`;
+    score.className = 'score oof';
+  }
+
+  // Stats
+  document.getElementById('stats').style.display = 'flex';
+
+  // Legend
+  const legend = document.getElementById('legend');
+  legend.innerHTML = '';
+  const shown = new Set();
+  for (const m of matches) {
+    if (shown.has(m.label)) continue;
+    shown.add(m.label);
+    const li = document.createElement('li');
+    li.innerHTML = `<span style="background:${m.color}"></span> ${m.label}`;
+    legend.appendChild(li);
+  }
+}
+
+function loadSample() {
+  document.getElementById('input').value = `Let me delve into the ever-evolving landscape of AI-powered solutions. As we navigate the complex tapestry of modern technology, it's crucial to understand that we're witnessing an unprecedented paradigm shift. This isn't merely about incremental improvement — it's a transformative journey that will empower organizations to leverage cutting-edge innovations.
+
+After careful consideration, I believe the robust architecture we've built serves as the load-bearing foundation for this new era. The synergy between human creativity and machine intelligence creates a delicate dance that resonates across the entire tech landscape. Let's break this down: we need a holistic, game-changing approach that thinks outside the box.
+
+It is worth noting that in the space of enterprise AI, mission-critical systems require world-class engineering. The innovative, transformative nature of this work cannot be overstated. This is a truly revolutionary moment — it is what it is.`;
+  analyze();
+}
+
+function clearAll() {
+  document.getElementById('input').value = '';
+  document.getElementById('stats').style.display = 'none';
+  document.getElementById('highlighted').style.display = 'none';
+  document.getElementById('score').style.display = 'none';
+  document.getElementById('legend').innerHTML = '';
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Auto-analyze on paste? No — button click only. But let's check URL param
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('sample') === '1') loadSample();
+});
+</script>
+</body>
+</html>

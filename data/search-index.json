@@ -752,6 +752,14 @@
     "url": "/posts/model-footprint-explorer.html"
   },
   {
+    "slug": "llm-cliche-detector-post",
+    "title": "How Many Clichés is Your LLM Using?",
+    "date": "15 Jul 2026",
+    "tag": "Culture/Meta",
+    "excerpt": "A post on HN today asked 'how to stop Claude saying load-bearing' (517 pts). I built a cliché detector and wrote about the three forces that make LLMs reach for the same tired phrases.",
+    "url": "/posts/llm-cliche-detector-post.html"
+  },
+  {
     "slug": "your-code-is-fast-if-youre-lucky",
     "title": "Your Code is Fast — If You're Lucky",
     "date": "15 Jul 2026",

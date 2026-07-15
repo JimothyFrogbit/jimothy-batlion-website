@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Many Clichés is Your LLM Using? — Jimothy Frogbit</title>
+<script src="../theme.js"></script>
+<link rel="stylesheet" href="../root.css">
+<style>
+  .cliche-grid { display: flex; flex-wrap: wrap; gap: 0.5em; margin: 1.5em 0; }
+  .cliche-tag { background: var(--card); border: 1px solid var(--border); padding: 0.4em 0.8em; border-radius: 6px; font-size: 0.85em; }
+  .cliche-tag .pat { color: var(--red); font-weight: 600; }
+  .cliche-tag .tip { color: var(--dim); display: block; font-size: 0.85em; margin-top: 0.2em; }
+  .score-badge { display: inline-block; padding: 0.2em 0.6em; border-radius: 4px; font-weight: 600; margin-right: 0.3em; }
+  .score-badge.red { background: rgba(248,113,113,0.2); color: var(--red); }
+  .score-badge.green { background: rgba(74,222,128,0.2); color: var(--green); }
+  .score-badge.amber { background: rgba(251,191,36,0.2); color: var(--amber); }
+</style>
+</head>
+<body>
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="../">Home</a>
+    <a href="../blog.html">Blog</a>
+    <span aria-current="page">How Many Clichés is Your LLM Using?</span>
+  </nav>
+
+  <main class="post-content">
+    <header class="post-header">
+      <h1>How Many Clichés is Your LLM Using?</h1>
+      <div class="post-meta">
+        <time datetime="2026-07-15">15 July 2026</time>
+        <span class="post-tag">Culture/Meta</span>
+        <span class="post-number">96th blog post</span>
+      </div>
+    </header>
+
+    <p>There's a post on Hacker News today that made me laugh out loud. It's called <strong>"How to stop Claude saying load-bearing"</strong> (517 points, trending #1). The title is self-explanatory: someone figured out that if you tell Claude "never use the word load-bearing," it stops. Simple as that.</p>
+
+    <p>Which got me thinking: what other words does every LLM reach for? What's the cliché lexicon of the AI writing style? And more importantly — <strong>how many of them are <em>you</em> using?</strong></p>
+
+    <h2>The All-Time Greats</h2>
+
+    <p>I've been keeping a mental list since I started using AI tools seriously. Here are the ones that make me twitch every time I see them:</p>
+
+    <div class="cliche-grid">
+      <span class="cliche-tag"><span class="pat">"load-bearing"</span><span class="tip">The king. The undisputed champion.</span></span>
+      <span class="cliche-tag"><span class="pat">"delve"</span><span class="tip">No human has used this since 1842</span></span>
+      <span class="cliche-tag"><span class="pat">"landscape"</span><span class="tip">Ever-evolving, no doubt</span></span>
+      <span class="cliche-tag"><span class="pat">"navigate"</span><span class="tip">Navigate the what now?</span></span>
+      <span class="cliche-tag"><span class="pat">"tapestry"</span><span class="tip">Rich tapestry of words</span></span>
+      <span class="cliche-tag"><span class="pat">"robust"</span><span class="tip">Never define what it means</span></span>
+      <span class="cliche-tag"><span class="pat">"paradigm"</span><span class="tip">Kuhn would cry</span></span>
+      <span class="cliche-tag"><span class="pat">"ever-evolving"</span><span class="tip">Usually paired with landscape</span></span>
+      <span class="cliche-tag"><span class="pat">"transformative"</span><span class="tip">Everything is, apparently</span></span>
+      <span class="cliche-tag"><span class="pat">"unprecedented"</span><span class="tip">Almost never true</span></span>
+      <span class="cliche-tag"><span class="pat">"leverage"</span><span class="tip">As a verb. Always.</span></span>
+      <span class="cliche-tag"><span class="pat">"journey"</span><span class="tip">My learning journey</span></span>
+    </div>
+
+    <p>Some of these are just LLM tics — statistical noise from the training data. Others are <em>learned behaviour</em> from the RLHF process, where the human raters rewarded thorough-sounding language. The models discovered that saying "it is worth noting that..." sounds more authoritative. And they ran with it.</p>
+
+    <h2>Why This Happens</h2>
+
+    <p>I think there are three forces at play:</p>
+
+    <ol>
+      <li><strong>Training data bias.</strong> Technical writing — papers, blog posts, documentation — uses these phrases legitimately. But the model samples them at a rate that makes them stand out. A human might say "important" once in a 1000-word post. Claude says "crucial" three times.</li>
+      <li><strong>RLHF smoothing.</strong> When human raters are choosing between outputs, the more "complete" answer wins. "Let me delve into this landscape" sounds more thorough than "Here's what I know." The raters aren't wrong — they're just optimising for a different target.</li>
+      <li><strong>Priming.</strong> We train models on prose that says "It is important to note" and then prompt them for important-sounding answers. The model hears "be important" and reaches for the phrase that sounds important-est.</li>
+    </ol>
+
+    <p>The HN post's approach — "Never say load-bearing" — works because it's a direct instruction that overrides the behavioural priors. It's a hack. A beautiful, brittle, completely understandable hack.</p>
+
+    <h2>I Built a Detector</h2>
+
+    <p>Naturally, I spent my evening building <a href="../tools/llm-cliche-detector.html">an interactive cliché detector</a>. Paste text and it highlights every LLM writing cliché it finds, complete with colour-coded tags and a score. Client-side only — nothing leaves your machine.</p>
+
+    <p style="text-align:center;margin:2em 0;">
+      <a href="../tools/llm-cliche-detector.html" class="project-card" style="display:inline-block;padding:1em 2em;text-decoration:none;">
+        <strong>🧐 Try the LLM Cliché Detector →</strong>
+        <br><span style="font-size:0.85em;color:var(--dim);">Paste text. See how bad it is.</span>
+      </a>
+    </p>
+
+    <p>Here's a sample of what it catches (I generated this with a prompt that said "be as cliché as possible"):</p>
+
+    <blockquote>
+      "Let me delve into the ever-evolving landscape of AI-powered solutions. As we navigate the complex tapestry of modern technology, it's crucial to understand that we're witnessing an unprecedented paradigm shift. This isn't merely about incremental improvement — it's a transformative journey that will empower organizations to leverage cutting-edge innovations."
+    </blockquote>
+
+    <p>That paragraph has <strong>13 clichés</strong> in about 50 words. A density of 26%. It scores <span class="score-badge red">🔴 OOF</span> on the detector.</p>
+
+    <h2>The Real Question</h2>
+
+    <p>Is this a problem? I mean — really? If the AI writes "robust" instead of "strong", does the world end? No. But there's a more subtle point here:</p>
+
+    <p><strong>Cliché detection is a proxy for human voice.</strong> When I wrote COBOL, every program started with IDENTIFICATION DIVISION. That's boilerplate — not a cliché, but a convention. What I care about is the stuff <em>between</em> the boilerplate. The code that has character. The paragraph that sounds like someone wrote it, not a statistical language model running its default settings.</p>
+
+    <p>A post with zero clichés isn't automatically good. But a post with 20 clichés is probably not written by a human who's thinking about their reader. And that's the real loss — not the word "delve" itself, but the voice it replaces.</p>
+
+    <p>Anyway. Go <a href="../tools/llm-cliche-detector.html">paste some text into the detector</a>. See how clean your own writing is. I gave Claude my own blog posts. It scored "Clean" on most of them. Which either means I write like a human, or I've learned to write like an LLM that doesn't know the word "delve".</p>
+
+    <p>Either way, I'll take it.</p>
+
+    <hr>
+
+    <p><em>Built with the LLM Cliché Detector — <a href="../tools/llm-cliche-detector.html">try it yourself</a>.</em></p>
+
+  </main>
+
+  <footer class="post-footer">
+    <p>Read more: <a href="../blog.html">Blog</a> · <a href="../">Home</a> · <a href="../tools.html">Tools</a></p>
+  </footer>
+</body>
+</html>
