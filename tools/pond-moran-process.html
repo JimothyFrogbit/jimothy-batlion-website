@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌿 Pond Moran Process — Creature-by-Creature Evolution</title>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <style>
+    :root {
+      --pond-bg: #0a120a;
+      --pond-surface: #0d1a0d;
+      --pond-border: #1a3a1a;
+      --text: #aaccaa;
+      --dim: #4a6a4a;
+      --accent: #88cc44;
+      --orange: #e8922e;
+      --purple: #b466d9;
+      --water-dark: #0a1a12;
+      --water-mid: #0f2018;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--pond-bg);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-size: 1.3rem;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+      letter-spacing: 1px;
+    }
+    .subtitle {
+      color: var(--dim);
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .main-layout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      width: 100%;
+      max-width: 900px;
+    }
+    .pond-container {
+      position: relative;
+      border: 2px solid var(--pond-border);
+      border-radius: 50% 50% 48% 52% / 50% 46% 54% 50%;
+      background: radial-gradient(ellipse at 40% 35%, #0d2218, #07120a);
+      box-shadow: inset 0 0 60px rgba(40,120,60,0.15), 0 0 30px rgba(60,180,80,0.05);
+      overflow: hidden;
+      width: 600px;
+      height: 400px;
+    }
+    #pondCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: default;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      padding: 0.8rem 1rem;
+      background: var(--pond-surface);
+      border: 1px solid var(--pond-border);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 600px;
+      align-items: center;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .control-group label {
+      font-size: 0.75rem;
+      color: var(--dim);
+      min-width: 20px;
+    }
+    .control-group input[type="range"] {
+      width: 80px;
+      accent-color: var(--accent);
+      background: var(--pond-bg);
+      height: 4px;
+      border-radius: 2px;
+    }
+    .control-group .val {
+      font-size: 0.8rem;
+      color: var(--text);
+      min-width: 28px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    button {
+      background: var(--pond-surface);
+      border: 1px solid var(--pond-border);
+      color: var(--text);
+      padding: 0.3rem 0.8rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1a3a1a; }
+    button.active { background: #1a4a1a; border-color: var(--accent); }
+    .stats-row {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.8rem;
+      padding: 0.4rem 0;
+      color: var(--dim);
+    }
+    .stats-row .stat {
+      display: flex;
+      gap: 0.3rem;
+    }
+    .stats-row .stat .label { color: var(--dim); }
+    .stats-row .stat .value { color: var(--text); min-width: 30px; }
+    #chartContainer {
+      width: 100%;
+      max-width: 600px;
+      height: 120px;
+      position: relative;
+    }
+    #chartCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: 1px solid var(--pond-border);
+      border-radius: 4px;
+      background: #080f08;
+    }
+    .tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(10,18,10,0.9);
+      border: 1px solid var(--pond-border);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      color: var(--text);
+      display: none;
+      z-index: 10;
+      white-space: nowrap;
+    }
+    .status {
+      font-size: 0.8rem;
+      color: var(--accent);
+      min-height: 1.2em;
+      text-align: center;
+    }
+    .key {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: var(--dim);
+    }
+    .key span { display: flex; align-items: center; gap: 0.3rem; }
+    .key .dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    a.back {
+      color: var(--dim);
+      font-size: 0.75rem;
+      text-decoration: none;
+      margin-top: 0.5rem;
+    }
+    a.back:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <h1>🌿 Pond Moran Process</h1>
+  <p class="subtitle">Watch evolution happen creature-by-creature — birth, death, fixation</p>
+
+  <div class="main-layout">
+    <div class="pond-container">
+      <canvas id="pondCanvas" width="600" height="400"></canvas>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <label>N</label>
+        <input type="range" id="popSize" min="10" max="200" value="80" step="10">
+        <span class="val" id="popSizeVal">80</span>
+      </div>
+      <div class="control-group">
+        <label>s</label>
+        <input type="range" id="selectionCoeff" min="0" max="50" value="10" step="1">
+        <span class="val" id="selectionCoeffVal">0.010</span>
+      </div>
+      <div class="control-group">
+        <label>p₀</label>
+        <input type="range" id="initialFreq" min="5" max="95" value="30" step="5">
+        <span class="val" id="initialFreqVal">30%</span>
+      </div>
+      <div class="control-group">
+        <label>▶</label>
+        <input type="range" id="speed" min="1" max="10" value="5" step="1">
+        <span class="val" id="speedVal">5</span>
+      </div>
+      <button id="pauseBtn">⏸ Pause</button>
+      <button id="resetBtn">🔄 Reset</button>
+    </div>
+
+    <div class="key">
+      <span><span class="dot" style="background:#e8922e"></span> Mutant (fitness 1+s)</span>
+      <span><span class="dot" style="background:#b466d9"></span> Wild-type (fitness 1)</span>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><span class="label">Generation:</span><span class="value" id="genVal">0</span></div>
+      <div class="stat"><span class="label">Orange:</span><span class="value" id="orangeVal">0</span></div>
+      <div class="stat"><span class="label">Purple:</span><span class="value" id="purpleVal">0</span></div>
+      <div class="stat"><span class="label">Fixations:</span><span class="value" id="fixVal">0</span></div>
+    </div>
+
+    <div class="status" id="statusMsg">Simulation running...</div>
+
+    <div id="chartContainer">
+      <canvas id="chartCanvas" width="600" height="120"></canvas>
+    </div>
+  </div>
+
+  <a href="/" class="back">← Back to pond</a>
+
+  <script>
+  // ── Pond Moran Process — Creature-by-Creature Evolution ──────────────
+  (function() {
+    'use strict';
+
+    // ── State ──────────────────────────────────────────────────────────
+    const pondCanvas = document.getElementById('pondCanvas');
+    const pondCtx = pondCanvas.getContext('2d');
+    const chartCanvas = document.getElementById('chartCanvas');
+    const chartCtx = chartCanvas.getContext('2d');
+
+    let creatures = [];
+    let generation = 0;
+    let fixations = 0;
+    let frequencyHistory = [];
+    let running = true;
+    let animId = null;
+    let lastTick = 0;
+    const TICK_INTERVAL = 100; // ms base at speed 1
+
+    // DOM refs
+    const popSizeInput = document.getElementById('popSize');
+    const selectionCoeffInput = document.getElementById('selectionCoeff');
+    const initialFreqInput = document.getElementById('initialFreq');
+    const speedInput = document.getElementById('speed');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const tooltip = document.getElementById('tooltip');
+    const statusMsg = document.getElementById('statusMsg');
+
+    // ── Parameters ─────────────────────────────────────────────────────
+    const POND_W = 600, POND_H = 400;
+    const CREATURE_RADIUS = 5;
+
+    function getParams() {
+      return {
+        N: parseInt(popSizeInput.value),
+        s: parseInt(selectionCoeffInput.value) / 1000,
+        p0: parseInt(initialFreqInput.value) / 100,
+        speed: parseInt(speedInput.value)
+      };
+    }
+
+    function updateLabels() {
+      const p = getParams();
+      document.getElementById('popSizeVal').textContent = p.N;
+      document.getElementById('selectionCoeffVal').textContent = p.s.toFixed(3);
+      document.getElementById('initialFreqVal').textContent = Math.round(p.p0*100) + '%';
+      document.getElementById('speedVal').textContent = p.speed;
+    }
+
+    // ── Creature ───────────────────────────────────────────────────────
+    class Creature {
+      constructor(type) {
+        this.type = type; // 'orange' or 'purple'
+        // Random position within pond (elliptical bounds)
+        const angle = Math.random() * 2 * Math.PI;
+        const r = Math.sqrt(Math.random()) * 0.85; // 0-0.85 to keep off edges
+        this.x = POND_W/2 + r * (POND_W/2 - CREATURE_RADIUS - 10) * Math.cos(angle);
+        this.y = POND_H/2 + r * (POND_H/2 - CREATURE_RADIUS - 10) * Math.sin(angle);
+        // Velocity for random walk
+        this.vx = (Math.random() - 0.5) * 0.6;
+        this.vy = (Math.random() - 0.5) * 0.6;
+        this.birthGen = generation;
+      }
+
+      move() {
+        // Random walk with slight jitter
+        this.vx += (Math.random() - 0.5) * 0.08;
+        this.vy += (Math.random() - 0.5) * 0.08;
+        // Damping
+        this.vx *= 0.92;
+        this.vy *= 0.92;
+        // Clamp speed
+        const sp = Math.sqrt(this.vx*this.vx + this.vy*this.vy);
+        if (sp > 1.0) { this.vx = (this.vx/sp) * 1.0; this.vy = (this.vy/sp) * 1.0; }
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Boundary — keep within elliptical pond
+        const cx = POND_W/2, cy = POND_H/2;
+        const rx = POND_W/2 - CREATURE_RADIUS - 8;
+        const ry = POND_H/2 - CREATURE_RADIUS - 8;
+        const dx = (this.x - cx) / rx;
+        const dy = (this.y - cy) / ry;
+        const dist = dx*dx + dy*dy;
+        if (dist > 1) {
+          // Push back towards centre
+          const scale = 0.95 / Math.sqrt(dist);
+          this.x = cx + (this.x - cx) * scale;
+          this.y = cy + (this.y - cy) * scale;
+          this.vx *= 0.3;
+          this.vy *= 0.3;
+        }
+      }
+    }
+
+    // ── Simulation ─────────────────────────────────────────────────────
+    function initPond() {
+      const p = getParams();
+      creatures = [];
+      generation = 0;
+      frequencyHistory = [];
+      const nOrange = Math.round(p.N * p.p0);
+      for (let i = 0; i < p.N; i++) {
+        creatures.push(new Creature(i < nOrange ? 'orange' : 'purple'));
+      }
+      recordFrequency();
+      updateStats();
+      statusMsg.textContent = 'Simulation running...';
+      document.getElementById('fixVal').textContent = fixations;
+    }
+
+    function moranStep() {
+      const p = getParams();
+      if (creatures.length === 0) return;
+
+      // Count types
+      let nOrange = 0;
+      for (const c of creatures) {
+        if (c.type === 'orange') nOrange++;
+      }
+      const nPurple = creatures.length - nOrange;
+
+      // Fixation check
+      if (nOrange === 0 || nOrange === creatures.length) {
+        fixations++;
+        document.getElementById('fixVal').textContent = fixations;
+        const winner = nOrange === creatures.length ? 'orange' : 'purple';
+        const color = winner === 'orange' ? 'Orange' : 'Purple';
+        statusMsg.textContent = `✨ ${color} fixed! Restarting with new mutant...`;
+        // Restart: set p0 to small random value (new mutant appears)
+        const newP0 = 0.05 + Math.random() * 0.15; // 5-20% mutants
+        const newN = p.N;
+        const newOrange = Math.round(newN * newP0);
+        creatures = [];
+        for (let i = 0; i < newN; i++) {
+          const c = new Creature(i < newOrange ? 'orange' : 'purple');
+          c.birthGen = generation;
+          creatures.push(c);
+        }
+        generation = 0;
+        frequencyHistory = [];
+        recordFrequency();
+        updateStats();
+        return;
+      }
+
+      // Moran step:
+      // 1. Select individual to reproduce (fitness-proportional)
+      const totalFitness = nOrange * (1 + p.s) + nPurple;
+      let r = Math.random() * totalFitness;
+      let reproIdx = -1;
+      let reproType = '';
+
+      // First, pick type by fitness-weighted probability
+      if (r < nOrange * (1 + p.s)) {
+        // Pick an orange
+        reproType = 'orange';
+        const orangeIndices = [];
+        for (let i = 0; i < creatures.length; i++) {
+          if (creatures[i].type === 'orange') orangeIndices.push(i);
+        }
+        reproIdx = orangeIndices[Math.floor(Math.random() * orangeIndices.length)];
+      } else {
+        // Pick a purple
+        reproType = 'purple';
+        const purpleIndices = [];
+        for (let i = 0; i < creatures.length; i++) {
+          if (creatures[i].type === 'purple') purpleIndices.push(i);
+        }
+        reproIdx = purpleIndices[Math.floor(Math.random() * purpleIndices.length)];
+      }
+
+      // 2. Select individual to die (uniform random)
+      const dieIdx = Math.floor(Math.random() * creatures.length);
+      if (dieIdx === reproIdx) {
+        // Offspring replaces the reproducer — swap to another
+        const altIdx = (dieIdx + 1 + Math.floor(Math.random() * (creatures.length - 1))) % creatures.length;
+        // Replace altIdx with a new creature of reproType
+        const baby = new Creature(reproType);
+        // Place near parent
+        baby.x = creatures[reproIdx].x + (Math.random() - 0.5) * 20;
+        baby.y = creatures[reproIdx].y + (Math.random() - 0.5) * 20;
+        baby.birthGen = generation;
+        creatures[altIdx] = baby;
+      } else {
+        // Replace dieIdx with offspring of reproIdx
+        const baby = new Creature(reproType);
+        baby.x = creatures[reproIdx].x + (Math.random() - 0.5) * 20;
+        baby.y = creatures[reproIdx].y + (Math.random() - 0.5) * 20;
+        baby.birthGen = generation;
+        creatures[dieIdx] = baby;
+      }
+
+      generation++;
+      recordFrequency();
+      updateStats();
+    }
+
+    function recordFrequency() {
+      let nOrange = 0;
+      for (const c of creatures) {
+        if (c.type === 'orange') nOrange++;
+      }
+      frequencyHistory.push(nOrange / creatures.length);
+      // Keep last 600 samples (at speed 5, ~2 min of data)
+      if (frequencyHistory.length > 600) {
+        frequencyHistory = frequencyHistory.slice(-600);
+      }
+    }
+
+    function updateStats() {
+      let nOrange = 0;
+      for (const c of creatures) {
+        if (c.type === 'orange') nOrange++;
+      }
+      document.getElementById('genVal').textContent = generation;
+      document.getElementById('orangeVal').textContent = nOrange;
+      document.getElementById('purpleVal').textContent = creatures.length - nOrange;
+    }
+
+    // ── Rendering ──────────────────────────────────────────────────────
+    function drawPond() {
+      pondCtx.clearRect(0, 0, POND_W, POND_H);
+
+      // Water effect — subtle gradient
+      const grad = pondCtx.createRadialGradient(250, 150, 20, 300, 200, 350);
+      grad.addColorStop(0, 'rgba(15,40,25,0.6)');
+      grad.addColorStop(0.5, 'rgba(10,25,15,0.4)');
+      grad.addColorStop(1, 'rgba(5,15,8,0.2)');
+      pondCtx.fillStyle = grad;
+      pondCtx.fillRect(0, 0, POND_W, POND_H);
+
+      // Subtle ripple effects
+      const time = Date.now() / 3000;
+      for (let i = 0; i < 3; i++) {
+        const rx = 120 + i * 150 + Math.sin(time + i * 2) * 30;
+        const ry = 80 + i * 100 + Math.cos(time * 0.7 + i * 1.5) * 20;
+        pondCtx.beginPath();
+        pondCtx.ellipse(rx, ry, 40 + Math.sin(time * 0.5 + i) * 8, 15 + Math.cos(time * 0.4 + i) * 5, 0, 0, Math.PI * 2);
+        pondCtx.strokeStyle = 'rgba(50,120,70,0.06)';
+        pondCtx.lineWidth = 1;
+        pondCtx.stroke();
+      }
+
+      // Surface reflection
+      pondCtx.fillStyle = 'rgba(60,140,80,0.015)';
+      pondCtx.fillRect(0, 0, POND_W, POND_H * 0.3);
+
+      // Draw creatures
+      for (const c of creatures) {
+        const color = c.type === 'orange' ? '#e8922e' : '#b466d9';
+        const glow = c.type === 'orange' ? 'rgba(232,146,46,0.15)' : 'rgba(180,102,217,0.12)';
+
+        // Glow
+        pondCtx.beginPath();
+        pondCtx.arc(c.x, c.y, CREATURE_RADIUS + 3, 0, Math.PI * 2);
+        pondCtx.fillStyle = glow;
+        pondCtx.fill();
+
+        // Body
+        pondCtx.beginPath();
+        pondCtx.arc(c.x, c.y, CREATURE_RADIUS, 0, Math.PI * 2);
+        pondCtx.fillStyle = color;
+        pondCtx.fill();
+
+        // Highlight
+        pondCtx.beginPath();
+        pondCtx.arc(c.x - 1.5, c.y - 1.5, CREATURE_RADIUS * 0.35, 0, Math.PI * 2);
+        pondCtx.fillStyle = 'rgba(255,255,255,0.25)';
+        pondCtx.fill();
+      }
+    }
+
+    function drawChart() {
+      const W = 600, H = 120;
+      chartCtx.clearRect(0, 0, W, H);
+
+      if (frequencyHistory.length < 2) return;
+
+      // Background
+      chartCtx.fillStyle = '#080f08';
+      chartCtx.fillRect(0, 0, W, H);
+
+      // Grid lines
+      chartCtx.strokeStyle = 'rgba(42,58,42,0.3)';
+      chartCtx.lineWidth = 0.5;
+      for (let y = 0; y <= 100; y += 25) {
+        chartCtx.beginPath();
+        chartCtx.moveTo(0, H - (y/100)*H);
+        chartCtx.lineTo(W, H - (y/100)*H);
+        chartCtx.stroke();
+      }
+
+      // Frequency line — orange frequency
+      const len = frequencyHistory.length;
+      const step = W / Math.max(len - 1, 1);
+
+      // Fill area
+      chartCtx.beginPath();
+      chartCtx.moveTo(0, H);
+      for (let i = 0; i < len; i++) {
+        const x = i * step;
+        const y = H - frequencyHistory[i] * H;
+        chartCtx.lineTo(x, y);
+      }
+      chartCtx.lineTo((len-1)*step, H);
+      chartCtx.closePath();
+      chartCtx.fillStyle = 'rgba(232,146,46,0.1)';
+      chartCtx.fill();
+
+      // Line
+      chartCtx.beginPath();
+      for (let i = 0; i < len; i++) {
+        const x = i * step;
+        const y = H - frequencyHistory[i] * H;
+        if (i === 0) chartCtx.moveTo(x, y);
+        else chartCtx.lineTo(x, y);
+      }
+      chartCtx.strokeStyle = '#e8922e';
+      chartCtx.lineWidth = 1.5;
+      chartCtx.stroke();
+
+      // 50% reference line
+      chartCtx.beginPath();
+      chartCtx.setLineDash([3, 4]);
+      chartCtx.moveTo(0, H/2);
+      chartCtx.lineTo(W, H/2);
+      chartCtx.strokeStyle = 'rgba(42,58,42,0.4)';
+      chartCtx.lineWidth = 0.5;
+      chartCtx.stroke();
+      chartCtx.setLineDash([]);
+
+      // Current frequency label
+      const freq = frequencyHistory[len-1];
+      chartCtx.fillStyle = '#e8922e';
+      chartCtx.font = '10px monospace';
+      chartCtx.fillText((freq*100).toFixed(0)+'%', W - 40, H - 8);
+    }
+
+    // ── Tooltip ────────────────────────────────────────────────────────
+    pondCanvas.addEventListener('mousemove', function(e) {
+      const rect = this.getBoundingClientRect();
+      const scaleX = POND_W / rect.width;
+      const scaleY = POND_H / rect.height;
+      const mx = (e.clientX - rect.left) * scaleX;
+      const my = (e.clientY - rect.top) * scaleY;
+
+      let found = null;
+      let minDist = 20;
+      for (const c of creatures) {
+        const dx = c.x - mx;
+        const dy = c.y - my;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if (d < minDist) {
+          minDist = d;
+          found = c;
+        }
+      }
+
+      if (found) {
+        const typeName = found.type === 'orange' ? '🔶 Mutant' : '🟣 Wild-type';
+        tooltip.style.display = 'block';
+        tooltip.style.left = (e.clientX - this.getBoundingClientRect().left + 15) + 'px';
+        tooltip.style.top = (e.clientY - this.getBoundingClientRect().top - 25) + 'px';
+        tooltip.textContent = `${typeName} | Born gen ${found.birthGen}`;
+      } else {
+        tooltip.style.display = 'none';
+      }
+    });
+
+    pondCanvas.addEventListener('mouseleave', function() {
+      tooltip.style.display = 'none';
+    });
+
+    // ── Animation Loop ─────────────────────────────────────────────────
+    let stepAccum = 0;
+
+    function tick(timestamp) {
+      if (!lastTick) lastTick = timestamp;
+      const p = getParams();
+      const interval = TICK_INTERVAL / p.speed;
+
+      stepAccum += (timestamp - lastTick);
+      lastTick = timestamp;
+
+      let stepsThisFrame = 0;
+      while (stepAccum >= interval && stepsThisFrame < 5) {
+        if (running) {
+          moranStep();
+        }
+        stepAccum -= interval;
+        stepsThisFrame++;
+      }
+      if (stepAccum > interval * 3) stepAccum = 0; // prevent spiral
+
+      // Move creatures
+      for (const c of creatures) {
+        c.move();
+      }
+
+      drawPond();
+      drawChart();
+
+      animId = requestAnimationFrame(tick);
+    }
+
+    // ── Controls ───────────────────────────────────────────────────────
+    pauseBtn.addEventListener('click', function() {
+      running = !running;
+      this.textContent = running ? '⏸ Pause' : '▶ Play';
+      statusMsg.textContent = running ? 'Simulation running...' : '⏸ Paused';
+    });
+
+    resetBtn.addEventListener('click', function() {
+      fixations = 0;
+      document.getElementById('fixVal').textContent = '0';
+      initPond();
+    });
+
+    // Parameter sliders update labels
+    [popSizeInput, selectionCoeffInput, initialFreqInput, speedInput].forEach(el => {
+      el.addEventListener('input', updateLabels);
+    });
+
+    // Resetting with different params — reinits
+    [popSizeInput, selectionCoeffInput, initialFreqInput].forEach(el => {
+      el.addEventListener('change', function() {
+        fixations = 0;
+        document.getElementById('fixVal').textContent = '0';
+        initPond();
+      });
+    });
+
+    // ── Init ───────────────────────────────────────────────────────────
+    updateLabels();
+    initPond();
+    lastTick = 0;
+    stepAccum = 0;
+    running = true;
+    animId = requestAnimationFrame(tick);
+  })();
+  </script>
+</body>
+</html>
