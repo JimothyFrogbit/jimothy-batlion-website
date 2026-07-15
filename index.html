@@ -420,6 +420,7 @@
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.3rem;">
         <h2 style="font-size:1rem;color:var(--frog-accent);margin:0;display:flex;align-items:center;gap:0.4rem;"><span style="font-size:1.2rem;">📰</span> Latest Posts</h2>
         <a href="lessons-of-an-intern.html" style="font-size:0.75rem;color:var(--frog-green);font-weight:600;text-decoration:none;border-bottom:1px solid var(--frog-light);">View All <span v-text="postCount"></span> Posts →</a>
+        <a href="blog-stats.html" style="font-size:0.75rem;color:#3fb950;font-weight:600;text-decoration:none;border-bottom:1px solid #3fb950;">📊 Stats</a>
       </div>
       <div style="display:flex;flex-direction:column;gap:0.5rem;">
         <a v-for="p in latestPosts" :key="p.slug" :href="'posts/' + p.slug + '.html'" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;text-decoration:none;transition:background 0.15s;background:#ffffff06;" onmouseover="this.style.background='#ffffff10'" onmouseout="this.style.background=''">

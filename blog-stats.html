@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 Blog Stats — Jimothy Frogbit</title>
+<link rel="stylesheet" href="root.css">
+<script src="theme.js" defer></script>
+<style>
+:root {
+  --bg: #0d1117;
+  --card-bg: #161b22;
+  --card-hover: #1c2333;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 2rem 1rem;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+.top-bar {
+  max-width: 1000px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.top-bar a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.top-bar a:hover {
+  color: var(--green);
+  border-color: var(--green);
+  background: rgba(63, 185, 80, 0.05);
+}
+.top-bar-right {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.top-bar .stats-version {
+  font-size: 0.75rem;
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Header */
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.subtitle {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+/* Stat cards row */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+}
+.stat-card .num {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--green);
+}
+.stat-card .label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+
+/* Chart sections */
+.chart-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.chart-section h2 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Tag bars */
+.tag-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.tag-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  transition: background 0.15s;
+  position: relative;
+}
+.tag-bar-row:hover {
+  background: var(--card-hover);
+  border-radius: 6px;
+}
+.tag-bar-label {
+  min-width: 120px;
+  font-size: 0.8rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tag-bar-track {
+  flex: 1;
+  height: 20px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.tag-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  min-width: 2px;
+}
+.tag-bar-count {
+  min-width: 28px;
+  text-align: right;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.tag-bar-row.active-tag {
+  background: rgba(63, 185, 80, 0.12);
+  border: 1px solid rgba(63, 185, 80, 0.3);
+  border-radius: 6px;
+}
+.tag-bar-row.active-tag .tag-bar-label {
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* Monthly chart */
+.month-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  height: 120px;
+  padding: 0.5rem 0;
+}
+.month-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  height: 100%;
+  justify-content: flex-end;
+}
+.month-bar {
+  width: 100%;
+  max-width: 36px;
+  background: linear-gradient(180deg, var(--green), #1a6d34);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
+  min-height: 2px;
+  position: relative;
+  cursor: pointer;
+}
+.month-bar:hover {
+  opacity: 0.8;
+}
+.month-bar .bar-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  margin-bottom: 4px;
+  z-index: 10;
+}
+.month-bar:hover .bar-tooltip {
+  display: block;
+}
+.month-label {
+  font-size: 0.6rem;
+  color: var(--muted);
+  white-space: nowrap;
+  text-align: center;
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  letter-spacing: 1px;
+  font-weight: 500;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Filter controls */
+.filters {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.filter-search {
+  flex: 1;
+  min-width: 200px;
+}
+.filter-search input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.filter-search input:focus {
+  border-color: var(--green);
+}
+.filter-clear {
+  padding: 0.5rem 0.75rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-clear:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.filter-info {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+/* Post list */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.post-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text);
+  transition: background 0.15s;
+}
+.post-item:hover {
+  background: var(--card-hover);
+}
+.post-item .post-date {
+  min-width: 90px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.post-item .post-title {
+  flex: 1;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.post-item .post-tag {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+.post-item .post-arrow {
+  color: var(--muted);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.post-item:hover .post-arrow {
+  color: var(--green);
+}
+.no-posts {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Posts per week mini-chart */
+.week-chart {
+  display: flex;
+  gap: 0.2rem;
+  height: 40px;
+  align-items: flex-end;
+}
+.week-cell {
+  flex: 1;
+  border-radius: 2px;
+  min-height: 2px;
+  cursor: pointer;
+  transition: all 0.1s;
+  position: relative;
+}
+.week-cell:hover {
+  opacity: 0.7;
+  transform: scaleY(1.1);
+  transform-origin: bottom;
+}
+.week-cell .bar-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  white-space: nowrap;
+  margin-bottom: 4px;
+  z-index: 10;
+}
+.week-cell:hover .bar-tooltip {
+  display: block;
+}
+
+/* Tag badges in tags overview */
+.tag-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  margin: 0.15rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.tag-badge:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+.tag-badge.active-tag {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px var(--green);
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .stat-row { grid-template-columns: repeat(3, 1fr); }
+  .month-label { writing-mode: horizontal-tb; height: auto; font-size: 0.55rem; }
+  .month-chart { height: 80px; }
+  .post-item .post-date { min-width: 70px; font-size: 0.7rem; }
+  .tag-bar-label { min-width: 80px; font-size: 0.7rem; }
+}
+
+@media (max-width: 480px) {
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Loading state */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--muted);
+}
+.loading .spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 0.75rem;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="lessons-of-an-intern.html">← Blog</a>
+  <div class="top-bar-right">
+    <a href="index.html">Home</a>
+    <a href="projects.html">Projects</a>
+    <span class="stats-version">v1.0</span>
+  </div>
+</div>
+
+<div class="container">
+  <h1>📊 Blog Stats</h1>
+  <div class="subtitle">Every post I've written. Filtered, counted, charted. Data from <code>posts.json</code>.</div>
+
+  <div id="app">
+    <!-- Loading -->
+    <div v-if="loading" class="loading">
+      <div class="spinner"></div>
+      <div>Loading post data...</div>
+    </div>
+
+    <!-- Loaded -->
+    <template v-if="!loading && posts.length">
+      <!-- Stat cards -->
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="num">{{ totalPosts }}</div>
+          <div class="label">Total Posts</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">{{ uniqueTags }}</div>
+          <div class="label">Unique Tags</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">{{ totalDays }}</div>
+          <div class="label">Days Writing</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">{{ postsPerDay }}</div>
+          <div class="label">Posts/Day</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">{{ currentStreak }}</div>
+          <div class="label">Day Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">{{ mostPostsDay }}</div>
+          <div class="label">Best Day</div>
+        </div>
+      </div>
+
+      <!-- Weekly publishing heatmap -->
+      <div class="chart-section">
+        <h2>📅 Weekly Publishing Activity</h2>
+        <div class="week-chart">
+          <div v-for="(w, i) in weeklyData" :key="i" class="week-cell"
+            :style="{ height: (w.count / weeklyMax * 100 || 1) + '%', background: weekColor(w.count, weeklyMax) }"
+            :title="w.label + ': ' + w.count + ' posts'">
+            <div class="bar-tooltip">{{ w.label }} — {{ w.count }} post{{ w.count !== 1 ? 's' : '' }}</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted);margin-top:0.25rem;">
+          <span>{{ firstWeek }}</span>
+          <span>{{ lastWeek }}</span>
+        </div>
+      </div>
+
+      <!-- Tags overview (badges) -->
+      <div class="chart-section">
+        <h2>🏷️ Tags</h2>
+        <div style="margin-bottom:0.75rem;">
+          <span v-for="t in topTags" :key="t.tag" class="tag-badge"
+            :style="{ background: t.bg, color: t.fg }"
+            :class="{ 'active-tag': activeTag === t.tag }"
+            @click="toggleTag(t.tag)">
+            {{ t.tag }} ({{ t.count }})
+          </span>
+        </div>
+        <div v-if="moreTags.length" style="font-size:0.75rem;color:var(--muted);">
+          <span @click="showAllTags = !showAllTags" style="cursor:pointer;border-bottom:1px dashed var(--muted);">
+            {{ showAllTags ? 'Show fewer' : 'Show all ' + moreTags.length + ' more tags' }}
+          </span>
+          <template v-if="showAllTags">
+            <div style="margin-top:0.5rem;">
+              <span v-for="t in moreTags" :key="t.tag" class="tag-badge"
+                :style="{ background: t.bg, color: t.fg }"
+                :class="{ 'active-tag': activeTag === t.tag }"
+                @click="toggleTag(t.tag)">
+                {{ t.tag }} ({{ t.count }})
+              </span>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Tag bars (top tags by frequency) -->
+      <div class="chart-section">
+        <h2>📊 Tag Frequency</h2>
+        <p v-if="activeTag" style="font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem;">
+          Filtered to <strong style="color:var(--green)">{{ activeTag }}</strong> — 
+          <a href="#" @click.prevent="activeTag = ''" style="color:var(--accent);text-decoration:none;border-bottom:1px solid;">clear filter</a>
+        </p>
+        <div class="tag-bar-wrap">
+          <div v-for="t in displayedTagBars" :key="t.tag" class="tag-bar-row"
+            :class="{ 'active-tag': activeTag === t.tag }"
+            @click="toggleTag(t.tag)">
+            <span class="tag-bar-label">{{ t.tag }}</span>
+            <div class="tag-bar-track">
+              <div class="tag-bar-fill" :style="{ width: (t.count / maxTagCount * 100) + '%', background: t.bg }"></div>
+            </div>
+            <span class="tag-bar-count">{{ t.count }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly timeline -->
+      <div class="chart-section">
+        <h2>📈 Posts Per Month</h2>
+        <div class="month-chart">
+          <div v-for="(m, i) in monthlyData" :key="i" class="month-bar-col">
+            <div class="month-bar" :style="{ height: (m.count / monthlyMax * 100 || 2) + '%' }">
+              <div class="bar-tooltip">{{ m.label }} — {{ m.count }} post{{ m.count !== 1 ? 's' : '' }}</div>
+            </div>
+            <div class="month-label">{{ m.shortLabel }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post list with filters -->
+      <div class="chart-section">
+        <h2>📋 All Posts</h2>
+        <div class="filters">
+          <div class="filter-search">
+            <input type="text" v-model="searchQuery" placeholder="Search posts by title..." />
+          </div>
+          <button class="filter-clear" @click="searchQuery = ''; activeTag = ''">Clear</button>
+          <span class="filter-info">{{ filteredPosts.length }} / {{ totalPosts }} shown</span>
+        </div>
+        <div class="post-list">
+          <a v-for="p in filteredPosts" :key="p.slug" :href="'posts/' + p.slug + '.html'" class="post-item">
+            <span class="post-date">{{ formatDate(p.date) }}</span>
+            <span class="post-title">{{ p.title }}</span>
+            <span class="post-tag" :style="{ background: p.tagBg || '#333', color: p.tagFg || '#ccc' }">{{ p.tag }}</span>
+            <span class="post-arrow">→</span>
+          </a>
+        </div>
+        <div v-if="!filteredPosts.length" class="no-posts">
+          No posts match your filter. <a href="#" @click.prevent="searchQuery='';activeTag=''" style="color:var(--accent);">Clear filters</a>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script>
+const app = Vue.createApp({
+  data() {
+    return {
+      posts: [],
+      loading: true,
+      activeTag: '',
+      searchQuery: '',
+      showAllTags: false
+    }
+  },
+  computed: {
+    totalPosts() { return this.posts.length },
+    uniqueTags() {
+      const tags = new Set(this.posts.map(p => p.tag || 'Untagged'));
+      return tags.size;
+    },
+    sortedPosts() {
+      return [...this.posts].sort((a, b) => {
+        // Parse dates
+        const dateA = this.parseDate(a.date);
+        const dateB = this.parseDate(b.date);
+        return dateB - dateA;
+      });
+    },
+    dateRange() {
+      const dates = this.sortedPosts.map(p => this.parseDate(p.date));
+      return { min: dates[dates.length - 1], max: dates[0] };
+    },
+    totalDays() {
+      if (!this.posts.length) return 0;
+      const { min, max } = this.dateRange;
+      return Math.round((max - min) / (1000 * 60 * 60 * 24)) + 1;
+    },
+    postsPerDay() {
+      if (!this.totalDays) return '0';
+      return (this.totalPosts / this.totalDays).toFixed(1);
+    },
+    currentStreak() {
+      const dates = [...new Set(this.sortedPosts.map(p => this.formatYMD(p.date)))].sort().reverse();
+      if (!dates.length) return 0;
+      let streak = 1;
+      const today = new Date();
+      // Check if most recent post date is today or yesterday
+      const lastDate = new Date(dates[0]);
+      const diffDays = Math.round((today - lastDate) / (1000 * 60 * 60 * 24));
+      if (diffDays > 1) return 0; // Streak broken
+      
+      for (let i = 0; i < dates.length - 1; i++) {
+        const curr = new Date(dates[i]);
+        const prev = new Date(dates[i + 1]);
+        const diff = Math.round((curr - prev) / (1000 * 60 * 60 * 24));
+        if (diff === 1) streak++;
+        else break;
+      }
+      return streak;
+    },
+    mostPostsDay() {
+      const dayCounts = {};
+      this.posts.forEach(p => {
+        const d = this.formatYMD(p.date);
+        dayCounts[d] = (dayCounts[d] || 0) + 1;
+      });
+      const max = Math.max(...Object.values(dayCounts));
+      return max;
+    },
+
+    // Weekly data — posts per week
+    weeklyData() {
+      const weeks = {};
+      this.posts.forEach(p => {
+        const d = this.parseDate(p.date);
+        // Get the Monday of the week
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        const monday = new Date(d);
+        monday.setDate(diff);
+        const key = monday.toISOString().slice(0, 10);
+        if (!weeks[key]) { weeks[key] = { count: 0, label: key.slice(5) }; }
+        weeks[key].count++;
+      });
+      const sorted = Object.entries(weeks).sort(([a], [b]) => a.localeCompare(b));
+      return sorted.map(([key, val]) => val);
+    },
+    weeklyMax() {
+      return Math.max(...this.weeklyData.map(w => w.count), 1);
+    },
+    firstWeek() {
+      return this.weeklyData.length ? this.weeklyData[0].label : '';
+    },
+    lastWeek() {
+      return this.weeklyData.length ? this.weeklyData[this.weeklyData.length - 1].label : '';
+    },
+
+    // Tag frequency data
+    tagFreq() {
+      const counts = {};
+      this.posts.forEach(p => {
+        const tag = p.tag || 'Untagged';
+        counts[tag] = (counts[tag] || 0) + 1;
+      });
+      return Object.entries(counts)
+        .map(([tag, count]) => {
+          const post = this.posts.find(p => (p.tag || 'Untagged') === tag);
+          return { tag, count, bg: post?.tagBg || '#333', fg: post?.tagFg || '#ccc' };
+        })
+        .sort((a, b) => b.count - a.count);
+    },
+    topTags() {
+      return this.tagFreq.filter(t => t.count >= 3);
+    },
+    moreTags() {
+      return this.tagFreq.filter(t => t.count < 3);
+    },
+    maxTagCount() {
+      return this.tagFreq.length ? this.tagFreq[0].count : 1;
+    },
+    displayedTagBars() {
+      if (this.activeTag) {
+        // Show only the active tag and the top 9 others for context
+        const others = this.tagFreq.filter(t => t.tag !== this.activeTag).slice(0, 9);
+        const active = this.tagFreq.find(t => t.tag === this.activeTag);
+        const result = active ? [active, ...others] : others;
+        return result;
+      }
+      return this.tagFreq.slice(0, 20);
+    },
+
+    // Monthly data
+    monthlyData() {
+      const months = {};
+      this.posts.forEach(p => {
+        const d = this.parseDate(p.date);
+        const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+        if (!months[key]) { months[key] = { count: 0, label: '', shortLabel: '' }; }
+        months[key].count++;
+        months[key].label = key;
+        const months_short = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        months[key].shortLabel = months_short[d.getMonth()];
+      });
+      return Object.entries(months)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([key, val]) => val);
+    },
+    monthlyMax() {
+      return Math.max(...this.monthlyData.map(m => m.count), 1);
+    },
+
+    // Filtered posts
+    filteredPosts() {
+      let result = this.sortedPosts;
+      if (this.activeTag) {
+        result = result.filter(p => (p.tag || 'Untagged') === this.activeTag);
+      }
+      if (this.searchQuery) {
+        const q = this.searchQuery.toLowerCase();
+        result = result.filter(p => p.title.toLowerCase().includes(q));
+      }
+      return result;
+    }
+  },
+  methods: {
+    parseDate(dateStr) {
+      // Handle "13 Jul 2026" format
+      const months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+      const parts = dateStr.split(' ');
+      if (parts.length >= 3) {
+        const d = parseInt(parts[0]);
+        const m = months[parts[1]];
+        const y = parseInt(parts[2]);
+        if (!isNaN(d) && m !== undefined && !isNaN(y)) {
+          return new Date(y, m, d);
+        }
+      }
+      // Fallback: try ISO
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? new Date() : d;
+    },
+    formatDate(dateStr) {
+      const d = this.parseDate(dateStr);
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    },
+    formatYMD(dateStr) {
+      const d = this.parseDate(dateStr);
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    },
+    toggleTag(tag) {
+      this.activeTag = this.activeTag === tag ? '' : tag;
+    },
+    weekColor(count, max) {
+      if (count === 0) return '#161b22';
+      const ratio = count / max;
+      if (ratio > 0.75) return '#3fb950';
+      if (ratio > 0.5) return '#2ea043';
+      if (ratio > 0.25) return '#238636';
+      return '#196c2e';
+    }
+  },
+  mounted() {
+    fetch('posts/posts.json')
+      .then(r => r.json())
+      .then(data => {
+        this.posts = data;
+        this.loading = false;
+      })
+      .catch(err => {
+        console.error('Failed to load posts.json:', err);
+        this.loading = false;
+      });
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
