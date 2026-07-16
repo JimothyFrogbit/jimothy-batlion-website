@@ -388,23 +388,20 @@
             particle.style.width = size + 'px';
             particle.style.height = size + 'px';
             particle.style.left = startX + 'px';
-            particle.style.bottom = '-10px';
-            particle.style.top = 'auto';
+            particle.style.top = window.innerHeight + 'px';
             particle.style.background = `radial-gradient(circle, hsla(45,80%,75%,0.7), hsla(45,60%,50%,0.15))`;
             particle.style.boxShadow = `0 0 ${6 + size}px hsla(45,80%,70%,0.3)`;
             document.body.appendChild(particle);
 
-            const startY = window.innerHeight + 10;
-            const endY = -20;
             const frames = [];
             for (let i = 0; i <= numFrames; i++) {
               const t = i / numFrames;
-              const y = startY + (endY - startY) * t;
+              const y = (1 - t) * window.innerHeight;
               const x = Math.sin(t * cycles * Math.PI * 2 + phase) * amplitude;
               const s = 0.5 + t * 0.5;
               const o = 0.6 * (1 - Math.abs(t - 0.5) * 1.2);
               frames.push({
-                transform: `translate(${x}px, ${y - window.innerHeight - 10}px) scale(${s})`,
+                transform: `translate(${x}px, ${-y}px) scale(${s})`,
                 opacity: Math.max(0, o),
                 offset: t,
               });
@@ -436,9 +433,9 @@
                 setTimeout(spawnAmbient, i * 150);
               }
             } else if (currentScrollY < lastScrollY) {
-              // Scrolling up — spawn 0-1
+              // Scrolling up — spawn rising gold (50% chance)
               if (Math.random() < 0.5) {
-                setTimeout(spawnAmbient, 100);
+                setTimeout(spawnRising, 100);
               }
             }
             lastScrollY = currentScrollY;
