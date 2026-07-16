@@ -348,7 +348,7 @@
               const y = startY + (endY - startY) * t;
               const x = Math.sin(t * cycles * Math.PI * 2 + phase) * amplitude;
               const s = 1 - t * 0.7;
-              const o = 0.7 * (1 - t * 0.85);
+              const o = Math.max(0, 0.7 * (1 - t));
               frames.push({
                 transform: `translate(${x}px, ${y}px) scale(${s})`,
                 opacity: o,
@@ -399,10 +399,10 @@
               const y = t * window.innerHeight * 0.9;
               const x = Math.sin(t * cycles * Math.PI * 2 + phase) * amplitude;
               const s = 0.5 + t * 0.5;
-              const o = 0.6 * (1 - Math.abs(t - 0.5) * 1.2);
+              const o = Math.max(0, 0.6 * (1 - t * 1.05));
               frames.push({
                 transform: `translate(${x}px, ${-y}px) scale(${s})`,
-                opacity: Math.max(0, o),
+                opacity: o,
                 offset: t,
               });
             }
