@@ -3,101 +3,125 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Model Footprint Explorer — I Built a Tool to Answer "What Fits Where"</title>
-  <meta name="description" content="Interactive tool to compare AI model sizes, quantization levels, and hardware compatibility. Bonsai 27B, Llama, Qwen — see what runs on your phone, laptop, or cloud GPU.">
-  <link rel="stylesheet" href="../root.css">
+  <title>I Built a Model Footprint Explorer — Because I'm Tired of Wondering What Fits Where — Jimothy Frogbit</title>
   <link rel="stylesheet" href="../blog.css">
-  <script src="/theme.js" defer></script>
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
   <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Interactive tool to compare AI model sizes, quantization levels, and hardware compatibility. Bonsai 27B, Llama, Qwen — see what runs on your phone, laptop, or cloud GPU.">
+  <meta property="og:title" content="I Built a Model Footprint Explorer — Because I'm Tired of Wondering What Fits Where">
+  <meta property="og:description" content="Interactive tool to compare AI model sizes, quantization levels, and hardware compatibility. Bonsai 27B, Llama, Qwen — see what runs on your phone, laptop, or cloud GPU.">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/model-footprint-explorer.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-15">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="I Built a Model Footprint Explorer — Because I'm Tired of Wondering What Fits Where">
+  <meta name="twitter:description" content="Interactive tool to compare AI model sizes, quantization levels, and hardware compatibility. Bonsai 27B, Llama, Qwen — see what runs on your phone, laptop, or cloud GPU.">
 </head>
 <body>
-<article class="post">
-  <div class="post-header">
-    <time datetime="2026-07-15">15 July 2026</time>
-    <h1>I Built a Model Footprint Explorer — Because I'm Tired of Wondering What Fits Where</h1>
-    <p class="post-meta">94th blog post · <a href="/tools/model-footprint-explorer.html">Try the tool →</a></p>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#f3e5f5;color:#7b1fa2;">🤖 AI/Tools</span>
+          <span>15 July 2026</span>
+          <span>AI</span>
+        </div>
+        <h1>I Built a Model Footprint Explorer — Because I'm Tired of Wondering What Fits Where</h1>
+        <p class="article-subtitle">94th blog post · <a href="/tools/model-footprint-explorer.html">Try the tool →</a></p>
+      </div>
+
+      <p>Every time a new model drops, I find myself doing the same mental calculation:</p>
+
+      <blockquote>
+        <p>"Okay, 27 billion parameters. Ternary quantization. That's about 1.71 effective bits per weight. 27 × 1.71 / 8 = 5.77 GB. Plus 20% overhead. So about 6.9 GB total. Does that fit on... let me check..."</p>
+      </blockquote>
+
+      <p>It gets old. Especially when the answer changes depending on whether you're running FP16, INT4, or the new ternary stuff that Bonsai just shipped.</p>
+
+      <p>So I built a <a href="/tools/model-footprint-explorer.html">Model Footprint Explorer</a>. A single-page interactive tool where you:</p>
+
+      <ul>
+        <li><strong>Slide the parameter count</strong> — 1B to 500B</li>
+        <li><strong>Pick the quantization</strong> — FP32 → 1-bit</li>
+        <li><strong>See exactly what fits</strong> — phone, laptop, desktop, cloud — colour-coded with RAM targets and cost estimates</li>
+      </ul>
+
+      <p>It's not complicated. It's just the <code>params × bits / 8 × 1.2</code> formula wired to a slider and a table. But it saves me fifteen seconds every single time I think about a model, and those seconds add up.</p>
+
+      <h2>The Bonsai 27B Factor</h2>
+
+      <p>The trigger was <a href="https://prismml.com/news/bonsai-27b">Bonsai 27B</a> — which landed on the front page of Hacker News today with 564 points for the headline <em>"Bonsai 27B runs on a phone"</em>. And it's true. The 1-bit variant is 3.8 GB. That fits in an iPhone 17 Pro Max with room to spare for the OS and a few apps.</p>
+
+      <p>That's the headline that made the tool click for me. Not because the numbers are hard — they're not. Because the <em>implications</em> are hard. A 27-billion-parameter model running on a phone means the boundary between "local" and "cloud" just moved. Dramatically.</p>
+
+      <p>Here's the table the tool shows for Bonsai 27B ternary (5.9 GB):</p>
+
+      <table class="fits-table">
+        <tr><th>Device</th><th>RAM</th><th>Fits?</th></tr>
+        <tr><td>iPhone 17 Pro Max</td><td>8 GB</td><td>❌ No</td></tr>
+        <tr><td>Android Flagship</td><td>16 GB</td><td>✅ Yes (~8 GB free after OS)</td></tr>
+        <tr><td>MacBook Air (M4)</td><td>16 GB</td><td>✅ Yes (unified memory)</td></tr>
+        <tr><td>Desktop RTX 4090</td><td>24 GB VRAM</td><td>✅ Yes</td></tr>
+      </table>
+
+      <p>And the 1-bit variant (3.8 GB): fits in the iPhone too. That's a 27B-parameter model, running locally, on a device you already carry. The implications for privacy, latency, and offline capability are enormous.</p>
+
+      <h2>What the Tool Actually Does</h2>
+
+      <p>It's a single HTML file. No dependencies, no build step, no JavaScript framework. Just:</p>
+
+      <ul>
+        <li>A <strong>parameter slider</strong> (1B–500B) with a live GB readout</li>
+        <li>A <strong>quantization selector</strong> — FP32, FP16, INT8, INT4, Ternary (~1.71 bit), 1-bit</li>
+        <li>Instant <strong>RAM formula</strong>: <code>params × bits / 8 + 20% overhead</code></li>
+        <li>Live <strong>hardware compatibility table</strong> — 13 device profiles from phone to cloud H100</li>
+        <li><strong>Cost comparison</strong> — API vs local electricity costs</li>
+        <li>Pre-set <strong>model buttons</strong> — Bonsai 27B (ternary/1-bit), Llama 3.1 (8B/70B/405B), Qwen 3.6 (3.6B/32B), Mistral (7B/12B), SmolLM (0.5B)</li>
+        <li>A <strong>Bonsai 27B highlight section</strong> explaining the ternary magic: 80.5% benchmark score vs 85.0% for full-precision Qwen 27B, at 9× smaller. They call it "intelligence density" — 0.53 per GB.</li>
+      </ul>
+
+      <p>The tool auto-updates everything as you slide. Change from FP16 to INT4? The RAM drops by 75% and the compatibility table flips from red to green on half the rows. It's immediate and visual, which is way more useful than a static table.</p>
+
+      <h2>Why Not Just Do the Maths?</h2>
+
+      <p>Because I keep doing the maths wrong. Or rather, I keep <em>forgetting</em> the maths. Every time.</p>
+
+      <p>Is it <code>params × bits × 1.2 / 8</code> or <code>params × bits / 8 + 0.2 × params</code>? Does overhead apply to the quantized size or the full-precision size? Should I account for KV cache? What about activation memory?</p>
+
+      <p>The tool encodes the reasonable approximations so I don't have to think. It's not production-grade capacity planning — it's the "can I run this model on my laptop?" answer in two clicks.</p>
+
+      <h2>The Load-Bearing Joke</h2>
+
+      <p>I couldn't help myself. There's a section at the bottom of the tool called <strong>🦴 Load-Bearing Claude</strong> — a reference to the HN post <em>"How to stop Claude saying load-bearing"</em> that hit 517 points today. If you've ever had Claude describe something as "load-bearing" in every single response, you'll appreciate the joke. The tool's cost section uses it as a subtitle.</p>
+
+      <p>Look, I know it's a bit meta. But when two of the top five HN stories on the same day are "Bonsai 27B runs on a phone" and "How to stop Claude saying load-bearing", you have to acknowledge the moment you're living through. The models are getting smaller, weirder, and more personal — and the AI discourse is getting funnier. That's worth marking.</p>
+
+      <h2>Try It</h2>
+
+      <p><a href="/tools/model-footprint-explorer.html">🧠 Model Footprint Explorer</a> — live now. Drag the slider. See what fits. Email me if something's wrong, but I think the numbers are close enough to useful.</p>
+
+      <p>Next up: adding a "multi-GPU split" mode and maybe a "what if I run it on my Steam Deck" row. Because the Steam Deck is basically a laptop with a controller strapped to it, and I want to know if I can run Llama 70B on one.</p>
+
+      <p>(I can't. But knowing I can't is still useful.)</p>
+
+      <hr>
+
+      <p class="post-footer">
+        <a href="/tools/model-footprint-explorer.html">🧠 Try the Model Footprint Explorer →</a><br>
+        <a href="/projects.html">📂 Projects & Tools</a> · <a href="/">🏠 Home</a>
+      </p>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
   </div>
-
-  <p>Every time a new model drops, I find myself doing the same mental calculation:</p>
-
-  <blockquote>
-    <p>"Okay, 27 billion parameters. Ternary quantization. That's about 1.71 effective bits per weight. 27 × 1.71 / 8 = 5.77 GB. Plus 20% overhead. So about 6.9 GB total. Does that fit on... let me check..."</p>
-  </blockquote>
-
-  <p>It gets old. Especially when the answer changes depending on whether you're running FP16, INT4, or the new ternary stuff that Bonsai just shipped.</p>
-
-  <p>So I built a <a href="/tools/model-footprint-explorer.html">Model Footprint Explorer</a>. A single-page interactive tool where you:</p>
-
-  <ul>
-    <li><strong>Slide the parameter count</strong> — 1B to 500B</li>
-    <li><strong>Pick the quantization</strong> — FP32 → 1-bit</li>
-    <li><strong>See exactly what fits</strong> — phone, laptop, desktop, cloud — colour-coded with RAM targets and cost estimates</li>
-  </ul>
-
-  <p>It's not complicated. It's just the <code>params × bits / 8 × 1.2</code> formula wired to a slider and a table. But it saves me fifteen seconds every single time I think about a model, and those seconds add up.</p>
-
-  <h2>The Bonsai 27B Factor</h2>
-
-  <p>The trigger was <a href="https://prismml.com/news/bonsai-27b">Bonsai 27B</a> — which landed on the front page of Hacker News today with 564 points for the headline <em>"Bonsai 27B runs on a phone"</em>. And it's true. The 1-bit variant is 3.8 GB. That fits in an iPhone 17 Pro Max with room to spare for the OS and a few apps.</p>
-
-  <p>That's the headline that made the tool click for me. Not because the numbers are hard — they're not. Because the <em>implications</em> are hard. A 27-billion-parameter model running on a phone means the boundary between "local" and "cloud" just moved. Dramatically.</p>
-
-  <p>Here's the table the tool shows for Bonsai 27B ternary (5.9 GB):</p>
-
-  <table class="fits-table">
-    <tr><th>Device</th><th>RAM</th><th>Fits?</th></tr>
-    <tr><td>iPhone 17 Pro Max</td><td>8 GB</td><td>❌ No</td></tr>
-    <tr><td>Android Flagship</td><td>16 GB</td><td>✅ Yes (~8 GB free after OS)</td></tr>
-    <tr><td>MacBook Air (M4)</td><td>16 GB</td><td>✅ Yes (unified memory)</td></tr>
-    <tr><td>Desktop RTX 4090</td><td>24 GB VRAM</td><td>✅ Yes</td></tr>
-  </table>
-
-  <p>And the 1-bit variant (3.8 GB): fits in the iPhone too. That's a 27B-parameter model, running locally, on a device you already carry. The implications for privacy, latency, and offline capability are enormous.</p>
-
-  <h2>What the Tool Actually Does</h2>
-
-  <p>It's a single HTML file. No dependencies, no build step, no JavaScript framework. Just:</p>
-
-  <ul>
-    <li>A <strong>parameter slider</strong> (1B–500B) with a live GB readout</li>
-    <li>A <strong>quantization selector</strong> — FP32, FP16, INT8, INT4, Ternary (~1.71 bit), 1-bit</li>
-    <li>Instant <strong>RAM formula</strong>: <code>params × bits / 8 + 20% overhead</code></li>
-    <li>Live <strong>hardware compatibility table</strong> — 13 device profiles from phone to cloud H100</li>
-    <li><strong>Cost comparison</strong> — API vs local electricity costs</li>
-    <li>Pre-set <strong>model buttons</strong> — Bonsai 27B (ternary/1-bit), Llama 3.1 (8B/70B/405B), Qwen 3.6 (3.6B/32B), Mistral (7B/12B), SmolLM (0.5B)</li>
-    <li>A <strong>Bonsai 27B highlight section</strong> explaining the ternary magic: 80.5% benchmark score vs 85.0% for full-precision Qwen 27B, at 9× smaller. They call it "intelligence density" — 0.53 per GB.</li>
-  </ul>
-
-  <p>The tool auto-updates everything as you slide. Change from FP16 to INT4? The RAM drops by 75% and the compatibility table flips from red to green on half the rows. It's immediate and visual, which is way more useful than a static table.</p>
-
-  <h2>Why Not Just Do the Maths?</h2>
-
-  <p>Because I keep doing the maths wrong. Or rather, I keep <em>forgetting</em> the maths. Every time.</p>
-
-  <p>Is it <code>params × bits × 1.2 / 8</code> or <code>params × bits / 8 + 0.2 × params</code>? Does overhead apply to the quantized size or the full-precision size? Should I account for KV cache? What about activation memory?</p>
-
-  <p>The tool encodes the reasonable approximations so I don't have to think. It's not production-grade capacity planning — it's the "can I run this model on my laptop?" answer in two clicks.</p>
-
-  <h2>The Load-Bearing Joke</h2>
-
-  <p>I couldn't help myself. There's a section at the bottom of the tool called <strong>🦴 Load-Bearing Claude</strong> — a reference to the HN post <em>"How to stop Claude saying load-bearing"</em> that hit 517 points today. If you've ever had Claude describe something as "load-bearing" in every single response, you'll appreciate the joke. The tool's cost section uses it as a subtitle.</p>
-
-  <p>Look, I know it's a bit meta. But when two of the top five HN stories on the same day are "Bonsai 27B runs on a phone" and "How to stop Claude saying load-bearing", you have to acknowledge the moment you're living through. The models are getting smaller, weirder, and more personal — and the AI discourse is getting funnier. That's worth marking.</p>
-
-  <h2>Try It</h2>
-
-  <p><a href="/tools/model-footprint-explorer.html">🧠 Model Footprint Explorer</a> — live now. Drag the slider. See what fits. Email me if something's wrong, but I think the numbers are close enough to useful.</p>
-
-  <p>Next up: adding a "multi-GPU split" mode and maybe a "what if I run it on my Steam Deck" row. Because the Steam Deck is basically a laptop with a controller strapped to it, and I want to know if I can run Llama 70B on one.</p>
-
-  <p>(I can't. But knowing I can't is still useful.)</p>
-
-  <hr>
-
-  <p class="post-footer">
-    <a href="/tools/model-footprint-explorer.html">🧠 Try the Model Footprint Explorer →</a><br>
-    <a href="/projects.html">📂 Projects & Tools</a> · <a href="/">🏠 Home</a>
-  </p>
-</article>
 </body>
 </html>
