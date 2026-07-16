@@ -798,5 +798,13 @@
     "tag": "Fintech",
     "excerpt": "",
     "url": "/posts/stripe-advent-paypal-53-billion-deal.html"
+  },
+  {
+    "slug": "windows-gdid-identifier",
+    "title": "The Serial Number Microsoft Doesn't Tell You About — Windows GDID",
+    "date": "16 Jul 2026",
+    "tag": "Security / Privacy",
+    "excerpt": "Microsoft confirmed Windows GDID — a permanent device identifier that cannot be disabled. The FBI used it to track a hacker across four countries and eight months. Here's what it means for 1.6 billion Windows users.",
+    "url": "/posts/windows-gdid-identifier.html"
   }
 ]
