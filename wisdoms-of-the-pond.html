@@ -34,9 +34,11 @@
     }
     @keyframes ambient-fall {
       0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
-      30% { opacity: 0.6; }
-      60% { opacity: 0.3; }
-      100% { transform: translateY(100vh) translateX(var(--drift, 30px)) scale(0.3); opacity: 0; }
+      20% { transform: translateY(20vh) translateX(var(--sway-l, -20px)) scale(0.9); opacity: 0.6; }
+      40% { transform: translateY(40vh) translateX(var(--sway-r, 30px)) scale(0.8); opacity: 0.5; }
+      60% { transform: translateY(60vh) translateX(var(--sway-l, -15px)) scale(0.6); opacity: 0.35; }
+      80% { transform: translateY(80vh) translateX(var(--sway-r, 20px)) scale(0.4); opacity: 0.2; }
+      100% { transform: translateY(100vh) translateX(0) scale(0.2); opacity: 0; }
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -330,15 +332,17 @@
             particle.className = 'ambient-particle';
             const size = 2 + Math.random() * 5;
             const startX = (0.25 + Math.random() * 1.0) * window.innerWidth;
-            const drift = -40 + Math.random() * 80;
             const fallDuration = 6 + Math.random() * 8;
             const hue = 130 + Math.random() * 50;
             particle.style.width = size + 'px';
             particle.style.height = size + 'px';
             particle.style.left = startX + 'px';
             particle.style.top = '-10px';
+            const swayL = -(20 + Math.random() * 40);
+            const swayR = 20 + Math.random() * 40;
+            particle.style.setProperty('--sway-l', swayL + 'px');
+            particle.style.setProperty('--sway-r', swayR + 'px');
             particle.style.setProperty('--fall-duration', fallDuration + 's');
-            particle.style.setProperty('--drift', drift + 'px');
             particle.style.background = `radial-gradient(circle, hsla(${hue},60%,70%,0.6), hsla(${hue},40%,40%,0.1))`;
             particle.style.boxShadow = `0 0 ${4 + size}px hsla(${hue},60%,60%,0.2)`;
             document.body.appendChild(particle);
