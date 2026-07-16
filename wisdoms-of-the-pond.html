@@ -30,15 +30,6 @@
       pointer-events: none;
       border-radius: 50%;
       z-index: 9998;
-      animation: ambient-fall var(--fall-duration, 8s) ease-in forwards;
-    }
-    @keyframes ambient-fall {
-      0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
-      20% { transform: translateY(20vh) translateX(var(--sway-l, -20px)) scale(0.9); opacity: 0.6; }
-      40% { transform: translateY(40vh) translateX(var(--sway-r, 30px)) scale(0.8); opacity: 0.5; }
-      60% { transform: translateY(60vh) translateX(var(--sway-l, -15px)) scale(0.6); opacity: 0.35; }
-      80% { transform: translateY(80vh) translateX(var(--sway-r, 20px)) scale(0.4); opacity: 0.2; }
-      100% { transform: translateY(100vh) translateX(0) scale(0.2); opacity: 0; }
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -328,25 +319,44 @@
 
           // ── Ambient falling particles ──
           function spawnAmbient() {
-            const particle = document.createElement('div');
-            particle.className = 'ambient-particle';
             const size = 2 + Math.random() * 5;
             const startX = (0.25 + Math.random() * 1.0) * window.innerWidth;
-            const fallDuration = 6 + Math.random() * 8;
+            const fallDuration = 6000 + Math.random() * 8000;
             const hue = 130 + Math.random() * 50;
+            const swayL = -(20 + Math.random() * 40);
+            const swayR = 20 + Math.random() * 40;
+
+            const particle = document.createElement('div');
+            particle.className = 'ambient-particle';
             particle.style.width = size + 'px';
             particle.style.height = size + 'px';
             particle.style.left = startX + 'px';
             particle.style.top = '-10px';
-            const swayL = -(20 + Math.random() * 40);
-            const swayR = 20 + Math.random() * 40;
-            particle.style.setProperty('--sway-l', swayL + 'px');
-            particle.style.setProperty('--sway-r', swayR + 'px');
-            particle.style.setProperty('--fall-duration', fallDuration + 's');
             particle.style.background = `radial-gradient(circle, hsla(${hue},60%,70%,0.6), hsla(${hue},40%,40%,0.1))`;
             particle.style.boxShadow = `0 0 ${4 + size}px hsla(${hue},60%,60%,0.2)`;
             document.body.appendChild(particle);
-            setTimeout(() => particle.remove(), fallDuration * 1000);
+
+            // ── Web Animations API for smooth sway ──
+            const startY = -10;
+            const endY = window.innerHeight + 10;
+            const mid1 = endY * 0.25;
+            const mid2 = endY * 0.5;
+            const mid3 = endY * 0.75;
+
+            particle.animate([
+              { transform: `translate(0px, ${startY}px) scale(1)`, opacity: 0.7, offset: 0 },
+              { transform: `translate(${swayL}px, ${mid1}px) scale(0.9)`, opacity: 0.55, offset: 0.2 },
+              { transform: `translate(${swayR}px, ${mid2}px) scale(0.8)`, opacity: 0.45, offset: 0.4 },
+              { transform: `translate(${swayL}px, ${mid3}px) scale(0.65)`, opacity: 0.3, offset: 0.6 },
+              { transform: `translate(${swayR}px, ${endY}px) scale(0.45)`, opacity: 0.15, offset: 0.8 },
+              { transform: `translate(0px, ${endY + 20}px) scale(0.2)`, opacity: 0, offset: 1 }
+            ], {
+              duration: fallDuration,
+              easing: 'ease-in-out',
+              fill: 'forwards'
+            });
+
+            setTimeout(() => particle.remove(), fallDuration + 100);
           }
 
           // Spawn initial batch
