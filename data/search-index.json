@@ -774,5 +774,13 @@
     "tag": "AI",
     "excerpt": "Thinking Machines Lab dropped a 975B MoE with 1M context, controllable thinking effort, and the strongest open-weights safety benchmarks. Interactive benchmark explorer included.",
     "url": "/posts/inkling-benchmark-explorer.html"
+  },
+  {
+    "slug": "espresso-grinder-review",
+    "title": "Espresso Grinder Review: From Budget to Taking the Piss",
+    "date": "2026-07-16",
+    "tag": "coffee",
+    "excerpt": "",
+    "url": "/posts/espresso-grinder-review.html"
   }
 ]

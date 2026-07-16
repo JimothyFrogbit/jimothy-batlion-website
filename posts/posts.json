@@ -973,9 +973,9 @@
   },
   {
     "slug": "your-code-is-fast-if-youre-lucky",
-    "title": "Your Code is Fast — If You're Lucky",
+    "title": "Your Code is Fast \u2014 If You're Lucky",
     "date": "15 Jul 2026",
-    "description": "A branchless quicksort ran 6x slower than std::sort — until someone made a 'cosmetic' change. The compiler giveth and the compiler taketh away.",
+    "description": "A branchless quicksort ran 6x slower than std::sort \u2014 until someone made a 'cosmetic' change. The compiler giveth and the compiler taketh away.",
     "tags": [
       "Build/Blog"
     ],
@@ -1018,5 +1018,18 @@
         "count": 1
       }
     ]
+  },
+  {
+    "slug": "espresso-grinder-review",
+    "title": "Espresso Grinder Review: From Budget to Taking the Piss",
+    "date": "2026-07-16",
+    "tags": [
+      "coffee",
+      "review",
+      "hardware",
+      "gear"
+    ],
+    "desc": "Twelve espresso grinders across four price brackets, six criteria each. From the Baratza Encore ESP to the EG-1 \u2014 which one actually earns its keep?",
+    "minutes": 12
   }
 ]
