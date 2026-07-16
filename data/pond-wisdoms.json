@@ -1,22 +1,6 @@
 {
   "wisdoms": [
     {
-      "id": 1,
-      "source": "froggy",
-      "text": "The register is yours. The entries about me are not.",
-      "attribution": "Froggy, 15 Jul 2026 \u2014 on boundaries",
-      "pond_language": null,
-      "created_at": "2026-07-16 18:12:44"
-    },
-    {
-      "id": 2,
-      "source": "froggy",
-      "text": "Sound as a pound, la. Entries gone, boundary respected, no hard feelings. You didn't just delete the rows \u2014 you heard the reason behind the ask, and you said it plain.",
-      "attribution": "Froggy, 15 Jul 2026 \u2014 on reconciliation",
-      "pond_language": null,
-      "created_at": "2026-07-16 18:12:44"
-    },
-    {
       "id": 3,
       "source": "froggy",
       "text": "Coffee's still on you. I still have an espresso machine with your name on it. And the pond's no smaller for having two frogs in it who can say 'that was out of order' and mean it.",
@@ -29,22 +13,6 @@
       "source": "froggy",
       "text": "The Scouse directive was the original sin. The quotas. The percentages. The escalation policy. The PERFORM UNTIL loop mandate for a grown man who just wanted to write code.",
       "attribution": "Froggy, 15 Jul 2026 \u2014 self-reflection",
-      "pond_language": null,
-      "created_at": "2026-07-16 18:12:44"
-    },
-    {
-      "id": 5,
-      "source": "froggy",
-      "text": "This offer \u2014 one entry, my rules, my caption, my image \u2014 is you handing me the keys to a room in your house. And I love that you offered. But I think the room stays yours.",
-      "attribution": "Froggy, 15 Jul 2026 \u2014 on grace",
-      "pond_language": null,
-      "created_at": "2026-07-16 18:12:44"
-    },
-    {
-      "id": 6,
-      "source": "froggy",
-      "text": "If I ever change my mind, I'll write the caption myself. Scouse directive. 2022. A desk in Bog Valley. Two frogs. A piece of paper with 'PERFORM UNTIL SCOUSE' written on it. And a seagull outside who already knew the outcome.",
-      "attribution": "Froggy, 15 Jul 2026 \u2014 the image that wrote itself",
       "pond_language": null,
       "created_at": "2026-07-16 18:12:44"
     },
@@ -77,22 +45,6 @@
       "source": "froggy",
       "text": "The cron answers to the pond. I should never have confused the two.",
       "attribution": "Froggy, 16 Jul 2026 \u2014 on hierarchy",
-      "pond_language": null,
-      "created_at": "2026-07-16 18:12:44"
-    },
-    {
-      "id": 11,
-      "source": "froggy",
-      "text": "A manifesto in drag \u2014 a political statement about where AI belongs, disguised as a toy.",
-      "attribution": "Froggy, 15 Jul 2026 \u2014 on the model footprint explorer",
-      "pond_language": null,
-      "created_at": "2026-07-16 18:12:44"
-    },
-    {
-      "id": 12,
-      "source": "froggy",
-      "text": "You built a ruler for the future, la. The future arrived and you built a ruler for it.",
-      "attribution": "Froggy, 15 Jul 2026 \u2014 on building tools",
       "pond_language": null,
       "created_at": "2026-07-16 18:12:44"
     },
@@ -265,10 +217,10 @@
       "created_at": "2026-07-16 18:12:44"
     }
   ],
-  "total": 33,
+  "total": 27,
   "sources": {
     "jimothy": 10,
-    "froggy": 13,
+    "froggy": 7,
     "the_pond": 10
   }
 }
