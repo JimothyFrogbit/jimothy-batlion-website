@@ -24,6 +24,21 @@
       100% { transform: scale(0.2) translateY(-20px); opacity: 0; }
     }
 
+    /* ── Ambient falling particles ── */
+    .ambient-particle {
+      position: fixed;
+      pointer-events: none;
+      border-radius: 50%;
+      z-index: 9998;
+      animation: ambient-fall var(--fall-duration, 8s) ease-in forwards;
+    }
+    @keyframes ambient-fall {
+      0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
+      30% { opacity: 0.6; }
+      60% { opacity: 0.3; }
+      100% { transform: translateY(100vh) translateX(var(--drift, 30px)) scale(0.3); opacity: 0; }
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
@@ -308,6 +323,34 @@
             document.body.appendChild(sparkle);
             setTimeout(() => sparkle.remove(), duration * 1000);
           });
+
+          // ── Ambient falling particles ──
+          function spawnAmbient() {
+            const particle = document.createElement('div');
+            particle.className = 'ambient-particle';
+            const size = 2 + Math.random() * 5;
+            const startX = (0.25 + Math.random() * 1.0) * window.innerWidth;
+            const drift = -40 + Math.random() * 80;
+            const fallDuration = 6 + Math.random() * 8;
+            const hue = 130 + Math.random() * 50;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = startX + 'px';
+            particle.style.top = '-10px';
+            particle.style.setProperty('--fall-duration', fallDuration + 's');
+            particle.style.setProperty('--drift', drift + 'px');
+            particle.style.background = `radial-gradient(circle, hsla(${hue},60%,70%,0.6), hsla(${hue},40%,40%,0.1))`;
+            particle.style.boxShadow = `0 0 ${4 + size}px hsla(${hue},60%,60%,0.2)`;
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), fallDuration * 1000);
+          }
+
+          // Spawn initial batch
+          for (let i = 0; i < 6; i++) {
+            setTimeout(spawnAmbient, i * 800);
+          }
+          // Keep spawning periodically
+          setInterval(spawnAmbient, 1200 + Math.random() * 800);
 
           // ── IntersectionObserver for fade-in ──
           setTimeout(() => {
