@@ -396,7 +396,7 @@
             const frames = [];
             for (let i = 0; i <= numFrames; i++) {
               const t = i / numFrames;
-              const y = (1 - t) * window.innerHeight;
+              const y = t * window.innerHeight;
               const x = Math.sin(t * cycles * Math.PI * 2 + phase) * amplitude;
               const s = 0.5 + t * 0.5;
               const o = 0.6 * (1 - Math.abs(t - 0.5) * 1.2);
