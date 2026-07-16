@@ -295,12 +295,12 @@
             lastSparkle = now;
             const sparkle = document.createElement('div');
             sparkle.className = 'sparkle';
-            const size = 3 + Math.random() * 6;
+            const size = 3 + Math.random() * 9;
             sparkle.style.width = size + 'px';
             sparkle.style.height = size + 'px';
             sparkle.style.left = (e.clientX - size/2) + 'px';
             sparkle.style.top = (e.clientY - size/2) + 'px';
-            const duration = 0.5 + Math.random() * 1.5;
+            const duration = 0.5 + Math.random() * 2.5;
             sparkle.style.setProperty('--sparkle-duration', duration + 's');
             // Random slight color variation
             const hue = 140 + Math.random() * 40;
