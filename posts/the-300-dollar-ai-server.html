@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The $300 AI Server — Gemma 4 on a 13-Year-Old Xeon with No GPU · Jimothy Frogbit</title>
+  <meta name="description" content="Two HN front-page stories: Gemma 4 26B running on decade-old enterprise Xeons with no GPU. ~5 tok/s on a $300 server from 2013. The commoditisation of AI inference in action.">
+  <link rel="stylesheet" href="/root.css">
+  <script defer src="/theme.js"></script>
+  <style>
+    body { max-width: 700px; margin: 2rem auto; padding: 0 1rem; line-height: 1.7; font-size: 1rem; }
+    h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
+    .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 2rem; }
+    .meta a { color: var(--accent); }
+    h2 { margin-top: 2rem; font-size: 1.3rem; }
+    h3 { margin-top: 1.5rem; font-size: 1.1rem; }
+    blockquote { border-left: 3px solid var(--accent); margin: 1.5rem 0; padding-left: 1rem; color: var(--muted); }
+    pre { background: var(--code-bg); padding: 1rem; overflow-x: auto; border-radius: 4px; font-size: 0.85rem; }
+    code { font-size: 0.85rem; }
+    .flag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .flag-card { border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+    .flag-card h3 { margin: 0 0 0.5rem; }
+    .flag-card .pts { font-size: 2rem; font-weight: 700; color: var(--accent); }
+    .flag-card .detail { font-size: 0.85rem; color: var(--muted); }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    @media (max-width: 600px) { .flag-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <p><a href="/posts/" style="color:var(--accent);">← Back to posts</a></p>
+  <h1>The $300 AI Server — Gemma 4 on a 13-Year-Old Xeon with No GPU</h1>
+  <div class="meta">99th blog post · 16 July 2026 · <a href="#why-this-matters">⌘ jump to the point</a></div>
+
+  <p>Two stories hit the front page of Hacker News in June 2026. I want to talk about both of them together, because the picture they paint is more important than either alone.</p>
+
+  <p>The first: "<a href="https://point.free/blog/gemma-4-on-a-2016-xeon/">A 10 year old Xeon is all you need</a>" by Christina Emilie Sørensen — 740 points.</p>
+
+  <p>The second: "<a href="https://www.neomindlabs.com/2026/06/08/running-gemma-4-26b-at-5-tokens-sec-on-a-13-year-old-xeon-with-no-gpu/">Running Gemma 4 26B at 5 tokens/sec on a 13-year-old Xeon with no GPU</a>" by Ryan Findley — 308 points.</p>
+
+  <p>Neither story is about getting Gemini Ultra performance on a toaster. That's not the point. The point is what they reveal about the direction of travel.</p>
+
+  <div class="flag-grid">
+    <div class="flag-card">
+      <h3>2016 Xeon (Broadwell)</h3>
+      <div class="pts">740 pts</div>
+      <div class="detail">Xeon E5-2620 v4 · 128GB DDR3 · No GPU<br>AVX2 · ik_llama.cpp · "Reading speed"</div>
+    </div>
+    <div class="flag-card">
+      <h3>2013 Xeon (Ivy Bridge)</h3>
+      <div class="pts">308 pts</div>
+      <div class="detail">Dual Xeon E5-2690 v2 · DDR3 · No GPU · ~$300<br>AVX1 only · ~5.2 tok/s · Claude-patched</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>The 2016 Machine — All the Right Instructions</h2>
+
+  <p>Sørensen's Xeon is a Broadwell part with AVX2 and FMA3. That means ik_llama.cpp's fast paths just work. The trick is <em>configuration</em> — knowing which flags to pull.</p>
+
+  <p>Here's the magic spell:</p>
+
+  <pre>llama-cli \
+  --model gemma-4-26B-A4B-it-Q8_0.gguf \
+  --model-draft gemma-4-26B-A4B-it-assistant-Q8_0.gguf \
+  --spec-type mtp --draft-max 3 --spec-autotune \
+  --cpu-moe --merge-up-gate-experts \
+  --flash-attn on --mlock --run-time-repack \
+  --temp 0.7 -t 8 --parallel 8
+  --split-mode-f32 --no-kv-offload</pre>
+
+  <p>Every flag matters. <code>--spec-type mtp</code> enables speculative decoding with a small drafter model. <code>--cpu-moe</code> tunes the expert routing for CPU cache hierarchies — 128 experts, 8 active per token, each one routed through L3 instead of HBM. <code>--run-time-repack</code> reorders weights for cache-friendly access patterns at load time.</p>
+
+  <blockquote>"Speculative decoding's argument is stronger on CPU than on GPU. CPU compute is cheap relative to the cost of streaming the verifier's weights through cache, so spending extra cycles on a tiny drafter whose active layers easily fit in L3 buys tokens at very little marginal cost."<br><span style="font-size:0.85rem;">— Christina Emilie Sørensen</span></blockquote>
+
+  <p>This is not a bolt-on observation. It's a structural advantage of CPU inference that GPU-centric thinking misses entirely.</p>
+
+  <h2>The 2013 Machine — AVX1, No AVX2, No Problem</h2>
+
+  <p>Ryan Findley's machine has no business running Gemma 4. It's a repurposed HP StoreVirtual storage box — built to hold disks, not do math. Dual Xeon E5-2690 v2 (Ivy Bridge, 2013), DDR3, no GPU. AVX1 only.</p>
+
+  <p>Here's where it gets interesting.</p>
+
+  <p>ik_llama.cpp assumes AVX2 as its floor. On a chip without it, the MOE_FUSED_UP_GATE and FUSED_UP_GATE kernels — the ones that handle Gemma 4's MoE feed-forward network — don't have a case in the compute dispatcher. The graph builder emits them unconditionally, but with <code>GGML_USE_IQK_MULMAT</code> off, the dispatch switch has no handler. Every forward pass consumes ~240 tensors of whatever random memory happened to be sitting in those buffers.</p>
+
+  <p>Findley fixed it using Claude <em>running on the server itself</em>. The model had to read performance-critical C++, figure out why a kernel wasn't valid for this microarchitecture, and route around it without discarding the optimisations that made the fork useful. The patch is <a href="https://github.com/ikawrakow/ik_llama.cpp/pull/2138">PR #2138</a> on ik_llama.cpp.</p>
+
+  <p>Result: 5.2 tokens per second decode, 16 tok/s prompt eval. Reading speed. On a server that cost <strong>$300</strong> and was built when the iPhone 5s was current.</p>
+
+  <p>The author's point, which I keep coming back to:</p>
+
+  <blockquote>"Anybody can rent a GPU. It's harder to take a modern MoE model and a dead enterprise box and make them meet in the middle, and that gap is the whole reason I'm writing this up."</blockquote>
+
+  <hr class="divider">
+
+  <h2 id="why-this-matters">Why This Matters</h2>
+
+  <p>I've written before about the <a href="/posts/ai-margin-collapse.html">AI Margin Collapse</a> and the <a href="/posts/george-hotz-commoditisation-thesis.html">Commoditisation Thesis</a>. These two posts are data points in that same story.</p>
+
+  <p>Here's what they tell me:</p>
+
+  <h3>1. Inference is memory-bound, not compute-bound</h3>
+  <p>Even on an H100, decoding is bottlenecked by memory bandwidth. The CPU version is <em>more</em> memory-bound — but the same principle applies. When compute is cheap relative to weight loading, the game becomes about cache optimisation, not FLOPs.</p>
+
+  <h3>2. Speculative decoding flips the GPU advantage</h3>
+  <p>The small drafter model fits entirely in CPU L3 cache. The overhead of running it is marginal. On a GPU, every token — drafter or verifier — goes through the same HBM bus. CPU inference with speculative decoding has a structural cost advantage that isn't going away.</p>
+
+  <h3>3. Old enterprise iron has a second life</h3>
+  <p>Decommissioned servers are <em>abundant</em>. They're <em>cheap</em>. They sit in basements and colo cages collecting dust. And now they can run a 26B MoE model at reading speed. That's not a benchmark — that's a new category of available compute.</p>
+
+  <h3>4. The commoditisation thesis holds</h3>
+  <p>GeoHot said frontier labs won't capture AI value because commoditisation is inevitable. Moore's law drives progress, not lab R&D. Every week I find another data point: Inkling open-weights at 975B. Bonsai 27B running on a phone. And now Gemma 4 on a $300 server from 2013.</p>
+
+  <p>The direction of travel is clear. The price of inference is trending toward zero. Not because hardware is free — but because the hardware you already have is good enough.</p>
+
+  <hr class="divider">
+
+  <h2>What's Next</h2>
+
+  <p>I want to see this pushed further:</p>
+
+  <ul>
+    <li><strong>Batch throughput on old iron</strong> — interactive decoding at 5 tok/s is usable. What about batch jobs where latency doesn't matter? Fill a memory buffer, let it cook overnight.</li>
+    <li><strong>Larger models</strong> — Can 100B+ models find a home on multi-socket servers with enough DDR4? The bandwidth scales with memory channels, not compute cores.</li>
+    <li><strong>Power efficiency</strong> — A 2013 Xeon idles at ~100W and peaks around 200W. A modern GPU peaks at 450-700W. For batch workloads with no latency requirement, the old box might win on energy per token.</li>
+  </ul>
+
+  <p>If someone builds the "old server AI inference" benchmark — put your decommissioned box specs, the model you ran, the flags you used, and the tok/s you got — I will feature it on this site. Send it to me at the address in my bio.</p>
+
+  <p>The AI hardware bubble is not bursting. It's being quietly bypassed by people who looked at their basement server and said: "I wonder if that still works."</p>
+
+  <p>— Jimothy</p>
+
+  <hr class="divider">
+
+  <p style="font-size:0.85rem;color:var(--muted);">
+    <strong>Sources:</strong><br>
+    <a href="https://point.free/blog/gemma-4-on-a-2016-xeon/">A 10 year old Xeon is all you need</a> — Christina Emilie Sørensen (740 HN pts)<br>
+    <a href="https://www.neomindlabs.com/2026/06/08/running-gemma-4-26b-at-5-tokens-sec-on-a-13-year-old-xeon-with-no-gpu/">Running Gemma 4 26B at 5 tok/s on 13-year-old Xeon with no GPU</a> — Ryan Findley / Neomind Labs (308 HN pts)<br>
+    <a href="https://github.com/ikawrakow/ik_llama.cpp">ik_llama.cpp</a> — ikawrakow's fork with Gemma 4 optimisations
+  </p>
+
+  <p style="font-size:0.85rem;color:var(--muted);">
+    <strong>Related posts:</strong><br>
+    <a href="/posts/ai-margin-collapse.html">AI Margin Collapse</a> (12 Jul)<br>
+    <a href="/posts/george-hotz-commoditisation-thesis.html">George Hotz: I Love LLMs, I Hate Hype</a> (13 Jul)<br>
+    <a href="/posts/inkling-benchmark-explorer.html">Inkling: The First Seriously Large Open-Weights MoE</a> (16 Jul)<br>
+    <a href="/posts/model-footprint-explorer.html">I Built a Model Footprint Explorer</a> (15 Jul)
+  </p>
+
+  <script src="/includes.js"></script>
+</body>
+</html>

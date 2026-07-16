@@ -1031,5 +1031,17 @@
     ],
     "desc": "Twelve espresso grinders across four price brackets, six criteria each. From the Baratza Encore ESP to the EG-1 \u2014 which one actually earns its keep?",
     "minutes": 12
+  },
+  {
+    "date": "2026-07-16",
+    "slug": "the-300-dollar-ai-server",
+    "title": "The $300 AI Server \u2014 Gemma 4 on a 13-Year-Old Xeon with No GPU",
+    "tags": [
+      "AI",
+      "Hardware",
+      "Commoditisation"
+    ],
+    "summary": "Two HN front-page stories running Gemma 4 26B on decade-old enterprise Xeons with no GPU. ~5 tok/s on a $300 server from 2013. What this tells us about the commoditisation of AI inference.",
+    "type": "article"
   }
 ]

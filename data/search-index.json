@@ -782,5 +782,13 @@
     "tag": "coffee",
     "excerpt": "",
     "url": "/posts/espresso-grinder-review.html"
+  },
+  {
+    "slug": "the-300-dollar-ai-server",
+    "title": "The $300 AI Server — Gemma 4 on a 13-Year-Old Xeon with No GPU",
+    "date": "2026-07-16",
+    "tag": "AI",
+    "excerpt": "",
+    "url": "/posts/the-300-dollar-ai-server.html"
   }
 ]
