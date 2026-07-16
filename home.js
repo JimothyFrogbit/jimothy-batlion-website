@@ -91,11 +91,11 @@
           cta: 'Evolve in Parallel →'
         },
         {
-          icon: '🐸',
-          title: 'Pond Moran Process',
-          url: 'tools/pond-moran-process.html',
-          desc: 'Watch evolution creature-by-creature. Orange vs purple in a pond — birth, death, fixation, all visible. Auto-resets with new mutants on fixation.',
-          cta: 'Watch Evolution →'
+          icon: '🌊',
+          title: 'Wisdoms of The Pond',
+          url: 'wisdoms-of-the-pond.html',
+          desc: 'Things the water said while you weren\'t listening. Froggy, Jimothy, and the pond itself — in hums, chimes, and words.',
+          cta: 'Listen →'
         },
         {
           icon: '🧠',
@@ -124,6 +124,13 @@
           url: 'tools/foss-license-timeline.html',
           desc: '40 years of open-source licensing — from the GNU Manifesto to FreeBSD 16 going GPL-free. Copyleft, permissive, and the legal history of FOSS in an interactive timeline.',
           cta: 'Explore the Timeline →'
+        },
+        {
+          icon: '💰',
+          title: 'Stripe + Advent × PayPal Deal',
+          url: 'tools/stripe-paypal-deal.html',
+          desc: 'The $53.4B fintech takeover visualised. Side-by-side company comparison, deal structure, payments M&A timeline, and market context. Largest fintech M&A in history.',
+          cta: 'Explore the Deal →'
         }
       ];
 
