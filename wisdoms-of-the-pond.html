@@ -424,7 +424,11 @@
 
           // ── Spawn burst on scroll down ──
           let lastScrollY = window.scrollY;
+          let lastScrollTime = 0;
           window.addEventListener('scroll', () => {
+            const now = Date.now();
+            if (now - lastScrollTime < 300) return;
+            lastScrollTime = now;
             const currentScrollY = window.scrollY;
             if (currentScrollY > lastScrollY) {
               // Scrolling down — spawn a small burst
