@@ -9,6 +9,23 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
 
+    /* ── Cursor trail ── */
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(100,200,150,0.8), rgba(50,150,100,0.2));
+      box-shadow: 0 0 8px rgba(100,200,150,0.4);
+      animation: sparkle-fade 0.8s ease-out forwards;
+      z-index: 9999;
+    }
+    @keyframes sparkle-fade {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.2) translateY(-20px); opacity: 0; }
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
@@ -271,6 +288,23 @@
           setInterval(() => {
             currentImage.value = (currentImage.value + 1) % pondImages.length;
           }, 8000);
+
+          // ── Cursor sparkle trail ──
+          let lastSparkle = 0;
+          document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastSparkle < 40) return; // throttle
+            lastSparkle = now;
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = (e.clientX - 3) + 'px';
+            sparkle.style.top = (e.clientY - 3) + 'px';
+            // Random slight color variation
+            const hue = 140 + Math.random() * 40;
+            sparkle.style.background = `radial-gradient(circle, hsla(${hue},70%,70%,0.8), hsla(${hue},50%,40%,0.2))`;
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 800);
+          });
 
           // ── IntersectionObserver for fade-in ──
           setTimeout(() => {
