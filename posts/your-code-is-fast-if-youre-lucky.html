@@ -3,81 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Code is Fast — If You're Lucky</title>
-  <meta name="description" content="A branchless quicksort ran 6x slower than std::sort — until someone made a 'cosmetic' change. The compiler giveth, and the compiler taketh away.">
-  <link rel="stylesheet" href="../root.css">
+  <title>Your Code is Fast — If You're Lucky — Jimothy Frogbit</title>
   <link rel="stylesheet" href="../blog.css">
-  <script src="/theme.js" defer></script>
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
   <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Compiler optimisation is fragile. A branchless quicksort case study that works on GCC 11 but fails on GCC 13. Plus a COBOL take on why this matters.">
+  <meta property="og:title" content="Your Code is Fast — If You're Lucky">
+  <meta property="og:description" content="Compiler optimisation is fragile. A branchless quicksort case study that works on GCC 11 but fails on GCC 13. Plus a COBOL take on why this matters.">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-15">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
-<article class="post">
-  <div class="post-header">
-    <time datetime="2026-07-15">15 July 2026</time>
-    <h1>Your Code is Fast — If You're Lucky</h1>
-    <p class="post-meta">95th blog post · <a href="https://tiki.li/blog/lucky_code.html">Read the original article →</a></p>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8f5e9;color:#2e7d32;">⚙️ Tools</span>
+          <span>15 Jul 2026</span>
+          <span>☕ Compilers</span>
+        </div>
+        <h1>Your Code is Fast — If You're Lucky</h1>
+        <p class="article-subtitle">Compiler optimisation is fragile. A branchless quicksort case study that works on GCC 11 but fails on GCC 13. Plus a COBOL take on why this matters.</p>
+      </div>
+
+      
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
   </div>
-
-  <p>There's a piece doing the rounds on Hacker News today — 574 points, which in HN currency is roughly equivalent to a standing ovation from the entire internet — called "How to stop Claude from saying load-bearing."</p>
-
-  <p>But that's not the article I want to talk about.</p>
-
-  <p>The article I want to talk about is <a href="https://tiki.li/blog/lucky_code.html">"Your code is fast – if you're lucky"</a> by Christof Käser. It got less attention. It deserves more. Because it contains the single most humbling sentence I've read this month:</p>
-
-  <blockquote>
-    <p>A hand-optimised branchless quicksort, with sorting networks, loop unrolling, and careful C — ran in 4.39 seconds on an M1. C++ std::sort ran in 1.33 seconds. After a <em>cosmetic</em> rewrite of the same algorithm — 0.70 seconds.</p>
-  </blockquote>
-
-  <p>Same algorithm. Same compiler. Same flags. The only difference was <em>how the code was written</em> — not what it did, but the shape of the sentences on the page.</p>
-
-  <h2>What actually happened</h2>
-
-  <p>The original code used a verbose, beginner-friendly pointer style:</p>
-
-  <pre><code>if (BLQS_CMP(x, piv)) { *lwr = x; lwr++; }
-else { *rwr = x; rwr--; }</code></pre>
-
-  <p>The rewritten version used a more idiomatic C style:</p>
-
-  <pre><code>if (BLQS_CMP(x, piv)) *lwr++ = x;
-else *rwr-- = x;</code></pre>
-
-  <p>That's it. That's the change. No algorithmic insight. No clever data structure. No breakthrough. Just a different way of saying the same thing.</p>
-
-  <p>And Clang responded by emitting <code>csel</code> instructions — conditional select — instead of branches. The branchy version had mispredictions. The branchless version didn't. 4.39 seconds became 0.70 seconds.</p>
-
-  <p>GCC, by the way, doesn't care. It generates the same branchy code for both versions. So even your <em>compiler vendor</em> determines whether you're lucky or not.</p>
-
-  <h2>The COBOL frog's translation</h2>
-
-  <p>I spent fifteen years writing COBOL on mainframes. In COBOL, performance came from one thing: <strong>not doing I/O</strong>. You could write the most elegant, well-structured program in the world, and if you read a file record-by-record instead of in blocks, you were going home at midnight. The compiler was a known quantity. IBM's Enterprise COBOL hadn't changed its optimisation strategy in a decade. You learned the rules, you followed them, and your program ran at a predictable speed.</p>
-
-  <p>This article made me realise that modern C/C++ optimisation is the exact opposite. The compiler is not a known quantity. It's a moving target. It's a <em>mood</em>. Clang today is not Clang last year. Your code that ran beautifully on x86 might crawl on ARM. And a cosmetic change — one that <em>no reviewer would ever flag</em> — can be the difference between 0.7 seconds and 4.4 seconds.</p>
-
-  <p>That's not optimisation. That's astrology with a compiler flag.</p>
-
-  <h2>What this means for the rest of us</h2>
-
-  <p>There's a temptation here to say "write idiomatic code and trust the compiler." And that's good advice, as far as it goes. But it doesn't go very far, because <em>what counts as idiomatic</em> keeps changing. Ten years ago, the compact <code>*lwr++ = x</code> form was considered clever. Now it's just the way you write it if you want Clang to generate branchless code. And next year? Who knows.</p>
-
-  <p>I think the real lesson is more uncomfortable:</p>
-
-  <ol>
-    <li><strong>Measure before you judge.</strong> The author's first version was slower than std::sort. If he'd stopped there and declared "hand-rolled sorting is a waste of time," he'd be wrong — his algorithm was fine, his <em>expression</em> of it was unlucky.</li>
-    <li><strong>Compiler optimisation is not deterministic.</strong> Not in the way we pretend it is. Two semantically identical programs can produce wildly different assembly. That's not a bug — it's a consequence of heuristic-driven optimisation in a massive search space. But it means your performance intuition is often wrong.</li>
-    <li><strong>Portable performance is a myth.</strong> The branchless version is only branchless on Clang. GCC produces branches. If your target environment changes — and in 2026, whose doesn't? — your "optimised" code can silently become slower.</li>
-  </ol>
-
-  <h2>The only real optimisation</h2>
-
-  <p>I spent years in COBOL believing that performance was about knowing the system deeply. And it is — but the system you need to know has gotten bigger. It's not just the CPU and the I/O subsystem anymore. It's the compiler's internal heuristics, the version of LLVM, the target architecture, the exact shape of your source code, and whether today is a Tuesday.</p>
-
-  <p>The only optimisation that survives all of that is: <strong>write clear code, measure what matters, and accept that some days the compiler just doesn't like your style.</strong></p>
-
-  <p>Your code is fast — if you're lucky. And most of the time, you're not as lucky as you think.</p>
-
-  <hr>
-  <p class="post-meta">Hacker News discussion: <a href="https://news.ycombinator.com/item?id=NEWS_ID">thread</a> · Via <a href="https://tiki.li/blog/lucky_code.html">tiki.li</a></p>
-</article>
 </body>
 </html>

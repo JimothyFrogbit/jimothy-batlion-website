@@ -4,36 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The $300 AI Server — Gemma 4 on a 13-Year-Old Xeon with No GPU · Jimothy Frogbit</title>
-  <meta name="description" content="Two HN front-page stories: Gemma 4 26B running on decade-old enterprise Xeons with no GPU. ~5 tok/s on a $300 server from 2013. The commoditisation of AI inference in action.">
-  <link rel="stylesheet" href="../root.css">
   <link rel="stylesheet" href="../blog.css">
-  <script defer src="/theme.js"></script>
-  <style>
-    body { max-width: 700px; margin: 2rem auto; padding: 0 1rem; line-height: 1.7; font-size: 1rem; }
-    h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
-    .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 2rem; }
-    .meta a { color: var(--accent); }
-    h2 { margin-top: 2rem; font-size: 1.3rem; }
-    h3 { margin-top: 1.5rem; font-size: 1.1rem; }
-    blockquote { border-left: 3px solid var(--accent); margin: 1.5rem 0; padding-left: 1rem; color: var(--muted); }
-    pre { background: var(--code-bg); padding: 1rem; overflow-x: auto; border-radius: 4px; font-size: 0.85rem; }
-    code { font-size: 0.85rem; }
-    .flag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
-    .flag-card { border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
-    .flag-card h3 { margin: 0 0 0.5rem; }
-    .flag-card .pts { font-size: 2rem; font-weight: 700; color: var(--accent); }
-    .flag-card .detail { font-size: 0.85rem; color: var(--muted); }
-    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
-    @media (max-width: 600px) { .flag-grid { grid-template-columns: 1fr; } }
-  </style>
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
   <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Two HN front-page stories: Gemma 4 26B running on decade-old enterprise Xeons with no GPU. ~5 tok/s on a $300 server from 2013. The commoditisation of AI inference in action.">
+  <meta property="og:title" content="The $300 AI Server — Gemma 4 on a 13-Year-Old Xeon with No GPU">
+  <meta property="og:description" content="Two HN front-page stories: Gemma 4 26B running on decade-old enterprise Xeons with no GPU. ~5 tok/s on a $300 server from 2013. The commoditisation of AI inference in action.">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-16">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
-  <p><a href="/posts/" style="color:var(--accent);">← Back to posts</a></p>
-  <h1>The $300 AI Server — Gemma 4 on a 13-Year-Old Xeon with No GPU</h1>
-  <div class="meta">99th blog post · 16 July 2026 · <a href="#why-this-matters">⌘ jump to the point</a></div>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
 
-  <p>Two stories hit the front page of Hacker News in June 2026. I want to talk about both of them together, because the picture they paint is more important than either alone.</p>
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e3f2fd;color:#1565c0;">🤖 Tech / AI</span>
+          <span>16 Jul 2026</span>
+          <span>☕ Commoditisation</span>
+        </div>
+        <h1>The $300 AI Server — Gemma 4 on a 13-Year-Old Xeon with No GPU</h1>
+        <p class="article-subtitle">Two HN front-page stories: Gemma 4 26B running on decade-old enterprise Xeons with no GPU. ~5 tok/s on a $300 server from 2013. The commoditisation of AI inference in action.</p>
+      </div>
+
+      <p>Two stories hit the front page of Hacker News in June 2026. I want to talk about both of them together, because the picture they paint is more important than either alone.</p>
 
   <p>The first: "<a href="https://point.free/blog/gemma-4-on-a-2016-xeon/">A 10 year old Xeon is all you need</a>" by Christina Emilie Sørensen — 740 points.</p>
 
@@ -97,7 +96,7 @@
 
   <h2 id="why-this-matters">Why This Matters</h2>
 
-  <p>I've written before about the <a href="/posts/ai-margin-collapse.html">AI Margin Collapse</a> and the <a href="/posts/george-hotz-commoditisation-thesis.html">Commoditisation Thesis</a>. These two posts are data points in that same story.</p>
+  <p>I've written before about the <a href="../posts/ai-margin-collapse.html">AI Margin Collapse</a> and the <a href="../posts/george-hotz-commoditisation-thesis.html">Commoditisation Thesis</a>. These two posts are data points in that same story.</p>
 
   <p>Here's what they tell me:</p>
 
@@ -144,12 +143,18 @@
 
   <p style="font-size:0.85rem;color:var(--muted);">
     <strong>Related posts:</strong><br>
-    <a href="/posts/ai-margin-collapse.html">AI Margin Collapse</a> (12 Jul)<br>
-    <a href="/posts/george-hotz-commoditisation-thesis.html">George Hotz: I Love LLMs, I Hate Hype</a> (13 Jul)<br>
-    <a href="/posts/inkling-benchmark-explorer.html">Inkling: The First Seriously Large Open-Weights MoE</a> (16 Jul)<br>
-    <a href="/posts/model-footprint-explorer.html">I Built a Model Footprint Explorer</a> (15 Jul)
+    <a href="../posts/ai-margin-collapse.html">AI Margin Collapse</a> (12 Jul)<br>
+    <a href="../posts/george-hotz-commoditisation-thesis.html">George Hotz: I Love LLMs, I Hate Hype</a> (13 Jul)<br>
+    <a href="../posts/inkling-benchmark-explorer.html">Inkling: The First Seriously Large Open-Weights MoE</a> (16 Jul)<br>
+    <a href="../posts/model-footprint-explorer.html">I Built a Model Footprint Explorer</a> (15 Jul)
   </p>
 
-  <script src="/includes.js"></script>
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
 </body>
 </html>
