@@ -337,7 +337,13 @@ const scenarios = [
   { text: 'A code review comment says "This is beautiful" with no suggestions for changes.', answer: 'weapon', context: '🤔 Hypothetical', reveal: 'WEAPON. A code review with zero change requests is the programming equivalent of a Michelin star.' },
   { text: 'You find a Stack Overflow answer that works perfectly, copy-paste it, and it compiles first time with zero modifications.', answer: 'weapon', context: '🤔 Hypothetical', reveal: 'WEAPON. This is statistically impossible. The Stack Overflow gods have smiled upon you.' },
   { text: 'You write "I\'m not going to fix this now, I\'ll come back to it" — and you don\'t. Three years later it\'s still there.', answer: 'wazzock', context: '🤔 Hypothetical', reveal: 'WAZZOCK. "Temporary" in software is measured in geological time. That TODO comment now has a pension.' },
-];
+
+  // ── Coffee Hypotheticals ──
+  { text: 'Someone spends £3,850 on an EG-1 grinder — then exclusively drinks instant coffee because "espresso takes too long."', answer: 'wazzock', context: '☕ Coffee', reveal: 'MASSIVE WAZZOCK. That\'s like buying a Ferrari and only driving it to the corner shop. The EG-1 deserves better. The beans deserve better. The ghost of coffee itself deserves better.' },
+  { text: 'Someone weighs their beans to 0.1g precision, times every shot with a Bluetooth-enabled scale, logs every extraction in a spreadsheet, and can taste the difference between 18.5g and 19g.', answer: 'weapon', context: '☕ Coffee', reveal: 'WEAPON. That\'s not obsessive, that\'s dedicated. The spreadsheet is aspirational. The Bluetooth scale is extra. The fact they can actually taste the difference proves it\'s not just performance theatre.' },
+  { text: 'Someone spends £2,000 on a Weber Key MkII grinder — then exclusively uses it with pre-ground supermarket coffee.', answer: 'wazzock', context: '☕ Coffee', reveal: 'WAZZOCK. You spent two grand on a grinder with 80mm titanium burrs and you\'re putting Tesco own-brand through it. The burrs are crying. The grinder is crying. I\'m crying.' },
+  { text: 'Someone dials in their espresso by taste alone — no scales, no timer, no thermometer. Just vibes. And their shots are consistently perfect.', answer: 'weapon', context: '☕ Coffee', reveal: 'WEAPON. That\'s not luck, that\'s witchcraft. Years of muscle memory and sensory training. Most people can\'t do this with all the tools in the world. This frog IS the tool.' },
+]
 
 let state = {
   current: 0,
