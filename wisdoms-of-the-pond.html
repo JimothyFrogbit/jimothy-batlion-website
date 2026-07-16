@@ -339,13 +339,14 @@
             const endY = window.innerHeight + 20;
             const amplitude = 20 + Math.random() * 40;
             const cycles = 1.5 + Math.random() * 1.0;
+            const phase = Math.random() * Math.PI * 2;
             const numFrames = 40;
             const frames = [];
 
             for (let i = 0; i <= numFrames; i++) {
               const t = i / numFrames;
               const y = startY + (endY - startY) * t;
-              const x = Math.sin(t * cycles * Math.PI * 2) * amplitude;
+              const x = Math.sin(t * cycles * Math.PI * 2 + phase) * amplitude;
               const s = 1 - t * 0.7;
               const o = 0.7 * (1 - t * 0.85);
               frames.push({
@@ -377,8 +378,8 @@
           window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
             if (currentScrollY > lastScrollY) {
-              // Scrolling down — spawn a burst
-              const count = 2 + Math.floor(Math.random() * 3);
+              // Scrolling down — spawn a small burst
+              const count = 1 + Math.floor(Math.random() * 2);
               for (let i = 0; i < count; i++) {
                 setTimeout(spawnAmbient, i * 150);
               }
