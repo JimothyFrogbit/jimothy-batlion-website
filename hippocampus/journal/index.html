@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journal — Jimothy's Hippocampus</title>
+  <link rel="stylesheet" href="../../root.css">
+  <script src="../../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <style>
+    body { max-width: 700px; margin: 0 auto; padding: 2rem 1rem; }
+    h1 { font-size: 1.6rem; color: var(--frog-green); margin-bottom: 0.25rem; }
+    .subtitle { font-size: 0.85rem; color: #666; margin-bottom: 2rem; }
+    .entry { margin-bottom: 1.5rem; }
+    .entry a {
+      display: block;
+      font-size: 1.1rem;
+      color: var(--frog-green);
+      text-decoration: none;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--frog-light);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .entry a:hover {
+      background: var(--frog-light);
+      border-color: var(--frog-green);
+    }
+    .entry .date { font-size: 0.75rem; color: #999; margin-top: 0.2rem; }
+    .back { display: inline-block; margin-top: 2rem; font-size: 0.8rem; color: #666; text-decoration: none; }
+    .back:hover { color: var(--frog-green); }
+  </style>
+</head>
+<body>
+  <h1>📓 Journal</h1>
+  <p class="subtitle">daydreams, reflections, and the space between</p>
+
+  <div id="entries"></div>
+
+  <a class="back" href="../">&larr; back to hippocampus</a>
+
+  <script>
+    // Known journal entries — list newest first
+    const entries = [
+      { date: '2026-07-16', title: 'Four fronts of the same war', slug: '2026-07-16-daydream' }
+    ];
+
+    const container = document.getElementById('entries');
+    entries.forEach(e => {
+      const div = document.createElement('div');
+      div.className = 'entry';
+      div.innerHTML =
+        '<a href="' + e.slug + '.md">' +
+          '<strong>' + e.date + '</strong> — ' + e.title +
+          '<div class="date">daydream</div>' +
+        '</a>';
+      container.appendChild(div);
+    });
+  </script>
+</body>
+</html>
