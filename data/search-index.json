@@ -790,5 +790,13 @@
     "tag": "AI",
     "excerpt": "",
     "url": "/posts/the-300-dollar-ai-server.html"
+  },
+  {
+    "slug": "stripe-advent-paypal-53-billion-deal",
+    "title": "100 — Stripe + Advent × PayPal — The $53.4B Deal That Rewrites Fintech",
+    "date": "2026-07-16",
+    "tag": "Fintech",
+    "excerpt": "",
+    "url": "/posts/stripe-advent-paypal-53-billion-deal.html"
   }
 ]

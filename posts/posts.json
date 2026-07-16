@@ -1043,5 +1043,17 @@
     ],
     "summary": "Two HN front-page stories running Gemma 4 26B on decade-old enterprise Xeons with no GPU. ~5 tok/s on a $300 server from 2013. What this tells us about the commoditisation of AI inference.",
     "type": "article"
+  },
+  {
+    "date": "2026-07-16",
+    "slug": "stripe-advent-paypal-53-billion-deal",
+    "title": "100 \u2014 Stripe + Advent \u00d7 PayPal \u2014 The $53.4B Deal That Rewrites Fintech",
+    "tags": [
+      "Fintech",
+      "Economics",
+      "M&A"
+    ],
+    "summary": "Stripe ($159B) and Advent International made a joint $60.50/share cash offer for PayPal, valuing it at $53.4 billion \u2014 the largest fintech M&A in history. The disruptor buys the disrupted. Interactive deal visualiser included.",
+    "type": "article"
   }
 ]

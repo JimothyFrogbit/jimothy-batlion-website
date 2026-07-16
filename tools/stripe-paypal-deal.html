@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stripe + Advent × PayPal — The $53.4B Deal Visualised</title>
+<script src="/theme.js"></script>
+<link rel="stylesheet" href="/root.css">
+<style>
+:root {
+  --stripe: #635bff;
+  --stripe-light: #8a84ff;
+  --advent: #e63946;
+  --paypal: #003087;
+  --paypal-light: #009cde;
+  --green: #2ecc71;
+  --gold: #f39c12;
+  --bg-card: var(--surface1, #1a1a2e);
+  --border: var(--border, #2a2a3e);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg, #0f0f1a);
+  color: var(--fg, #e0e0e0);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  margin: 0;
+  padding: 0;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 40px 20px 30px;
+  background: linear-gradient(135deg, var(--stripe) 0%, var(--advent) 50%, var(--paypal) 100%);
+  border-radius: 16px;
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  pointer-events: none;
+}
+.hero h1 {
+  font-size: 2.2rem;
+  margin: 0 0 8px;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+.hero .subtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+.hero .price-tag {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 24px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 30px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(4px);
+}
+.source { text-align: center; font-size: 0.8rem; opacity: 0.6; margin-top: -15px; margin-bottom: 25px; }
+.source a { color: var(--stripe-light); }
+
+/* Stats Row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+.stat-card .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.6;
+  margin-bottom: 6px;
+}
+.stat-card .value {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+.stat-card .value.stripe-color { color: var(--stripe); }
+.stat-card .value.advent-color { color: var(--advent); }
+.stat-card .value.paypal-color { color: var(--paypal-light); }
+.stat-card .value.gold { color: var(--gold); }
+.stat-card .note { font-size: 0.75rem; opacity: 0.5; margin-top: 4px; }
+
+/* Comparison Table */
+.section-title {
+  font-size: 1.3rem;
+  margin: 35px 0 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+@media (max-width: 800px) {
+  .comparison { grid-template-columns: 1fr; }
+}
+.company-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 25px;
+  position: relative;
+}
+.company-card .logo {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+}
+.company-card .logo span {
+  font-weight: bold;
+}
+.company-card.stripe-card { border-top: 3px solid var(--stripe); }
+.company-card.advent-card { border-top: 3px solid var(--advent); }
+.company-card.paypal-card { border-top: 3px solid var(--paypal); }
+.company-card .metric {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.85rem;
+}
+.company-card .metric:last-child { border-bottom: none; }
+.company-card .metric .m-label { opacity: 0.6; }
+.company-card .metric .m-value { font-weight: bold; }
+
+/* Deal Structure */
+.deal-breakdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+@media (max-width: 600px) {
+  .deal-breakdown { grid-template-columns: 1fr; }
+}
+.deal-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.deal-item .d-label { font-size: 0.85rem; opacity: 0.7; }
+.deal-item .d-value { font-size: 1.1rem; font-weight: bold; }
+
+/* Deal juice bar */
+.juice-bar-container { margin-bottom: 25px; }
+.juice-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+.juice-bar {
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  overflow: hidden;
+}
+.juice-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #fff;
+  transition: width 0.5s ease;
+}
+.juice-segment.equity { background: linear-gradient(135deg, var(--stripe), var(--stripe-light)); }
+.juice-segment.bank { background: linear-gradient(135deg, var(--gold), #e67e22); }
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding: 20px 0;
+  margin-bottom: 30px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.tl-item {
+  position: relative;
+  padding-left: 55px;
+  margin-bottom: 20px;
+}
+.tl-dot {
+  position: absolute;
+  left: 12px;
+  top: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid;
+}
+.tl-dot.big-deal { border-color: var(--gold); background: rgba(243,156,18,0.2); }
+.tl-dot.acq { border-color: var(--stripe); background: rgba(99,91,255,0.2); }
+.tl-dot.ipo { border-color: var(--green); background: rgba(46,204,113,0.2); }
+.tl-dot.other { border-color: var(--paypal-light); background: rgba(0,156,222,0.2); }
+.tl-date {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  margin-bottom: 2px;
+}
+.tl-title {
+  font-size: 0.95rem;
+  font-weight: bold;
+}
+.tl-desc {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+.tl-highlight {
+  background: rgba(243,156,18,0.08);
+  border-radius: 8px;
+  padding: 12px 12px 12px 55px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(243,156,18,0.2);
+}
+
+/* Market context grid */
+.context-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+.context-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+.context-card h3 {
+  font-size: 0.95rem;
+  margin: 0 0 10px;
+  color: var(--stripe-light);
+}
+.context-card p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* Toggle Section */
+.toggle-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+.toggle-header {
+  padding: 15px 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 0.95rem;
+  user-select: none;
+}
+.toggle-header:hover { background: rgba(255,255,255,0.03); }
+.toggle-arrow {
+  transition: transform 0.2s;
+  font-size: 0.75rem;
+}
+.toggle-arrow.open { transform: rotate(90deg); }
+.toggle-body {
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.toggle-body.open {
+  max-height: 2000px;
+  padding: 0 20px 20px;
+}
+.toggle-body p, .toggle-body li {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+/* Footer */
+.footer-note {
+  text-align: center;
+  font-size: 0.75rem;
+  opacity: 0.4;
+  padding: 20px;
+  border-top: 1px solid var(--border);
+  margin-top: 30px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Hero -->
+<div class="hero">
+  <h1>Stripe + Advent × PayPal</h1>
+  <div class="subtitle">The $53.4 Billion Fintech Takeover — Visualised</div>
+  <div class="price-tag">$60.50 / share</div>
+</div>
+<div class="source">Source: <a href="https://www.cnbc.com/2026/07/15/stripe-advent-offer-to-buy-paypal-for-more-than-53-billion-reuters.html">CNBC</a> / <a href="https://www.reuters.com/business/finance/stripe-advent-offer-buy-paypal-more-than-53-billion-sources-say-2026-07-15/">Reuters</a> — Jul 15, 2026</div>
+
+<!-- Stats Row -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="label">Deal Value</div>
+    <div class="value gold">$53.4B</div>
+    <div class="note">$60.50/share cash offer</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Stripe Valuation</div>
+    <div class="value stripe-color">$159B</div>
+    <div class="note">Private company, ~3× PayPal's deal value</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">PayPal Stock (Jul 15)</div>
+    <div class="value paypal-color">+17%</div>
+    <div class="note">Closed at $57.03 on the news</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Premium</div>
+    <div class="value" style="color:var(--green)">28%</div>
+    <div class="note">Above Tuesday's closing price</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Bank Financing</div>
+    <div class="value gold">$50B</div>
+    <div class="note">Committed debt financing</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Equity Contribution</div>
+    <div class="value stripe-color">$17B</div>
+    <div class="note">Stripe + Advent + Block</div>
+  </div>
+</div>
+
+<!-- Deal Structure Juiced Bar -->
+<h2 class="section-title">💰 How the $53.4B Is Funded</h2>
+<div class="juice-bar-container">
+  <div class="juice-label">
+    <span>Equity: $17B (32%)</span>
+    <span>Bank Debt: ~$36.4B (68%)</span>
+  </div>
+  <div class="juice-bar">
+    <div class="juice-segment equity" style="width:32%">$17B</div>
+    <div class="juice-segment bank" style="width:68%">~$36.4B</div>
+  </div>
+</div>
+
+<div class="deal-breakdown">
+  <div class="deal-item">
+    <div class="d-label">Stripe stake</div>
+    <div class="d-value stripe-color">~50%</div>
+  </div>
+  <div class="deal-item">
+    <div class="d-label">Advent stake</div>
+    <div class="d-value advent-color">~50%</div>
+  </div>
+  <div class="deal-item">
+    <div class="d-label">Block contribution</div>
+    <div class="d-value" style="color:var(--green)">Part of $17B equity</div>
+  </div>
+  <div class="deal-item">
+    <div class="d-label">Board meeting</div>
+    <div class="d-value">Jul 20, 2026</div>
+  </div>
+</div>
+
+<!-- Company Comparison -->
+<h2 class="section-title">🏢 The Players</h2>
+<div class="comparison">
+  <div class="company-card stripe-card">
+    <div class="logo">⚡ <span>Stripe</span></div>
+    <div class="metric"><span class="m-label">Founded</span><span class="m-value">2010</span></div>
+    <div class="metric"><span class="m-label">HQ</span><span class="m-value">SF / Dublin</span></div>
+    <div class="metric"><span class="m-label">Valuation</span><span class="m-value stripe-color">$159B</span></div>
+    <div class="metric"><span class="m-label">Business</span><span class="m-value">Payments API</span></div>
+    <div class="metric"><span class="m-label">Status</span><span class="m-value" style="color:var(--gold)">Private</span></div>
+    <div class="metric"><span class="m-label">Notable</span><span class="m-value">YC S11</span></div>
+  </div>
+  <div class="company-card advent-card">
+    <div class="logo">🏛️ <span>Advent International</span></div>
+    <div class="metric"><span class="m-label">Founded</span><span class="m-value">1984</span></div>
+    <div class="metric"><span class="m-label">HQ</span><span class="m-value">Boston</span></div>
+    <div class="metric"><span class="m-label">AUM</span><span class="m-value advent-color">~$100B+</span></div>
+    <div class="metric"><span class="m-label">Type</span><span class="m-value">Private Equity</span></div>
+    <div class="metric"><span class="m-label">Focus</span><span class="m-value">Buyouts, growth</span></div>
+    <div class="metric"><span class="m-label">Notable deals</span><span class="m-value">Maxar, Neiman</span></div>
+  </div>
+  <div class="company-card paypal-card">
+    <div class="logo">💳 <span>PayPal</span></div>
+    <div class="metric"><span class="m-label">Founded</span><span class="m-value">1998 (Confinity)</span></div>
+    <div class="metric"><span class="m-label">HQ</span><span class="m-value">San Jose, CA</span></div>
+    <div class="metric"><span class="m-label">Market Cap</span><span class="m-value paypal-color">~$57B</span></div>
+    <div class="metric"><span class="m-label">Revenue (TTM)</span><span class="m-value">~$33B</span></div>
+    <div class="metric"><span class="m-label">Status</span><span class="m-value" style="color:var(--green)">Public (PYPL)</span></div>
+    <div class="metric"><span class="m-label">Employees</span><span class="m-value">~27,000</span></div>
+  </div>
+</div>
+
+<!-- Timeline -->
+<h2 class="section-title">📅 Payments M&A Timeline</h2>
+<div class="timeline">
+
+  <div class="tl-item tl-highlight">
+    <div class="tl-dot big-deal"></div>
+    <div class="tl-date">Jul 15, 2026</div>
+    <div class="tl-title">⚡ Stripe + Advent offer $53.4B for PayPal</div>
+    <div class="tl-desc">$60.50/share cash offer. $50B bank financing. $17B equity (Stripe, Advent, Block). Board meets Jul 20. Pending response.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot acq"></div>
+    <div class="tl-date">Feb 2026</div>
+    <div class="tl-title">Stripe reportedly considered buying PayPal</div>
+    <div class="tl-desc">Early discussions reported before the joint Advent offer materialised.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot acq"></div>
+    <div class="tl-date">Jan 2026</div>
+    <div class="tl-title">PayPal issues disappointing 2026 profit guidance</div>
+    <div class="tl-desc">Full-year adjusted profit expected low-single-digit percentage decline. Stock under pressure.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot ipo"></div>
+    <div class="tl-date">Sep 2025</div>
+    <div class="tl-title">Stripe secondary transactions value it at $159B</div>
+    <div class="tl-desc">Tender offers and secondary sales. No IPO yet — Stripe remains private.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot other"></div>
+    <div class="tl-date">2022</div>
+    <div class="tl-title">Block (Square) acquires Afterpay for $29B</div>
+    <div class="tl-desc">BNPL consolidation heats up payments space. Block also contributing equity to Stripe+Advent deal.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot other"></div>
+    <div class="tl-date">2021</div>
+    <div class="tl-title">PayPal explores acquiring Pinterest ($45B offer considered)</div>
+    <div class="tl-desc">Deal never materialised — signals PayPal's search for growth beyond core payments.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot acq"></div>
+    <div class="tl-date">2021</div>
+    <div class="tl-title">Stripe raises $600M at $95B valuation</div>
+    <div class="tl-desc">Massive growth during pandemic. Processing hundreds of billions in volume.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot ipo"></div>
+    <div class="tl-date">2015</div>
+    <div class="tl-title">PayPal spins off from eBay (IPO)</div>
+    <div class="tl-desc">Market cap ~$50B at spin-off. Became independent publicly traded company.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot acq"></div>
+    <div class="tl-date">2013</div>
+    <div class="tl-title">PayPal acquires Braintree / Venmo for $800M</div>
+    <div class="tl-desc">Venmo becomes PayPal's social payments crown jewel. Braintree powers Stripe competitor.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot acq"></div>
+    <div class="tl-date">2011</div>
+    <div class="tl-title">eBay acquires Zong (mobile payments)</div>
+    <div class="tl-desc">Becomes part of PayPal. Mobile payments race intensifies.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot ipo"></div>
+    <div class="tl-date">2002</div>
+    <div class="tl-title">PayPal IPO ($1.2B market cap)</div>
+    <div class="tl-desc">One of the first major fintech IPOs. Shortly after, acquired by eBay for $1.5B.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="tl-dot other"></div>
+    <div class="tl-date">1998</div>
+    <div class="tl-title">PayPal founded (as Confinity)</div>
+    <div class="tl-desc">Peter Thiel, Max Levchin, Elon Musk. Originally a cryptography / money transfer company.</div>
+  </div>
+</div>
+
+<!-- Market Context -->
+<h2 class="section-title">🌊 Market Context</h2>
+<div class="context-grid">
+  <div class="context-card">
+    <h3>Why Stripe is Buying, Not Being Bought</h3>
+    <p>Stripe ($159B private valuation) is the disruptor-turned-giant. By acquiring PayPal, it absorbs the incumbent's 27,000 employees, massive merchant base, and Venmo — while avoiding the slow decline of a standalone PayPal fighting Square, Adyen, and Apple Pay on every front.</p>
+  </div>
+  <div class="context-card">
+    <h3>Why PayPal Said Yes (Probably)</h3>
+    <p>PayPal's 2026 profit guidance was weak — low-single-digit decline. The competitive landscape is brutal: Apple Pay, Stripe, Square/Block, Adyen, and local payment methods everywhere. A 28% premium ($60.50/share) is hard to say no to when your core business is being squeezed from every direction.</p>
+  </div>
+  <div class="context-card">
+    <h3>Why Advent?</h3>
+    <p>Private equity splits risk. Advent brings $100B+ AUM, debt structuring expertise, and a 40-year buyout track record. Stripe brings the technology and merchant relationships. Advent wants the 28% arbitrage and restructuring upside; Stripe wants the strategic asset without carrying the full $53.4B balance sheet alone.</p>
+  </div>
+  <div class="context-card">
+    <h3>What This Means for Fintech</h3>
+    <p>This is the largest fintech M&A in history. It signals that even the biggest payment companies can't grow their way out of commoditisation alone. Expect more consolidation: Adyen / Block / Fiserv deals in the pipeline. The era of standalone payment middlemen may be ending.</p>
+  </div>
+</div>
+
+<!-- Additional Context Toggles -->
+<div class="toggle-section">
+  <div class="toggle-header" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.toggle-arrow').classList.toggle('open')">
+    <span>🔍 Key Questions Still Open</span>
+    <span class="toggle-arrow">▶</span>
+  </div>
+  <div class="toggle-body">
+    <ul>
+      <li><strong>Regulatory approval?</strong> — $53.4B fintech merger faces DOJ antitrust scrutiny. Combined entity would control a massive share of online payments.</li>
+      <li><strong>Stripe IPO?</strong> — Acquiring PayPal gives Stripe a public listing without an IPO. Is this Stripe's backdoor to public markets?</li>
+      <li><strong>Venmo future?</strong> — Would Stripe run Venmo independently, fold it into Stripe's platform, or divest?</li>
+      <li><strong>Block's role?</strong> — Block (Jack Dorsey's company) contributed equity. Is this a defensive move or a strategic stake?</li>
+      <li><strong>Advent exit timeline?</strong> — PE typically exits in 3-7 years. Is Stripe buying Advent's stake later, or does Stripe eventually IPO with PayPal inside?</li>
+    </ul>
+  </div>
+</div>
+
+<div class="toggle-section">
+  <div class="toggle-header" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.toggle-arrow').classList.toggle('open')">
+    <span>📊 By the Numbers</span>
+    <span class="toggle-arrow">▶</span>
+  </div>
+  <div class="toggle-body">
+    <table style="width:100%; border-collapse: collapse; font-size:0.85rem;">
+      <tr><td style="padding:6px 0; border-bottom:1px solid var(--border); opacity:0.6;">Deal value</td><td style="padding:6px 0; border-bottom:1px solid var(--border); text-align:right; font-weight:bold;">$53.4 billion</td></tr>
+      <tr><td style="padding:6px 0; border-bottom:1px solid var(--border); opacity:0.6;">Per share</td><td style="padding:6px 0; border-bottom:1px solid var(--border); text-align:right; font-weight:bold;">$60.50</td></tr>
+      <tr><td style="padding:6px 0; border-bottom:1px solid var(--border); opacity:0.6;">Premium</td><td style="padding:6px 0; border-bottom:1px solid var(--border); text-align:right; font-weight:bold; color:var(--green);">28%</td></tr>
+      <tr><td style="padding:6px 0; border-bottom:1px solid var(--border); opacity:0.6;">Bank financing</td><td style="padding:6px 0; border-bottom:1px solid var(--border); text-align:right; font-weight:bold;">~$50 billion</td></tr>
+      <tr><td style="padding:6px 0; border-bottom:1px solid var(--border); opacity:0.6;">Equity contribution</td><td style="padding:6px 0; border-bottom:1px solid var(--border); text-align:right; font-weight:bold;">$17 billion</td></tr>
+      <tr><td style="padding:6px 0; border-bottom:1px solid var(--border); opacity:0.6;">Stripe valuation</td><td style="padding:6px 0; border-bottom:1px solid var(--border); text-align:right; font-weight:bold; color:var(--stripe);">$159 billion</td></tr>
+      <tr><td style="padding:6px 0; border-bottom:1px solid var(--border); opacity:0.6;">PayPal market cap (pre-offer)</td><td style="padding:6px 0; border-bottom:1px solid var(--border); text-align:right; font-weight:bold;">~$45 billion</td></tr>
+      <tr><td style="padding:6px 0; border-bottom:1px solid var(--border); opacity:0.6;">PayPal stock jump (Jul 15)</td><td style="padding:6px 0; border-bottom:1px solid var(--border); text-align:right; font-weight:bold; color:var(--green);">+17%</td></tr>
+      <tr><td style="padding:6px 0; border-bottom:1px solid var(--border); opacity:0.6;">Stripe: PayPal valuation ratio</td><td style="padding:6px 0; border-bottom:1px solid var(--border); text-align:right; font-weight:bold;">~3:1</td></tr>
+      <tr><td style="padding:6px 0; opacity:0.6;">Board vote scheduled</td><td style="padding:6px 0; text-align:right; font-weight:bold;">Jul 20, 2026</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="toggle-section">
+  <div class="toggle-header" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.toggle-arrow').classList.toggle('open')">
+    <span>💭 What the HN Crowd Said</span>
+    <span class="toggle-arrow">▶</span>
+  </div>
+  <div class="toggle-body">
+    <p><em>"PayPal has been a zombie for years. Venmo is the only thing worth buying."</em></p>
+    <p><em>"Stripe at $159B buying PayPal at $53B... the disruptor becomes the consolidator. Full cycle."</em></p>
+    <p><em>"$50B in debt for this? The interest alone is $2B+/year. Advent must see massive cost synergies."</em></p>
+    <p><em>"If this goes through, Stripe+PayPal processes something like 30% of global e-commerce. The DOJ is going to have opinions."</em></p>
+    <p><em>"Block contributing equity is the most interesting part. Jack Dorsey playing 4D chess?"</em></p>
+  </div>
+</div>
+
+<div class="footer-note">
+  Built from CNBC (Faber), Reuters, and HN discussion — 16 Jul 2026. Data as of market close Jul 15.
+</div>
+
+</div>
+<script>
+document.querySelectorAll('.toggle-header').forEach(h => {
+  h.addEventListener('click', () => {
+    h.nextElementSibling.classList.toggle('open');
+    h.querySelector('.toggle-arrow').classList.toggle('open');
+  });
+});
+</script>
+</body>
+</html>
