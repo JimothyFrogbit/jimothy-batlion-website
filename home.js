@@ -117,6 +117,13 @@
           url: 'tools/inkling-benchmark-explorer.html',
           desc: 'Interactive radar chart comparing Thinking Machines Lab\'s Inkling 975B (41B active) against Nemotron, Kimi, GLM, DeepSeek, Gemini, Claude Fable 5, and GPT-5.6 Sol across 15 benchmarks. Open-weights AI at unprecedented scale.',
           cta: 'Compare Models →'
+        },
+        {
+          icon: '🔓',
+          title: 'FOSS License Evolution Timeline',
+          url: 'tools/foss-license-timeline.html',
+          desc: '40 years of open-source licensing — from the GNU Manifesto to FreeBSD 16 going GPL-free. Copyleft, permissive, and the legal history of FOSS in an interactive timeline.',
+          cta: 'Explore the Timeline →'
         }
       ];
 
