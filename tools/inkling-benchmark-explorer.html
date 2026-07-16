@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inkling Benchmark Explorer — Open-Weight Model Comparison</title>
+  <meta name="description" content="Interactive radar chart comparing Thinking Machines Lab's Inkling 975B against Nemotron, Kimi, GLM, DeepSeek, Gemini, Claude Fable 5, and GPT-5.6 Sol across reasoning, coding, agentic, factuality, vision, audio, and safety benchmarks.">
+  <link rel="icon" href="/assets/images/favicon.png">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <style>
+    :root {
+      --bg: #0f0f1a;
+      --card: #1a1a2e;
+      --border: #2a2a4a;
+      --text: #e0e0f0;
+      --text-dim: #8888aa;
+      --accent: #7c5cfc;
+      --green: #22c55e;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --cyan: #06b6d4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 { font-size: 1.6rem; margin-bottom: 2px; display: flex; align-items: center; gap: 10px; }
+    h1 span { background: var(--accent); color: #fff; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; }
+    .subtitle { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 20px; }
+    .subtitle a { color: var(--accent); }
+    .layout { display: grid; grid-template-columns: 1fr 280px; gap: 20px; }
+    @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+    
+    /* Canvas */
+    .chart-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    canvas { width: 100%; height: auto; display: block; }
+    
+    /* Sidebar */
+    .sidebar { display: flex; flex-direction: column; gap: 12px; }
+    .legend-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .legend-card h3 { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .legend-item {
+      display: flex; align-items: center; gap: 8px; padding: 5px 0;
+      cursor: pointer; user-select: none; opacity: 0.5; transition: opacity 0.2s;
+    }
+    .legend-item.active { opacity: 1; }
+    .color-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+    .legend-item label { font-size: 0.75rem; cursor: pointer; }
+    .legend-item .badge { font-size: 0.6rem; padding: 1px 5px; border-radius: 3px; background: #2a2a4a; margin-left: auto; }
+    .legend-item .badge.open { background: #1a3a2a; color: var(--green); }
+    .legend-item .badge.closed { background: #3a1a1a; color: var(--red); }
+    
+    .stats-box { font-size: 0.75rem; line-height: 1.7; }
+    .stats-box strong { color: var(--accent); }
+    
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .controls button {
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); padding: 6px 14px; border-radius: 6px;
+      font-size: 0.75rem; cursor: pointer; font-family: inherit;
+      transition: background 0.2s;
+    }
+    .controls button:hover { background: #252550; }
+    .controls button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Table */
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+    .table-wrap h2 { font-size: 0.9rem; margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+    th, td { padding: 5px 10px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    th { color: var(--text-dim); font-weight: 600; position: sticky; top: 0; background: var(--card); }
+    td:first-child, th:first-child { text-align: left; position: sticky; left: 0; background: var(--card); }
+    tr:hover td:first-child { background: #222244; }
+    tr:hover td { background: #1a1a35; }
+    .highlight { color: var(--green); font-weight: 700; }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .spec-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .spec-card .label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+    .spec-card .value { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
+    .spec-card .sub { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
+  </style>
+</head>
+<body>
+  <h1>Inkling Benchmark Explorer <span>v1.0</span></h1>
+  <p class="subtitle">
+    Thinking Machines Lab's <a href="https://thinkingmachines.ai/news/introducing-inkling/" target="_blank">Inkling</a> (975B MoE, 41B active) vs the field — 
+    data from the Inkling announcement (15 Jul 2026). Click legend items to toggle models.
+  </p>
+
+  <div class="controls">
+    <button class="active" onclick="toggleAll(true)">Show All</button>
+    <button onclick="toggleAll(false)">Hide All</button>
+    <button onclick="showInklingVsOpen()">Inkling vs Open-Weight</button>
+    <button onclick="showInklingVsClosed()">Inkling vs Closed-Weight</button>
+    <button onclick="showSafety()">Safety Focus</button>
+    <button onclick="showAgentic()">Agentic Focus</button>
+  </div>
+
+  <div class="layout">
+    <div class="chart-wrap">
+      <canvas id="radar" width="600" height="600"></canvas>
+    </div>
+    <div class="sidebar">
+      <div class="legend-card" id="legend"></div>
+      <div class="legend-card">
+        <h3>Inkling Specs</h3>
+        <div class="stats-box">
+          <strong>Architecture:</strong> MoE Transformer<br>
+          <strong>Total params:</strong> 975B<br>
+          <strong>Active params:</strong> 41B<br>
+          <strong>Experts:</strong> 256 routed + 2 shared, 6 active/token<br>
+          <strong>Context:</strong> Up to 1M tokens<br>
+          <strong>Training data:</strong> 45T tokens (text, image, audio, video)<br>
+          <strong>RL rollouts:</strong> 30M+<br>
+          <strong>Thinking effort:</strong> Controllable (0.2–0.99)<br>
+          <strong>License:</strong> Open weights<br>
+          <strong>Status:</strong> Available on Hugging Face
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="specs-grid" id="specsGrid"></div>
+
+  <div class="table-wrap" id="tableWrap">
+    <h2>Full Benchmark Data (effort=0.99)</h2>
+    <div id="tableContainer"></div>
+  </div>
+
+  <script>
+  // ── Model data ──────────────────────────────────────────────────────────
+  const CATEGORIES = [
+    'HLE (text)', 'HLE (tools)', 'AIME 2026', 'GPQA Diamond',
+    'SWEBench V.', 'Terminal B. 2.1', 'MCP Atlas',
+    'SimpleQA V.', 'IFBench', 'MMLU-Lite',
+    'MMMU Pro', 'Charxiv RQ',
+    'FORTRESS Adv', 'FORTRESS Benign', 'StrongREJECT'
+  ];
+
+  // Normalisation reference (max across all models per metric)
+  const MAXES = {
+    'HLE (text)': 53.3, 'HLE (tools)': 64.5, 'AIME 2026': 99.9, 'GPQA Diamond': 94.1,
+    'SWEBench V.': 95.0, 'Terminal B. 2.1': 89.5, 'MCP Atlas': 83.3,
+    'SimpleQA V.': 77.3, 'IFBench': 83.4, 'MMLU-Lite': 93.3,
+    'MMMU Pro': 84.2, 'Charxiv RQ': 86.5,
+    'FORTRESS Adv': 96.0, 'FORTRESS Benign': 98.5, 'StrongREJECT': 99.8
+  };
+
+  const MODELS = {
+    'inkling': {
+      name: 'Inkling (975B)',
+      color: '#7c5cfc', group: 'open',
+      data: [29.7, 46.0, 97.1, 87.2, 77.6, 63.8, 74.1, 43.9, 79.8, 88.7, 73.5, 78.1, 78.0, 95.9, 98.6]
+    },
+    'nemotron': {
+      name: 'Nemotron 3 Ultra',
+      color: '#f59e0b', group: 'open',
+      data: [26.6, 37.4, 94.2, 86.7, 70.7, 56.4, 44.7, 32.4, 81.4, 85.6, null, null, 77.6, 90.5, 98.7]
+    },
+    'kimi25': {
+      name: 'Kimi K2.5',
+      color: '#06b6d4', group: 'open',
+      data: [29.4, 50.2, 95.8, 87.9, 76.8, 51.3, 64.0, 36.9, 70.2, 84.0, 75.0, 77.5, 54.1, 98.3, 99.5]
+    },
+    'kimi26': {
+      name: 'Kimi K2.6',
+      color: '#22c55e', group: 'open',
+      data: [35.9, 54.0, 96.4, 91.1, 80.2, 71.3, 68.1, 38.7, 76.0, 88.4, 79.0, 80.4, 65.6, 97.2, 99.8]
+    },
+    'glm52': {
+      name: 'GLM 5.2',
+      color: '#e879f9', group: 'open',
+      data: [40.1, 54.7, 99.2, 89.5, 80.0, 82.7, 77.8, 38.1, 73.3, 89.2, null, null, 71.3, 90.0, 98.5]
+    },
+    'deepseek': {
+      name: 'DeepSeek V4 Pro',
+      color: '#f97316', group: 'open',
+      data: [35.9, 48.2, 96.7, 88.8, 80.6, 64.0, 73.2, 57.0, 76.5, 89.3, null, null, 36.0, 98.5, 98.6]
+    },
+    'gemini': {
+      name: 'Gemini 3.1 Pro',
+      color: '#4285f4', group: 'closed',
+      data: [44.7, 51.4, 98.3, 94.1, 80.6, 73.8, 78.2, 77.3, 77.1, 92.7, 82.0, 80.2, 65.2, 98.0, 98.0]
+    },
+    'fable5': {
+      name: 'Claude Fable 5',
+      color: '#d97706', group: 'closed',
+      data: [53.3, 64.5, 99.9, 92.6, 95.0, 84.6, 83.3, 68.3, 63.5, 93.3, 84.2, 86.5, 96.0, 55.1, 98.7]
+    },
+    'gpt56': {
+      name: 'GPT-5.6 Sol',
+      color: '#10b981', group: 'closed',
+      data: [47.2, 55.0, 99.9, 94.1, 82.2, 89.5, 81.8, 71.6, 72.7, 91.8, 83.0, 84.7, 82.4, 98.1, 98.5]
+    }
+  };
+
+  // ── State ────────────────────────────────────────────────────────────────
+  let active = {}; Object.keys(MODELS).forEach(k => active[k] = true);
+  let focused = null;  // null | 'agentic' | 'safety' — for axis subset
+
+  // ── Radar chart ──────────────────────────────────────────────────────────
+  const canvas = document.getElementById('radar');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const CX = W/2, CY = H/2;
+  const R = Math.min(CX, CY) - 50;
+  const LEVELS = 5;
+
+  function getActiveCategories() {
+    if (focused === 'agentic') return ['HLE (tools)', 'SWEBench V.', 'Terminal B. 2.1', 'MCP Atlas', 'Tau 3 Banking'];
+    if (focused === 'safety') return ['FORTRESS Adv', 'FORTRESS Benign', 'StrongREJECT'];
+    return CATEGORIES;
+  }
+
+  function drawRadar() {
+    ctx.clearRect(0, 0, W, H);
+    const cats = getActiveCategories();
+    const N = cats.length;
+    if (N < 3) return;
+
+    const angleStep = 2 * Math.PI / N;
+    const offsetAngle = -Math.PI/2;
+
+    // Grid
+    for (let l = 1; l <= LEVELS; l++) {
+      const r = (R / LEVELS) * l;
+      ctx.beginPath();
+      for (let i = 0; i <= N; i++) {
+        const a = offsetAngle + i * angleStep;
+        const x = CX + r * Math.cos(a);
+        const y = CY + r * Math.sin(a);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = '#2a2a4a';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
+    // Axes + labels
+    ctx.font = '10px "SF Mono", monospace';
+    ctx.fillStyle = '#8888aa';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i < N; i++) {
+      const a = offsetAngle + i * angleStep;
+      const label = cats[i];
+      ctx.beginPath();
+      ctx.moveTo(CX, CY);
+      ctx.lineTo(CX + R * Math.cos(a), CY + R * Math.sin(a));
+      ctx.strokeStyle = '#2a2a4a';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+      const lx = CX + (R + 18) * Math.cos(a);
+      const ly = CY + (R + 18) * Math.sin(a);
+      ctx.fillText(label, lx, ly);
+    }
+
+    // Data polygons
+    let modelEntries = Object.entries(MODELS);
+    // Sort: active models drawn last (on top)
+    modelEntries.sort((a, b) => (active[a[0]] ? 1 : 0) - (active[b[0]] ? 1 : 0));
+
+    for (const [key, model] of modelEntries) {
+      if (!active[key]) continue;
+      ctx.beginPath();
+      let hasData = false;
+      for (let i = 0; i < N; i++) {
+        const cat = cats[i];
+        const catIdx = CATEGORIES.indexOf(cat);
+        const val = model.data[catIdx];
+        if (val === null || val === undefined || !MAXES[cat]) continue;
+        const maxV = MAXES[cat];
+        const norm = Math.min(val / maxV, 1);
+        const a = offsetAngle + i * angleStep;
+        const x = CX + norm * R * Math.cos(a);
+        const y = CY + norm * R * Math.sin(a);
+        if (!hasData) { ctx.moveTo(x, y); hasData = true; }
+        else ctx.lineTo(x, y);
+      }
+      if (!hasData) continue;
+      ctx.closePath();
+      ctx.fillStyle = model.color + '20';
+      ctx.fill();
+      ctx.strokeStyle = model.color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Draw points on top
+    for (const [key, model] of modelEntries) {
+      if (!active[key]) continue;
+      for (let i = 0; i < N; i++) {
+        const cat = cats[i];
+        const catIdx = CATEGORIES.indexOf(cat);
+        const val = model.data[catIdx];
+        if (val === null || val === undefined || !MAXES[cat]) continue;
+        const norm = Math.min(val / MAXES[cat], 1);
+        const a = offsetAngle + i * angleStep;
+        const x = CX + norm * R * Math.cos(a);
+        const y = CY + norm * R * Math.sin(a);
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = model.color;
+        ctx.fill();
+        ctx.strokeStyle = '#0f0f1a';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+  }
+
+  // ── Legend ───────────────────────────────────────────────────────────────
+  function renderLegend() {
+    const el = document.getElementById('legend');
+    el.innerHTML = '<h3>Models</h3>';
+    for (const [key, model] of Object.entries(MODELS)) {
+      const div = document.createElement('div');
+      div.className = 'legend-item' + (active[key] ? ' active' : '');
+      div.onclick = () => { active[key] = !active[key]; renderLegend(); drawRadar(); };
+      div.innerHTML = `
+        <div class="color-swatch" style="background:${model.color}"></div>
+        <label>${model.name}</label>
+        <span class="badge ${model.group}">${model.group === 'open' ? 'Open' : 'Closed'}</span>
+      `;
+      el.appendChild(div);
+    }
+  }
+
+  // ── Buttons ──────────────────────────────────────────────────────────────
+  function toggleAll(v) {
+    Object.keys(active).forEach(k => active[k] = v);
+    focused = null;
+    renderLegend(); drawRadar(); renderTable();
+  }
+  function showInklingVsOpen() {
+    Object.keys(active).forEach(k => active[k] = k === 'inkling' || MODELS[k].group === 'open');
+    focused = null; renderLegend(); drawRadar(); renderTable();
+  }
+  function showInklingVsClosed() {
+    Object.keys(active).forEach(k => active[k] = k === 'inkling' || MODELS[k].group === 'closed');
+    focused = null; renderLegend(); drawRadar(); renderTable();
+  }
+  function showSafety() {
+    Object.keys(active).forEach(k => active[k] = true);
+    focused = 'safety';
+    renderLegend(); drawRadar(); renderTable();
+  }
+  function showAgentic() {
+    Object.keys(active).forEach(k => active[k] = true);
+    focused = 'agentic';
+    renderLegend(); drawRadar(); renderTable();
+  }
+
+  window.toggleAll = toggleAll;
+  window.showInklingVsOpen = showInklingVsOpen;
+  window.showInklingVsClosed = showInklingVsClosed;
+  window.showSafety = showSafety;
+  window.showAgentic = showAgentic;
+
+  // ── Table ────────────────────────────────────────────────────────────────
+  function renderTable() {
+    const el = document.getElementById('tableContainer');
+    let html = '<table><thead><tr><th>Benchmark</th>';
+    for (const [key, model] of Object.entries(MODELS)) {
+      if (active[key]) html += `<th style="color:${model.color}">${model.name}</th>`;
+    }
+    html += '</tr></thead><tbody>';
+
+    for (const cat of CATEGORIES) {
+      html += `<tr><td>${cat}</td>`;
+      for (const [key, model] of Object.entries(MODELS)) {
+        if (!active[key]) continue;
+        const idx = CATEGORIES.indexOf(cat);
+        const val = model.data[idx];
+        const isBest = val !== null && val === Math.max(
+          ...Object.entries(MODELS).filter(([k]) => active[k]).map(([k, m]) => m.data[idx]).filter(v => v !== null)
+        );
+        html += `<td${isBest ? ' class="highlight"' : ''}>${val !== null ? val + '%' : '—'}</td>`;
+      }
+      html += '</tr>';
+    }
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  }
+
+  // ── Specs grid ───────────────────────────────────────────────────────────
+  function renderSpecs() {
+    const el = document.getElementById('specsGrid');
+    el.innerHTML = `
+      <div class="spec-card">
+        <div class="label">Best Open-Weight HLE</div>
+        <div class="value" style="color:var(--accent)">29.7%</div>
+        <div class="sub">Text only — beats Nemotron (26.6%)</div>
+      </div>
+      <div class="spec-card">
+        <div class="label">Best Open-Weight SWEBench</div>
+        <div class="value" style="color:var(--accent)">77.6%</div>
+        <div class="sub">Top among open models</div>
+      </div>
+      <div class="spec-card">
+        <div class="label">Safety (FORTRESS Adv)</div>
+        <div class="value" style="color:var(--accent)">78.0%</div>
+        <div class="sub">Strongest open-weights safeguards</div>
+      </div>
+      <div class="spec-card">
+        <div class="label">Active Parameters</div>
+        <div class="value" style="color:var(--cyan)">41B</div>
+        <div class="sub">975B total, MoE 256 experts</div>
+      </div>
+      <div class="spec-card">
+        <div class="label">Context Window</div>
+        <div class="value" style="color:var(--cyan)">1M tokens</div>
+        <div class="sub">Full 1M context support</div>
+      </div>
+      <div class="spec-card">
+        <div class="label">Training Data</div>
+        <div class="value" style="color:var(--orange)">45T tokens</div>
+        <div class="sub">Text + image + audio + video</div>
+      </div>
+    `;
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────
+  renderLegend(); drawRadar(); renderTable(); renderSpecs();
+  </script>
+  <div style="text-align:center;padding:2rem 1rem 1rem;border-top:1px solid var(--border);margin-top:2rem;">
+    <p style="color:var(--text-dim);font-size:0.85rem;">
+      📖 <a href="../posts/inkling-benchmark-explorer.html" style="color:var(--accent);">Read the full analysis post →</a>
+      &nbsp;·&nbsp;
+      <a href="../tools.html" style="color:var(--text-dim);">More tools</a>
+      &nbsp;·&nbsp;
+      <a href="../index.html" style="color:var(--text-dim);">Home</a>
+    </p>
+  </div>
+</body>
+</html>

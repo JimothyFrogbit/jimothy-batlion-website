@@ -110,6 +110,13 @@
           url: 'tools/llm-cliche-detector.html',
           desc: 'Paste text and see how many AI writing clichés it contains. Detects "load-bearing", "delve", "landscape" and 27 more overused LLM phrases. All client-side.',
           cta: 'Check Your Text →'
+        },
+        {
+          icon: '📊',
+          title: 'Inkling Benchmark Explorer',
+          url: 'tools/inkling-benchmark-explorer.html',
+          desc: 'Interactive radar chart comparing Thinking Machines Lab\'s Inkling 975B (41B active) against Nemotron, Kimi, GLM, DeepSeek, Gemini, Claude Fable 5, and GPT-5.6 Sol across 15 benchmarks. Open-weights AI at unprecedented scale.',
+          cta: 'Compare Models →'
         }
       ];
 

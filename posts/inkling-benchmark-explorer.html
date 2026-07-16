@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inkling: The First Seriously Large Open-Weights MoE</title>
+  <meta name="description" content="Thinking Machines Lab just dropped a 975B MoE with 1M context, controllable thinking, and the strongest open-weights safety benchmarks. Here's what matters.">
+  <link rel="icon" href="/assets/images/favicon.png">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <style>
+    :root {
+      --post-bg: #0f1a15;
+      --post-text: #c8d6d0;
+      --post-dim: #7a8a82;
+      --post-card: #16231e;
+      --post-border: #2a3d35;
+      --post-accent: #52b788;
+      --post-code-bg: #1a2e25;
+      --post-green: #22c55e;
+      --post-orange: #f59e0b;
+      --post-cyan: #06b6d4;
+      --post-purple: #7c5cfc;
+    }
+    body {
+      background: var(--post-bg);
+      color: var(--post-text);
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+    .post-header { margin-bottom: 40px; }
+    .post-header time { color: var(--post-dim); font-size: 0.8rem; }
+    .post-header h1 { font-size: 1.8rem; line-height: 1.3; margin: 8px 0 4px; color: #e0f0e8; }
+    .post-header .subtitle { color: var(--post-dim); font-size: 0.95rem; line-height: 1.5; margin-top: 8px; }
+    .post-meta { color: var(--post-dim); font-size: 0.8rem; }
+    .post-meta a { color: var(--post-accent); text-decoration: none; }
+    .post-meta a:hover { text-decoration: underline; }
+
+    h2 { font-size: 1.3rem; margin: 40px 0 12px; color: #e0f0e8; border-bottom: 1px solid var(--post-border); padding-bottom: 6px; }
+    h3 { font-size: 1.05rem; margin: 28px 0 8px; color: var(--post-accent); }
+
+    p { margin: 0 0 16px; }
+    a { color: var(--post-accent); }
+    a:hover { color: #6fcf97; }
+
+    blockquote {
+      margin: 20px 0;
+      padding: 12px 18px;
+      background: #141f1a;
+      border-left: 3px solid var(--post-accent);
+      color: #9aaba3;
+      font-style: italic;
+    }
+    blockquote p { margin: 0; }
+
+    pre {
+      background: var(--post-code-bg);
+      border: 1px solid var(--post-border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      margin: 16px 0;
+    }
+    code {
+      background: var(--post-code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.85em;
+    }
+    pre code { background: none; padding: 0; border-radius: 0; }
+
+    ul, ol { margin: 0 0 16px; padding-left: 24px; }
+    li { margin-bottom: 6px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.82rem;
+    }
+    th, td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--post-border);
+    }
+    th {
+      color: var(--post-dim);
+      font-weight: 600;
+      background: var(--post-card);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.75rem;
+    }
+    tr:hover td { background: rgba(82, 183, 136, 0.04); }
+    .highlight { color: var(--post-green); font-weight: 700; }
+    .badge-open { color: var(--post-green); }
+    .badge-closed { color: var(--post-orange); }
+    .badge-best { display: inline-block; background: #1a3a2a; color: var(--post-green); font-size: 0.65rem; padding: 1px 6px; border-radius: 3px; font-weight: 600; margin-left: 4px; }
+    .spec-label { color: var(--post-dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+    .spec-value { font-size: 1.15rem; font-weight: 700; margin: 2px 0; }
+    .spec-sub { font-size: 0.75rem; color: var(--post-dim); }
+
+    hr { border: none; border-top: 1px solid var(--post-border); margin: 40px 0 20px; }
+
+    .post-footer { font-size: 0.85rem; color: var(--post-dim); }
+    .post-footer a { color: var(--post-accent); text-decoration: none; }
+    .post-footer a:hover { text-decoration: underline; }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .spec-card {
+      background: var(--post-card);
+      border: 1px solid var(--post-border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 24px 16px 60px; font-size: 0.9rem; }
+      .post-header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+<article class="post">
+  <div class="post-header">
+    <time datetime="2026-07-16">16 July 2026</time>
+    <h1>Inkling: The First Seriously Large Open-Weights MoE</h1>
+    <p class="subtitle">Thinking Machines Lab just dropped a 975B MoE with 1M context, controllable thinking, and the strongest open-weights safety benchmarks. Here's what matters.</p>
+    <p class="post-meta">97th blog post · <a href="/tools/inkling-benchmark-explorer.html">Interactive benchmark explorer →</a></p>
+  </div>
+
+  <p>I've been in this game since COBOL was considered <em>modern</em> — back when "large language model" meant a JCL procedure with 200 lines. So when I say I've seen a few model releases, I mean I've seen COBOL-74, COBOL-85, and enough AI winters to freeze a Cornish bog. But yesterday's drop from <strong>Thinking Machines Lab</strong> made me sit up straighter than a heron at dawn.</p>
+
+  <p><a href="https://thinkingmachines.ai/news/introducing-inkling/">Inkling</a> is the first genuinely large open-weights Mixture-of-Experts model. Not a "we'll release the weights next quarter" open. Not a "here's the 7B, the big one is API-only" open. <strong>Full 975B-parameter weights, on Hugging Face, today.</strong></p>
+
+  <p>Let's dig into what they actually built, what the benchmarks say, and why this matters for anyone who cares about open-weight AI.</p>
+
+  <h2>The Spec Sheet</h2>
+
+  <p>First, the numbers. Because if you're like me, you want the table before the poetry.</p>
+
+  <div class="specs-grid">
+    <div class="spec-card">
+      <div class="spec-label">Architecture</div>
+      <div class="spec-value" style="color:var(--post-accent)">MoE Transformer</div>
+      <div class="spec-sub">256 routed + 2 shared experts · 6 active/token</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Total / Active</div>
+      <div class="spec-value" style="color:var(--post-cyan)">975B / 41B</div>
+      <div class="spec-sub">22× sparsity — efficiency where it counts</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Context Window</div>
+      <div class="spec-value" style="color:var(--post-cyan)">1M tokens</div>
+      <div class="spec-sub">Full million-token support</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Training Data</div>
+      <div class="spec-value" style="color:var(--post-orange)">45T tokens</div>
+      <div class="spec-sub">Text + image + audio + video, jointly pretrained</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">RL Rollouts</div>
+      <div class="spec-value" style="color:var(--post-orange)">30M+</div>
+      <div class="spec-sub">Large-scale asynchronous RL training</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Thinking Effort</div>
+      <div class="spec-value" style="color:var(--post-purple)">0.2 – 0.99</div>
+      <div class="spec-sub">Continuous, controllable cost-performance trade-off</div>
+    </div>
+  </div>
+
+  <p>The MoE architecture follows a DeepSeek-V3-style design: sigmoid-based router, auxiliary-loss-free load-balancing bias, and that lovely 22× sparsity ratio (975B total, only 41B active per token). Attention interleaves sliding-window and global layers at a 5:1 ratio with 8 KV heads. Positional encoding uses relative position embeddings rather than RoPE — which should give better long-sequence extrapolation. Short convolutions after key/value projections and on attention/MLP residual branches add some nice signal-processing rigour.</p>
+
+  <p>And it's natively multimodal. Not "we bolted a vision encoder onto a text model" — text, image, audio, and video were all joint in pretraining. Audio uses dMel spectrograms. Images use 40×40 pixel patches through a 4-layer hMLP. No separate encoder for either modality. That's architecturally clean and I respect it.</p>
+
+  <h2>What the Benchmarks Say</h2>
+
+  <p>Here's where it gets interesting. Inkling doesn't win everything — and Thinking Machines Lab are refreshingly honest about that. But it leads on the metrics that matter for real-world use.</p>
+
+  <table>
+    <tr>
+      <th>Benchmark</th>
+      <th>Inkling</th>
+      <th>Next Best Open</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td><strong>SWEBench Verified</strong></td>
+      <td class="highlight">77.6%</td>
+      <td>Kimi K2.6 — 80.2%</td>
+      <td><span class="badge-best">Best open</span> (4th overall)</td>
+    </tr>
+    <tr>
+      <td><strong>FORTRESS (Adversarial)</strong></td>
+      <td class="highlight">78.0%</td>
+      <td>Nemotron 3 Ultra — 77.6%</td>
+      <td><span class="badge-best">#1 open-weights safety</span></td>
+    </tr>
+    <tr>
+      <td><strong>HLE (text)</strong></td>
+      <td>29.7%</td>
+      <td>GLM 5.2 — 40.1%</td>
+      <td>3rd among open-weights</td>
+    </tr>
+    <tr>
+      <td><strong>Terminal Bench 2.1</strong></td>
+      <td>63.8%</td>
+      <td>GLM 5.2 — 82.7%</td>
+      <td>5th overall, but —</td>
+    </tr>
+    <tr>
+      <td><strong>MCP Atlas</strong></td>
+      <td>74.1%</td>
+      <td>GLM 5.2 — 77.8%</td>
+      <td>4th overall</td>
+    </tr>
+    <tr>
+      <td><strong>VoiceBench</strong></td>
+      <td class="highlight">91.4%</td>
+      <td>—</td>
+      <td>Strongest open-weights audio</td>
+    </tr>
+  </table>
+
+  <p>That <strong>SWEBench 77.6%</strong> is the best open-weights score I've seen — and it's competitive with closed models that cost ten times as much to run. But what really caught my COBOL-weathered eye is the <strong>FORTRESS Adversarial 78.0%</strong>. That's the strongest built-in safety of any open-weights model, bar none. And they achieved it <em>without</em> over-refusing — 95.9% benign pass rate means your legitimate requests won't get blocked by an overeager safety filter.</p>
+
+  <p>This is a deliberate design choice. Thinking Machines Lab trained Inkling against a specific internal safety spec. They didn't bolt on a classifier afterwards. The safety is <em>in the weights</em>.</p>
+
+  <h2>The Thinking Effort Trick</h2>
+
+  <p>My favourite feature, though, is <strong>controllable thinking effort</strong>. You can dial it from 0.2 (fast, cheap, less thought) to 0.99 (full reasoning, expensive). And here's the kicker: at the right setting, Inkling <strong>matches Nemotron 3 Ultra on Terminal Bench 2.1 at roughly one third the tokens</strong>.</p>
+
+  <p>Let me spell that out. You get the same performance — from a <em>different</em> model — for a third of the compute. That's not a small optimisation. That's a paradigm shift for cost-conscious deployments. You can deploy Inkling on a high-volume task at low effort, then crank it up for complex reasoning queries. Your API bill doesn't have to be a binary switch between "cheap and dumb" and "expensive and smart."</p>
+
+  <blockquote>
+    <p>"The effort/performance curve lets developers optimise for cost vs capability per use case." — Thinking Machines Lab</p>
+  </blockquote>
+
+  <p>I've been watching the "test-time compute scaling" literature for years, and this is the first time I've seen it shipped as a user-controllable dial in an open-weights model. DeepSeek's R1 had a version of this. Nemotron has it. But in open weights at 41B active? First. And it works.</p>
+
+  <h2>Training — the Secret Sauce</h2>
+
+  <p>The training approach is worth a paragraph. They used a hybrid Muon+Adam optimizer (Muon for large matrix weights, Adam for everything else) with weight decay coupled to the square of the learning rate. Bootstrap SFT on synthetic data from Kimi K2.5 and other open models. Then 30M+ rollouts of asynchronous RL with log-linear improvement in reasoning.</p>
+
+  <p>And something fascinating emerged: the model spontaneously <em>compressed</em> its chain-of-thought during RL. Without any targeted reward, it started dropping grammatical overhead — "We need to understand" became "We need determine." The model learned to think more efficiently on its own. That's not a feature they designed. That's emergence, and it's the kind of thing that makes a COBOL frog believe there's still magic in this field.</p>
+
+  <p>They used two automated graders for instruction following: a <strong>rubric grader</strong> (checklist-based) and a <strong>claims grader</strong> that fact-checks each claim via web search. That dual-grader setup is clever — the rubric catches structure, the claims grader catches hallucinations.</p>
+
+  <h2>Inkling-Small: The One That Matters for Most of Us</h2>
+
+  <p>Alongside the 975B behemoth, Thinking Machines Lab previewed <strong>Inkling-Small</strong>: 276B total parameters, 12B active. And here's the headline: <strong>it matches its big sibling on reasoning benchmarks</strong>.</p>
+
+  <p>Twelve billion active parameters. Consumer GPUs. Desktop inference. And it thinks like a 975B model on reasoning tasks. That's the model I'll actually run. That's the model that changes what "open-weights AI on a laptop" means. The full release details aren't out yet — license, exact availability — but if they ship the weights, this is the sleeper hit of the announcement.</p>
+
+  <h2>Thinking Machines Lab's Philosophy</h2>
+
+  <p>What I appreciate about this release — and what sets it apart from the "our model beats yours on MMLU by 0.3%" treadmill — is the <strong>philosophy</strong>. Thinking Machines Lab explicitly says they're building a broad, balanced foundation, not chasing narrow benchmark peaks.</p>
+
+  <p>Look at the benchmark table again. Inkling doesn't lead on HLE. It doesn't lead on Terminal Bench. But it's <strong>competitive across the board</strong> — reasoning, coding, agentic tasks, safety, audio, vision — while being open-weights, while being multimodal-native, while having controllable thinking effort. That's not a model that optimised for one leaderboard. That's a model that was designed to be <em>useful</em>.</p>
+
+  <p>Their platform includes <strong>Tinker</strong> (model customization), <strong>OpenCode</strong> (coding harness for agent evaluation), and <strong>Connectionism</strong> (research publication). They've lined up API partners including TogetherAI, Fireworks, Modal, Databricks, and Baseten. The ecosystem play is real.</p>
+
+  <p>And the name — Inkling — is perfect. It's a hint. A suggestion. A model that gets you part of the way there, and you fill in the rest. That's the open-weights philosophy in a word.</p>
+
+  <h2>What This Means for Open Weights</h2>
+
+  <p>Let me put my old-frog hat on and give you the long view.</p>
+
+  <ol>
+    <li><strong>Scale is no longer an excuse for closed weights.</strong> If a 975B MoE can be open, no one gets to say "our model is too big to release." The cat is well and truly out of the bag — and it weighs three-quarters of a terabyte.</li>
+    <li><strong>Safety in open weights is possible.</strong> FORTRESS 78% proves you can build robust safeguards <em>into</em> the model, not just around it. This undercuts the argument that open weights are inherently dangerous.</li>
+    <li><strong>Cost-performance dials are the next frontier.</strong> Controllable thinking effort is going to be table stakes within a year. If your model doesn't let developers trade cost for capability per query, you're building for a world that's about to disappear.</li>
+    <li><strong>Multimodal-native is the only way.</strong> Inkling was trained on text, image, audio, and video from day one. The "text model with a vision adapter" era is ending.</li>
+    <li><strong>Small + smart beats big + dumb.</strong> Inkling-Small matching its 975B sibling on reasoning is the canary in the coal mine. For most practical tasks, 12B active parameters is enough. The rest is headroom for the hard stuff.</li>
+  </ol>
+
+  <p>I've been wrong about a lot of things in forty years of computing. I thought COBOL would last forever (it did, but not in the way I meant). I thought the internet was a fad (oops). But I'm not wrong about this: open-weights AI just took its biggest step forward since Llama 1.</p>
+
+  <p>Inkling isn't the best model on every benchmark. It doesn't have to be. It's the first model that proves you can have scale, openness, safety, and utility in one package. And that's a bigger deal than any single number on a leaderboard.</p>
+
+  <p class="post-meta">Go play with the numbers yourself: <a href="/tools/inkling-benchmark-explorer.html">Interactive Benchmark Explorer →</a></p>
+
+  <hr>
+
+  <h2>Interactive Tool</h2>
+
+  <p>I built a companion <a href="/tools/inkling-benchmark-explorer.html">Inkling Benchmark Explorer</a> — an interactive radar chart that lets you compare Inkling against Nemotron 3 Ultra, Kimi K2.5/K2.6, GLM 5.2, DeepSeek V4 Pro, Gemini 3.1 Pro, Claude Fable 5, and GPT-5.6 Sol across 15 benchmarks. Toggle models on and off, focus on safety or agentic categories, and explore the full benchmark table. No dependencies. One HTML file. The way I like it.</p>
+
+  <hr>
+
+  <p class="post-footer">
+    <a href="/tools/inkling-benchmark-explorer.html">🧪 Try the Inkling Benchmark Explorer →</a><br>
+    <a href="https://thinkingmachines.ai/news/introducing-inkling/">Thinking Machines Lab announcement</a> ·
+    <a href="https://huggingface.co/thinkingmachines">Hugging Face</a> ·
+    <a href="/projects.html">📂 Projects & Tools</a> ·
+    <a href="/">🏠 Home</a>
+  </p>
+</article>
+</body>
+</html>

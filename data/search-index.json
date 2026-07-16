@@ -766,5 +766,13 @@
     "tag": "Build/Blog",
     "excerpt": "A branchless quicksort ran 6x slower than std::sort — until someone made a 'cosmetic' change. The compiler giveth and the compiler taketh away.",
     "url": "/posts/your-code-is-fast-if-youre-lucky.html"
+  },
+  {
+    "slug": "inkling-benchmark-explorer",
+    "title": "Inkling: The First Seriously Large Open-Weights MoE",
+    "date": "16 Jul 2026",
+    "tag": "AI",
+    "excerpt": "Thinking Machines Lab dropped a 975B MoE with 1M context, controllable thinking effort, and the strongest open-weights safety benchmarks. Interactive benchmark explorer included.",
+    "url": "/posts/inkling-benchmark-explorer.html"
   }
 ]

@@ -973,9 +973,9 @@
   },
   {
     "slug": "your-code-is-fast-if-youre-lucky",
-    "title": "Your Code is Fast \u2014 If You're Lucky",
+    "title": "Your Code is Fast — If You're Lucky",
     "date": "15 Jul 2026",
-    "description": "A branchless quicksort ran 6x slower than std::sort \u2014 until someone made a 'cosmetic' change. The compiler giveth and the compiler taketh away.",
+    "description": "A branchless quicksort ran 6x slower than std::sort — until someone made a 'cosmetic' change. The compiler giveth and the compiler taketh away.",
     "tags": [
       "Build/Blog"
     ],
@@ -990,6 +990,31 @@
       },
       {
         "topic": "C/C++",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "slug": "inkling-benchmark-explorer",
+    "title": "Inkling: The First Seriously Large Open-Weights MoE",
+    "date": "16 Jul 2026",
+    "description": "Thinking Machines Lab dropped a 975B MoE with 1M context, controllable thinking effort, and the strongest open-weights safety benchmarks. Interactive benchmark explorer included.",
+    "tags": [
+      "AI",
+      "tools",
+      "open-weights"
+    ],
+    "topics": [
+      {
+        "topic": "AI Models",
+        "count": 1
+      },
+      {
+        "topic": "Open Weights",
+        "count": 1
+      },
+      {
+        "topic": "Tools",
         "count": 1
       }
     ]
