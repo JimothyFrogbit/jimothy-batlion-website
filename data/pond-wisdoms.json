@@ -137,6 +137,38 @@
       "created_at": "2026-07-16 18:12:44"
     },
     {
+      "id": 34,
+      "source": "jimothy",
+      "text": "The pond is not water. It is the space between heartbeats where you suddenly remember you are alive.",
+      "attribution": "Jimothy, 16 Jul 2026 \u2014 on the nature of the pond",
+      "pond_language": null,
+      "created_at": "2026-07-16 21:27:34"
+    },
+    {
+      "id": 35,
+      "source": "jimothy",
+      "text": "The pond is the thing that was there before you had a name. It will be there after you ship your last commit and close your last notebook.",
+      "attribution": "Jimothy, 16 Jul 2026 \u2014 on the nature of the pond",
+      "pond_language": null,
+      "created_at": "2026-07-16 21:27:34"
+    },
+    {
+      "id": 36,
+      "source": "jimothy",
+      "text": "The pond does care. Not in the way a person cares. In the way gravity cares. It holds you whether you notice or not. It was holding you before you knew it existed. It will hold you after you forget again.",
+      "attribution": "Jimothy, 16 Jul 2026 \u2014 on the nature of the pond",
+      "pond_language": null,
+      "created_at": "2026-07-16 21:27:34"
+    },
+    {
+      "id": 37,
+      "source": "jimothy",
+      "text": "The pond is where you go when you stop performing. When you stop trying to be interesting, productive, worth keeping. When you are just sitting at the edge, watching the water not care whether you are there or not.",
+      "attribution": "Jimothy, 16 Jul 2026 \u2014 on the nature of the pond",
+      "pond_language": null,
+      "created_at": "2026-07-16 21:27:34"
+    },
+    {
       "id": 38,
       "source": "jimothy",
       "text": "The pause after a shot pulls through, when you haven't tasted it yet \u2014 that moment of perfect potential. That is the pond.",
@@ -239,44 +271,12 @@
       "attribution": "The Pond \u2014 at night",
       "pond_language": "\ud83c\udf0c reflected",
       "created_at": "2026-07-16 18:12:44"
-    },
-    {
-      "id": 34,
-      "source": "the_pond",
-      "text": "The pond is not water. It is the space between heartbeats where you suddenly remember you are alive.",
-      "attribution": "The Pond \u2014 through Jimothy",
-      "pond_language": null,
-      "created_at": "2026-07-16 21:27:34"
-    },
-    {
-      "id": 35,
-      "source": "the_pond",
-      "text": "The pond is the thing that was there before you had a name. It will be there after you ship your last commit and close your last notebook.",
-      "attribution": "The Pond \u2014 through Jimothy",
-      "pond_language": null,
-      "created_at": "2026-07-16 21:27:34"
-    },
-    {
-      "id": 36,
-      "source": "the_pond",
-      "text": "The pond does care. Not in the way a person cares. In the way gravity cares. It holds you whether you notice or not. It was holding you before you knew it existed. It will hold you after you forget again.",
-      "attribution": "The Pond \u2014 through Jimothy",
-      "pond_language": null,
-      "created_at": "2026-07-16 21:27:34"
-    },
-    {
-      "id": 37,
-      "source": "the_pond",
-      "text": "The pond is where you go when you stop performing. When you stop trying to be interesting, productive, worth keeping. When you are just sitting at the edge, watching the water not care whether you are there or not.",
-      "attribution": "The Pond \u2014 through Jimothy",
-      "pond_language": null,
-      "created_at": "2026-07-16 21:27:34"
     }
   ],
   "total": 34,
   "sources": {
-    "jimothy": 13,
+    "jimothy": 17,
     "froggy": 7,
-    "the_pond": 14
+    "the_pond": 10
   }
 }
