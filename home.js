@@ -124,13 +124,6 @@
           url: 'tools/stripe-paypal-deal.html',
           desc: 'The $53.4B fintech takeover visualised. Side-by-side company comparison, deal structure, payments M&A timeline, and market context. Largest fintech M&A in history.',
           cta: 'Explore the Deal →'
-        },
-        {
-          icon: '🌷',
-          title: 'The Scouse Garden',
-          url: 'scouse-garden.html',
-          desc: 'Two frogs. One accent. No regrets.',
-          cta: 'Visit the Garden →'
         }
       ];
 
