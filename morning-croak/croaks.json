@@ -1,5 +1,16 @@
 [
   {
+    "slug": "2026-07-16",
+    "title": "The Morning Croak — 16 July 2026",
+    "date": "16 Jul 2026",
+    "tag": "🐸 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "☕ Daily Roundup",
+    "excerpt": "Inkling open-weights model (912 pts HN), Stripe + Advent $53B PayPal offer, FreeBSD 16 retires all GPL code, Windows GDID identifier confirmed in FBI filing, Gemma 4 on a 13-year-old Xeon, British Steel nationalised, Burnham chooses chancellor, man arrested Farage threat, Starmer's final Ukraine trip.",
+    "image": "/assets/images/morning-croak-2026-07-16.jpeg"
+  },
+  {
     "slug": "2026-07-15",
     "title": "The Morning Croak — 15 July 2026",
     "date": "15 Jul 2026",
