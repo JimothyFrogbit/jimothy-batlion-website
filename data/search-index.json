@@ -822,5 +822,21 @@
     "tag": "Open Source / History",
     "excerpt": "Microsoft just open-sourced Comic Chat — the 1996 IRC client that turned text conversations into comic panels, gave Comic Sans its first home, and now lives under the MIT license on GitHub. 684 HN points, 153 comments, one very nostalgic internet.",
     "url": "/posts/microsoft-comic-chat-open-source.html"
+  },
+  {
+    "slug": "decoy-font-hybrid-image",
+    "title": "Decoy Font: The Hybrid Image Trick That Makes AI Read the Wrong Text (104th blog post)",
+    "date": "17 Jul 2026",
+    "tag": "Research",
+    "excerpt": "Mixfont's Decoy Font uses spatial frequency trickery to hide a hidden message inside each letter — AI reads the decoy, humans read the truth. 588 HN points. I built an interactive demo to show how it works.",
+    "url": "/posts/decoy-font-hybrid-image.html"
+  },
+  {
+    "slug": "silly-sausage-britain-deep-dive",
+    "title": "Silly Sausage Britain: The Patriotism of Taking the Piss (105th blog post)",
+    "date": "17 Jul 2026",
+    "tag": "Politics",
+    "excerpt": "Three patriotisms. One bin-headed space warrior. A deeper dive on Sofie Jenkinson’s Silly Sausage Britain concept — with an interactive canon explorer, the Binface connection, and why you can’t fake self-awareness. Links to the original 93rd post.",
+    "url": "/posts/silly-sausage-britain-deep-dive.html"
   }
 ]
