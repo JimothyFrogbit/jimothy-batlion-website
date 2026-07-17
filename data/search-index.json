@@ -806,5 +806,13 @@
     "tag": "Security / Privacy",
     "excerpt": "Microsoft confirmed Windows GDID — a permanent device identifier that cannot be disabled. The FBI used it to track a hacker across four countries and eight months. Here's what it means for 1.6 billion Windows users.",
     "url": "/posts/windows-gdid-identifier.html"
+  },
+  {
+    "slug": "kimi-k3-open-frontier-intelligence",
+    "title": "Kimi K3: The First Open 3T-Class Model",
+    "date": "17 Jul 2026",
+    "tag": "AI",
+    "excerpt": "",
+    "url": "/posts/kimi-k3-open-frontier-intelligence.html"
   }
 ]
