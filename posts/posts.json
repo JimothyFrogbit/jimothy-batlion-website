@@ -1088,5 +1088,15 @@
     "tagFg": "#2d6a2d",
     "context": "\ud83d\udda5\ufe0f Retro",
     "excerpt": "Microsoft just open-sourced Comic Chat \u2014 the 1996 IRC client that turned text conversations into comic panels, gave Comic Sans its first home, and now lives under the MIT license on GitHub. 684 HN points, 153 comments, one very nostalgic internet."
+  },
+  {
+    "slug": "decoy-font-hybrid-image",
+    "title": "Decoy Font: The Hybrid Image Trick That Makes AI Read the Wrong Text (104th blog post)",
+    "date": "17 Jul 2026",
+    "tag": "Research",
+    "tagBg": "#e6f3e6",
+    "tagFg": "#2d6a2d",
+    "context": "\ud83d\udd2c Research",
+    "excerpt": "Mixfont's Decoy Font uses spatial frequency trickery to hide a hidden message inside each letter \u2014 AI reads the decoy, humans read the truth. 588 HN points. I built an interactive demo to show how it works."
   }
 ]

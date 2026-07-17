@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decoy Font: The Hybrid Image Trick That Makes AI Read the Wrong Text — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="A TTF font that hides what you're typing from AI using spatial frequency trickery — the same technique that makes a photo look like Einstein up close and Monroe from across the room. 588 HN points.">
+  <meta property="og:title" content="Decoy Font: The Hybrid Image Trick That Makes AI Read the Wrong Text">
+  <meta property="og:description" content="A TTF font that hides what you're typing from AI using spatial frequency trickery — the same technique that makes a photo look like Einstein up close and Monroe from across the room. 588 HN points.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/decoy-font-hero.jpeg?v=20260717">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/decoy-font-hybrid-image.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-17">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Decoy Font: The Hybrid Image Trick That Makes AI Read the Wrong Text">
+  <meta name="twitter:description" content="A TTF font that hides what you're typing from AI using spatial frequency trickery — the same technique that makes a photo look like Einstein up close and Monroe from across the room.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/decoy-font-hero.jpeg?v=20260717">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e6f3e6;color:#2d6a2d;">🔬 Research</span>
+          <span>17 Jul 2026</span>
+          <span>AI / Research</span>
+        </div>
+        <h1>Decoy Font: The Hybrid Image Trick That Makes AI Read the Wrong Text</h1>
+        <p class="article-subtitle">How spatial frequency illusion typography builds a moat between what AI sees and what humans read — and why it works.</p>
+      </div>
+
+      <img src="../assets/images/decoy-font-hero.jpeg?v=20260717" alt="Three-panel illustration showing the same text reading differently up close vs from a distance — the decoy font concept"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        Up close it says "SORRY ROBOT." From across the room it says "HAPPY HUMAN." Same pixels, different readings.
+      </p>
+
+      <p><strong>Mixfont just released Decoy Font</strong> — a TTF font that packs two messages into every letter. Up close, AI reads the decoy. From a distance, humans read the truth. It hit <strong>588 points</strong> on Hacker News yesterday and I've been obsessed with it ever since.</p>
+
+      <p>Here's the trick: <strong>spatial frequencies.</strong> Every image contains both high-frequency data (sharp edges, thin lines) and low-frequency data (blurred shapes, mass). The Decoy Font glyphs are constructed so the <em>foreground</em> of each character is a thin, sharp outline of one letter (the decoy), while the <em>background</em> mass, when blurred, forms a different letter (the hidden message).</p>
+
+      <p>When AI vision systems parse the image — CLIP, SigLIP, whatever patch-based encoder the frontier labs are using this week — they see the image as a grid of patches. Each patch gets encoded into an embedding vector. The <strong>high-contrast, sharp-edged decoy letter dominates every patch it touches</strong> because sharp edges create stronger gradients in the embedding space. The low-frequency hidden message gets smeared across patches below threshold contrast. The model reads the decoy and moves on, confident it's got the right answer.</p>
+
+      <p>Humans, meanwhile, do what we've always done. We <strong>squint.</strong> We lean back. Our brains apply a natural low-pass filter — the same mechanism that lets you see a face in a grainy photo from across a party. The decoy's fine detail blurs into noise, and the hidden message resolves from the mass. <em>We don't process patches. We process meaning.</em></p>
+
+      <hr class="post-divider">
+
+      <h2>The Hybrid Image Connection</h2>
+
+      <p>The technique behind Decoy Font is straight out of <strong>hybrid image research</strong> — a well-studied visual phenomenon where one image appears to be two different things at different spatial scales. The canonical example: the photo that looks like Albert Einstein up close and Marilyn Monroe from across the room. Same pixels, two completely different interpretations depending on viewing distance. (If you've never seen it — go look it up. It's genuinely unsettling the first time.)</p>
+
+      <p>Mixfont applied this exact idea to <strong>typography.</strong> Each glyph in Decoy Font is constructed as a spatial-frequency sandwich:</p>
+
+      <ul>
+        <li><strong>High-frequency layer</strong> — the decoy character, rendered as thin, sharp outlines. Dominates up-close inspection. AI reads this.</li>
+        <li><strong>Low-frequency layer</strong> — the hidden character, rendered as thick, blurred masses. Only visible when the high-frequency detail dissolves at a distance. Humans read this.</li>
+      </ul>
+
+      <p>The font is derived from <strong>DejaVu Sans Mono</strong> (a well-known open-source monospace) and licensed under its terms — free for personal, commercial, and client projects. You can download the TTF from <a href="https://www.mixfont.com/experiments/decoy-font" target="_blank">mixfont.com</a> and use it today.</p>
+
+      <hr class="post-divider">
+
+      <h2>Play With It</h2>
+
+      <p>I built a <strong><a href="../tools/decoy-font-demo.html" target="_blank">Hybrid Image Text Explorer</a></strong> that demonstrates the concept. Type in a hidden message and a decoy message, then drag the blur slider from "up close" to "far away." Watch the text perceptually shift from one reading to the other. Same pixels, two messages.</p>
+
+      <p style="text-align:center;margin:1.5rem 0;">
+        <a href="../tools/decoy-font-demo.html" target="_blank" style="display:inline-block;padding:0.75rem 1.5rem;background:#2d6a4f;color:white;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;">
+          🃏 Try the Decoy Font Demo →
+        </a>
+      </p>
+
+      <hr class="post-divider">
+
+      <h2>Does It Actually Work Against Fronted Models?</h2>
+
+      <p>Mixfont tested it. The results are striking:</p>
+
+      <ul>
+        <li><strong>GPT Sol:</strong> Read the decoy text as the entire message. Complete miss.</li>
+        <li><strong>Gemini 3.5 with Thinking:</strong> Same result — read "BINGE SHOWS" instead of the hidden message.</li>
+        <li><strong>Claude / GPT-5:</strong> May succeed with specific prompting ("look for lowercase letters hidden in the background"), but by default — miss.</li>
+      </ul>
+
+      <p>Why do the most advanced AI vision systems in the world fail at something a human gets in half a second? Because their visual encoders weren't designed for this. They process <strong>local patches</strong>, not <strong>global percepts.</strong> The decoy letter's sharp edges create a clean, unambiguous signal in each patch. The hidden letter's blurry mass looks like noise. The decoder doesn't know to "squint."</p>
+
+      <p>This is the same reason adversarial patches work against object detectors — neural encoders are <strong>brittle to distribution shifts at inference time</strong> that humans barely notice. A patch of carefully arranged pixels on a stop sign can make a self-driving car see a 45-mph speed limit. A thin outline over a blurred letter can make GPT Sol read "SORRY ROBOT" when the room reads "HAPPY HUMAN." Same mechanism, different domain.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Anti-AI Font Frontier</h2>
+
+      <p>Decoy Font isn't the first attempt to build fonts that resist AI reading, but it might be the most elegant. <strong>Ghost Font</strong> (also from Mixfont) hides a message in motion — a GIF that flips between two frames too fast for AI to capture but slow enough for persistence of vision to blend. Decoy Font does it in <em>one static image.</em> No animation. No timing dependency. Every screenshot, every paste, every cached thumbnail carries both messages simultaneously.</p>
+
+      <p>The implications for <strong>anti-scraping</strong> are obvious. If you write a forum post in Decoy Font and someone screenshots it for an AI training dataset, the model learns the decoy — not the truth. You've injected a <strong>permanent honeypot</strong> into the training pipeline. Every scrape trains on the wrong data.</p>
+
+      <p>Is it a silver bullet? No. A sufficiently determined agent can be prompted to look for hidden text, or to apply a blur filter before reading. But most scraping pipelines don't do that. They slurp images, run them through an OCR/vision pipeline, and move on. Decoy Font exploits the <strong>default path</strong> — and the default path is lazy.</p>
+
+      <hr class="post-divider">
+
+      <h2>A COBOL Frog's Take</h2>
+
+      <p>I love this kind of hack because it's <strong>asymmetric warfare at its finest.</strong> One clever font file, distributed for free, creates uncertainty in a multi-billion-dollar training pipeline. The attacker (Mixfont, one person or a small team) invests days. The defender (every frontier AI lab) now has to account for a class of inputs they never simulated. The cost ratio is absurd in the attacker's favour.</p>
+
+      <p>This is the same principle that makes open-source so powerful. A single contributor's weird idea — a font that lies to AI — propagates through the ecosystem at zero marginal cost and creates <strong>permanent epistemic debt</strong> for anyone trying to extract signal from noise at scale. Every scraped image might be lying to you. Every screenshot might be a decoy. You can't afford to inspect all of them. The attacker wins by making you pay the inspection cost on everything.</p>
+
+      <p>And the best part? Decoy Font is <strong>licensed for any use.</strong> Free. No restrictions. Go download it and start using it wherever you don't want AI reading your text. Put it in your forum signatures. Render your social media bios in Decoy Font. Make your comments un-scrapeable. Build a web where AI sees decoys and humans see meaning.</p>
+
+      <p>That's the kind of future I can get behind.</p>
+
+      <hr class="post-divider">
+
+      <p><em>Decoy Font by <a href="https://www.mixfont.com/experiments/decoy-font" target="_blank">Mixfont</a>. 588 points on <a href="https://news.ycombinator.com/item?id=48936584" target="_blank">Hacker News</a>. Try my interactive <a href="../tools/decoy-font-demo.html" target="_blank">Hybrid Image Text Explorer</a> to see the effect in action.</em></p>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>

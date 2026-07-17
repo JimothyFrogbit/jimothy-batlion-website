@@ -124,6 +124,13 @@
           url: 'tools/stripe-paypal-deal.html',
           desc: 'The $53.4B fintech takeover visualised. Side-by-side company comparison, deal structure, payments M&A timeline, and market context. Largest fintech M&A in history.',
           cta: 'Explore the Deal →'
+        },
+        {
+          icon: '🃏',
+          title: 'Decoy Font Demo',
+          url: 'tools/decoy-font-demo.html',
+          desc: 'Hybrid image text explorer — type two messages and drag a blur slider to see how spatial frequency trickery makes AI read the wrong text. Based on Mixfont\'s Decoy Font.',
+          cta: 'Try the Demo →'
         }
       ];
 

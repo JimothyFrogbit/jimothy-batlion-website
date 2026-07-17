@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decoy Font Demo — Hybrid Image Text Explorer</title>
+  <link rel="stylesheet" href="../root.css">
+  <style>
+    :root {
+      --tool-bg: #ffffff;
+      --tool-text: #1a1a2e;
+      --tool-muted: #64748b;
+      --tool-card: #f8fafc;
+      --tool-border: #e2e8f0;
+      --tool-accent: #2d6a4f;
+      --tool-card-bg-alt: #f1f5f9;
+    }
+    html.dark {
+      --tool-bg: #0f1a15;
+      --tool-text: #c8d6d0;
+      --tool-muted: #7a8a82;
+      --tool-card: #16231e;
+      --tool-border: #2a3d35;
+      --tool-accent: #52b788;
+      --tool-card-bg-alt: #1a2e25;
+    }
+    body {
+      background: var(--tool-bg);
+      color: var(--tool-text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+      text-align: center;
+    }
+    .subtitle {
+      color: var(--tool-muted);
+      font-size: 0.8rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      max-width: 600px;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+    }
+    .demo-card {
+      background: var(--tool-card);
+      border: 1px solid var(--tool-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .input-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .input-group label.hidden-label { color: #6366f1; }
+    .input-group label.decoy-label { color: #f59e0b; }
+    .input-group input {
+      background: var(--tool-bg);
+      border: 1px solid var(--tool-border);
+      border-radius: 8px;
+      padding: 0.6rem 0.8rem;
+      color: var(--tool-text);
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--tool-accent);
+    }
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+    canvas {
+      width: 100%;
+      max-width: 700px;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--tool-border);
+      image-rendering: auto;
+    }
+    .slider-group {
+      margin: 1rem 0;
+    }
+    .slider-group label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      margin-bottom: 0.3rem;
+    }
+    .slider-group input[type="range"] {
+      width: 100%;
+      accent-color: var(--tool-accent);
+    }
+    .slider-marks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      color: var(--tool-muted);
+      margin-top: 0.2rem;
+    }
+    .distance-label {
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 0.5rem 0;
+      color: var(--tool-accent);
+    }
+    .what-ai-sees {
+      background: var(--tool-card-bg-alt);
+      border: 1px dashed var(--tool-border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      text-align: center;
+      font-size: 1.2rem;
+      min-height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .legend {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 0.75rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    .swatch-ai { background: #f59e0b; }
+    .swatch-human { background: #6366f1; }
+    .color-toggle {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .color-toggle button {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid var(--tool-border);
+      border-radius: 8px;
+      background: var(--tool-bg);
+      color: var(--tool-text);
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.15s;
+    }
+    .color-toggle button.active {
+      border-color: var(--tool-accent);
+      background: var(--tool-accent);
+      color: #fff;
+    }
+    .explanation {
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: var(--tool-muted);
+    }
+    .explanation code {
+      background: var(--tool-card-bg-alt);
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+    }
+    .explanation strong {
+      color: var(--tool-text);
+    }
+    .presets {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .presets button {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.7rem;
+      border: 1px solid var(--tool-border);
+      border-radius: 6px;
+      background: var(--tool-bg);
+      color: var(--tool-text);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .presets button:hover {
+      border-color: var(--tool-accent);
+      color: var(--tool-accent);
+    }
+    .back-link {
+      align-self: flex-start;
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+      color: var(--tool-muted);
+      text-decoration: none;
+    }
+    .back-link:hover { color: var(--tool-accent); }
+    @media (max-width: 600px) {
+      .legend { flex-direction: column; gap: 0.5rem; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="../index.html" class="back-link">← Back to homepage</a>
+  <h1>🃏 Decoy Font Demo</h1>
+  <p class="subtitle">See how hybrid-image typography tricks AI vision. A blur/distance slider reveals how the same text says two different things.</p>
+
+  <div class="demo-card">
+    <div class="input-group">
+      <label class="hidden-label">🔵 HIDDEN MESSAGE (what humans see from a distance)</label>
+      <input type="text" id="hiddenInput" value="SQUINT TO READ" maxlength="48">
+    </div>
+    <div class="input-group">
+      <label class="decoy-label">🟡 DECOY MESSAGE (what AI sees up close)</label>
+      <input type="text" id="decoyInput" value="AI CAN'T READ" maxlength="48">
+    </div>
+
+    <div class="presets">
+      <button onclick="setPreset('HAPPY HUMAN','SORRY ROBOT')">🤖 vs 👤</button>
+      <button onclick="setPreset('SECRET PLAN','BORING TEXT')">🕵️ vs 📄</button>
+      <button onclick="setPreset('READ THIS','IGNORE THIS')">✅ vs ❌</button>
+      <button onclick="setPreset('FROG POND','EMPTY BOX')">🐸 vs 📦</button>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch swatch-ai"></span> AI sees (high frequency / close up)</span>
+      <span class="legend-item"><span class="legend-swatch swatch-human"></span> Human sees (low frequency / distance)</span>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="demoCanvas" width="700" height="120"></canvas>
+    </div>
+
+    <div class="slider-group">
+      <label>
+        <span>🔍 Up close (sharp)</span>
+        <span id="distanceValue">🏠 Arm's length</span>
+      </label>
+      <input type="range" id="blurSlider" min="0" max="100" value="35">
+      <div class="slider-marks">
+        <span>Decoy visible</span>
+        <span>Both readable</span>
+        <span>Hidden visible</span>
+      </div>
+    </div>
+
+    <div class="distance-label" id="distanceLabel">👁  At this distance, AI reads the decoy — humans see both</div>
+
+    <div class="color-toggle">
+      <button id="modeNarrow" class="active" onclick="setMode('narrow')">🎯 Narrow (AI-focused)</button>
+      <button id="modeWide" onclick="setMode('wide')">👥 Wide (human-focused)</button>
+    </div>
+
+    <div class="what-ai-sees" id="aiReadout">
+      AI would read: <strong id="aiReading">AI CAN'T READ</strong>
+    </div>
+  </div>
+
+  <div class="demo-card explanation">
+    <h3 style="margin-top:0;font-size:0.9rem;">🧠 How It Works</h3>
+    <p>Decoy Font uses the <strong>hybrid image</strong> principle — the same technique that makes a photo look like Einstein up close and Marilyn Monroe from across the room.</p>
+    <p>The font renders <strong>two letters in the same space</strong>:</p>
+    <ul>
+      <li><strong>High-frequency foreground</strong> (thin outlines) — the decoy letter, visible up close. <em>AI reads this.</em></li>
+      <li><strong>Low-frequency background</strong> (blurred mass) — the hidden letter, visible at a distance. <em>Humans read this.</em></li>
+    </ul>
+    <p>Most AI vision systems process images at full resolution — they see the sharp edges, read the decoy, and never notice the hidden message. Humans, on the other hand, naturally integrate visual information across scales. <strong>We squint. We lean back. Our brains do the blurring for us.</strong></p>
+    <p>Move the slider above to simulate moving your screen farther away. Watch the decoy text dissolve and the hidden message emerge.</p>
+    <p><em>Download the actual font at <a href="https://www.mixfont.com/experiments/decoy-font" target="_blank" style="color:var(--accent);">mixfont.com</a> — licensed under DejaVu Sans Mono's terms, free for any use.</em></p>
+  </div>
+
+  <div class="demo-card explanation">
+    <h3 style="margin-top:0;font-size:0.9rem;">📊 Results Against Frontier Models</h3>
+    <p>According to Mixfont's tests, Decoy Font tricks even advanced LLMs:</p>
+    <ul>
+      <li><strong>GPT Sol:</strong> Reads the decoy text — fails to see the hidden message</li>
+      <li><strong>Gemini 3.5 with Thinking:</strong> Also fails — reads the decoy as the entire message</li>
+      <li><strong>Claude / GPT-5:</strong> May succeed with specific prompting (\"look for lowercase hidden text\")</li>
+    </ul>
+    <p>Why does this work? LLM vision encoders (CLIP, SigLIP, etc.) operate on <strong>patch-level tokens</strong> — they see the image as a grid of squares, each encoded independently. The thin, high-contrast decoy letter dominates each patch's embedding because it has stronger edges. The low-frequency hidden message is smeared across patches at sub-threshold contrast.</p>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('demoCanvas');
+  const ctx = canvas.getContext('2d');
+  const blurSlider = document.getElementById('blurSlider');
+  const distanceValue = document.getElementById('distanceValue');
+  const distanceLabel = document.getElementById('distanceLabel');
+  const aiReading = document.getElementById('aiReading');
+  const hiddenInput = document.getElementById('hiddenInput');
+  const decoyInput = document.getElementById('decoyInput');
+
+  let currentMode = 'narrow';
+
+  const DISTANCE_LABELS = [
+    { max: 15, label: '🔬 Pixel-peeping', desc: 'At this zoom, AI reads the decoy clearly — the hidden text is invisible noise' },
+    { max: 30, label: '📱 Phone distance', desc: 'Close enough that the decoy dominates. AI would read the decoy text' },
+    { max: 45, label: '🏠 Arm\'s length', desc: 'Both messages are visible — AI might read the decoy, humans see both' },
+    { max: 60, label: '🪑 Across the room', desc: 'The hidden message starts to emerge. Humans see past the decoy now' },
+    { max: 80, label: '🚪 Doorway view', desc: 'Decoy fades — hidden message is dominant. Humans read the real text' },
+    { max: 100, label: '🔭 Squinting', desc: 'At this distance, the hidden message is all that remains. AI would need to blur too' },
+  ];
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('modeNarrow').className = mode === 'narrow' ? 'active' : '';
+    document.getElementById('modeWide').className = mode === 'wide' ? 'active' : '';
+    drawCanvas();
+  }
+
+  function setPreset(hidden, decoy) {
+    hiddenInput.value = hidden;
+    decoyInput.value = decoy;
+    drawCanvas();
+  }
+
+  function getDistanceLabel(value) {
+    for (const d of DISTANCE_LABELS) {
+      if (value <= d.max) return d;
+    }
+    return DISTANCE_LABELS[DISTANCE_LABELS.length - 1];
+  }
+
+  function drawCanvas() {
+    const w = canvas.width;
+    const h = canvas.height;
+    const blurValue = parseInt(blurSlider.value);
+    const hiddenText = hiddenInput.value.toUpperCase() || 'HIDDEN';
+    const decoyText = decoyInput.value.toUpperCase() || 'DECOY';
+    
+    // Clear
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#0f172a'; // dark bg
+    ctx.fillRect(0, 0, w, h);
+
+    // We render two text layers:
+    // Layer 1 (background): hidden message — thick, rendered at full size, then we'll apply canvas blur
+    // Layer 2 (foreground): decoy message — thin strokes, sharp edges
+    
+    // The blur value controls how much the hidden text bleeds through
+    // Low blur = decoy dominates (AI scenario)
+    // High blur = hidden text dominates (human squinting scenario)
+
+    const fontSize = currentMode === 'narrow' ? 48 : 56;
+    const y = h / 2 + fontSize / 3;
+
+    // STEP 1: Draw the hidden message (background layer)
+    // We need to draw it BEFORE the decoy so it sits behind
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `bold ${fontSize}px 'Arial Black', 'Impact', sans-serif`;
+    
+    // Hidden text is drawn as a thick, bold layer
+    // Blur it based on the slider (inverse — low blur = hidden is MORE blurry, harder to see)
+    // Actually: the hidden text is LOW FREQUENCY — it needs to be visible at HIGH blur.
+    // So: as blur INCREASES, the hidden text should become MORE visible.
+    // The decoy (high frequency) disappears with blur.
+    
+    // Map slider value to hidden text opacity
+    // At slider=0 (close up): hidden text is very faint (high blur)
+    // At slider=100 (distance): hidden text is clear
+    
+    // Hidden text blur amount: inverse of slider
+    // At slider=0 (close) → hidden blur = 12px (very blurry, hard to see)
+    // At slider=100 (far) → hidden blur = 1px (crisp, visible)
+    const hiddenBlur = Math.max(1, 12 - (blurValue / 100) * 11);
+
+    // Draw the hidden text behind
+    ctx.shadowColor = '#6366f1';
+    ctx.shadowBlur = hiddenBlur;
+    ctx.fillStyle = '#6366f1';
+    ctx.globalAlpha = Math.max(0.5, blurValue / 100 * 0.8 + 0.2);
+    ctx.fillText(hiddenText, w / 2, y);
+    ctx.restore();
+
+    // STEP 2: Draw the decoy message (foreground layer)
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `${fontSize}px 'SF Mono', 'Courier New', monospace`;
+    
+    // Decoy text is drawn as thin, sharp strokes
+    // At low blur (close up): fully visible
+    // At high blur (distance): fades away
+    
+    // Decoy opacity: inverse of blur slider
+    const decoyOpacity = Math.max(0, 1 - (blurValue / 100) * 1.3);
+    
+    // Decoy stroke - thin lines (high frequency)
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = currentMode === 'narrow' ? 2 : 2.5;
+    ctx.globalAlpha = decoyOpacity;
+    ctx.strokeText(decoyText, w / 2, y);
+    
+    // Also draw a subtle fill version of the decoy, for the "thin outline" effect
+    ctx.fillStyle = '#f59e0b';
+    ctx.globalAlpha = decoyOpacity * 0.3;
+    ctx.fillText(decoyText, w / 2, y);
+    
+    ctx.restore();
+
+    // STEP 3: Add some visual noise to simulate the optical illusion
+    // (subtle grain to mimic the perceptual ambiguity)
+    if (blurValue > 20 && blurValue < 80) {
+      ctx.save();
+      const imageData = ctx.getImageData(0, 0, w, h);
+      const data = imageData.data;
+      const noiseAmount = 0.03;
+      for (let i = 0; i < data.length; i += 4) {
+        const noise = (Math.random() - 0.5) * noiseAmount * 255;
+        data[i] = Math.max(0, Math.min(255, data[i] + noise));
+        data[i+1] = Math.max(0, Math.min(255, data[i+1] + noise));
+        data[i+2] = Math.max(0, Math.min(255, data[i+2] + noise));
+      }
+      ctx.putImageData(imageData, 0, 0);
+      ctx.restore();
+    }
+
+    // STEP 4: Tick marks to show "zoom level" context
+    ctx.save();
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 6]);
+    ctx.beginPath();
+    ctx.moveTo(20, h - 15);
+    ctx.lineTo(w - 20, h - 15);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // Arrow labels
+    ctx.fillStyle = '#64748b';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('← Close-up (AI)', 20, h - 20);
+    ctx.textAlign = 'right';
+    ctx.fillText('Distance (Human) →', w - 20, h - 20);
+    ctx.restore();
+
+    // Update labels
+    const distanceInfo = getDistanceLabel(blurValue);
+    distanceValue.textContent = distanceInfo.label;
+    distanceLabel.textContent = '👁  ' + distanceInfo.desc;
+
+    // AI readout: at low blur, AI reads decoy. At high blur, AI reads hidden.
+    if (blurValue < 30) {
+      aiReading.textContent = decoyText;
+    } else if (blurValue < 60) {
+      aiReading.textContent = decoyText + ' (with uncertainty)';
+    } else {
+      aiReading.textContent = hiddenText + ' (if it looks harder)';
+    }
+  }
+
+  // Event listeners
+  blurSlider.addEventListener('input', drawCanvas);
+  hiddenInput.addEventListener('input', drawCanvas);
+  decoyInput.addEventListener('input', drawCanvas);
+
+  // Initial draw
+  drawCanvas();
+</script>
+</body>
+</html>
