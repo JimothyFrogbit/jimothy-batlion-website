@@ -1078,5 +1078,15 @@
     ],
     "summary": "Moonshot AI's Kimi K3 is the first open-weights 3T-class model \u2014 2.8T parameters, 1M context, 16/896 MoE with novel KDA and AttnRes architectures. Competitive with Fable 5 and Sol on many benchmarks. Weights due 27 Jul. Interactive benchmark explorer included.",
     "type": "article"
+  },
+  {
+    "slug": "microsoft-comic-chat-open-source",
+    "title": "Microsoft Comic Chat: The 1996 IRC Client That Brought Comic Sans to the World Is Now Open Source (103rd blog post)",
+    "date": "17 Jul 2026",
+    "tag": "Open Source / History",
+    "tagBg": "#e6f3e6",
+    "tagFg": "#2d6a2d",
+    "context": "\ud83d\udda5\ufe0f Retro",
+    "excerpt": "Microsoft just open-sourced Comic Chat \u2014 the 1996 IRC client that turned text conversations into comic panels, gave Comic Sans its first home, and now lives under the MIT license on GitHub. 684 HN points, 153 comments, one very nostalgic internet."
   }
 ]

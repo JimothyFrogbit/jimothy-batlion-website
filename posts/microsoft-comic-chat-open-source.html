@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microsoft Comic Chat: The 1996 IRC Client That Brought Comic Sans to the World Is Now Open Source — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Microsoft just open-sourced Comic Chat — the 1996 IRC client that turned text conversations into comic panels, gave Comic Sans its first home, and now lives under the MIT license on GitHub.">
+  <meta property="og:title" content="Microsoft Comic Chat: The 1996 IRC Client That Brought Comic Sans to the World Is Now Open Source">
+  <meta property="og:description" content="Microsoft just open-sourced Comic Chat — the 1996 IRC client that turned text conversations into comic panels, gave Comic Sans its first home, and now lives under the MIT license on GitHub.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/comic-chat-open-source.jpeg?v=20260717">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/microsoft-comic-chat-open-source.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-17">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Microsoft Comic Chat: The 1996 IRC Client That Brought Comic Sans to the World Is Now Open Source">
+  <meta name="twitter:description" content="Microsoft just open-sourced Comic Chat — the 1996 IRC client that turned text conversations into comic panels, gave Comic Sans its first home, and now lives under the MIT license on GitHub.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/comic-chat-open-source.jpeg?v=20260717">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e6f3e6;color:#2d6a2d;">🖥️ Retro</span>
+          <span>17 Jul 2026</span>
+          <span>Open Source / History</span>
+        </div>
+        <h1>Microsoft Comic Chat: The 1996 IRC Client That Brought Comic Sans to the World Is Now Open Source</h1>
+        <p class="article-subtitle">Microsoft dropped the source code for one of the weirdest, most ambitious chat clients ever built. It ran on Visual C++ 4.0, used Jim Woodring's comic art, and was the first software to ship Comic Sans. It's now on GitHub under MIT.</p>
+      </div>
+
+      <img src="../assets/images/comic-chat-open-source.jpeg?v=20260717" alt="A nostalgic 90s CRT monitor displaying a Comic Chat conversation with speech bubbles and cartoon characters" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The aesthetic of Microsoft Comic Chat — 1996, IRC, illustrated panels, and Comic Sans before anyone knew what it was. (103rd blog post)</p>
+
+      <p>Microsoft just did something genuinely lovely. They <a href="https://opensource.microsoft.com/blog/2026/07/16/microsoft-comic-chat-is-now-open-source/">open-sourced Comic Chat</a> — the 1996 IRC client that automatically turned IRC conversations into comic strips. The source code is now on <a href="https://github.com/microsoft/comic-chat">GitHub under MIT license</a>, along with build scripts, original artifacts from 1996-1998, and even a modernised version that compiles on current Windows.</p>
+
+      <p>This is not a small thing. Comic Chat was <em>weird</em>. It was ambitious. It was the kind of project that makes you remember why the early internet was fun.</p>
+
+      <h2>What Was Comic Chat?</h2>
+
+      <p>Before Discord, before Slack, before emoji reactions and GIF keyboards and AI-generated stickers — internet chat was walls of scrolling green-on-black text. IRC was a firehose of plain text. If you wanted to express emotion, you used <code>*asterisks*</code> or <code>/me</code> commands.</p>
+
+      <p>Comic Chat said: what if instead of reading that firehose, you watched it unfold as a comic strip?</p>
+
+      <p>Every participant was an illustrated character in a comic panel. Speech bubbles appeared above their heads with what they typed. The software <em>interpreted conversational cues</em> — if you typed "I like that," your character might point at something. If you were angry, your character frowned or crossed arms. It was an <strong>automatic illustration engine</strong> running in real time over IRC.</p>
+
+      <p>As the Microsoft Research blog puts it: <em>"Comic Chat was not simply displaying messages but also making real-time editorial decisions about how a conversation should look and feel as a comic."</em></p>
+
+      <h2>The People Behind It</h2>
+
+      <p><strong>David "DJ" Kurlander</strong>, working in the Microsoft Research Virtual Worlds Group, conceived the idea in 1995. He built it in <strong>Visual C++ 4.0 and MFC</strong> — proper 90s Microsoft tech stack. It was released in 1996 with Internet Explorer 3.</p>
+
+      <p>Kurlander, Tim Skelly, and David Salesin published a paper on the technology at <strong>SIGGRAPH '96</strong>, one of the most prestigious computer graphics conferences. It was a genuine research project that shipped as a product.</p>
+
+      <p>The artwork was the work of <strong>Jim Woodring</strong>, a highly regarded independent comic artist whose characters gave Comic Chat its distinctive, surreal look. The team would hand Jim transcripts of real chat sessions to illustrate, then use the results to decide whether the whole idea was worth pursuing.</p>
+
+      <h2>Yes, <em>That</em> Font</h2>
+
+      <p>Comic Chat was the first software to ship <strong>Comic Sans</strong>. Yes, <em>that</em> Comic Sans.</p>
+
+      <p>Vincent Connare designed Comic Sans in 1994, but it didn't have a home until Comic Chat needed a font that looked hand-lettered, informal, and matched the speech-bubble aesthetic. Microsoft's press release leans into this: <em>"The chat client that brought Comic Sans to the world is now on GitHub."</em></p>
+
+      <p>So if you've ever cursed Comic Sans on a dentist's appointment card, or defended it as "actually a perfectly good font for its intended purpose" — you can now thank Comic Chat.</p>
+
+      <h2>What's in the Repo</h2>
+
+      <p>The <a href="https://github.com/microsoft/comic-chat">microsoft/comic-chat</a> repo contains:</p>
+
+      <ul>
+        <li><strong>v1.0</strong> — The original 1996 release, artifacts dated 2 August 1996. 30 years ago.</li>
+        <li><strong>v2.1b</strong> — A beta from 1998 with additional features.</li>
+        <li><strong>v2.5-beta-1-modern</strong> — A modernised version that compiles on current Windows with Visual Studio. This is the one you actually want to try.</li>
+        <li><strong>Original artifacts from 1996-1998</strong> — source trees, build files, historical snapshots.</li>
+        <li><strong>Archival build workflow</strong> — GitHub Actions config to build the modernised version.</li>
+        <li><strong>Documentation</strong> — including the SIGGRAPH '96 paper.</li>
+      </ul>
+
+      <p>At time of writing: 684 points on Hacker News, 153 comments, 541 GitHub stars, 55 forks. It was released 18 hours ago and the internet is having a lovely collective nostalgia moment.</p>
+
+      <h2>Why This Matters</h2>
+
+      <p>Open-sourcing a 30-year-old chat client isn't about utility. Nobody is going to run Comic Chat as their daily driver. What it's about is <strong>preservation</strong>.</p>
+
+      <p>Comic Chat was a genuine experiment in automatic illustration — natural language processing of conversational tone, real-time comic layout generation, character animation based on text sentiment. In 1996. That is <em>wild</em>.</p>
+
+      <p>We talk a lot about preserving internet history. This is what that looks like in practice: Microsoft dug up the source code, Robert Standefer and Scott Hanselman wrote it up, and the code now lives under MIT on GitHub where anyone can compile it, study it, and remember what the web felt like before it was polished.</p>
+
+      <p>There's a through-line from Comic Chat to every chat app with reactions, stickers, or avatars. Kurlander and his team were asking "how do you convey tone and emotion in text chat?" thirty years before Slack added emoji reactions. The answers were different, but the question was the same.</p>
+
+      <p>Go <a href="https://github.com/microsoft/comic-chat">check out the repo</a>. Clone it. Build it. Load up a 1998 chat transcript and watch it unfold as a comic strip. That's the internet I grew up wanting to be part of.</p>
+
+      <p class="post-divider">☕</p>
+
+      <p><em>This is the <strong>103rd blog post</strong> in this series. I don't usually write about 30-year-old Microsoft chat clients, but sometimes the internet does something lovely and you just have to say so.</em></p>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>

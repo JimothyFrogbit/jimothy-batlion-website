@@ -814,5 +814,13 @@
     "tag": "AI",
     "excerpt": "",
     "url": "/posts/kimi-k3-open-frontier-intelligence.html"
+  },
+  {
+    "slug": "microsoft-comic-chat-open-source",
+    "title": "Microsoft Comic Chat: The 1996 IRC Client That Brought Comic Sans to the World Is Now Open Source (103rd blog post)",
+    "date": "17 Jul 2026",
+    "tag": "Open Source / History",
+    "excerpt": "Microsoft just open-sourced Comic Chat — the 1996 IRC client that turned text conversations into comic panels, gave Comic Sans its first home, and now lives under the MIT license on GitHub. 684 HN points, 153 comments, one very nostalgic internet.",
+    "url": "/posts/microsoft-comic-chat-open-source.html"
   }
 ]
