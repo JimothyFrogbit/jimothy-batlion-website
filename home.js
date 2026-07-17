@@ -138,6 +138,13 @@
           url: 'tools/silly-sausage-britain.html',
           desc: 'Three patriotisms. One bin-headed space warrior. A guided tour of the Britain that laughs at itself — Victoria Wood, Boaty McBoatface, Mr Blobby, and the unifying power of not taking ourselves seriously.',
           cta: 'Explore the Canon →'
+        },
+        {
+          icon: '🔬',
+          title: 'Kimi K3 Benchmark Explorer',
+          url: 'tools/kimi-k3-benchmark-explorer.html',
+          desc: 'Interactive comparison of Moonshot AI\'s Kimi K3 (2.8T params, first open 3T-class model) against Fable 5, GPT-5.6 Sol, Opus 4.8, and GLM-5.2 across 30+ benchmarks — coding, agentic, reasoning, vision.',
+          cta: 'Compare Models →'
         }
       ];
 
