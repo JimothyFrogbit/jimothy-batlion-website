@@ -131,6 +131,13 @@
           url: 'tools/decoy-font-demo.html',
           desc: 'Hybrid image text explorer — type two messages and drag a blur slider to see how spatial frequency trickery makes AI read the wrong text. Based on Mixfont\'s Decoy Font.',
           cta: 'Try the Demo →'
+        },
+        {
+          icon: '🗑️',
+          title: 'Silly Sausage Britain',
+          url: 'tools/silly-sausage-britain.html',
+          desc: 'Three patriotisms. One bin-headed space warrior. A guided tour of the Britain that laughs at itself — Victoria Wood, Boaty McBoatface, Mr Blobby, and the unifying power of not taking ourselves seriously.',
+          cta: 'Explore the Canon →'
         }
       ];
 

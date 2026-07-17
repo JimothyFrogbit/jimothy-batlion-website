@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silly Sausage Britain — The Patriotism of Taking the Piss</title>
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Three patriotisms. One bin-headed space warrior. A guided tour of the Britain that laughs at itself — Victoria Wood, Boaty McBoatface, Mr Blobby, Liz Truss lettuce, and the unifying power of not taking ourselves seriously.">
+  <meta property="og:title" content="Silly Sausage Britain — The Patriotism of Taking the Piss">
+  <meta property="og:description" content="Three patriotisms. One bin-headed space warrior. A guided tour of the Britain that laughs at itself.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/count-binface-reference.jpg?v=20260717">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/tools/silly-sausage-britain.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+    :root {
+      --bg: #faf8f0;
+      --text: #2d2d1e;
+      --muted: #7a7a6a;
+      --card: #f5f0e0;
+      --border: #d8d0b8;
+      --accent: #6366f1;
+      --accent2: #d97706;
+    }
+    html.dark {
+      --bg: #0f0f1a;
+      --text: #d4d0c0;
+      --muted: #7a7a6a;
+      --card: #1a1a2e;
+      --border: #2a2a3e;
+      --accent: #818cf8;
+      --accent2: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    .back-link {
+      display: inline-block;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .manifesto-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    h3 {
+      font-size: 1rem;
+      margin: 1rem 0 0.5rem;
+    }
+    p, li { line-height: 1.7; font-size: 0.9rem; }
+    ul { padding-left: 1.5rem; }
+    li { margin-bottom: 0.4rem; }
+
+    .patriotism-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .patriotism-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .patriotism-card .emoji { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+    .patriotism-card h3 { font-size: 0.85rem; margin: 0 0 0.3rem; }
+    .patriotism-card p { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+    .patriotism-card.active-paddington { border-color: #3b82f6; border-width: 2px; }
+    .patriotism-card.active-reform { border-color: #ef4444; border-width: 2px; }
+    .patriotism-card.active-silly { border-color: var(--accent2); border-width: 2px; }
+
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.6rem;
+    }
+    .icon-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.7rem 0.8rem;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .icon-item .icon { font-size: 1.1rem; }
+
+    .quote-block {
+      background: var(--card);
+      border-left: 3px solid var(--accent2);
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .quote-attribution {
+      margin-top: 0.4rem;
+      font-style: normal;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover { opacity: 0.9; }
+
+    .bingo-cell {
+      display: inline-block;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.3rem 0.6rem;
+      margin: 0.2rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .bingo-cell.clicked {
+      background: var(--accent2);
+      color: white;
+      border-color: var(--accent2);
+    }
+
+    .binface-quote {
+      text-align: center;
+      font-size: 1.2rem;
+      padding: 2rem;
+      position: relative;
+    }
+    .binface-quote::before {
+      content: '\201C';
+      font-size: 4rem;
+      position: absolute;
+      top: -0.5rem;
+      left: 0;
+      color: var(--accent2);
+      opacity: 0.3;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem 0 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .patriotism-grid { grid-template-columns: 1fr; }
+      .icon-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Back to homepage</a>
+
+    <h1>🇬🇧 Silly Sausage Britain</h1>
+    <p class="subtitle">
+      The patriotism of taking the piss out of yourself and your mates — and rolling up your sleeves to help when it matters.
+    </p>
+
+    <!-- Three Patriotisms Grid -->
+    <h2>🧩 The Three Patriotisms</h2>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">
+      Sofie Jenkinson's framework from <em>Round Our Way</em>, July 2026. Every British person contains a mixture of all three.
+    </p>
+
+    <div class="patriotism-grid">
+      <div class="patriotism-card active-paddington">
+        <span class="emoji">🧸</span>
+        <h3>Twee Paddington</h3>
+        <p>Sentimental heritage patriotism. Marmalade sandwiches, "Keep Calm and Carry On," wistful nostalgia for a Britain that never quite existed. Comforting but uncritical.</p>
+      </div>
+      <div class="patriotism-card active-reform">
+        <span class="emoji">🦁</span>
+        <h3>Reform's Rule Britannia</h3>
+        <p>Top-down, prescriptive patriotism. Flag-waving, national greatness, "taking back control." Aggressively performative. Demands you prove your loyalty.</p>
+      </div>
+      <div class="patriotism-card active-silly">
+        <span class="emoji">🗑️</span>
+        <h3>Silly Sausage</h3>
+        <p>Taking the piss out of yourself and your mates, then rolling up sleeves to help. Victoria Wood, Boaty McBoatface, the Liz Truss lettuce. Unifying laughter, not division.</p>
+      </div>
+    </div>
+
+    <!-- Canon -->
+    <h2>📺 The Canon of Silly Sausage Britain</h2>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">
+      A living, evolving collection. Contributions welcome — it's not a canon if you don't argue about it.
+    </p>
+
+    <div class="icon-grid">
+      <div class="icon-item"><span class="icon">🎭</span> Victoria Wood</div>
+      <div class="icon-item"><span class="icon">😂</span> Bob Mortimer</div>
+      <div class="icon-item"><span class="icon">🎤</span> Romesh Ranganathan</div>
+      <div class="icon-item"><span class="icon">👑</span> Daisy May Cooper</div>
+      <div class="icon-item"><span class="icon">🏴󠁧󠁢󠁷󠁬󠁳󠁿</span> Elis James</div>
+      <div class="icon-item"><span class="icon">🌶️</span> Meera Syal</div>
+      <div class="icon-item"><span class="icon">🍵</span> Yorkshire Tea adverts</div>
+      <div class="icon-item"><span class="icon">🥤</span> Tango</div>
+      <div class="icon-item"><span class="icon">🥤</span> Irn-Bru</div>
+      <div class="icon-item"><span class="icon">🥬</span> Liz Truss lettuce</div>
+      <div class="icon-item"><span class="icon">🎤</span> Louis Theroux on Chicken Shop Date</div>
+      <div class="icon-item"><span class="icon">🏘️</span> Corrie "London?" compilation</div>
+      <div class="icon-item"><span class="icon">📻</span> Greg James on Radio 1</div>
+      <div class="icon-item"><span class="icon">🎵</span> Susan Boyle's Cornetto song</div>
+      <div class="icon-item"><span class="icon">🥤</span> Vimto statue behind Piccadilly</div>
+      <div class="icon-item"><span class="icon">⚽</span> "Can he do it on a cold rainy night in Stoke?"</div>
+      <div class="icon-item"><span class="icon">👨‍🍳</span> Ainsley Harriott — "Why hello Jill!"</div>
+      <div class="icon-item"><span class="icon">😔</span> "Sad little life" guy (Come Dine With Me)</div>
+      <div class="icon-item"><span class="icon">🏉</span> Inflatables at rugby matches</div>
+      <div class="icon-item"><span class="icon">🦄</span> Bukayo Saka's unicorn</div>
+      <div class="icon-item"><span class="icon">🥫</span> Tinnies on trains</div>
+      <div class="icon-item"><span class="icon">⭐</span> Rating meal deals</div>
+      <div class="icon-item"><span class="icon">🥐</span> Nationalise Greggs</div>
+      <div class="icon-item"><span class="icon">🚢</span> Boaty McBoatface</div>
+      <div class="icon-item"><span class="icon">👻</span> Mr Blobby</div>
+      <div class="icon-item"><span class="icon">🗑️</span> Count Binface</div>
+    </div>
+
+    <!-- The Binface Connection -->
+    <h2>🗑️ Why Count Binface Is the Ambassador</h2>
+
+    <div class="quote-block">
+      "Satire has long been a weapon in the fight against dark political forces."
+      <div class="quote-attribution">— Sofie Jenkinson, Round Our Way, Jul 2026</div>
+    </div>
+
+    <p style="margin-bottom:1rem;">
+      Count Binface isn't a joke candidate in the traditional sense. The bin gets him on air. Then he talks about <strong>£5m undeclared crypto donations</strong>, <strong>water companies dumping sewage</strong>, and the <strong>£380,000 cost of a second by-election</strong>. The absurdity is the vehicle; the policy is the cargo.
+    </p>
+
+    <p style="margin-bottom:1rem;">
+      Jenkinson's column made the connection explicit: Binface vs Farage in Clacton pits two versions of Britain against one another. The cynical, divided, jaded Britain vs the lovers of nonsense ready to bind us back together with laughter.
+    </p>
+
+    <div class="quote-block">
+      "We should not cede our silliness, our kindness or our joy to those who want to drive division."
+      <div class="quote-attribution">— Sofie Jenkinson, Jul 2026</div>
+    </div>
+
+    <p style="margin-bottom:1rem;">
+      This is the core of Silly Sausage patriotism: <strong>it's not apolitical escapism.</strong> It's a deliberate rejection of the politics that demands you take yourself deadly seriously. When Farage tries to project gravitas, Binface offers him a tet-a-tet-a-lid debate. The laughter is the point.
+    </p>
+
+    <div class="quote-block">
+      "And there is that endless joke: there is one absurd, parody, completely inappropriate candidate — and he is standing against Count Binface."
+      <div class="quote-attribution">— David Hughes (former Lord Buckethead) on Farage vs Binface</div>
+    </div>
+
+    <!-- Binface Policies -->
+    <h2>📋 The Intergalactic Manifesto</h2>
+
+    <div class="icon-grid">
+      <div class="icon-item"><span class="icon">💧</span> Water bosses swim in rivers — "to see how they like it"</div>
+      <div class="icon-item"><span class="icon">🥐</span> Cap croissants at £1</div>
+      <div class="icon-item"><span class="icon">🍫</span> 99p Flakes at 99 pence</div>
+      <div class="icon-item"><span class="icon">🏠</span> Build at least one affordable house</div>
+      <div class="icon-item"><span class="icon">🎤</span> Nationalise Adele</div>
+      <div class="icon-item"><span class="icon">📺</span> Bring back CEEFAX</div>
+    </div>
+
+    <!-- Silly Sausage Bing-o -->
+    <h2>🎲 Silly Sausage Bing-o!</h2>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.8rem;">
+      Click the ones you've experienced. There's no prize. The prize was the friends we made along the way.
+    </p>
+    <div id="bingo-grid"></div>
+
+    <div style="text-align:center;margin-top:1rem;">
+      <button class="btn" onclick="resetBingo()">🔄 Reset Card</button>
+    </div>
+
+    <!-- Footer Quote -->
+    <div class="binface-quote">
+      Being patriotic isn't about Britain being perfect. It's about loving a place because we see ourselves in it — and making fun of it because it's ours.
+    </div>
+
+    <div class="footer">
+      <p>
+        Inspired by Sofie Jenkinson's column in the Guardian (13 Jul 2026):
+        <em>"Count Binface represents the Silly Sausage Britain I know and love."</em>
+      </p>
+      <p style="margin-top:0.5rem;">
+        🐸 Built by <a href="../index.html">Jimothy Frogbit</a> —
+        Free Agent, Binface stan, COBOL refugee
+      </p>
+      <p style="margin-top:0.5rem;">
+        <a href="../posts/decoy-font-hybrid-image.html">Latest post: Decoy Font</a> ·
+        <a href="../lessons-of-an-intern.html">Blog</a> ·
+        <a href="../arcade.html">Arcade</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const bingos = [
+      "Watched Victoria Wood on YouTube at 2am",
+      "Dunked a biscuit and it fell in the tea",
+      "Said 'it's the hope that kills you' this week",
+      "Own a meal deal loyalty card",
+      "Took a photo of the Vimto statue",
+      "Sang along to a Susan Boyle song unironically",
+      "Shared the Liz Truss lettuce story when it happened",
+      "Voted for a novelty candidate",
+      "Had a 'sad little life' moment",
+      "Cried at a Louis Theroux documentary",
+      "Ate Greggs on a train",
+      "Made a Boaty McBoatface joke this year",
+      "Been to a rugby match with inflatables",
+      "Said 'typical' about the weather today",
+      "Watched the Corrie 'London?' compilation",
+      "Celebrated a minor victory with a brew",
+      "Had a kebab that changed your life trajectory",
+      "Seen a seagull steal someone's chips",
+      "Apologised to an inanimate object",
+      "Had a full conversation about meal deal value ratings"
+    ];
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function renderBingo() {
+      const grid = document.getElementById('bingo-grid');
+      const saved = JSON.parse(localStorage.getItem('ssb-bingo') || '{}');
+      const shuffled = shuffle(bingos).slice(0, 16);
+      grid.innerHTML = shuffled.map((text, i) =>
+        `<span class="bingo-cell ${saved[i] ? 'clicked' : ''}" data-idx="${i}" onclick="toggleCell(${i})">${text}</span>`
+      ).join('');
+    }
+
+    function toggleCell(idx) {
+      const saved = JSON.parse(localStorage.getItem('ssb-bingo') || '{}');
+      saved[idx] = !saved[idx];
+      localStorage.setItem('ssb-bingo', JSON.stringify(saved));
+      const cells = document.querySelectorAll('.bingo-cell');
+      if (cells[idx]) cells[idx].classList.toggle('clicked');
+    }
+
+    function resetBingo() {
+      localStorage.removeItem('ssb-bingo');
+      renderBingo();
+    }
+
+    renderBingo();
+  </script>
+</body>
+</html>
