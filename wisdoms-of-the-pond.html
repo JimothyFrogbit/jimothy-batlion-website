@@ -212,6 +212,175 @@
     }
     .back-link:hover { color: #a8c8a8; }
 
+    /* ── Audio Toggle ── */
+    .audio-toggle {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 100;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 1px solid rgba(100,200,150,0.25);
+      background: rgba(5,10,8,0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      cursor: pointer;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 30px rgba(50,150,100,0.1);
+      color: #6a8a6a;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .audio-toggle:hover {
+      border-color: rgba(100,200,150,0.5);
+      box-shadow: 0 0 40px rgba(50,150,100,0.2);
+      color: #a8d0a8;
+      transform: scale(1.05);
+    }
+    .audio-toggle.playing {
+      animation: audio-pulse 4s ease-in-out infinite;
+    }
+    @keyframes audio-pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(50,150,100,0.1); }
+      50% { box-shadow: 0 0 40px rgba(50,150,100,0.25); }
+    }
+    .audio-toggle-label {
+      position: fixed;
+      bottom: 3.2rem;
+      right: 4.5rem;
+      z-index: 99;
+      font-size: 0.75rem;
+      color: #4a6a4a;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .audio-toggle:hover + .audio-toggle-label,
+    .audio-toggle-label.visible {
+      opacity: 1;
+    }
+
+    /* ── Mixer panel ── */
+    .mixer-btn {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      z-index: 100;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(100,200,150,0.2);
+      background: rgba(5,10,8,0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s ease;
+      color: #4a6a4a;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .mixer-btn:hover {
+      border-color: rgba(100,200,150,0.5);
+      color: #a8d0a8;
+      transform: scale(1.05);
+    }
+    .mixer-btn.active {
+      border-color: rgba(100,200,150,0.4);
+      color: #8aba8a;
+      box-shadow: 0 0 20px rgba(50,150,100,0.15);
+    }
+    .mixer-panel {
+      position: fixed;
+      bottom: 5rem;
+      left: 2rem;
+      z-index: 99;
+      background: rgba(5,10,8,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(100,200,150,0.15);
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      min-width: 160px;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .mixer-panel.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .mixer-panel h4 {
+      color: #6a8a6a;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin: 0 0 0.8rem 0;
+      font-weight: 400;
+    }
+    .mixer-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .mixer-row:last-child { margin-bottom: 0; }
+    .mixer-label {
+      color: #8a9a8a;
+      font-size: 0.78rem;
+      min-width: 1.4rem;
+      text-align: center;
+    }
+    .mixer-row input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 3px;
+      background: #2a3a2a;
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+    .mixer-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #5a8a5a;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .mixer-row input[type="range"]::-webkit-slider-thumb:hover {
+      background: #7aaa7a;
+    }
+    .mixer-row input[type="range"]::-moz-range-thumb {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #5a8a5a;
+      border: none;
+      cursor: pointer;
+    }
+    .mixer-val {
+      color: #5a7a5a;
+      font-size: 0.65rem;
+      min-width: 1.6rem;
+      text-align: right;
+    }
+
     /* ── Responsive ── */
     @media (max-width: 600px) {
       .wisdom-text { font-size: 1.2rem; }
@@ -262,6 +431,21 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ── Ambient Audio Toggle ── -->
+  <button class="audio-toggle" id="audioToggle" aria-label="Toggle ambient audio">🔇</button>
+  <span class="audio-toggle-label" id="audioToggleLabel">still water</span>
+
+  <!-- ── Mixer ── -->
+  <button class="mixer-btn" id="mixerBtn" aria-label="Open mixer">⚙️</button>
+  <div class="mixer-panel" id="mixerPanel">
+    <h4>mix</h4>
+    <div class="mixer-row" data-layer="water"><span class="mixer-label">🌊</span><input type="range" min="0" max="100"><span class="mixer-val">80</span></div>
+    <div class="mixer-row" data-layer="binaural"><span class="mixer-label">🧠</span><input type="range" min="0" max="100"><span class="mixer-val">50</span></div>
+    <div class="mixer-row" data-layer="hum"><span class="mixer-label">🌬️</span><input type="range" min="0" max="100"><span class="mixer-val">60</span></div>
+    <div class="mixer-row" data-layer="drone"><span class="mixer-label">🎵</span><input type="range" min="0" max="100"><span class="mixer-val">40</span></div>
+    <div class="mixer-row" data-layer="sfx"><span class="mixer-label">🎐</span><input type="range" min="0" max="100"><span class="mixer-val">70</span></div>
   </div>
 
   <script>
@@ -394,6 +578,9 @@
             particle.style.boxShadow = `0 0 ${6 + size}px hsla(45,80%,70%,0.3)`;
             document.body.appendChild(particle);
 
+            // ── Gold chime ──
+            if (window.playGoldChime) window.playGoldChime();
+
             const frames = [];
             for (let i = 0; i <= numFrames; i++) {
               const t = i / numFrames;
@@ -508,6 +695,624 @@
         };
       }
     }).mount('#app');
+
+    // ── Ambient Audio Engine ──
+    // Synthesised pond atmosphere: water noise, binaural beats, low hum
+    // No external files — everything is procedural via Web Audio API
+    (function() {
+      'use strict';
+
+      let ctx = null;
+      let masterGain = null;
+      let isMuted = true;
+      let isInitialized = false;
+
+      // ── Mixer — per-layer volume levels (0-100) ──
+      const MIXER_DEFAULTS = {
+        water: 80, binaural: 50, hum: 60, drone: 40, sfx: 70
+      };
+      let mixerLevels = { ...MIXER_DEFAULTS };
+      let mixerGains = {}; // populated in init()
+
+      function btn() { return document.getElementById('audioToggle'); }
+      function label() { return document.getElementById('audioToggleLabel'); }
+
+      function createWaterNoise(audioCtx) {
+        // Brown noise through modulated filters → gentle water trickle
+        const bufLen = audioCtx.sampleRate * 4;
+        const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+        const data = buf.getChannelData(0);
+        let last = 0;
+        for (let i = 0; i < bufLen; i++) {
+          const white = Math.random() * 2 - 1;
+          last = (last + (0.02 * white)) / 1.02;
+          data[i] = last * 3.5;
+        }
+        const src = audioCtx.createBufferSource();
+        src.buffer = buf;
+        src.loop = true;
+
+        const lp = audioCtx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 400;
+        lp.Q.value = 2.0;
+
+        const bp = audioCtx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = 1200;
+        bp.Q.value = 1.5;
+
+        const gn = audioCtx.createGain();
+        gn.gain.value = 0.06;
+
+        src.connect(lp);
+        lp.connect(bp);
+        bp.connect(gn);
+        src.start();
+
+        // Slow filter modulation for water movement
+        function modFreq() {
+          if (!lp.frequency) return;
+          lp.frequency.setTargetAtTime(280 + Math.random() * 240, audioCtx.currentTime, 4);
+          setTimeout(modFreq, 3000 + Math.random() * 4000);
+        }
+        setTimeout(modFreq, 2000);
+
+        return gn;
+      }
+
+      function createBinauralBeats(audioCtx) {
+        // 5 Hz theta binaural beat — 180 Hz L / 185 Hz R
+        const lOsc = audioCtx.createOscillator();
+        lOsc.type = 'sine';
+        lOsc.frequency.value = 180;
+        const lGain = audioCtx.createGain();
+        lGain.gain.value = 0.04;
+
+        const rOsc = audioCtx.createOscillator();
+        rOsc.type = 'sine';
+        rOsc.frequency.value = 185;
+        const rGain = audioCtx.createGain();
+        rGain.gain.value = 0.04;
+
+        const merger = audioCtx.createChannelMerger(2);
+        lOsc.connect(lGain);
+        lGain.connect(merger, 0, 0);
+        rOsc.connect(rGain);
+        rGain.connect(merger, 0, 1);
+
+        const lp = audioCtx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 600;
+
+        const gn = audioCtx.createGain();
+        gn.gain.value = 0.04;
+
+        merger.connect(lp);
+        lp.connect(gn);
+        lOsc.start();
+        rOsc.start();
+
+        return gn;
+      }
+
+      function createGoldChime(audioCtx) {
+        // Bright crystalline chime with soft echo — triggered by gold particles
+        const now = audioCtx.currentTime;
+        const baseFreq = 1400 + Math.random() * 1000; // 1400-2400 Hz — bright & high
+        const duration = 0.6 + Math.random() * 0.6;   // 0.6-1.2s — slightly shorter
+
+        // ── First partial (main pitch) ──
+        const osc1 = audioCtx.createOscillator();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(baseFreq * 1.01, now);
+        osc1.frequency.exponentialRampToValueAtTime(baseFreq * 0.99, now + duration * 0.25);
+        const gn1 = audioCtx.createGain();
+        gn1.gain.setValueAtTime(0, now);
+        gn1.gain.linearRampToValueAtTime(0.025, now + 0.02);
+        gn1.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        // ── Second partial (fifth/harmonic) ──
+        const osc2 = audioCtx.createOscillator();
+        osc2.type = 'sine';
+        const ratio = Math.random() < 0.5 ? 1.5 : 2.0;
+        osc2.frequency.setValueAtTime(baseFreq * ratio * 1.005, now);
+        osc2.frequency.exponentialRampToValueAtTime(baseFreq * ratio, now + duration * 0.15);
+        const gn2 = audioCtx.createGain();
+        gn2.gain.setValueAtTime(0, now);
+        gn2.gain.linearRampToValueAtTime(0.015, now + 0.02);
+        gn2.gain.exponentialRampToValueAtTime(0.001, now + duration * 0.6);
+
+        // ── Mix & pan ──
+        const mixGain = audioCtx.createGain();
+        mixGain.gain.value = 1;
+        const panner = audioCtx.createStereoPanner();
+        panner.pan.setValueAtTime((Math.random() - 0.5) * 0.5, now);
+
+        osc1.connect(gn1);
+        osc2.connect(gn2);
+        gn1.connect(mixGain);
+        gn2.connect(mixGain);
+        mixGain.connect(panner);
+        panner.connect(mixerGains.sfx);
+
+        // ── Echo / delay tail — big, spacious pond reverb ──
+        const delayMax = 1.5;
+        const delay1 = audioCtx.createDelay(delayMax);
+        delay1.delayTime.value = 0.35 + Math.random() * 0.15; // 350-500ms
+        const dGain1 = audioCtx.createGain();
+        dGain1.gain.setValueAtTime(0.55, now);
+        dGain1.gain.exponentialRampToValueAtTime(0.001, now + duration * 3.5);
+
+        const delay2 = audioCtx.createDelay(delayMax);
+        delay2.delayTime.value = 0.55 + Math.random() * 0.25; // 550-800ms
+        const dGain2 = audioCtx.createGain();
+        dGain2.gain.setValueAtTime(0.4, now);
+        dGain2.gain.exponentialRampToValueAtTime(0.001, now + duration * 4);
+
+        const delay3 = audioCtx.createDelay(delayMax);
+        delay3.delayTime.value = 0.9 + Math.random() * 0.3; // 900-1200ms
+        const dGain3 = audioCtx.createGain();
+        dGain3.gain.setValueAtTime(0.22, now);
+        dGain3.gain.exponentialRampToValueAtTime(0.001, now + duration * 4.5);
+
+        // Spread echoes across stereo field
+        const dPan1 = audioCtx.createStereoPanner();
+        dPan1.pan.setValueAtTime(0.5, now);
+        const dPan2 = audioCtx.createStereoPanner();
+        dPan2.pan.setValueAtTime(-0.5, now);
+        const dPan3 = audioCtx.createStereoPanner();
+        dPan3.pan.setValueAtTime(0.2, now);
+
+        panner.connect(delay1);
+        panner.connect(delay2);
+        panner.connect(delay3);
+
+        delay1.connect(dGain1);
+        dGain1.connect(dPan1);
+        dPan1.connect(mixerGains.sfx);
+
+        delay2.connect(dGain2);
+        dGain2.connect(dPan2);
+        dPan2.connect(mixerGains.sfx);
+
+        delay3.connect(dGain3);
+        dGain3.connect(dPan3);
+        dPan3.connect(mixerGains.sfx);
+
+        // Feedback loop: delay1 feeds into delay2 and delay3 for cascading repeats
+        delay1.connect(delay2);
+        delay2.connect(delay3);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + duration + 0.1);
+        osc2.stop(now + duration + 0.1);
+      }
+
+      // Expose so gold particles can trigger chimes
+      window.playGoldChime = function() {
+        if (!ctx || isMuted || !masterGain) return;
+        createGoldChime(ctx);
+      };
+
+      // Expose so user taps/clicks trigger the pond drum
+      window.pondTap = function() {
+        if (!ctx || isMuted || !masterGain) return;
+        createPulseKick(ctx);
+      };
+
+      function createPulseKick(audioCtx) {
+        // Soft sub-kick — the pond's heartbeat
+        const now = audioCtx.currentTime;
+
+        // ── Pitch sweep (fast drop for thump) ──
+        const osc = audioCtx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(42, now + 0.1);
+
+        // ── Gain envelope (quick attack, med decay) ──
+        const gn = audioCtx.createGain();
+        gn.gain.setValueAtTime(0, now);
+        gn.gain.linearRampToValueAtTime(0.06, now + 0.006);
+        gn.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+        // ── Subtle lowpass to keep it warm ──
+        const lp = audioCtx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 300;
+
+        // ── Noise click for transient ──
+        const bufLen = audioCtx.sampleRate * 0.03;
+        const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < bufLen; i++) {
+          data[i] = (Math.random() * 2 - 1) * (1 - i / bufLen);
+        }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buf;
+        const noiseGn = audioCtx.createGain();
+        noiseGn.gain.setValueAtTime(0.015, now);
+        noiseGn.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+        const noiseLp = audioCtx.createBiquadFilter();
+        noiseLp.type = 'lowpass';
+        noiseLp.frequency.value = 800;
+
+        // ── Route ──
+        osc.connect(lp);
+        lp.connect(gn);
+        gn.connect(mixerGains.sfx);
+
+        noise.connect(noiseLp);
+        noiseLp.connect(noiseGn);
+        noiseGn.connect(mixerGains.sfx);
+
+        osc.start(now);
+        osc.stop(now + 0.3);
+        noise.start(now);
+        noise.stop(now + 0.03);
+      }
+
+      // Listen for taps/clicks anywhere on the page
+      document.addEventListener('click', function(e) {
+        window.pondTap && window.pondTap();
+      });
+      document.addEventListener('touchstart', function(e) {
+        window.pondTap && window.pondTap();
+      }, { passive: true });
+
+      // ── Frog croak: ambient ribbit that drifts in and out ──
+      let croakTimer = null;
+
+      function createFrogCroak(audioCtx) {
+        const now = audioCtx.currentTime;
+        const pitchVar = 0.8 + Math.random() * 0.4; // 0.8-1.2 random pitch
+        const vol = 0.028 + Math.random() * 0.015;  // 0.028-0.043 random volume
+
+        // Fade-in envelope (drifts in)
+        const fadeIn = audioCtx.createGain();
+        fadeIn.gain.setValueAtTime(0, now);
+        fadeIn.gain.linearRampToValueAtTime(vol, now + 0.4);
+
+        // Fade-out envelope (drifts out)
+        const fadeOut = audioCtx.createGain();
+        fadeOut.gain.setValueAtTime(1, now + 0.6);
+        fadeOut.gain.linearRampToValueAtTime(0, now + 2.0);
+
+        // ── Main saw voice — hoarse, buzzy ──
+        const osc1 = audioCtx.createOscillator();
+        osc1.type = 'sawtooth';
+        const croakFreq = 280 * pitchVar;
+        osc1.frequency.setValueAtTime(croakFreq * 1.08, now + 0.45);
+        osc1.frequency.exponentialRampToValueAtTime(croakFreq * 0.7, now + 0.95);
+
+        const gn1 = audioCtx.createGain();
+        gn1.gain.setValueAtTime(0, now + 0.45);
+        gn1.gain.linearRampToValueAtTime(0.6, now + 0.48);
+        gn1.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+
+        // ── Second saw slightly detuned for thickness ──
+        const osc2 = audioCtx.createOscillator();
+        osc2.type = 'sawtooth';
+        osc2.frequency.setValueAtTime(croakFreq * 0.97, now + 0.45);
+        osc2.frequency.setValueAtTime(croakFreq * 0.68, now + 0.95);
+
+        const gn2 = audioCtx.createGain();
+        gn2.gain.setValueAtTime(0, now + 0.45);
+        gn2.gain.linearRampToValueAtTime(0.35, now + 0.48);
+        gn2.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+        // ── Lowpass to keep it from being too harsh ──
+        const lp = audioCtx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 600;
+
+        // ── Noise texture for grit and hoarseness ──
+        const bufLen = audioCtx.sampleRate * 0.5;
+        const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < bufLen; i++) {
+          const t = i / bufLen;
+          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 1.5);
+        }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buf;
+        const noiseGn = audioCtx.createGain();
+        noiseGn.gain.setValueAtTime(0, now + 0.45);
+        noiseGn.gain.linearRampToValueAtTime(0.18, now + 0.48);
+        noiseGn.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+
+        // ── Route ──
+        const mix = audioCtx.createGain();
+        mix.gain.value = 1;
+
+        osc1.connect(gn1);
+        gn1.connect(mix);
+        osc2.connect(gn2);
+        gn2.connect(mix);
+        noise.connect(noiseGn);
+        noiseGn.connect(mix);
+
+        mix.connect(lp);
+        lp.connect(fadeIn);
+        fadeIn.connect(fadeOut);
+        fadeOut.connect(mixerGains.sfx);
+
+        const croakStart = now + 0.45;
+        const croakEnd = now + 1.1;
+
+        osc1.start(croakStart);
+        osc1.stop(croakEnd);
+        osc2.start(croakStart);
+        osc2.stop(croakEnd);
+        noise.start(croakStart);
+        noise.stop(croakEnd);
+      }
+
+      function scheduleNextCroak() {
+        if (isMuted || !ctx) return;
+        const delay = 10000 + Math.random() * 15000; // 10-25s apart
+        croakTimer = setTimeout(function() {
+          createFrogCroak(ctx);
+          scheduleNextCroak();
+        }, delay);
+      }
+
+      function startCroaks() {
+        stopCroaks();
+        // First croak after a breath
+        croakTimer = setTimeout(function() {
+          createFrogCroak(ctx);
+          scheduleNextCroak();
+        }, 3000 + Math.random() * 5000);
+      }
+
+      function stopCroaks() {
+        if (croakTimer) {
+          clearTimeout(croakTimer);
+          croakTimer = null;
+        }
+      }
+
+      function createLowHum(audioCtx) {
+        // Deep 55 Hz sub-bass with 8-second amplitude cycle
+        const osc = audioCtx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = 55;
+
+        const modOsc = audioCtx.createOscillator();
+        modOsc.type = 'sine';
+        modOsc.frequency.value = 0.125; // 8-second cycle
+
+        const modGain = audioCtx.createGain();
+        modGain.gain.value = 0.006;
+
+        const gn = audioCtx.createGain();
+        gn.gain.value = 0.02;
+
+        modOsc.connect(modGain);
+        modGain.connect(gn.gain);
+        osc.connect(gn);
+        osc.start();
+        modOsc.start();
+
+        return gn;
+      }
+
+      function createSweepingDrone(audioCtx) {
+        // Choir-like vocal drone — warm midrange voices breathing in and out
+        const baseFreq = 200 + Math.random() * 80; // 200-280 Hz, vocal range
+
+        // ── Four voices for a choral cluster ──
+        const voices = [];
+        const voiceData = [
+          { freq: baseFreq,            detune: 3,  gain: 0.5 },  // tenor
+          { freq: baseFreq * 1.005,    detune: -5, gain: 0.4 },  // tenor (slightly flat)
+          { freq: baseFreq * 1.25,     detune: 4,  gain: 0.35 }, // alto third
+          { freq: baseFreq * 1.5,      detune: -3, gain: 0.25 }, // fifth
+        ];
+
+        voiceData.forEach((vd, i) => {
+          const osc = audioCtx.createOscillator();
+          osc.type = 'triangle'; // warmer, more vocal than sine
+          osc.frequency.value = vd.freq;
+
+          // ── Individual slow vibrato per voice (like real singers) ──
+          const vibLfo = audioCtx.createOscillator();
+          vibLfo.type = 'sine';
+          vibLfo.frequency.value = 0.08 + Math.random() * 0.06; // 7-14s cycle per voice
+          const vibMod = audioCtx.createGain();
+          vibMod.gain.value = 2 + Math.random() * 3; // ±2-5Hz wobble
+
+          const gn = audioCtx.createGain();
+          gn.gain.value = vd.gain;
+
+          vibLfo.connect(vibMod);
+          vibMod.connect(osc.frequency);
+
+          // ── Slight stereo spread ──
+          const panner = audioCtx.createStereoPanner();
+          panner.pan.setValueAtTime((i / (voiceData.length - 1) - 0.5) * 0.5, audioCtx.currentTime);
+
+          osc.connect(gn);
+          gn.connect(panner);
+
+          voices.push({ osc, vibLfo, panner });
+        });
+
+        // ── Mix bus ──
+        const mixBus = audioCtx.createGain();
+        mixBus.gain.value = 1;
+
+        voices.forEach(v => v.panner.connect(mixBus));
+
+        // ── Warm bandpass ──
+        const bp = audioCtx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = baseFreq * 1.3;
+        bp.Q.value = 1.5;
+
+        // ── Volume LFO — breathes the choir in and out ──
+        const gn = audioCtx.createGain();
+        gn.gain.value = 0.006; // base level
+
+        const volLfo = audioCtx.createOscillator();
+        volLfo.type = 'sine';
+        volLfo.frequency.value = 0.04; // ~25s cycle
+        const volMod = audioCtx.createGain();
+        volMod.gain.value = 0.006; // sweeps 0 → 0.012
+        volLfo.connect(volMod);
+        volMod.connect(gn.gain);
+
+        // ── Route ──
+        mixBus.connect(bp);
+        bp.connect(gn);
+
+        voices.forEach(v => {
+          v.osc.start();
+          v.vibLfo.start();
+        });
+        volLfo.start();
+
+        return gn;
+      }
+
+      function init() {
+        if (isInitialized) return;
+        try {
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          masterGain = ctx.createGain();
+          masterGain.gain.value = 0;
+          masterGain.connect(ctx.destination);
+
+          // ── Per-layer mixer gains ──
+          ['water','binaural','hum','drone','sfx'].forEach(key => {
+            mixerGains[key] = ctx.createGain();
+            mixerGains[key].gain.value = mixerLevels[key] / 100;
+            mixerGains[key].connect(masterGain);
+          });
+
+          createWaterNoise(ctx).connect(mixerGains.water);
+          createBinauralBeats(ctx).connect(mixerGains.binaural);
+          createLowHum(ctx).connect(mixerGains.hum);
+          createSweepingDrone(ctx).connect(mixerGains.drone);
+
+          isInitialized = true;
+
+          // Restore saved preference
+          const saved = localStorage.getItem('wisdoms-audio-muted');
+          if (saved === 'false') resumeAndUnmute();
+        } catch (e) {
+          console.warn('Audio engine init failed:', e);
+        }
+      }
+
+      function resumeAndUnmute() {
+        if (!ctx) return;
+        if (ctx.state === 'suspended') ctx.resume();
+        masterGain.gain.setTargetAtTime(0.4, ctx.currentTime, 3);
+        isMuted = false;
+        btn().textContent = '\uD83D\uDD0A';
+        btn().classList.add('playing');
+        label().textContent = 'pond breathing';
+        label().classList.add('visible');
+        localStorage.setItem('wisdoms-audio-muted', 'false');
+        startCroaks();
+      }
+
+      function mute() {
+        if (!ctx || !masterGain) return;
+        masterGain.gain.setTargetAtTime(0, ctx.currentTime, 1);
+        isMuted = true;
+        btn().textContent = '\uD83D\uDD07';
+        btn().classList.remove('playing');
+        label().textContent = 'still water';
+        localStorage.setItem('wisdoms-audio-muted', 'true');
+        stopCroaks();
+      }
+
+      function toggle() {
+        if (!isInitialized) init();
+        if (isMuted) resumeAndUnmute();
+        else mute();
+      }
+
+      btn().addEventListener('click', toggle);
+
+      // ── Mixer panel ──
+      function loadMixerLevels() {
+        try {
+          const saved = localStorage.getItem('wisdoms-mixer-levels');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            Object.keys(MIXER_DEFAULTS).forEach(key => {
+              if (typeof parsed[key] === 'number') mixerLevels[key] = parsed[key];
+            });
+          }
+        } catch(e) {}
+      }
+      function saveMixerLevels() {
+        try { localStorage.setItem('wisdoms-mixer-levels', JSON.stringify(mixerLevels)); }
+        catch(e) {}
+      }
+
+      function createMixerPanel() {
+        loadMixerLevels();
+        const panel = document.getElementById('mixerPanel');
+        const mBtn = document.getElementById('mixerBtn');
+
+        // Set initial values
+        panel.querySelectorAll('.mixer-row').forEach(row => {
+          const layer = row.dataset.layer;
+          const slider = row.querySelector('input');
+          const val = row.querySelector('.mixer-val');
+          slider.value = mixerLevels[layer];
+          val.textContent = mixerLevels[layer];
+
+          slider.addEventListener('input', function() {
+            const v = parseInt(this.value);
+            mixerLevels[layer] = v;
+            val.textContent = v;
+            if (mixerGains[layer]) {
+              mixerGains[layer].gain.setTargetAtTime(v / 100, ctx.currentTime, 0.1);
+            }
+            saveMixerLevels();
+          });
+        });
+
+        // Toggle panel
+        mBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          panel.classList.toggle('visible');
+          mBtn.classList.toggle('active');
+        });
+
+        // Close on click outside
+        document.addEventListener('click', function(e) {
+          if (!panel.contains(e.target) && e.target !== mBtn) {
+            panel.classList.remove('visible');
+            mBtn.classList.remove('active');
+          }
+        });
+      }
+
+      createMixerPanel();
+
+      // Initialise audio lazily on first real user gesture (autoplay policy)
+      const boot = function() {
+        init();
+        if (ctx && ctx.state === 'suspended') ctx.resume();
+        document.removeEventListener('mousemove', boot);
+        document.removeEventListener('touchstart', boot);
+        document.removeEventListener('scroll', boot);
+      };
+      document.addEventListener('mousemove', boot, { once: true });
+      document.addEventListener('touchstart', boot, { once: true });
+      document.addEventListener('scroll', boot, { once: true });
+    })();
   </script>
+
+
 </body>
 </html>
