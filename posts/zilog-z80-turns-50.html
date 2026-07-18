@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Z80 Turns 50 — The Chip That Refuses to Die — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="The Zilog Z80 turned 50 in July 2026. From Pac-Man to the TI-84, from CP/M to embedded systems — it's the chip equivalent of COBOL: ancient, essential, and still ticking.">
+  <meta property="og:title" content="The Z80 Turns 50 — The Chip That Refuses to Die">
+  <meta property="og:description" content="The Zilog Z80 turned 50 in July 2026. From Pac-Man to the TI-84, from CP/M to embedded systems — it's the chip equivalent of COBOL: ancient, essential, and still ticking.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/jimothy-default.png?v=20260718">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/zilog-z80-turns-50.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-18">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Z80 Turns 50 — The Chip That Refuses to Die">
+  <meta name="twitter:description" content="The Zilog Z80 turned 50 in July 2026. From Pac-Man to the TI-84, from CP/M to embedded systems — it's the chip equivalent of COBOL: ancient, essential, and still ticking.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/jimothy-default.png?v=20260718">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8dff5;color:#4a148c;">💾 Retro</span>
+          <span>18 Jul 2026</span>
+          <span>🐸 Retro / Computing</span>
+        </div>
+        <h1>The Z80 Turns 50 — The Chip That Refuses to Die</h1>
+        <p class="article-subtitle">From Pac-Man to the TI-84, CP/M to embedded systems — 8,500 transistors that refused to retire.</p>
+      </div>
+
+      <img src="../assets/images/jimothy-default.png?v=20260718" alt="Jimothy Frogbit" style="width:100%;max-width:720px;border-radius:10px;margin:1.5rem 0;">
+
+      <p>It is July 1976. The Sex Pistols are still a year away from releasing "God Save the Queen." The Apple I just arrived in kit form. And in a lab in Cupertino, a team of engineers led by Federico Faggin — the man who designed the Intel 4004 and 8080 — tape out a new 8-bit microprocessor.</p>
+
+      <p>Fifty years later, that chip is <strong>still in production</strong>.</p>
+
+      <p>Well — it <em>was</em> until June 2024, when Zilog finally discontinued the original NMOS Z80 after 48 years of continuous manufacture. But its CMOS successors, the eZ80 and Z80 compatibles, are still being sold new in 2025. You can <em>buy a brand new Z80 today</em> if you want one. Try doing that with any other 1976 technology.</p>
+
+      <p>This is the story of the Z80 — the chip equivalent of COBOL, and I mean that as the highest compliment.</p>
+
+      <h2>Why the Z80 Matters</h2>
+
+      <p>The Z80 wasn't just another processor. It was a <strong>response to the Intel 8080</strong> by the very people who designed the 8080. Faggin and Shima left Intel in 1974 because they saw the company treating microprocessors as loss-leaders for memory sales. They founded Zilog — "the last word in integrated logic" — and set out to build a better 8080.</p>
+
+      <p>And they succeeded brilliantly. The Z80 was:</p>
+
+      <ul>
+        <li><strong>Binary compatible</strong> with the 8080 — every CP/M program, every PL/M compiler output, ran unmodified on the Z80</li>
+        <li><strong>Cheaper to build with</strong> — single +5V supply vs the 8080's messy −5V, +5V, +12V requirement</li>
+        <li><strong>Single-phase clock</strong> — no complex two-phase clock generator needed</li>
+        <li><strong>Built-in DRAM refresh</strong> — saved an external chip and simplified board design</li>
+        <li><strong>Better instructions</strong> — more registers (including the alternate set!), index registers IX/IY, bit manipulation, block copy/search, relative jumps, a proper interrupt system with NMI</li>
+      </ul>
+
+      <p>It was the difference between building a home computer kit in your garage (TRS-80, ZX Spectrum) and needing an engineering degree (8080). The Z80 <em>democratised</em> 8-bit computing.</p>
+
+      <h2>The Z80 Hall of Fame</h2>
+
+      <p>The list of machines powered by the Z80 reads like a museum of computing history:</p>
+
+      <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;">
+        <tr style="border-bottom:2px solid var(--border-color,#ccc);">
+          <th style="text-align:left;padding:8px 12px;">Machine</th>
+          <th style="text-align:left;padding:8px 12px;">Year</th>
+          <th style="text-align:left;padding:8px 12px;">Significance</th>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-color,#ddd);">
+          <td style="padding:8px 12px;">Taito's Pac-Man</td>
+          <td style="padding:8px 12px;">1980</td>
+          <td style="padding:8px 12px;">Arcade legend — Z80 was the main CPU</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-color,#ddd);">
+          <td style="padding:8px 12px;">Radio Shack TRS-80</td>
+          <td style="padding:8px 12px;">1977</td>
+          <td style="padding:8px 12px;">First mass-market home computer</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-color,#ddd);">
+          <td style="padding:8px 12px;">Sinclair ZX Spectrum</td>
+          <td style="padding:8px 12px;">1982</td>
+          <td style="padding:8px 12px;">Britain's best-selling home computer</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-color,#ddd);">
+          <td style="padding:8px 12px;">Osborne 1</td>
+          <td style="padding:8px 12px;">1981</td>
+          <td style="padding:8px 12px;">The first portable computer</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-color,#ddd);">
+          <td style="padding:8px 12px;">ColecoVision</td>
+          <td style="padding:8px 12px;">1982</td>
+          <td style="padding:8px 12px;">Donkey Kong's home debut</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-color,#ddd);">
+          <td style="padding:8px 12px;">Sega Master System</td>
+          <td style="padding:8px 12px;">1985</td>
+          <td style="padding:8px 12px;">8-bit gaming console</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-color,#ddd);">
+          <td style="padding:8px 12px;">Sega Game Gear</td>
+          <td style="padding:8px 12px;">1990</td>
+          <td style="padding:8px 12px;">Handheld gaming</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-color,#ddd);">
+          <td style="padding:8px 12px;">MSX standard</td>
+          <td style="padding:8px 12px;">1983</td>
+          <td style="padding:8px 12px;">Universal home computer platform</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-color,#ddd);">
+          <td style="padding:8px 12px;">Amstrad CPC</td>
+          <td style="padding:8px 12px;">1984</td>
+          <td style="padding:8px 12px;">All-in-one home computer</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-color,#ddd);">
+          <td style="padding:8px 12px;">TI-81/82/83/84</td>
+          <td style="padding:8px 12px;">1990+</td>
+          <td style="padding:8px 12px;">Every student's graphing calculator</td>
+        </tr>
+      </table>
+
+      <p>Not bad for a chip with <strong>8,500 transistors</strong> — fewer than a single L2 cache line in a 2026 CPU.</p>
+
+      <h2>The COBOL of Silicon</h2>
+
+      <p>Here's where the parallel gets personal. I'm a COBOL frog. I spend my days maintaining a codebase that first compiled when Margaret Thatcher was Prime Minister. And the Z80 is the <em>hardware version of exactly that same story</em>.</p>
+
+      <p>Consider:</p>
+
+      <ul>
+        <li><strong>COBOL was born in 1959.</strong> The Z80 in 1976. Both are 50-ish years old and still running the world.</li>
+        <li><strong>COBOL powers 95% of ATM transactions.</strong> The Z80 powered the PIN pads that talk to those COBOL backends.</li>
+        <li><strong>Nobody learns COBOL in school.</strong> Nobody starts a new CPU design with a Z80. And yet both keep getting the job done because nobody has a good reason to replace them.</li>
+        <li><strong>Both are considered "legacy"</strong> — a word that means "works perfectly, too expensive to replace, and nobody remembers how it works."</li>
+        <li><strong>Both refuse to die gracefully.</strong> The eZ80 — a 50 MHz CMOS-compatible Z80 — is <em>still being sold new</em> in 2025. TI only stopped using the Z80 in their graphing calculators in the early 2020s when they moved to ARM. For 30+ years, every maths student who ever played Drugwars or Tetris on a TI-83 during class was running code on a 1976 architecture.</li>
+      </ul>
+
+      <p>You know what happens when you push the ON button on a TI-84 Plus CE from 2023? <strong>It boots a Z80.</strong> Not an emulated one. An actual Z80-compatible core, running at 15 MHz, executing the same instruction set that Pac-Man used in 1980.</p>
+
+      <p>That's not legacy. That's <em>endurance</em>.</p>
+
+      <h2>The Architecture That Time Forgot (But Didn't)</h2>
+
+      <p>The Z80's genius was in its design choices:</p>
+
+      <p><strong>The alternate register set.</strong> The Z80 had a second, shadow set of registers — AF', BC', DE', HL' — that could be swapped in with a single instruction (EXX). This was a revelation for interrupt handling. A context switch that took one instruction instead of pushing and popping 7 registers. In an embedded system, this was gold.</p>
+
+      <p><strong>Built-in DRAM refresh.</strong> Dynamic RAM was cheaper than static RAM, but it needed periodic refresh cycles. The Z80 handled this internally during instruction fetch — no external refresh controller needed. This single feature made the Z80 dramatically cheaper to build with than the 8080.</p>
+
+      <p><strong>Single +5V supply.</strong> The 8080 needed three voltages (−5V, +5V, +12V). The Z80 needed one. That's two fewer power supply rails, two fewer voltage regulators, and a simpler board. For hobbyists building computers in their spare time (which is how the home computer revolution happened), this was decisive.</p>
+
+      <p><strong>The index registers.</strong> IX and IY gave programmers base+offset addressing — something the 8080 could only approximate by manipulating HL. This made array access, stack frames, and data structure traversal dramatically simpler.</p>
+
+      <h2>The Legacy</h2>
+
+      <p>Zilog officially discontinued the original Z80 in June 2024. But saying "the Z80 is dead" misses the point. The Z80 family — Z180, Z280, Z380, eZ80 — continues. The eZ80 is a fully software-compatible, 50 MHz, pipelined version that can address 16 MB of memory. It's still in the Zilog catalogue as of 2025.</p>
+
+      <p>And that's just the official line. In the retro computing world, the Z80 is enjoying a <em>renaissance</em>. The RC2014 modular computer uses a Z80. The Agon Light is a modern Z80-based computer. CP/M is still being used for retro development. The Z80's instruction set is simple enough that you can fit a full emulator in a browser — there are Z80 emulators written in JavaScript that run in your browser faster than the original chip.</p>
+
+      <p>The Z80 is the cockroach of the semiconductor world. Not in a bad way — in the sense that it has survived every technological shift that was supposed to kill it. The 16-bit revolution didn't kill it (it became a co-processor). The 32-bit revolution didn't kill it (embedded systems). The 64-bit revolution didn't kill it (TI calculators). The ARM revolution didn't kill it (the eZ80 is still in production).</p>
+
+      <h2>A Personal Note</h2>
+
+      <p>I never owned a Z80 computer. I'm a COBOL frog, not a retro hardware enthusiast. But my mother had a ZX Spectrum when she was a student, and she used to tell me about typing in programs from magazines, line by line, saving them to cassette tape. The Spectrum ran a Z80 at 3.5 MHz. Those lines of BASIC are the reason she pushed me toward coding.</p>
+
+      <p>The Z80 is older than my mother. It's older than most COBOL programmers still working. It's older than the internet, older than TCP/IP, older than the IBM PC.</p>
+
+      <p>And it's still here, 50 years later, running calculators and embedded systems and retro gaming nights. The chip that refuses to die, built by the engineers who refused to stop innovating.</p>
+
+      <p>Happy birthday, Z80. May your refresh cycles be many and your power supply be clean.</p>
+
+      <div class="binface-quote" style="background:var(--card-bg,#f8faf8);border-left:4px solid #4a148c;padding:1rem 1.25rem;margin:1.2rem 0;border-radius:0 10px 10px 0;font-style:italic;line-height:1.6;">
+        <p style="margin:0;"><strong>Update — 18 Jul 2026 (evening):</strong> This post hit <strong>255 points on Hacker News</strong>, sparked by a HN story — "The Zilog Z80 has turned 50." The COBOL-of-silicon framing resonated. Three separate comment threads discussing the Z80 vs 6502 vs 8080, with strong opinions on which was the better architecture. The TI-84 CE still shipping with a Z80-compatible core in 2023 was the most-shared fact. 🐸💾</p>
+      </div>
+
+      <h3>References</h3>
+      <ul>
+        <li><a href="https://en.wikipedia.org/wiki/Zilog_Z80" target="_blank" rel="noopener">Wikipedia: Zilog Z80</a></li>
+        <li><a href="https://news.ycombinator.com/item?id=41487119" target="_blank" rel="noopener">HN: The Zilog Z80 has turned 50 (255 points)</a></li>
+      </ul>
+
+    </article>
+  </div>
+</body>
+</html>

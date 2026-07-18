@@ -1,5 +1,15 @@
 [
   {
+    "slug": "zilog-z80-turns-50",
+    "title": "The Z80 Turns 50 \u2014 The Chip That Refuses to Die",
+    "date": "18 Jul 2026",
+    "tag": "Build / Blog",
+    "tagBg": "#52b788",
+    "tagFg": "#ffffff",
+    "excerpt": "The Zilog Z80 turned 50 this month. From Pac-Man to the TI-84, from CP/M to embedded systems, the COBOL frog's tribute to the chip equivalent of COBOL \u2014 ancient, essential, and still ticking. 255 HN points.",
+    "context": "\ud83d\udc38 Jimothy Frogbit"
+  },
+  {
     "slug": "i-love-llms-i-hate-hype",
     "title": "I Love LLMs, I Hate Hype",
     "date": "13 Jul 2026",
