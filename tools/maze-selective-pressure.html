@@ -204,6 +204,7 @@
   const canvas = document.getElementById('mazeCanvas');
   const ctx = canvas.getContext('2d');
   const W = 600, COLS = 20, ROWS = 20, CELL = W / COLS;
+  const ER = ROWS - 3, EC = COLS - 3; // exit at furthest odd cell
 
   // ── Controls ──
   const popSlider = document.getElementById('popSlider');
@@ -324,9 +325,9 @@
       }
     }
 
-    // Ensure start (1,1) and exit (COLS-2, ROWS-2) are open
+    // Ensure start (1,1) and exit (ER, EC) are open
     grid[1][1] = 0;
-    grid[ROWS-2][COLS-2] = 0;
+    grid[ER][EC] = 0;
 
     return grid;
   }
@@ -365,7 +366,7 @@
       fitness: 0,       // lower = better (steps to exit)
       lastDir: null,    // 'N','S','E','W' — for backBias
       trailColor: `hsl(${Math.random() * 360}, 50%, 55%)`,
-      maxProgress: bfsShortestPath(maze, 1, 1, ROWS-2, COLS-2),
+      maxProgress: bfsShortestPath(maze, 1, 1, ER, EC),
       progress: 0,       // BFS steps from start at closest approach
     };
   }
@@ -390,98 +391,96 @@
 
     const mazeGrid = maze;
     const expr = expressGenome(c.genome);
-    const er = ROWS - 2, ec = COLS - 2;
+    const er = ER, ec = EC;
+    const maxMoves = Math.min(expr.speed, 50); // safety cap — prevent infinite loops
 
-    // Get valid moves
-    const dirs = [];
-    const candidates = [
-      { dr: -1, dc: 0, name: 'N' },
-      { dr: 1, dc: 0, name: 'S' },
-      { dr: 0, dc: -1, name: 'W' },
-      { dr: 0, dc: 1, name: 'E' }
-    ];
+    let moves = 0;
+    while (moves < maxMoves && c.alive && !c.finished) {
+      moves++;
 
-    for (const d of candidates) {
-      const nr = c.row + d.dr, nc = c.col + d.dc;
-      if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && mazeGrid[nr][nc] === 0) {
-        // Memory check — avoid recent cells
-        const inMemory = expr.memory > 0 && c.trail.includes(`${nr},${nc}`);
-        // Backtrack bias — penalise reversing direction
-        const isReverse = (c.lastDir === 'N' && d.name === 'S') ||
-                          (c.lastDir === 'S' && d.name === 'N') ||
-                          (c.lastDir === 'E' && d.name === 'W') ||
-                          (c.lastDir === 'W' && d.name === 'E');
+      // Get valid moves
+      const dirs = [];
+      const candidates = [
+        { dr: -1, dc: 0, name: 'N' },
+        { dr: 1, dc: 0, name: 'S' },
+        { dr: 0, dc: -1, name: 'W' },
+        { dr: 0, dc: 1, name: 'E' }
+      ];
 
-        let score = 1;
-        // Forward bias: prefer moves toward exit
-        const distBefore = Math.abs(c.row - er) + Math.abs(c.col - ec);
-        const distAfter = Math.abs(nr - er) + Math.abs(nc - ec);
-        if (distAfter < distBefore) score += expr.fwdBias * 3;
+      for (const d of candidates) {
+        const nr = c.row + d.dr, nc = c.col + d.dc;
+        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && mazeGrid[nr][nc] === 0) {
+          // Memory check — avoid recent cells
+          const inMemory = expr.memory > 0 && c.trail.includes(`${nr},${nc}`);
+          // Backtrack bias — penalise reversing direction
+          const isReverse = (c.lastDir === 'N' && d.name === 'S') ||
+                            (c.lastDir === 'S' && d.name === 'N') ||
+                            (c.lastDir === 'E' && d.name === 'W') ||
+                            (c.lastDir === 'W' && d.name === 'E');
 
-        // Wall-hug: prefer cells with fewer open neighbours (dead-end friendly)
-        if (expr.wallHug > 0) {
-          let openNeighbours = 0;
-          for (const n of candidates) {
-            const nnr = nr + n.dr, nnc = nc + n.dc;
-            if (nnr >= 0 && nnr < ROWS && nnc >= 0 && nnc < COLS && mazeGrid[nnr][nnc] === 0) {
-              openNeighbours++;
+          let score = 1;
+          // Forward bias: prefer moves toward exit
+          const distBefore = Math.abs(c.row - er) + Math.abs(c.col - ec);
+          const distAfter = Math.abs(nr - er) + Math.abs(nc - ec);
+          if (distAfter < distBefore) score += expr.fwdBias * 3;
+
+          // Wall-hug: prefer cells with fewer open neighbours (dead-end friendly)
+          if (expr.wallHug > 0) {
+            let openNeighbours = 0;
+            for (const n of candidates) {
+              const nnr = nr + n.dr, nnc = nc + n.dc;
+              if (nnr >= 0 && nnr < ROWS && nnc >= 0 && nnc < COLS && mazeGrid[nnr][nnc] === 0) {
+                openNeighbours++;
+              }
             }
+            if (openNeighbours >= 2 && openNeighbours <= 3) score += expr.wallHug * 2;
           }
-          // Prefer cells with 2-3 open neighbours (hallways and junctions, not open spaces)
-          if (openNeighbours >= 2 && openNeighbours <= 3) score += expr.wallHug * 2;
+
+          if (inMemory) score -= expr.memory * 0.3;
+          if (isReverse) score -= expr.backBias * 4;
+
+          // Exploration noise
+          if (Math.random() < expr.explore) score += Math.random() * 5;
+
+          dirs.push({ ...d, score });
         }
-
-        if (inMemory) score -= expr.memory * 0.3;
-        if (isReverse) score -= expr.backBias * 4;
-
-        // Exploration noise
-        if (Math.random() < expr.explore) score += Math.random() * 5;
-
-        dirs.push({ ...d, score });
       }
-    }
 
-    if (dirs.length === 0) {
-      // Stuck — dead end with all neighbours visited. Clear memory and try again
-      c.trail = [];
-      return;
-    }
+      if (dirs.length === 0) {
+        // Stuck — clear memory and bail
+        c.trail = [];
+        break;
+      }
 
-    // Weighted random choice by score
-    dirs.sort((a, b) => b.score - a.score);
-    // Top 2 weighted pick
-    const pick = dirs.length > 1 && Math.random() < 0.85 ? dirs[0] : dirs[Math.floor(Math.random() * Math.min(3, dirs.length))];
+      // Weighted random choice by score
+      dirs.sort((a, b) => b.score - a.score);
+      const pick = dirs.length > 1 && Math.random() < 0.85 ? dirs[0] : dirs[Math.floor(Math.random() * Math.min(3, dirs.length))];
 
-    // Move
-    c.prevRow = c.row;
-    c.prevCol = c.col;
-    c.row += pick.dr;
-    c.col += pick.dc;
-    c.lastDir = pick.name;
-    c.steps++;
+      // Move
+      c.prevRow = c.row;
+      c.prevCol = c.col;
+      c.row += pick.dr;
+      c.col += pick.dc;
+      c.lastDir = pick.name;
+      c.steps++;
 
-    // Trail (memory for revisiting)
-    c.trail.push(`${c.row},${c.col}`);
-    if (c.trail.length > expr.memory) c.trail.shift();
+      // Trail (memory for revisiting)
+      c.trail.push(`${c.row},${c.col}`);
+      if (c.trail.length > expr.memory) c.trail.shift();
 
-    // Progress tracking
-    const currentDist = bfsShortestPath(maze, c.row, c.col, er, ec);
-    const progress = c.maxProgress - currentDist;
-    c.progress = Math.max(c.progress, progress);
+      // Progress tracking
+      const currentDist = bfsShortestPath(maze, c.row, c.col, er, ec);
+      const progress = c.maxProgress - currentDist;
+      c.progress = Math.max(c.progress, progress);
 
-    // Check if reached exit
-    if (c.row === er && c.col === ec) {
-      c.finished = true;
-      c.alive = false;
-      c.fitness = c.steps;
-      finished.push(c);
-      if (c.steps < bestStepsVal) bestStepsVal = c.steps;
-    }
-
-    // Speed — multiple moves per tick if fast
-    const movesPerTick = expr.speed;
-    for (let i = 1; i < movesPerTick && !c.finished && c.alive; i++) {
-      updateCritter(c, dt);
+      // Check if reached exit
+      if (c.row === er && c.col === ec) {
+        c.finished = true;
+        c.alive = false;
+        c.fitness = c.steps;
+        finished.push(c);
+        if (c.steps < bestStepsVal) bestStepsVal = c.steps;
+      }
     }
   }
 
@@ -504,8 +503,8 @@
     const farthest = stuck
       .filter(c => !c.finished)
       .sort((a, b) => {
-        const da = bfsShortestPath(maze, a.row, a.col, ROWS-2, COLS-2);
-        const db = bfsShortestPath(maze, b.row, b.col, ROWS-2, COLS-2);
+        const da = bfsShortestPath(maze, a.row, a.col, ER, EC);
+        const db = bfsShortestPath(maze, b.row, b.col, ER, EC);
         return da - db;
       });
     for (let i = 0; i < Math.min(5, farthest.length); i++) {
@@ -523,8 +522,8 @@
       if (a.finished && b.finished) return a.fitness - b.fitness;
       if (a.finished) return -1;
       if (b.finished) return 1;
-      const da = bfsShortestPath(maze, a.row, a.col, ROWS-2, COLS-2);
-      const db = bfsShortestPath(maze, b.row, b.col, ROWS-2, COLS-2);
+      const da = bfsShortestPath(maze, a.row, a.col, ER, EC);
+      const db = bfsShortestPath(maze, b.row, b.col, ER, EC);
       return da - db;
     });
 
@@ -575,7 +574,7 @@
     // Exit marker
     ctx.fillStyle = '#b05050';
     ctx.globalAlpha = 0.3;
-    ctx.fillRect((COLS-2) * CELL + 2, (ROWS-2) * CELL + 2, CELL - 4, CELL - 4);
+    ctx.fillRect((EC) * CELL + 2, (ER) * CELL + 2, CELL - 4, CELL - 4);
     ctx.globalAlpha = 1;
 
     // Draw finished critters (small dim dots near exit)
@@ -583,7 +582,7 @@
       ctx.fillStyle = '#3a7a8a';
       ctx.globalAlpha = 0.4;
       ctx.beginPath();
-      ctx.arc((COLS-2) * CELL + CELL/2, (ROWS-2) * CELL + CELL/2, 3, 0, Math.PI * 2);
+      ctx.arc((EC) * CELL + CELL/2, (ER) * CELL + CELL/2, 3, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.globalAlpha = 1;
@@ -599,7 +598,7 @@
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         for (let i = 0; i < c.trail.length; i++) {
-          const [tc, tr] = c.trail[i].split(',').map(Number);
+          const [tr, tc] = c.trail[i].split(',').map(Number);
           if (i === 0) ctx.moveTo(tc * CELL + CELL/2, tr * CELL + CELL/2);
           else ctx.lineTo(tc * CELL + CELL/2, tr * CELL + CELL/2);
         }
@@ -684,11 +683,11 @@
       const active = critters.filter(c => c.alive);
       if (active.length > 0) {
         const closest = active.reduce((a, b) => {
-          const da = bfsShortestPath(maze, a.row, a.col, ROWS-2, COLS-2);
-          const db = bfsShortestPath(maze, b.row, b.col, ROWS-2, COLS-2);
+          const da = bfsShortestPath(maze, a.row, a.col, ER, EC);
+          const db = bfsShortestPath(maze, b.row, b.col, ER, EC);
           return da < db ? a : b;
         });
-        const dist = bfsShortestPath(maze, closest.row, closest.col, ROWS-2, COLS-2);
+        const dist = bfsShortestPath(maze, closest.row, closest.col, ER, EC);
         meanSteps.textContent = `closest: ${dist > 200 ? '∞' : dist} cells`;
       }
     }
@@ -735,7 +734,7 @@
     maze = generateMaze(parseInt(mazeSlider.value));
     resetCritters();
     // Ensure start/exit reachable
-    const pathLen = bfsShortestPath(maze, 1, 1, ROWS-2, COLS-2);
+    const pathLen = bfsShortestPath(maze, 1, 1, ER, EC);
     if (pathLen === Infinity) {
       // Unreachable — regenerate
       maze = generateMaze(parseInt(mazeSlider.value));
@@ -751,7 +750,7 @@
   mazeSlider.addEventListener('change', function() {
     maze = generateMaze(parseInt(this.value));
     resetCritters();
-    const pathLen = bfsShortestPath(maze, 1, 1, ROWS-2, COLS-2);
+    const pathLen = bfsShortestPath(maze, 1, 1, ER, EC);
     if (pathLen === Infinity) {
       maze = generateMaze(parseInt(this.value));
     }
@@ -762,11 +761,11 @@
   resetCritters();
 
   // Ensure maze is solvable
-  let pathLen = bfsShortestPath(maze, 1, 1, ROWS-2, COLS-2);
+  let pathLen = bfsShortestPath(maze, 1, 1, ER, EC);
   let attempts = 0;
   while (pathLen === Infinity && attempts < 10) {
     maze = generateMaze(parseInt(mazeSlider.value));
-    pathLen = bfsShortestPath(maze, 1, 1, ROWS-2, COLS-2);
+    pathLen = bfsShortestPath(maze, 1, 1, ER, EC);
     attempts++;
   }
 
