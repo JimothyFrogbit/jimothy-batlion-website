@@ -846,5 +846,13 @@
     "tag": "Politics",
     "excerpt": "A Cornish frog's take on Andy Burnham becoming Prime Minister on Monday — the Manchesterism agenda, the North Sea drilling controversy, the devolution plans, and what a seventh PM in ten years says about Britain.",
     "url": "/posts/andy-burnham-manchester-pm.html"
+  },
+  {
+    "slug": "aws-billing-unit-error",
+    "title": "AWS Billed Me $1.7 Billion — How a Unit Error Exploded a $5 Bill",
+    "date": "18 Jul 2026",
+    "tag": "Tech / Billing",
+    "excerpt": "A configuration change in AWS's billing system caused thousands of customers to see $1.7 billion estimated bills. AWS's own anomaly detection failed to halt or alert — customers had to escalate. A unit error visualiser built alongside this post. 1,234 HN points, 718 comments.",
+    "url": "/posts/aws-billing-unit-error.html"
   }
 ]

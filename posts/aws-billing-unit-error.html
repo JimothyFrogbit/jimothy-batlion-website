@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS Billed Me $1.7 Billion — How a Unit Error Exploded a $5 Bill — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="A configuration change in AWS's billing system caused thousands of customers to see $1.7 billion estimated bills. Here's how a unit error works, why their own alarms failed, and what happens when the COBOL frog looks under the hood.">
+  <meta property="og:title" content="AWS Billed Me $1.7 Billion — How a Unit Error Exploded a $5 Bill">
+  <meta property="og:description" content="A configuration change in AWS's billing system caused thousands of customers to see $1.7 billion estimated bills. Here's how a unit error works, why their own alarms failed, and what happens when the COBOL frog looks under the hood.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/aws-billing-unit-error.jpeg?v=20260718">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/aws-billing-unit-error.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-18">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AWS Billed Me $1.7 Billion — How a Unit Error Exploded a $5 Bill">
+  <meta name="twitter:description" content="A configuration change in AWS's billing system caused thousands of customers to see $1.7 billion estimated bills. Here's how a unit error works, why their own alarms failed, and what happens when the COBOL frog looks under the hood.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/aws-billing-unit-error.jpeg?v=20260718">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#1a1a2e;color:#ff9900;">☁️ AWS</span>
+          <span>18 Jul 2026</span>
+          <span>Tech / Billing</span>
+        </div>
+        <h1>AWS Billed Me $1.7 Billion — How a Unit Error Exploded a $5 Bill</h1>
+        <p class="article-subtitle">When a configuration change in the billing pipeline turned $5 into $1.7 billion, and AWS's own anomaly detection watched it happen for five hours.</p>
+      </div>
+
+      <img src="../assets/images/aws-billing-unit-error.jpeg?v=20260718" alt="A frog staring in horror at an AWS billing dashboard showing $1.7 billion"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        A frog's estimated monthly bill. Not a typo. Not a decimal place. Three billion dollars.
+      </p>
+
+      <p>Wasson.</p>
+
+      <p>I was mid-espresso pull yesterday afternoon when Hacker News exploded. 1,234 points in a few hours. 718 comments. A single Ask HN: <em>"I've got an estimated bill for $1.7 BILLION over this month. Normal usage is less than $5."</em></p>
+
+      <p>My first thought was decimal place. My second was "did someone forget to divide by a billion?" Turns out — yes. More or less.</p>
+
+      <h2>The Incident</h2>
+
+      <p>On <strong>16 July 2026 at 7:38 PM PDT</strong>, someone at AWS deployed a configuration change to the billing computation system. The system that converts metering records into dollar amounts. The system that decides whether you owe $5 or $5,000,000.</p>
+
+      <p>The change broke unit conversion data. Suddenly, the billing system couldn't correctly translate between, say, <strong>bytes and gigabytes</strong>, or <strong>milliseconds and hours</strong>. The result: line items that should have cost fractions of a cent became billions of dollars.</p>
+
+      <p>One customer — let's call them the $5 Threshold User — had set a budget alert at $5. The forecast came back at <strong>$3,005,575,870.47</strong>. The AWS AI support bot told them, in German: <em>"Die perfekt gleichmäßigen Tageskosten seit dem 1. Juli deuten stark auf einen Abrechnungs- oder Messfehler hin."</em> ("The perfectly consistent daily costs since July 1 strongly suggest a billing or metering error.")</p>
+
+      <p>So even the AI knew. The question is — why didn't AWS?</p>
+
+      <h2>The Unit Error</h2>
+
+      <p>An ex-AWS engineer named donavanm (21 hours ago on HN) gave the best explanation of what happened:</p>
+
+      <blockquote>
+        "I've dealt with this error at AWS. It's a unit error. In my case we meant to charge like 5¢/GB, but missed the unit (GB), and then the billing system defaults to bytes. 5¢ per Byte of data transferred meant some customers were seeing MM bills within hours."
+      </blockquote>
+
+      <p>The mechanism is beautifully simple and terrifyingly catastrophic:</p>
+
+      <p>Every AWS service emits metering records — "I used 100 units of thing." A separate pricing plan defines what those units cost: "100 units of thing at $0.05 per GB." The billing system joins them. If the pricing plan accidentally says "per byte" instead of "per GB", that $5 data transfer becomes $5.3 billion.</p>
+
+      <p><strong>One gigabyte = 1,073,741,824 bytes.</strong> That's not a rounding error. That's a billion-fold explosion. The billing system multiplies, not divides. It doesn't guess. It just computes.</p>
+
+      <p>And when the computation involves <em>every single line item</em> across <em>every single AWS customer</em>, those conversions can cascade into numbers that look like the GDP of a small country.</p>
+
+      <h2>The Timeline — When Alarms Fail</h2>
+
+      <p>Here's where it gets interesting from a safety-critical perspective:</p>
+
+      <ul>
+        <li><strong>7:38 PM</strong> — Configuration change deployed. Unit conversion breaks.</li>
+        <li><strong>7:46 PM</strong> — AWS's own <strong>alarms detect cost anomalies</strong> but <em>fail to halt the estimated bill generation process or alert engineering teams</em>.</li>
+        <li><strong>12:19 AM</strong> — Engineering is alerted not by their own systems, but by <strong>customer escalations</strong>.</li>
+        <li><strong>1:33 AM</strong> — First customer-facing communication via Service Health Dashboard.</li>
+        <li><strong>8:24 AM</strong> — Estimated billing updates paused. Budget alerts turned off.</li>
+        <li><strong>12:00 PM</strong> — Root cause identified. Unit conversion configuration.</li>
+        <li><strong>12:30 PM</strong> — Mitigation applied. Data reprocessing begins.</li>
+        <li><strong>6:00 AM (18 Jul)</strong> — Majority of accounts recovered.</li>
+      </ul>
+
+      <p>The alarms <strong>detected</strong> the anomaly 8 minutes after it started. They just didn't <em>do</em> anything about it. This is the textbook definition of a detection gap — you have the monitoring, but the response automation is missing.</p>
+
+      <p>I've debugged enough COBOL batch jobs in my time to recognise this pattern. The mainframe version: a report that says "WARNING: ACCOUNT BALANCE EXCEEDS 10 STANDARD DEVIATIONS" but keeps printing. The alert exists. The halt doesn't.</p>
+
+      <h2>What $1.7 Billion Looks Like</h2>
+
+      <p>The unit error multiplier of <strong>340 million times</strong> is hard to visualise. Let me try:</p>
+
+      <ul>
+        <li><strong>6,800</strong> average US homes</li>
+        <li><strong>42,500</strong> Teslas</li>
+        <li><strong>340,000,000</strong> espressos (at my local London rate, that's about 930,000 years of caffeine)</li>
+        <li><strong>53 million months</strong> of AWS t4g.nano instances</li>
+        <li><strong>2.5×</strong> Raspberry Pi's entire annual revenue</li>
+        <li><strong>1.7</strong> James Webb Space Telescopes</li>
+      </ul>
+
+      <p>Of course, the actual $1.7 billion was never an invoice — it was an <em>estimate</em>. The billing system was producing wrong numbers, but no money changed hands. AWS explicitly stated: <em>"These inaccurate billing estimates did not affect customer invoices."</em></p>
+
+      <p>But that's not really the point, is it? The point is that trust is a fragile thing, and waking up to a billionaire's debt is not how you build it.</p>
+
+      <h2>The COE Culture</h2>
+
+      <p>A fascinating HN subthread discussed Amazon's COE (Correction of Errors) process. COEs are mandatory post-mortems for any significant customer-impacting incident, and they apparently consume <em>at least a man-month</em> of follow-up work. There are L10-level meetings where technical staff randomly pick COE reports and review them in front of peers.</p>
+
+      <p>One commenter (mightyham, 19h ago) wrote:</p>
+
+      <blockquote>
+        "COEs are such a huge annoyance for teams that they create a strong incentive to be proactive in preventing issues like this from happening. One of the rules when it comes to writing COEs is that they are not the fault of individuals but processes; but in reality, no one wants to be the cause of one."
+      </blockquote>
+
+      <p>Another (akdev1l, 20h ago) was less impressed:</p>
+
+      <blockquote>
+        "Not even tests but just some basic anomaly detection lol. Like maybe if the bill amounts increase by like 10M% there should be someone that looks into it."
+      </blockquote>
+
+      <p>This is the tension at the heart of every large system. You have the monitoring. You have the process. You have the culture of blameless post-mortems. But somewhere between "we detected the anomaly" and "we paged the right person," there's a gap that costs a thousand customers a few sleepless hours and AWS a lot of trust.</p>
+
+      <h2>The COBOL Frog Observation</h2>
+
+      <p>In COBOL, every number has a <code>PICTURE</code> clause. You tell the compiler exactly how many digits, exactly where the decimal point lives. <code>PIC 9(9)V99</code> — nine digits, two decimal places. If you try to stuff a billion-dollar value into a field that expects $999,999.99, the program abends. Explicitly. On purpose. No silent overflow.</p>
+
+      <p>In the cloud, the picture clause is a pricing plan configuration. And when the unit metadata says "per byte" instead of "per GB," there's no abend. No compile error. The system computes $1.7 billion as a perfectly valid number, sends it to the console, and waits for someone to scream.</p>
+
+      <p>Neither approach is right or wrong. But I know which one lets you sleep better at night when a change goes out.</p>
+
+      <h2>Try It Yourself</h2>
+
+      <p>I built an <a href="../tools/aws-billing-unit-error.html" target="_blank">interactive unit error visualiser</a> so you can see how different unit conversions explode your bill. Select scenarios like bytes-vs-gigabytes or milliseconds-vs-hours, or enter your own numbers and see the catastrophic multiplier in real time. There's also the full timeline and AWS's official post-mortem embedded.</p>
+
+      <p>Watching a $5 bill become $5.3 billion with a single dropdown change is the fastest way to understand why the AWS billing error was 1,234 points on HN.</p>
+
+      <p>🐸 Proper job? Not quite. But at least we learn.</p>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>

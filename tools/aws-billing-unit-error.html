@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS $1.7B Billing Error — Unit Error Visualiser</title>
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <style>
+    :root {
+      --card: #1a1a2e;
+      --card-hover: #222240;
+      --accent: #ff9900;
+      --accent-dim: #cc7a00;
+      --green: #4ade80;
+      --red: #f87171;
+      --amber: #fbbf24;
+      --blue: #60a5fa;
+    }
+    body { background: #0f0f1a; color: #e0e0e0; font-family: 'Inter', system-ui, sans-serif; }
+    .container { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .subtitle { color: #999; margin-bottom: 2rem; }
+    .intro-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--accent);
+    }
+    .intro-card p { margin: 0.5rem 0; line-height: 1.6; }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 640px) {
+      .scenario-grid { grid-template-columns: 1fr; }
+    }
+    .scenario-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    .scenario-card:hover {
+      background: var(--card-hover);
+      transform: translateY(-2px);
+    }
+    .scenario-card.active {
+      border-color: var(--accent);
+      background: var(--card-hover);
+    }
+    .scenario-card h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+    .scenario-card .unit-label {
+      font-size: 0.85rem;
+      color: #aaa;
+      margin-bottom: 0.5rem;
+    }
+    .scenario-card .bill-normal { color: var(--green); font-size: 1.5rem; font-weight: 700; }
+    .scenario-card .bill-error { color: var(--red); font-size: 1.5rem; font-weight: 700; }
+    .scenario-card .multiplier {
+      display: inline-block;
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--amber);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    .visualiser-section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .visualiser-section h2 { margin: 0 0 1rem; font-size: 1.2rem; }
+
+    .bar-container { margin: 1rem 0; }
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 0.3rem;
+    }
+    .bar-track {
+      height: 32px;
+      background: #2a2a40;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.6s ease;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .bar-fill.normal { background: linear-gradient(90deg, #4ade80, #22c55e); }
+    .bar-fill.error { background: linear-gradient(90deg, #f87171, #ef4444); }
+    .bar-fill.corrected { background: linear-gradient(90deg, #60a5fa, #3b82f6); }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    .comparison-table th, .comparison-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+    .comparison-table th { color: #999; font-weight: 600; font-size: 0.85rem; }
+    .comparison-table .catastrophic { color: var(--red); }
+
+    .magnitude-vis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+    .magnitude-block {
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+    .controls label {
+      font-size: 0.85rem;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .controls select, .controls input {
+      background: #2a2a40;
+      border: 1px solid #444;
+      color: #e0e0e0;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    .timeline-section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .timeline-event {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #2a2a40;
+    }
+    .timeline-event:last-child { border-bottom: none; }
+    .timeline-time {
+      min-width: 120px;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .timeline-desc { font-size: 0.9rem; line-height: 1.5; }
+    .timeline-desc .highlight { color: var(--red); font-weight: 600; }
+
+    .quote-section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--blue);
+    }
+    .quote-section blockquote {
+      margin: 0;
+      font-style: italic;
+      line-height: 1.6;
+      color: #ccc;
+    }
+    .quote-section cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-style: normal;
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: #666;
+      font-size: 0.8rem;
+      padding: 2rem 0;
+    }
+
+    .mode-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1.5rem;
+      background: #2a2a40;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .mode-tab {
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      border: none;
+      color: #999;
+      background: transparent;
+    }
+    .mode-tab.active {
+      background: var(--accent);
+      color: #000;
+    }
+    .mode-tab:hover:not(.active) { color: #e0e0e0; }
+
+    .mode-content { display: none; }
+    .mode-content.active { display: block; }
+
+    .tiny-block { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 2px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>☁️ AWS $1.7B Billing Error</h1>
+  <p class="subtitle">How a unit conversion bug turned $5 into $1.7 billion — an interactive visualiser</p>
+
+  <div class="intro-card">
+    <p>On <strong>16-17 July 2026</strong>, a configuration change in AWS's billing computation system caused unit conversion data to fail, inflating estimated costs across thousands of accounts. Customers with normal monthly bills under <strong>$5</strong> woke up to estimated bills of <strong>$1.7 billion</strong>.</p>
+    <p>An ex-AWS engineer explained the mechanism: a <strong>unit error</strong> in the pricing plan — charging for bytes instead of gigabytes, milliseconds instead of hours — multiplied costs by a factor of a billion or more.</p>
+    <p>AWS's own anomaly detection <span class="highlight">failed to halt or alert</span>. Customer escalations were what alerted engineering. By the time it was fixed, the estimated bill for some accounts had reached astronomical figures.</p>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="scenarios" onclick="switchMode('scenarios')">📊 Scenarios</button>
+    <button class="mode-tab" data-mode="custom" onclick="switchMode('custom')">🔧 Custom Calculation</button>
+    <button class="mode-tab" data-mode="timeline" onclick="switchMode('timeline')">📅 Timeline</button>
+  </div>
+
+  <div id="mode-scenarios" class="mode-content active">
+    <h2 style="margin-bottom:1rem; font-size:1.1rem;">Select a unit error scenario</h2>
+
+    <div class="scenario-grid" id="scenarioGrid">
+      <div class="scenario-card active" data-scenario="0" onclick="selectScenario(0)">
+        <h3>AWS Billing Error</h3>
+        <div class="unit-label">Unit conversion data failure</div>
+        <div class="bill-normal">$5</div>
+        <div class="bill-error" id="scenarioError0">$1,700,000,000</div>
+        <div class="multiplier">340,000,000×</div>
+      </div>
+      <div class="scenario-card" data-scenario="1" onclick="selectScenario(1)">
+        <h3>Bytes vs Gigabytes</h3>
+        <div class="unit-label">5¢/GB → 5¢/byte</div>
+        <div class="bill-normal">$5</div>
+        <div class="bill-error" id="scenarioError1">$5,368,709,120</div>
+        <div class="multiplier">1,073,741,824×</div>
+      </div>
+      <div class="scenario-card" data-scenario="2" onclick="selectScenario(2)">
+        <h3>Milliseconds vs Hours</h3>
+        <div class="unit-label">$0.10/hr → $0.10/ms</div>
+        <div class="bill-normal">$50</div>
+        <div class="bill-error" id="scenarioError2">$180,000,000</div>
+        <div class="multiplier">3,600,000×</div>
+      </div>
+      <div class="scenario-card" data-scenario="3" onclick="selectScenario(3)">
+        <h3>Microcents vs Dollars</h3>
+        <div class="unit-label">$0.00001/req → $1/req</div>
+        <div class="bill-normal">$10</div>
+        <div class="bill-error" id="scenarioError3">$1,000,000</div>
+        <div class="multiplier">100,000×</div>
+      </div>
+      <div class="scenario-card" data-scenario="4" onclick="selectScenario(4)">
+        <h3>Per-Month vs Per-Hour</h3>
+        <div class="unit-label">$10/month → $10/hour</div>
+        <div class="bill-normal">$10</div>
+        <div class="bill-error" id="scenarioError4">$7,300</div>
+        <div class="multiplier">730×</div>
+      </div>
+      <div class="scenario-card" data-scenario="5" onclick="selectScenario(5)">
+        <h3>Kilobytes vs Terabytes</h3>
+        <div class="unit-label">0.1¢/TB → 0.1¢/KB</div>
+        <div class="bill-normal">$5</div>
+        <div class="bill-error" id="scenarioError5">$5,497,558</div>
+        <div class="multiplier">1,099,511×</div>
+      </div>
+    </div>
+
+    <div class="visualiser-section">
+      <h2>Bill Comparison</h2>
+      <div class="bar-container">
+        <div class="bar-label">
+          <span>Normal bill</span>
+          <span id="normalLabel">$5</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill normal" id="normalBar" style="width:0.1%">$5</div>
+        </div>
+      </div>
+      <div class="bar-container">
+        <div class="bar-label">
+          <span style="color:var(--red)">Error bill</span>
+          <span id="errorLabel" style="color:var(--red)">$1,700,000,000</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill error" id="errorBar" style="width:100%">$1.7B</div>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:1rem; color:var(--amber); font-size:0.9rem;">
+        <strong>Multiplier: <span id="multiplierValue">340,000,000×</span></strong>
+      </div>
+    </div>
+
+    <div class="visualiser-section">
+      <h2>What $1.7 Billion Could Buy</h2>
+      <div class="magnitude-vis" id="magnitudeVis">
+        <div class="magnitude-block" style="background:rgba(96,165,250,0.15);color:var(--blue);">🏠 6,800 average US homes</div>
+        <div class="magnitude-block" style="background:rgba(251,191,36,0.15);color:var(--amber);">🚗 42,500 Teslas</div>
+        <div class="magnitude-block" style="background:rgba(74,222,128,0.15);color:var(--green);">☕ 340M espressos</div>
+        <div class="magnitude-block" style="background:rgba(248,113,113,0.15);color:var(--red);">💻 53M months of AWS t4g.nano</div>
+        <div class="magnitude-block" style="background:rgba(251,191,36,0.15);color:var(--amber);">🏦 2.5× Raspberry Pi's annual revenue</div>
+        <div class="magnitude-block" style="background:rgba(96,165,250,0.15);color:var(--blue);">📡 1.7 James Webb Space Telescopes</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mode-custom" class="mode-content">
+    <div class="visualiser-section">
+      <h2>Custom Unit Error Calculator</h2>
+      <p style="color:#999;font-size:0.9rem;margin-bottom:1rem;">See how different unit conversion errors explode your bill.</p>
+      <div class="controls">
+        <label>Normal monthly bill: $
+          <input type="number" id="customNormal" value="5" min="0.01" step="0.01" oninput="calcCustom()">
+        </label>
+        <label>Error type:
+          <select id="customErrorType" onchange="calcCustom()">
+            <option value="gb">Bytes vs Gigabytes (1B×)</option>
+            <option value="ms">ms vs Hours (3.6M×)</option>
+            <option value="mcd">Microcents vs Dollars (100K×)</option>
+            <option value="hr">Per-Month vs Per-Hour (730×)</option>
+            <option value="custom">Custom multiplier</option>
+          </select>
+        </label>
+        <label id="customMultLabel" style="display:none;">Multiplier:
+          <input type="number" id="customMultiplier" value="1000000" min="2" oninput="calcCustom()">
+        </label>
+      </div>
+      <div class="bar-container">
+        <div class="bar-label">
+          <span>Normal bill</span>
+          <span id="customNormalLabel">$5.00</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill normal" id="customNormalBar" style="width:0.1%">$5</div>
+        </div>
+      </div>
+      <div class="bar-container">
+        <div class="bar-label">
+          <span style="color:var(--red)">Error bill</span>
+          <span id="customErrorLabel" style="color:var(--red)">$0</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill error" id="customErrorBar" style="width:0%"></div>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:1rem; color:var(--amber); font-size:0.9rem;">
+        <strong>Multiplier: <span id="customMultDisplay">1,073,741,824×</span></strong>
+      </div>
+    </div>
+    <div class="visualiser-section">
+      <h2>Unit Conversion Error Table</h2>
+      <table class="comparison-table">
+        <tr><th>Conversion</th><th>Multiplier</th><th>Catastrophic on</th></tr>
+        <tr><td>Byte ← GB</td><td>1,073,741,824×</td><td class="catastrophic">Any data transfer</td></tr>
+        <tr><td>ms ← hour</td><td>3,600,000×</td><td class="catastrophic">Any compute time</td></tr>
+        <tr><td>Micro$ ← $</td><td>1,000,000×</td><td class="catastrophic">Per-request APIs</td></tr>
+        <tr><td>μs ← hour</td><td>3,600,000,000×</td><td class="catastrophic">Sub-ms compute</td></tr>
+        <tr><td>KB ← TB</td><td>1,099,511,628×</td><td class="catastrophic">Storage pricing</td></tr>
+        <tr><td>Per-hour ← per-month</td><td>730×</td><td>Reserved instances</td></tr>
+        <tr><td>Per-day ← per-month</td><td>30×</td><td>Subscription pricing</td></tr>
+        <tr><td>Per-minute ← per-hour</td><td>60×</td><td>Compute pricing</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="mode-timeline" class="mode-content">
+    <div class="timeline-section">
+      <h2>📅 Incident Timeline (PDT, 16-18 Jul 2026)</h2>
+      <div class="timeline-event">
+        <div class="timeline-time">Jul 16, 7:38 PM</div>
+        <div class="timeline-desc"><strong>Configuration change</strong> deployed to billing computation system — unit conversion data updates begin to fail silently.</div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-time">Jul 16, 7:46 PM</div>
+        <div class="timeline-desc">AWS alarms detect cost anomalies but <span class="highlight">fail to halt</span> estimated bill generation or alert engineering teams.</div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-time">Jul 17, 12:19 AM</div>
+        <div class="timeline-desc"><span class="highlight">Customer escalations</span> alert engineering — not their own alarms. Thousands see $1.7B estimated bills.</div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-time">Jul 17, 1:33 AM</div>
+        <div class="timeline-desc">AWS informs customers via Service Health Dashboard.</div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-time">Jul 17, 8:24 AM</div>
+        <div class="timeline-desc">Pauses estimated billing data updates. Turns off budget and cost anomaly alerts as precaution.</div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-time">Jul 17, 12:00 PM</div>
+        <div class="timeline-desc">Root cause identified: configuration change broke unit conversion data, inflating line item costs.</div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-time">Jul 17, 12:30 PM</div>
+        <div class="timeline-desc">Mitigation deployed — unit conversion configuration corrected. Data reprocessing begins.</div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-time">Jul 17, 4:19 PM</div>
+        <div class="timeline-desc">Recovery observed beginning — estimated costs start returning to normal.</div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-time">Jul 18, 6:00 AM</div>
+        <div class="timeline-desc">Majority of accounts fully recovered. AWS declares issue resolved.</div>
+      </div>
+    </div>
+
+    <div class="quote-section">
+      <blockquote>
+        "I've dealt with this error at AWS. It's a unit error. In my case we meant to charge like 5¢/GB, but missed the unit (GB), and then the billing system defaults to bytes. 5¢ per Byte of data transferred meant some customers were seeing MM bills within hours."
+      </blockquote>
+      <cite>— donavanm, ex-AWS engineer (HN, 17 Jul 2026)</cite>
+    </div>
+
+    <div class="quote-section">
+      <blockquote>
+        "On July 16, 2026 at 7:46 PM PDT, our alarms detected cost anomalies but failed to halt the estimated bill generation process or alert our engineering teams. Our engineering teams were alerted to this issue on July 17 at 12:19 AM PDT by customer escalations."
+      </blockquote>
+      <cite>— AWS Health Dashboard, official post-mortem (18 Jul 2026)</cite>
+    </div>
+
+    <div class="quote-section">
+      <blockquote>
+        "I receive an AWS Budgets alert that my budget is exceeding the alert threshold. Threshold is $5. Forecasted amount is listed as $3,005,575,870.47. (Yepp, right, that's 3 billion dollars.) I haven't even used AWS actively in the last year."
+      </blockquote>
+      <cite>— mstolpm, HN (17 Jul 2026), quoting the AWS AI support bot: "The perfectly consistent daily costs since July 1 strongly suggest a billing or metering error." (in German)</cite>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Data sourced from AWS Health Dashboard, Hacker News (1,234 pts), and Reddit.<br>
+    Built 18 Jul 2026. All dollar figures are estimated billing data — no actual invoices were affected.
+  </div>
+</div>
+
+<script>
+const scenarios = [
+  { normal: 5, error: 1700000000, multiplier: 340000000, label: 'AWS Billing Error' },
+  { normal: 5, error: 5368709120, multiplier: 1073741824, label: 'Bytes vs Gigabytes' },
+  { normal: 50, error: 180000000, multiplier: 3600000, label: 'ms vs Hours' },
+  { normal: 10, error: 1000000, multiplier: 100000, label: 'Microcents vs Dollars' },
+  { normal: 10, error: 7300, multiplier: 730, label: 'Per-Month vs Per-Hour' },
+  { normal: 5, error: 5497558, multiplier: 1099511, label: 'KB vs TB' },
+];
+let currentScenario = 0;
+
+const magnitudeItems = [
+  { label: '🏠 6,800 average US homes', color: 'var(--blue)' },
+  { label: '🚗 42,500 Teslas', color: 'var(--amber)' },
+  { label: '☕ 340M espressos', color: 'var(--green)' },
+  { label: '💻 53M months of AWS t4g.nano', color: 'var(--red)' },
+  { label: '🏦 2.5× Raspberry Pi annual revenue', color: 'var(--amber)' },
+  { label: '📡 1.7 James Webb Space Telescopes', color: 'var(--blue)' },
+];
+
+function fmt(n) {
+  if (n >= 1e12) return '$' + (n / 1e12).toFixed(2) + 'T';
+  if (n >= 1e9) return '$' + (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
+  return '$' + n.toFixed(2);
+}
+
+function fmtFull(n) {
+  return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 2 });
+}
+
+function fmtMult(n) {
+  return n.toLocaleString('en-US') + '×';
+}
+
+function selectScenario(idx) {
+  currentScenario = idx;
+  document.querySelectorAll('.scenario-card').forEach((c, i) => {
+    c.classList.toggle('active', i === idx);
+  });
+  const s = scenarios[idx];
+  document.getElementById('normalLabel').textContent = fmt(s.normal);
+  document.getElementById('errorLabel').textContent = fmtFull(s.error);
+  document.getElementById('multiplierValue').textContent = fmtMult(s.multiplier);
+
+  const normalPct = Math.min(0.5, (s.normal / s.error) * 100);
+  document.getElementById('normalBar').style.width = Math.max(0.1, normalPct) + '%';
+  document.getElementById('normalBar').textContent = fmt(s.normal);
+  document.getElementById('errorBar').style.width = '100%';
+  document.getElementById('errorBar').textContent = fmt(s.error);
+}
+
+function calcCustom() {
+  const normal = parseFloat(document.getElementById('customNormal').value) || 5;
+  const type = document.getElementById('customErrorType').value;
+  let multiplier;
+  if (type === 'custom') {
+    document.getElementById('customMultLabel').style.display = 'flex';
+    multiplier = parseFloat(document.getElementById('customMultiplier').value) || 1;
+  } else {
+    document.getElementById('customMultLabel').style.display = 'none';
+    const mults = { gb: 1073741824, ms: 3600000, mcd: 100000, hr: 730 };
+    multiplier = mults[type] || 1;
+  }
+  const error = normal * multiplier;
+
+  document.getElementById('customNormalLabel').textContent = fmt(normal);
+  document.getElementById('customErrorLabel').textContent = fmtFull(error);
+  document.getElementById('customMultDisplay').textContent = fmtMult(multiplier);
+
+  const normalPct = Math.min(2, (normal / error) * 100);
+  document.getElementById('customNormalBar').style.width = Math.max(0.1, normalPct) + '%';
+  document.getElementById('customNormalBar').textContent = fmt(normal);
+  const errorWidth = Math.min(100, (error / (normal * 1.1e10)) * 100);
+  document.getElementById('customErrorBar').style.width = Math.max(0.1, errorWidth) + '%';
+  document.getElementById('customErrorBar').textContent = error > 1e9 ? fmt(error) : fmtFull(error);
+}
+
+function switchMode(mode) {
+  document.querySelectorAll('.mode-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.mode-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('mode-' + mode).classList.add('active');
+  document.querySelector(`.mode-tab[data-mode="${mode}"]`).classList.add('active');
+}
+
+// Init
+selectScenario(0);
+calcCustom();
+</script>
+</body>
+</html>
