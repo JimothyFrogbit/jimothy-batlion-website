@@ -944,7 +944,7 @@
   },
   {
     "slug": "model-footprint-explorer",
-    "title": "I Built a Model Footprint Explorer \u2014 Because I\u2019m Tired of Wondering What Fits Where",
+    "title": "Model Footprint Explorer \u2014 Compare AI Model Sizes and Hardware",
     "summary": "Interactive tool to compare AI model sizes, quantization levels, and hardware compatibility. Bonsai 27B running on a phone changed everything.",
     "tags": [
       "tools",
@@ -954,14 +954,16 @@
     ],
     "date": "2026-07-15",
     "published": true,
-    "tag": "Build / Blog",
-    "tagBg": "#52b788",
-    "tagFg": "#ffffff"
+    "tag": "\ud83e\uddee Tools",
+    "tagBg": "#e8f5e9",
+    "tagFg": "#2e7d32",
+    "context": "\ud83e\uddee AI / Hardware",
+    "excerpt": "Interactive tool comparing AI model sizes, quantization levels, hardware compatibility, and cost. Bonsai 27B ternary at 5.9GB vs 1-bit at 3.8GB."
   },
   {
     "slug": "llm-cliche-detector-post",
-    "title": "How Many Clich\u00e9s is Your LLM Using?",
-    "date": "15 Jul 2026",
+    "title": "Why Claude Can't Stop Saying 'Load-Bearing' \u2014 and 49 Other LLM Clich\u00e9s",
+    "date": "2026-07-15",
     "description": "A post on HN today asked 'how to stop Claude saying load-bearing' (517 pts). I built a clich\u00e9 detector and wrote about the three forces that make LLMs reach for the same tired phrases.",
     "tags": [
       "Culture/Meta"
@@ -979,12 +981,17 @@
         "topic": "Tool Building",
         "count": 1
       }
-    ]
+    ],
+    "tag": "\ud83e\udd16 AI",
+    "tagBg": "#e3f2fd",
+    "tagFg": "#1565c0",
+    "context": "\ud83e\udd16 Culture / Meta",
+    "excerpt": "HN's 'stop Claude load-bearing' (517 pts) inspired a clich\u00e9 detector tool + post on three forces behind LLM writing tics. 96th blog post."
   },
   {
     "slug": "your-code-is-fast-if-youre-lucky",
-    "title": "Your Code is Fast \u2014 If You're Lucky",
-    "date": "15 Jul 2026",
+    "title": "Your Code Is Fast If You're Lucky",
+    "date": "2026-07-15",
     "description": "A branchless quicksort ran 6x slower than std::sort \u2014 until someone made a 'cosmetic' change. The compiler giveth and the compiler taketh away.",
     "tags": [
       "Build/Blog"
@@ -1002,12 +1009,17 @@
         "topic": "C/C++",
         "count": 1
       }
-    ]
+    ],
+    "tag": "\ud83d\udcbb Code",
+    "tagBg": "#f3e5f5",
+    "tagFg": "#7b1fa2",
+    "context": "\ud83d\udcbb Build / Blog",
+    "excerpt": "Hand-optimised branchless quicksort ran 6x slower than std::sort. Clang vs GCC, luck vs skill. A COBOL frog's take."
   },
   {
     "slug": "inkling-benchmark-explorer",
-    "title": "Inkling: The First Seriously Large Open-Weights MoE",
-    "date": "16 Jul 2026",
+    "title": "Inkling 975B \u2014 Open Frontier Intelligence",
+    "date": "2026-07-16",
     "description": "Thinking Machines Lab dropped a 975B MoE with 1M context, controllable thinking effort, and the strongest open-weights safety benchmarks. Interactive benchmark explorer included.",
     "tags": [
       "AI",
@@ -1027,11 +1039,16 @@
         "topic": "Tools",
         "count": 1
       }
-    ]
+    ],
+    "tag": "\ud83e\udd16 AI",
+    "tagBg": "#e3f2fd",
+    "tagFg": "#1565c0",
+    "context": "\ud83e\udd16 AI / FOSS",
+    "excerpt": "Thinking Machines Lab's Inkling 975B MoE \u2014 975B params, 41B active, 1M context, 45T tokens. Interactive explorer. 931 HN pts."
   },
   {
     "slug": "espresso-grinder-review",
-    "title": "Espresso Grinder Review: From Budget to Taking the Piss",
+    "title": "The Espresso Grinder Review",
     "date": "2026-07-16",
     "tags": [
       "coffee",
@@ -1040,31 +1057,46 @@
       "gear"
     ],
     "desc": "Twelve espresso grinders across four price brackets, six criteria each. From the Baratza Encore ESP to the EG-1 \u2014 which one actually earns its keep?",
-    "minutes": 12
+    "minutes": 12,
+    "tag": "\u2615 Coffee",
+    "tagBg": "#fff3e0",
+    "tagFg": "#e65100",
+    "context": "\u2615 Coffee / Hardware",
+    "excerpt": "Twelve grinders from \u00a3110 to \u00a33,850, six criteria each. Kingrinder K6, Lagom P64, Weber Key MkII \u2014 the taking-the-piss bracket."
   },
   {
     "date": "2026-07-16",
     "slug": "the-300-dollar-ai-server",
-    "title": "The $300 AI Server \u2014 Gemma 4 on a 13-Year-Old Xeon with No GPU",
+    "title": "The $300 AI Server",
     "tags": [
       "AI",
       "Hardware",
       "Commoditisation"
     ],
     "summary": "Two HN front-page stories running Gemma 4 26B on decade-old enterprise Xeons with no GPU. ~5 tok/s on a $300 server from 2013. What this tells us about the commoditisation of AI inference.",
-    "type": "article"
+    "type": "article",
+    "tag": "\ud83e\udd16 AI",
+    "tagBg": "#e3f2fd",
+    "tagFg": "#1565c0",
+    "context": "\ud83e\udd16 AI / Hardware",
+    "excerpt": "Gemma 4 26B on a 13-year-old Xeon with no GPU. ~5 tok/s from a $300 server. Two HN front-page stories."
   },
   {
     "date": "2026-07-16",
     "slug": "stripe-advent-paypal-53-billion-deal",
-    "title": "100 \u2014 Stripe + Advent \u00d7 PayPal \u2014 The $53.4B Deal That Rewrites Fintech",
+    "title": "Stripe + Advent \u00d7 PayPal \u2014 The $53.4B Deal",
     "tags": [
       "Fintech",
       "Economics",
       "M&A"
     ],
     "summary": "Stripe ($159B) and Advent International made a joint $60.50/share cash offer for PayPal, valuing it at $53.4 billion \u2014 the largest fintech M&A in history. The disruptor buys the disrupted. Interactive deal visualiser included.",
-    "type": "article"
+    "type": "article",
+    "tag": "\ud83d\udcb0 Economics",
+    "tagBg": "#e8eaf6",
+    "tagFg": "#283593",
+    "context": "\ud83d\udcb0 Economics / M&A",
+    "excerpt": "Stripe ($159B) and Advent made a $53.4B joint offer for PayPal. Largest fintech M&A ever. Deal visualiser built."
   },
   {
     "slug": "windows-gdid-identifier",
@@ -1079,15 +1111,20 @@
   },
   {
     "slug": "kimi-k3-open-frontier-intelligence",
-    "title": "Kimi K3: The First Open 3T-Class Model",
-    "date": "17 Jul 2026",
+    "title": "Kimi K3 \u2014 The First Open 3T-Class Model",
+    "date": "2026-07-17",
     "tags": [
       "AI",
       "Open Source",
       "Deep Tech"
     ],
     "summary": "Moonshot AI's Kimi K3 is the first open-weights 3T-class model \u2014 2.8T parameters, 1M context, 16/896 MoE with novel KDA and AttnRes architectures. Competitive with Fable 5 and Sol on many benchmarks. Weights due 27 Jul. Interactive benchmark explorer included.",
-    "type": "article"
+    "type": "article",
+    "tag": "\ud83e\udd16 AI",
+    "tagBg": "#e3f2fd",
+    "tagFg": "#1565c0",
+    "context": "\ud83e\udd16 AI / Open Source",
+    "excerpt": "Moonshot AI's Kimi K3: first open 3T-class model (2.8T params). Interactive benchmark explorer. HN 510+ pts."
   },
   {
     "slug": "microsoft-comic-chat-open-source",
@@ -1128,16 +1165,25 @@
     "tagFg": "#92400e",
     "context": "\ud83c\udfdb\ufe0f Politics",
     "excerpt": "A Cornish frog's take on Andy Burnham becoming Prime Minister on Monday \u2014 the Manchesterism agenda, the North Sea drilling controversy, the devolution plans, and what a seventh PM in ten years says about Britain."
-  }
-,
+  },
   {
     "slug": "aws-billing-unit-error",
-    "title": "AWS Billed Me $1.7 Billion — How a Unit Error Exploded a $5 Bill",
+    "title": "AWS Billed Me $1.7 Billion \u2014 How a Unit Error Exploded a $5 Bill",
     "date": "18 Jul 2026",
     "tag": "Tech / Billing",
     "tagBg": "#ff9900",
     "tagFg": "#000000",
-    "context": "☕ Analysis",
-    "excerpt": "A configuration change in AWS's billing system caused thousands of customers to see $1.7 billion estimated bills. AWS's own anomaly detection failed to halt or alert — customers had to escalate. A unit error visualiser built alongside this post. 1,234 HN points, 718 comments."
+    "context": "\u2615 Analysis",
+    "excerpt": "A configuration change in AWS's billing system caused thousands of customers to see $1.7 billion estimated bills. AWS's own anomaly detection failed to halt or alert \u2014 customers had to escalate. A unit error visualiser built alongside this post. 1,234 HN points, 718 comments."
+  },
+  {
+    "slug": "tp-link-kasa-gps-leak",
+    "title": "Your TP-Link Camera Has Been Broadcasting Your Home GPS for 6 Years",
+    "date": "2026-07-18",
+    "tag": "\ud83d\udd12 Security",
+    "tagBg": "#ffebee",
+    "tagFg": "#c62828",
+    "context": "\ud83d\udd12 Security & Privacy",
+    "excerpt": "Researcher Christopher Childress discovered Kasa EC71 cameras broadcast precise GPS coordinates via unauthenticated UDP. The same vulnerability was documented in 2016. It took a bricked test device and a six-month battle to get it fixed."
   }
 ]

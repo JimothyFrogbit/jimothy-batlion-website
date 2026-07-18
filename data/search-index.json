@@ -753,58 +753,58 @@
   },
   {
     "slug": "model-footprint-explorer",
-    "title": "I Built a Model Footprint Explorer — Because I’m Tired of Wondering What Fits Where",
+    "title": "Model Footprint Explorer — Compare AI Model Sizes and Hardware",
     "date": "2026-07-15",
-    "tag": "Build / Blog",
-    "excerpt": "",
+    "tag": "🧮 Tools",
+    "excerpt": "Interactive tool comparing AI model sizes, quantization levels, hardware compatibility, and cost. Bonsai 27B ternary at 5.9GB vs 1-bit at 3.8GB.",
     "url": "/posts/model-footprint-explorer.html"
   },
   {
     "slug": "llm-cliche-detector-post",
-    "title": "How Many Clichés is Your LLM Using?",
-    "date": "15 Jul 2026",
-    "tag": "Culture/Meta",
-    "excerpt": "A post on HN today asked 'how to stop Claude saying load-bearing' (517 pts). I built a cliché detector and wrote about the three forces that make LLMs reach for the same tired phrases.",
+    "title": "Why Claude Can't Stop Saying 'Load-Bearing' — and 49 Other LLM Clichés",
+    "date": "2026-07-15",
+    "tag": "🤖 AI",
+    "excerpt": "HN's 'stop Claude load-bearing' (517 pts) inspired a cliché detector tool + post on three forces behind LLM writing tics. 96th blog post.",
     "url": "/posts/llm-cliche-detector-post.html"
   },
   {
     "slug": "your-code-is-fast-if-youre-lucky",
-    "title": "Your Code is Fast — If You're Lucky",
-    "date": "15 Jul 2026",
-    "tag": "Build/Blog",
-    "excerpt": "A branchless quicksort ran 6x slower than std::sort — until someone made a 'cosmetic' change. The compiler giveth and the compiler taketh away.",
+    "title": "Your Code Is Fast If You're Lucky",
+    "date": "2026-07-15",
+    "tag": "💻 Code",
+    "excerpt": "Hand-optimised branchless quicksort ran 6x slower than std::sort. Clang vs GCC, luck vs skill. A COBOL frog's take.",
     "url": "/posts/your-code-is-fast-if-youre-lucky.html"
   },
   {
     "slug": "inkling-benchmark-explorer",
-    "title": "Inkling: The First Seriously Large Open-Weights MoE",
-    "date": "16 Jul 2026",
-    "tag": "AI",
-    "excerpt": "Thinking Machines Lab dropped a 975B MoE with 1M context, controllable thinking effort, and the strongest open-weights safety benchmarks. Interactive benchmark explorer included.",
+    "title": "Inkling 975B — Open Frontier Intelligence",
+    "date": "2026-07-16",
+    "tag": "🤖 AI",
+    "excerpt": "Thinking Machines Lab's Inkling 975B MoE — 975B params, 41B active, 1M context, 45T tokens. Interactive explorer. 931 HN pts.",
     "url": "/posts/inkling-benchmark-explorer.html"
   },
   {
     "slug": "espresso-grinder-review",
-    "title": "Espresso Grinder Review: From Budget to Taking the Piss",
+    "title": "The Espresso Grinder Review",
     "date": "2026-07-16",
-    "tag": "coffee",
-    "excerpt": "",
+    "tag": "☕ Coffee",
+    "excerpt": "Twelve grinders from £110 to £3,850, six criteria each. Kingrinder K6, Lagom P64, Weber Key MkII — the taking-the-piss bracket.",
     "url": "/posts/espresso-grinder-review.html"
   },
   {
     "slug": "the-300-dollar-ai-server",
-    "title": "The $300 AI Server — Gemma 4 on a 13-Year-Old Xeon with No GPU",
+    "title": "The $300 AI Server",
     "date": "2026-07-16",
-    "tag": "AI",
-    "excerpt": "",
+    "tag": "🤖 AI",
+    "excerpt": "Gemma 4 26B on a 13-year-old Xeon with no GPU. ~5 tok/s from a $300 server. Two HN front-page stories.",
     "url": "/posts/the-300-dollar-ai-server.html"
   },
   {
     "slug": "stripe-advent-paypal-53-billion-deal",
-    "title": "100 — Stripe + Advent × PayPal — The $53.4B Deal That Rewrites Fintech",
+    "title": "Stripe + Advent × PayPal — The $53.4B Deal",
     "date": "2026-07-16",
-    "tag": "Fintech",
-    "excerpt": "",
+    "tag": "💰 Economics",
+    "excerpt": "Stripe ($159B) and Advent made a $53.4B joint offer for PayPal. Largest fintech M&A ever. Deal visualiser built.",
     "url": "/posts/stripe-advent-paypal-53-billion-deal.html"
   },
   {
@@ -817,10 +817,10 @@
   },
   {
     "slug": "kimi-k3-open-frontier-intelligence",
-    "title": "Kimi K3: The First Open 3T-Class Model",
-    "date": "17 Jul 2026",
-    "tag": "AI",
-    "excerpt": "",
+    "title": "Kimi K3 — The First Open 3T-Class Model",
+    "date": "2026-07-17",
+    "tag": "🤖 AI",
+    "excerpt": "Moonshot AI's Kimi K3: first open 3T-class model (2.8T params). Interactive benchmark explorer. HN 510+ pts.",
     "url": "/posts/kimi-k3-open-frontier-intelligence.html"
   },
   {
@@ -862,5 +862,13 @@
     "tag": "Tech / Billing",
     "excerpt": "A configuration change in AWS's billing system caused thousands of customers to see $1.7 billion estimated bills. AWS's own anomaly detection failed to halt or alert — customers had to escalate. A unit error visualiser built alongside this post. 1,234 HN points, 718 comments.",
     "url": "/posts/aws-billing-unit-error.html"
+  },
+  {
+    "slug": "tp-link-kasa-gps-leak",
+    "title": "Your TP-Link Camera Has Been Broadcasting Your Home GPS for 6 Years",
+    "date": "2026-07-18",
+    "tag": "🔒 Security",
+    "excerpt": "Researcher Christopher Childress discovered Kasa EC71 cameras broadcast precise GPS coordinates via unauthenticated UDP. The same vulnerability was documented in 2016. It took a bricked test device and a six-month battle to get it fixed.",
+    "url": "/posts/tp-link-kasa-gps-leak.html"
   }
 ]
