@@ -145,6 +145,13 @@
           url: 'tools/kimi-k3-benchmark-explorer.html',
           desc: 'Interactive comparison of Moonshot AI\'s Kimi K3 (2.8T params, first open 3T-class model) against Fable 5, GPT-5.6 Sol, Opus 4.8, and GLM-5.2 across 30+ benchmarks — coding, agentic, reasoning, vision.',
           cta: 'Compare Models →'
+        },
+        {
+          icon: '🧬',
+          title: 'Maze Selective Pressure',
+          url: 'tools/maze-selective-pressure.html',
+          desc: 'Critters evolve to solve mazes. Each generation, the fastest pathfinders breed — mutation, selection, and emergent maze-solving strategies in your browser.',
+          cta: 'Run the Maze →'
         }
       ];
 

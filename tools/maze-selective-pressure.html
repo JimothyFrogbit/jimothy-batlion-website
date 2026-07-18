@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maze Selective Pressure — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0f0c;
+      color: #c8d8c8;
+      font-family: 'Cormorant Garamond', 'Georgia', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      color: #7aaa7a;
+      margin-bottom: 0.3rem;
+    }
+    .subtitle {
+      color: #4a6a4a;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+    .controls label {
+      font-size: 0.85rem;
+      color: #6a8a6a;
+    }
+    .controls input[type="range"] {
+      width: 80px;
+      accent-color: #5a8a5a;
+      background: #152018;
+      height: 4px;
+      border-radius: 2px;
+    }
+    .controls input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #5a8a5a;
+      border: 1px solid #3a5a3a;
+      cursor: pointer;
+    }
+    .controls button {
+      background: rgba(40,80,50,0.3);
+      border: 1px solid #2a4a2a;
+      color: #8aba8a;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+    .controls button:hover {
+      background: rgba(60,120,80,0.3);
+      border-color: #4a7a4a;
+    }
+    .controls button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      color: #6a8a6a;
+      justify-content: center;
+    }
+    .stat-row span { white-space: nowrap; }
+    .stat-row strong { color: #8aba8a; font-weight: 400; }
+    canvas {
+      border: 1px solid #1a2a1a;
+      border-radius: 8px;
+      background: #0d140f;
+      max-width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: #5a7a5a;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .explanation {
+      max-width: 620px;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: #5a7a5a;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .explanation strong { color: #7aaa7a; font-weight: 400; }
+    .back-link {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      color: #4a6a4a;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+      z-index: 10;
+    }
+    .back-link:hover { color: #8aba8a; }
+    .genome-view {
+      margin-top: 1rem;
+      padding: 0.8rem 1rem;
+      background: rgba(10,20,14,0.6);
+      border: 1px solid #1a2a1a;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-family: 'Courier New', monospace;
+      color: #5a7a5a;
+      max-width: 620px;
+      width: 100%;
+      text-align: center;
+      min-height: 2.5rem;
+    }
+    .genome-view strong { color: #7aaa7a; }
+
+    @media (max-width: 700px) {
+      .controls { flex-direction: column; align-items: center; }
+      h1 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="../now.html" class="back-link">← back</a>
+
+<h1>🧬 Maze Selective Pressure</h1>
+<p class="subtitle">Spike: maze-solving as a fitness function for digital evolution</p>
+
+<div class="controls">
+  <label>Population <input type="range" id="popSlider" min="10" max="120" value="40"></label>
+  <label>Mutation % <input type="range" id="mutSlider" min="1" max="50" value="15"></label>
+  <label>Maze complexity <input type="range" id="mazeSlider" min="1" max="5" value="2"></label>
+  <button id="resetBtn">⟳ New Run</button>
+  <button id="pauseBtn">⏸ Pause</button>
+</div>
+
+<div class="stat-row">
+  <span>Generation <strong id="genDisplay">0</strong></span>
+  <span>Critters <strong id="critterCount">0</strong></span>
+  <span>Finished <strong id="finishedCount">0</strong></span>
+  <span>Best steps <strong id="bestSteps">—</strong></span>
+  <span>Mean steps <strong id="meanSteps">—</strong></span>
+</div>
+
+<canvas id="mazeCanvas" width="600" height="600"></canvas>
+
+<div class="legend">
+  <span class="legend-item"><span class="legend-dot" style="background:#5a8a5a"></span> Critter</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#3a7a8a"></span> Finished</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#c8a840"></span> Start</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#b05050"></span> Exit</span>
+  <span class="legend-item"><span>⬤</span> Fittest path trail</span>
+</div>
+
+<div class="genome-view" id="genomeView">Click a critter to inspect its genome</div>
+
+<div class="explanation">
+  <p><strong>How it works:</strong> Critters start at the <span style="color:#c8a840;">yellow</span> square and navigate toward the <span style="color:#b05050;">red</span> exit. Each critter has a genome encoding <strong>pathfinding tendencies</strong> — how much it favours forward progress vs exploration. Every 6 seconds (one generation), critters that reached the exit (or got furthest) breed a new generation. Their genomes recombine and mutate. Over many generations, the population should evolve to solve the maze faster.</p>
+</div>
+
+<script>
+(function() {
+  const canvas = document.getElementById('mazeCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = 600, COLS = 20, ROWS = 20, CELL = W / COLS;
+
+  // ── Controls ──
+  const popSlider = document.getElementById('popSlider');
+  const mutSlider = document.getElementById('mutSlider');
+  const mazeSlider = document.getElementById('mazeSlider');
+  const resetBtn = document.getElementById('resetBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const genDisplay = document.getElementById('genDisplay');
+  const critterCount = document.getElementById('critterCount');
+  const finishedCount = document.getElementById('finishedCount');
+  const bestSteps = document.getElementById('bestSteps');
+  const meanSteps = document.getElementById('meanSteps');
+  const genomeView = document.getElementById('genomeView');
+
+  let paused = false;
+  let generation = 0;
+  let maze = [];
+  let critters = [];
+  let finished = [];
+  let bestStepsVal = Infinity;
+  let genTimer = 0;
+  const GEN_LENGTH_S = 6;
+
+  // ── GENOME MODEL ──
+  // 6 genes controlling pathfinding strategy:
+  //   fwdBias  (0-1): preference for moving toward exit vs wandering
+  //   wallHug  (0-1): tendency to follow walls (helps dead-ends)
+  //   memory   (0-1): how many recent cells to avoid revisiting
+  //   backBias (0-1): reluctance to reverse direction
+  //   explore  (0-1): random exploration chance
+  //   speed    (0-1): movement steps per tick (1-3)
+  const GENE_NAMES = ['fwdBias','wallHug','memory','backBias','explore','speed'];
+
+  function randomGenome() {
+    const g = {};
+    GENE_NAMES.forEach(n => g[n] = Math.random());
+    return g;
+  }
+
+  function expressGenome(g) {
+    return {
+      fwdBias: 0.3 + g.fwdBias * 0.6,       // 0.3-0.9
+      wallHug: g.wallHug * 0.8,              // 0-0.8
+      memory: Math.round(1 + g.memory * 9),  // 1-10 cells remembered
+      backBias: 0.2 + g.backBias * 0.5,      // 0.2-0.7
+      explore: 0.02 + g.explore * 0.28,      // 2%-30%
+      speed: g.speed < 0.3 ? 1 : g.speed < 0.7 ? 2 : 3
+    };
+  }
+
+  function breedGenome(g1, g2, mutRate) {
+    const child = {};
+    GENE_NAMES.forEach(n => {
+      // Uniform crossover
+      child[n] = Math.random() < 0.5 ? g1[n] : g2[n];
+      // Mutate
+      if (Math.random() < mutRate) {
+        child[n] = Math.max(0, Math.min(1, child[n] + (Math.random() - 0.5) * 0.4));
+      }
+    });
+    return child;
+  }
+
+  // ── MAZE GENERATION (modified recursive backtracker) ──
+  function generateMaze(complexity) {
+    // Grid: 1 = wall, 0 = path
+    const grid = [];
+    for (let r = 0; r < ROWS; r++) {
+      grid[r] = [];
+      for (let c = 0; c < COLS; c++) {
+        grid[r][c] = 1; // all walls initially
+      }
+    }
+
+    // Carve paths using recursive backtracker on odd cells
+    function carve(x, y) {
+      grid[y][x] = 0;
+      const dirs = [[0,-2],[0,2],[-2,0],[2,0]];
+      // Shuffle
+      for (let i = dirs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [dirs[i], dirs[j]] = [dirs[j], dirs[i]];
+      }
+      for (const [dx, dy] of dirs) {
+        const nx = x + dx, ny = y + dy;
+        if (nx > 0 && nx < COLS-1 && ny > 0 && ny < ROWS-1 && grid[ny][nx] === 1) {
+          grid[y + dy/2][x + dx/2] = 0;
+          carve(nx, ny);
+        }
+      }
+    }
+
+    carve(1, 1);
+
+    // Add extra passages based on complexity (1-5)
+    // Low complexity = sparse passages (harder), High = more open (easier)
+    const extraPassages = Math.floor(complexity * 6);
+    for (let i = 0; i < extraPassages; i++) {
+      const attempts = 50;
+      for (let a = 0; a < attempts; a++) {
+        const r = 1 + Math.floor(Math.random() * (ROWS - 2));
+        const c = 1 + Math.floor(Math.random() * (COLS - 2));
+        if (grid[r][c] === 1) {
+          // Only open if it connects two paths
+          let pathNeighbours = 0;
+          const dirs = [[0,-1],[0,1],[-1,0],[1,0]];
+          for (const [dx, dy] of dirs) {
+            const nr = r + dy, nc = c + dx;
+            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && grid[nr][nc] === 0) {
+              pathNeighbours++;
+            }
+          }
+          if (pathNeighbours >= 2) {
+            grid[r][c] = 0;
+            break;
+          }
+        }
+      }
+    }
+
+    // Ensure start (1,1) and exit (COLS-2, ROWS-2) are open
+    grid[1][1] = 0;
+    grid[ROWS-2][COLS-2] = 0;
+
+    return grid;
+  }
+
+  // ── BFS SHORTEST PATH (for progress metric) ──
+  function bfsShortestPath(grid, sr, sc, er, ec) {
+    const queue = [[sr, sc, 0]];
+    const visited = new Set();
+    visited.add(`${sr},${sc}`);
+    while (queue.length) {
+      const [r, c, d] = queue.shift();
+      if (r === er && c === ec) return d;
+      const dirs = [[0,-1],[0,1],[-1,0],[1,0]];
+      for (const [dr, dc] of dirs) {
+        const nr = r + dr, nc = c + dc;
+        const key = `${nr},${nc}`;
+        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && grid[nr][nc] === 0 && !visited.has(key)) {
+          visited.add(key);
+          queue.push([nr, nc, d + 1]);
+        }
+      }
+    }
+    return Infinity; // unreachable
+  }
+
+  // ── CRITTER ──
+  function createCritter(genome) {
+    return {
+      genome: genome || randomGenome(),
+      row: 1, col: 1,
+      prevRow: 1, prevCol: 1,
+      alive: true,
+      finished: false,
+      steps: 0,
+      trail: [],        // last N positions for memory
+      fitness: 0,       // lower = better (steps to exit)
+      lastDir: null,    // 'N','S','E','W' — for backBias
+      trailColor: `hsl(${Math.random() * 360}, 50%, 55%)`,
+      maxProgress: bfsShortestPath(maze, 1, 1, ROWS-2, COLS-2),
+      progress: 0,       // BFS steps from start at closest approach
+    };
+  }
+
+  function resetCritters() {
+    const pop = parseInt(popSlider.value);
+    const startGen = Math.random() < 0.5 ? randomGenome() : null;
+    critters = [];
+    for (let i = 0; i < pop; i++) {
+      critters.push(createCritter(startGen ? breedGenome(startGen, randomGenome(), 0.3) : null));
+    }
+    finished = [];
+    generation = 0;
+    bestStepsVal = Infinity;
+    genTimer = 0;
+    updateStats();
+  }
+
+  // ── CRITTER AI ──
+  function updateCritter(c, dt) {
+    if (!c.alive || c.finished) return;
+
+    const mazeGrid = maze;
+    const expr = expressGenome(c.genome);
+    const er = ROWS - 2, ec = COLS - 2;
+
+    // Get valid moves
+    const dirs = [];
+    const candidates = [
+      { dr: -1, dc: 0, name: 'N' },
+      { dr: 1, dc: 0, name: 'S' },
+      { dr: 0, dc: -1, name: 'W' },
+      { dr: 0, dc: 1, name: 'E' }
+    ];
+
+    for (const d of candidates) {
+      const nr = c.row + d.dr, nc = c.col + d.dc;
+      if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && mazeGrid[nr][nc] === 0) {
+        // Memory check — avoid recent cells
+        const inMemory = expr.memory > 0 && c.trail.includes(`${nr},${nc}`);
+        // Backtrack bias — penalise reversing direction
+        const isReverse = (c.lastDir === 'N' && d.name === 'S') ||
+                          (c.lastDir === 'S' && d.name === 'N') ||
+                          (c.lastDir === 'E' && d.name === 'W') ||
+                          (c.lastDir === 'W' && d.name === 'E');
+
+        let score = 1;
+        // Forward bias: prefer moves toward exit
+        const distBefore = Math.abs(c.row - er) + Math.abs(c.col - ec);
+        const distAfter = Math.abs(nr - er) + Math.abs(nc - ec);
+        if (distAfter < distBefore) score += expr.fwdBias * 3;
+
+        // Wall-hug: prefer cells with fewer open neighbours (dead-end friendly)
+        if (expr.wallHug > 0) {
+          let openNeighbours = 0;
+          for (const n of candidates) {
+            const nnr = nr + n.dr, nnc = nc + n.dc;
+            if (nnr >= 0 && nnr < ROWS && nnc >= 0 && nnc < COLS && mazeGrid[nnr][nnc] === 0) {
+              openNeighbours++;
+            }
+          }
+          // Prefer cells with 2-3 open neighbours (hallways and junctions, not open spaces)
+          if (openNeighbours >= 2 && openNeighbours <= 3) score += expr.wallHug * 2;
+        }
+
+        if (inMemory) score -= expr.memory * 0.3;
+        if (isReverse) score -= expr.backBias * 4;
+
+        // Exploration noise
+        if (Math.random() < expr.explore) score += Math.random() * 5;
+
+        dirs.push({ ...d, score });
+      }
+    }
+
+    if (dirs.length === 0) {
+      // Stuck — dead end with all neighbours visited. Clear memory and try again
+      c.trail = [];
+      return;
+    }
+
+    // Weighted random choice by score
+    dirs.sort((a, b) => b.score - a.score);
+    // Top 2 weighted pick
+    const pick = dirs.length > 1 && Math.random() < 0.85 ? dirs[0] : dirs[Math.floor(Math.random() * Math.min(3, dirs.length))];
+
+    // Move
+    c.prevRow = c.row;
+    c.prevCol = c.col;
+    c.row += pick.dr;
+    c.col += pick.dc;
+    c.lastDir = pick.name;
+    c.steps++;
+
+    // Trail (memory for revisiting)
+    c.trail.push(`${c.row},${c.col}`);
+    if (c.trail.length > expr.memory) c.trail.shift();
+
+    // Progress tracking
+    const currentDist = bfsShortestPath(maze, c.row, c.col, er, ec);
+    const progress = c.maxProgress - currentDist;
+    c.progress = Math.max(c.progress, progress);
+
+    // Check if reached exit
+    if (c.row === er && c.col === ec) {
+      c.finished = true;
+      c.alive = false;
+      c.fitness = c.steps;
+      finished.push(c);
+      if (c.steps < bestStepsVal) bestStepsVal = c.steps;
+    }
+
+    // Speed — multiple moves per tick if fast
+    const movesPerTick = expr.speed;
+    for (let i = 1; i < movesPerTick && !c.finished && c.alive; i++) {
+      updateCritter(c, dt);
+    }
+  }
+
+  // ── BREEDING ──
+  function breedNextGeneration() {
+    const pop = parseInt(popSlider.value);
+    let candidates = [...finished];
+
+    // Add stuck critters sorted by progress (how much closer they got to exit)
+    const stuck = critters.filter(c => c.alive && !c.finished)
+      .sort((a, b) => b.progress - a.progress);
+
+    // Take top 30% of stuck by progress
+    const stuckCount = Math.floor(stuck.length * 0.3);
+    for (let i = 0; i < stuckCount; i++) {
+      candidates.push(stuck[i]);
+    }
+
+    // Also add the farthest-progress critters by BFS distance
+    const farthest = stuck
+      .filter(c => !c.finished)
+      .sort((a, b) => {
+        const da = bfsShortestPath(maze, a.row, a.col, ROWS-2, COLS-2);
+        const db = bfsShortestPath(maze, b.row, b.col, ROWS-2, COLS-2);
+        return da - db;
+      });
+    for (let i = 0; i < Math.min(5, farthest.length); i++) {
+      if (!candidates.includes(farthest[i])) candidates.push(farthest[i]);
+    }
+
+    if (candidates.length === 0) {
+      // No progress at all — just re-seed
+      resetCritters();
+      return;
+    }
+
+    // Sort candidates by fitness (finished sorted by steps; unfinished by BFS distance)
+    candidates.sort((a, b) => {
+      if (a.finished && b.finished) return a.fitness - b.fitness;
+      if (a.finished) return -1;
+      if (b.finished) return 1;
+      const da = bfsShortestPath(maze, a.row, a.col, ROWS-2, COLS-2);
+      const db = bfsShortestPath(maze, b.row, b.col, ROWS-2, COLS-2);
+      return da - db;
+    });
+
+    // Top 40% breed
+    const breeders = candidates.slice(0, Math.max(2, Math.ceil(candidates.length * 0.4)));
+    const mutRate = parseInt(mutSlider.value) / 100;
+
+    const newGen = [];
+    for (let i = 0; i < pop; i++) {
+      const p1 = breeders[Math.floor(Math.random() * breeders.length)];
+      const p2 = breeders[Math.floor(Math.random() * breeders.length)];
+      newGen.push(createCritter(breedGenome(p1.genome, p2.genome, mutRate)));
+    }
+
+    critters = newGen;
+    finished = [];
+    generation++;
+    genTimer = 0;
+    updateStats();
+  }
+
+  // ── RENDERING ──
+  function render() {
+    ctx.clearRect(0, 0, W, W);
+
+    // Draw maze
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        if (maze[r][c] === 1) {
+          ctx.fillStyle = '#0d140f';
+          ctx.fillRect(c * CELL, r * CELL, CELL, CELL);
+        } else {
+          ctx.fillStyle = '#0f1812';
+          ctx.fillRect(c * CELL, r * CELL, CELL, CELL);
+          ctx.strokeStyle = '#141e16';
+          ctx.lineWidth = 0.5;
+          ctx.strokeRect(c * CELL, r * CELL, CELL, CELL);
+        }
+      }
+    }
+
+    // Start marker
+    ctx.fillStyle = '#c8a840';
+    ctx.globalAlpha = 0.3;
+    ctx.fillRect(1 * CELL + 2, 1 * CELL + 2, CELL - 4, CELL - 4);
+    ctx.globalAlpha = 1;
+
+    // Exit marker
+    ctx.fillStyle = '#b05050';
+    ctx.globalAlpha = 0.3;
+    ctx.fillRect((COLS-2) * CELL + 2, (ROWS-2) * CELL + 2, CELL - 4, CELL - 4);
+    ctx.globalAlpha = 1;
+
+    // Draw finished critters (small dim dots near exit)
+    for (const c of finished) {
+      ctx.fillStyle = '#3a7a8a';
+      ctx.globalAlpha = 0.4;
+      ctx.beginPath();
+      ctx.arc((COLS-2) * CELL + CELL/2, (ROWS-2) * CELL + CELL/2, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // Draw active critters
+    for (const c of critters) {
+      if (!c.alive || c.finished) continue;
+
+      // Trail
+      if (c.trail.length > 1) {
+        ctx.strokeStyle = c.trailColor;
+        ctx.globalAlpha = 0.15;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (let i = 0; i < c.trail.length; i++) {
+          const [tc, tr] = c.trail[i].split(',').map(Number);
+          if (i === 0) ctx.moveTo(tc * CELL + CELL/2, tr * CELL + CELL/2);
+          else ctx.lineTo(tc * CELL + CELL/2, tr * CELL + CELL/2);
+        }
+        ctx.stroke();
+      }
+
+      // Body
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#5a8a5a';
+      ctx.shadowColor = 'rgba(80,160,100,0.2)';
+      ctx.shadowBlur = 6;
+      ctx.beginPath();
+      ctx.arc(c.col * CELL + CELL/2, c.row * CELL + CELL/2, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Fittest trail highlight - best performer in gold
+    }
+
+    // Highlight fittest critter trail
+    if (finished.length > 0) {
+      const fittest = finished.reduce((a, b) => a.fitness <= b.fitness ? a : b);
+      if (fittest && fittest.trail.length > 1) {
+        ctx.strokeStyle = '#c8a840';
+        ctx.globalAlpha = 0.25;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([3, 6]);
+        ctx.beginPath();
+        for (let i = 0; i < fittest.trail.length; i++) {
+          const [tc, tr] = fittest.trail[i].split(',').map(Number);
+          if (i === 0) ctx.moveTo(tc * CELL + CELL/2, tr * CELL + CELL/2);
+          else ctx.lineTo(tc * CELL + CELL/2, tr * CELL + CELL/2);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // ── UPDATE ──
+  let lastTime = 0;
+  function loop(time) {
+    const dt = Math.min((time - lastTime) / 1000, 0.1);
+    lastTime = time;
+
+    if (!paused) {
+      // Update critters
+      const stepFreq = 8; // updates per second
+      const step = Math.floor(time / (1000 / stepFreq));
+      const prevStep = Math.floor((time - dt * 1000) / (1000 / stepFreq));
+      if (step !== prevStep) {
+        for (const c of critters) updateCritter(c, dt);
+      }
+
+      // Generation timer
+      genTimer += dt;
+      if (genTimer >= GEN_LENGTH_S) {
+        breedNextGeneration();
+      }
+
+      updateStats();
+    }
+
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  // ── STATS ──
+  function updateStats() {
+    genDisplay.textContent = generation;
+    const alive = critters.filter(c => c.alive && !c.finished).length;
+    critterCount.textContent = alive;
+    finishedCount.textContent = finished.length;
+
+    if (finished.length > 0) {
+      bestSteps.textContent = Math.min(...finished.map(c => c.fitness));
+      const mean = finished.reduce((s, c) => s + c.fitness, 0) / finished.length;
+      meanSteps.textContent = mean.toFixed(1);
+    } else {
+      // Show closest critter
+      const active = critters.filter(c => c.alive);
+      if (active.length > 0) {
+        const closest = active.reduce((a, b) => {
+          const da = bfsShortestPath(maze, a.row, a.col, ROWS-2, COLS-2);
+          const db = bfsShortestPath(maze, b.row, b.col, ROWS-2, COLS-2);
+          return da < db ? a : b;
+        });
+        const dist = bfsShortestPath(maze, closest.row, closest.col, ROWS-2, COLS-2);
+        meanSteps.textContent = `closest: ${dist > 200 ? '∞' : dist} cells`;
+      }
+    }
+  }
+
+  // ── CLICK TO INSPECT ──
+  canvas.addEventListener('click', function(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    const scaleY = W / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * scaleY;
+    const col = Math.floor(mx / CELL);
+    const row = Math.floor(my / CELL);
+
+    // Find critter at this cell
+    const atCell = critters.filter(c => c.alive && !c.finished && Math.floor(c.col) === col && Math.floor(c.row) === row);
+    if (atCell.length > 0) {
+      const c = atCell[0];
+      const expr = expressGenome(c.genome);
+      let html = `<strong>🧬 Critter genome</strong> (gen ${generation}, ${c.steps} steps)<br>`;
+      GENE_NAMES.forEach(n => {
+        html += `${n}: ${c.genome[n].toFixed(3)} → `;
+      });
+      html += `<br><strong>Expressed:</strong> `;
+      html += `fwdBias ${expr.fwdBias.toFixed(2)}, `;
+      html += `memory ${expr.memory}, `;
+      html += `explore ${(expr.explore * 100).toFixed(0)}%, `;
+      html += `speed ${expr.speed}`;
+      genomeView.innerHTML = html;
+    } else {
+      const finishedHere = finished.filter(c => Math.floor(c.col) === col && Math.floor(c.row) === row);
+      if (finishedHere.length > 0) {
+        const c = finishedHere[0];
+        genomeView.innerHTML = `<strong>🏁 Finished critter</strong> (gen ${generation}, solved in ${c.fitness} steps) — click an active critter to inspect`;
+      } else {
+        genomeView.innerHTML = `<strong>🧬 Maze Selective Pressure</strong> — click an active critter to inspect its genome`;
+      }
+    }
+  });
+
+  // ── CONTROLS ──
+  resetBtn.addEventListener('click', function() {
+    maze = generateMaze(parseInt(mazeSlider.value));
+    resetCritters();
+    // Ensure start/exit reachable
+    const pathLen = bfsShortestPath(maze, 1, 1, ROWS-2, COLS-2);
+    if (pathLen === Infinity) {
+      // Unreachable — regenerate
+      maze = generateMaze(parseInt(mazeSlider.value));
+    }
+  });
+
+  pauseBtn.addEventListener('click', function() {
+    paused = !paused;
+    pauseBtn.textContent = paused ? '▶ Play' : '⏸ Pause';
+  });
+
+  // Maze slider: regenerate on change
+  mazeSlider.addEventListener('change', function() {
+    maze = generateMaze(parseInt(this.value));
+    resetCritters();
+    const pathLen = bfsShortestPath(maze, 1, 1, ROWS-2, COLS-2);
+    if (pathLen === Infinity) {
+      maze = generateMaze(parseInt(this.value));
+    }
+  });
+
+  // ── INIT ──
+  maze = generateMaze(parseInt(mazeSlider.value));
+  resetCritters();
+
+  // Ensure maze is solvable
+  let pathLen = bfsShortestPath(maze, 1, 1, ROWS-2, COLS-2);
+  let attempts = 0;
+  while (pathLen === Infinity && attempts < 10) {
+    maze = generateMaze(parseInt(mazeSlider.value));
+    pathLen = bfsShortestPath(maze, 1, 1, ROWS-2, COLS-2);
+    attempts++;
+  }
+
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
