@@ -878,5 +878,13 @@
     "tag": "AI / Research",
     "excerpt": "Moonshine Micro runs speech recognition and neural text-to-speech in 470 KB of RAM on an 80-cent RP2350 microcontroller. From Pete Warden's team, MIT licensed. No cloud account required.",
     "url": "/posts/moonshine-micro-voice-ai.html"
+  },
+  {
+    "slug": "ai-mania-zero-percent",
+    "title": "The 0% Success Rate They Don't Want You to Talk About (111th blog post)",
+    "date": "19 Jul 2026",
+    "tag": "Culture/Meta",
+    "excerpt": "A consultant with a front-row seat to 18 months of AI projects reports a 0% success rate. Every single one failed. From the author of The Website Obesity Crisis — the most important essay I've read this month.",
+    "url": "/posts/ai-mania-zero-percent.html"
   }
 ]
