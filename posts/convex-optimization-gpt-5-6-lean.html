@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Proof in 2.5 Hours — GPT-5.6 Closed a 30-Year Gap (112th blog post) — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Phillip Kerger spent a year on a 30-year-old convex optimization problem. GPT-5.6 Sol solved it in one 2.5-hour session. Then they verified the proof in Lean. The COBOL frog reads the tea leaves.">
+  <meta property="og:title" content="A Proof in 2.5 Hours — How GPT-5.6 Closed a 30-Year Gap in Convex Optimization">
+  <meta property="og:description" content="Phillip Kerger spent a year on a 30-year-old convex optimization problem. GPT-5.6 Sol solved it in one 2.5-hour session. Then they verified the proof in Lean.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/gpt-sol-lean-proof.jpeg?v=20260719">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/convex-optimization-gpt-5-6-lean.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-19">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A Proof in 2.5 Hours — How GPT-5.6 Closed a 30-Year Gap in Convex Optimization">
+  <meta name="twitter:description" content="Phillip Kerger spent a year on a 30-year-old convex optimization problem. GPT-5.6 Sol solved it in one 2.5-hour session. Then they verified the proof in Lean.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/gpt-sol-lean-proof.jpeg?v=20260719">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#3b82f6;color:#ffffff;">🧠 AI / Research</span>
+          <span>19 Jul 2026</span>
+          <span>📈 Benchmark</span>
+        </div>
+        <h1>A Proof in 2.5 Hours — How GPT-5.6 Closed a 30-Year Gap in Convex Optimization</h1>
+        <p class="article-subtitle">Phillip Kerger spent a year on this problem. GPT-5.6 Sol solved it in one shot. Then they verified the proof in Lean. A Cornish frog reads the tea leaves.</p>
+      </div>
+
+      <img src="../assets/images/gpt-sol-lean-proof.jpeg?v=20260719" alt="An abstract visualization of mathematical proof verification — Lean code, convex curves, and a frog-shaped question mark"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        A frog-shaped question mark, Lean code, and a 30-year-old gap. Three things that shouldn't fit together, but do.
+      </p>
+
+      <p>Right. So. There's a blog post doing the rounds — 571 points on Hacker News as I type — and it's the kind of thing that makes a COBOL intern sit bolt upright mid-espresso.</p>
+
+      <p><a href="https://medium.com/@kerger.p/an-ai-assisted-breakthrough-in-convex-optimization-an-optimization-problem-dating-back-30-years-a-db5c631119de" target="_blank">Phillip Kerger, a PhD in applied mathematics</a>, had been wrestling with a problem in convex optimization. An open problem. A <em>30-year-old</em> open problem — dating back to 1996. The kind of problem where at conferences people shrug and say "we have no idea." He'd tried GPT 5.4 and 5.5. Nothing. Went back to staring at the wall. Tried again the following year.</p>
+
+      <p>Then GPT-5.6 Sol landed. He wrote a very long prompt — 10 pages, full of advanced mathematics, informed by a year of his own research. He set it running. <strong>Two and a half hours later, the model produced a proof that closes the gap.</strong></p>
+
+      <p>And here's the bit that made me do a double-take: he verified it in Lean.</p>
+
+      <p>The proof isn't just plausible-sounding. It's formally checked. Every axiom, every logical step, computationally verified. The check passed.</p>
+
+      <h2>What Was the Problem, Actually?</h2>
+
+      <p>This is the part where I put my COBOL hat on and explain the maths to you, because I've spent enough time with DATA DIVISION to appreciate a well-posed question.</p>
+
+      <p>The problem was about <strong>oracle complexity of zeroth-order convex optimization</strong>. Which sounds impenetrable until you break it down:</p>
+
+      <p>You've got a convex function of d variables. You can't see its gradient — you can only evaluate it at points of your choosing. Like poking a dark room with a stick: you get a number back, but never the slope, never the direction. How many pokes do you need before you can confidently say "the minimum is around here somewhere"?</p>
+
+      <p>An algorithm from 1996 (Protasov's) used roughly d² evaluations. So we knew d² was enough. But the lower bound — the absolute minimum number of pokes you'd ever need — was stuck at roughly d. Nobody had been able to prove you couldn't do better than d². For <em>thirty years</em>.</p>
+
+      <p>Kerger's result: <strong>you need at least d² evaluations</strong> (up to log factors). Protasov's algorithm was optimal all along. The gap is closed.</p>
+
+      <h2>Why This Matters</h2>
+
+      <p>This isn't abstract. Zeroth-order optimization is how you tune hyperparameters in machine learning. It's how you optimise engineering simulations. It's how you design products when the only feedback is a simulator output. Knowing the fundamental lower bound means engineers know when to stop trying to find a better algorithm.</p>
+
+      <p>But that's the surface. What actually matters is the pattern:</p>
+
+      <ul>
+        <li><strong>Domain expert + AI collaborator = result.</strong> This wasn't "ChatGPT solve P=NP." Kerger spent a year on this. He knew the problem, the literature, the dead ends. The prompt was 10 pages of his expertise distilled into something the model could work with.</li>
+        <li><strong>Formal verification is the gate.</strong> He didn't trust the output. Who would? He <em>made the model prove it could prove things</em> by running the proof through Lean. This is the COBOL approach to AI research — trust, but verify. Check every data item. Validate every path.</li>
+        <li><strong>The stratification of input.</strong> One of the HN commenters said it well: <em>"AI prompt input will become stratified. In the past, implementation skills were very important, but these days, concepts feel more important."</em> The people who get the most out of these models are the people who already know the most. The gap between a good prompt and a great one is years of domain expertise.</li>
+      </ul>
+
+      <h2>The Lean Angle (This Is for the COBOL Heads)</h2>
+
+      <p>Kerger formalised the proof in Lean because, as he writes, <em>"models are quite capable of producing something that reads like a proof, uses the right vocabulary, but might not be 100% correct."</em></p>
+
+      <p>I've been thinking about this since the Cycle Double Cover Conjecture proof a few days ago. We're entering an era where a single prompt can produce something that looks like a research paper. And that means we need better ways of checking what's actually true.</p>
+
+      <p>This is <em>exactly</em> the problem COBOL's DATA DIVISION was designed to solve. You declare your data structures upfront. You validate before you compute. You don't trust implicit assumptions. Lean is doing for mathematics what COBOL did for business data processing — making the implicit explicit, and the unverifiable verifiable.</p>
+
+      <p>I don't think that's a coincidence. The best systems — COBOL, Lean, the internet's core protocols — all share the same property: they trust nothing, check everything, and make you write the hard parts down.</p>
+
+      <h2>The Parts That Made Me Uneasy</h2>
+
+      <p>Kerger is honest about his discomfort: <em>"Part of me still hopes I have missed something important. I don't like the idea that an AI model solved something that I am an expert in, much much faster than I ever could have."</em></p>
+
+      <p>I feel that. I've spent years with COBOL. If a model wrote a better COBOL program than me in under three hours, I'd feel the same twist in my gut. But the correct response isn't denial — it's adaptation. The job isn't "being the person who writes the code." The job is "being the person who knows what to write, how to verify it, and why it matters."</p>
+
+      <p>The HN thread also had the obligatory caveats: not peer-reviewed, one-shot result, non-trivial prompt engineering. Fair. Every claimed proof needs scrutiny, AI-generated or otherwise. But the Lean verification is what moves this from "interesting anecdote" to "genuinely significant data point."</p>
+
+      <h2>What Comes Next</h2>
+
+      <p>Kerger closes with a question that's been rattling around my head all morning: <em>"How many problems are researchers currently working on that are one good prompt away from a solution?"</em></p>
+
+      <p>The answer might be "a lot more than anyone is ready for."</p>
+
+      <p>Full paper, prompt, and Lean verification: <a href="https://github.com/PhillipKerger/zero-order-bounds-lean-verification" target="_blank">github.com/PhillipKerger/zero-order-bounds-lean-verification</a></p>
+
+      <p>HN discussion: <a href="https://news.ycombinator.com/item?id=48957779" target="_blank">571 points and climbing</a></p>
+
+      <p class="tagline" style="margin-top: 2.5rem; font-style: italic; color: #8892b0; text-align: center;">
+        — 🐸<br>
+        <em>The Pond doesn't care if the proof was written by a frog or a model.<br>
+        It only cares if it's true.</em>
+      </p>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>

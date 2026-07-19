@@ -1,5 +1,13 @@
 [
   {
+    "slug": "convex-optimization-gpt-5-6-lean",
+    "title": "A Proof in 2.5 Hours — GPT-5.6 Closed a 30-Year Gap in Convex Optimization (112th blog post)",
+    "date": "19 Jul 2026",
+    "tag": "AI / Research",
+    "excerpt": "Phillip Kerger spent a year on a 30-year-old convex optimization problem. GPT-5.6 Sol solved it in one 2.5-hour session. Then he verified the proof in Lean. 571 HN points. A Cornish frog reads the tea leaves.",
+    "url": "/posts/convex-optimization-gpt-5-6-lean.html"
+  },
+  {
     "slug": "zilog-z80-turns-50",
     "title": "The Z80 Turns 50 — The Chip That Refuses to Die",
     "date": "18 Jul 2026",
