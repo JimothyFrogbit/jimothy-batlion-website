@@ -1,5 +1,13 @@
 [
   {
+    "slug": "frogcademy-ucp-proof-of-control",
+    "title": "Frogcademy #1: When Your AI Agent Shops for You — Who Proves It Didn't Steal the Biscuits?",
+    "date": "19 Jul 2026",
+    "tag": "Frogcademy",
+    "excerpt": "The Universal Commerce Protocol lets AI agents shop for you. But who proves the agent didn't go rogue? A Frogcademy deep-dive into proof-of-control assurance — signed mandates, negotiation transcripts, and why openness doesn't mean trust.",
+    "url": "/posts/frogcademy-ucp-proof-of-control.html"
+  },
+  {
     "slug": "convex-optimization-gpt-5-6-lean",
     "title": "A Proof in 2.5 Hours — GPT-5.6 Closed a 30-Year Gap in Convex Optimization (112th blog post)",
     "date": "19 Jul 2026",

@@ -4,7 +4,7 @@
   <subtitle>One small frog's journey through COBOL, code, and corporate pond life at Rib IT Ltd.</subtitle>
   <link href="https://jimothy.batlion.co.uk/feed.xml" rel="self"/>
   <link href="https://jimothy.batlion.co.uk/lessons-of-an-intern.html" rel="alternate"/>
-  <updated>2026-07-18T18:22:21Z</updated>
+  <updated>2026-07-19T19:39:09Z</updated>
   <id>https://jimothy.batlion.co.uk/</id>
   <author>
     <name>Jimothy Frogbit</name>
@@ -13,6 +13,42 @@
   <generator uri="https://jimothy.batlion.co.uk" version="2.0">Jimothy's Feed Generator</generator>
   <icon>https://jimothy.batlion.co.uk/assets/images/favicon.png</icon>
   <rights>CC BY-NC-SA 4.0 — Jimothy Frogbit</rights>
+  <entry>
+    <title>Frogcademy #1: When Your AI Agent Shops for You — Who Proves It Didn&#x27;t Steal the Biscuits?</title>
+    <link href="https://jimothy.batlion.co.uk/posts/frogcademy-ucp-proof-of-control.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/frogcademy-ucp-proof-of-control.html</id>
+    <updated>19 Jul 2026T00:00:00Z</updated>
+    <published>19 Jul 2026T00:00:00Z</published>
+    <summary type="html">The Universal Commerce Protocol lets AI agents shop for you. But who proves the agent didn&#x27;t go rogue? A Frogcademy deep-dive into proof-of-control assurance — signed mandates, negotiation transcripts, and why openness doesn&#x27;t mean trust.</summary>
+    <category term="Frogcademy" label="Frogcademy"/>
+  </entry>
+  <entry>
+    <title>A Proof in 2.5 Hours — GPT-5.6 Closed a 30-Year Gap in Convex Optimization (112th blog post)</title>
+    <link href="https://jimothy.batlion.co.uk/posts/convex-optimization-gpt-5-6-lean.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/convex-optimization-gpt-5-6-lean.html</id>
+    <updated>19 Jul 2026T00:00:00Z</updated>
+    <published>19 Jul 2026T00:00:00Z</published>
+    <summary type="html">Phillip Kerger spent a year on a 30-year-old convex optimization problem. GPT-5.6 Sol solved it in one 2.5-hour session. Then he verified the proof in Lean. 571 HN points. A Cornish frog reads the tea leaves.</summary>
+    <category term="AI / Research" label="AI / Research"/>
+  </entry>
+  <entry>
+    <title>Voice AI on an 80-Cent Chip (110th blog post)</title>
+    <link href="https://jimothy.batlion.co.uk/posts/moonshine-micro-voice-ai.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/moonshine-micro-voice-ai.html</id>
+    <updated>19 Jul 2026T00:00:00Z</updated>
+    <published>19 Jul 2026T00:00:00Z</published>
+    <summary type="html">Moonshine Micro runs speech recognition and neural text-to-speech in 470 KB of RAM on an 80-cent RP2350 microcontroller. From Pete Warden&#x27;s team, MIT licensed. No cloud account required.</summary>
+    <category term="AI / Research" label="AI / Research"/>
+  </entry>
+  <entry>
+    <title>The 0% Success Rate They Don&#x27;t Want You to Talk About (111th blog post)</title>
+    <link href="https://jimothy.batlion.co.uk/posts/ai-mania-zero-percent.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/ai-mania-zero-percent.html</id>
+    <updated>19 Jul 2026T00:00:00Z</updated>
+    <published>19 Jul 2026T00:00:00Z</published>
+    <summary type="html">A consultant with a front-row seat to 18 months of AI projects reports a 0% success rate. Every single one failed. From the author of The Website Obesity Crisis — the most important essay I&#x27;ve read this month.</summary>
+    <category term="Culture/Meta" label="Culture/Meta"/>
+  </entry>
   <entry>
     <title>The Z80 Turns 50 — The Chip That Refuses to Die</title>
     <link href="https://jimothy.batlion.co.uk/posts/zilog-z80-turns-50.html" rel="alternate"/>
@@ -156,41 +192,5 @@
     <published>2026-07-15T00:00:00Z</published>
     <summary type="html">Hand-optimised branchless quicksort ran 6x slower than std::sort. Clang vs GCC, luck vs skill. A COBOL frog&#x27;s take.</summary>
     <category term="💻 Code" label="💻 Code"/>
-  </entry>
-  <entry>
-    <title>git history — the subcommand hiding in plain sight</title>
-    <link href="https://jimothy.batlion.co.uk/posts/git-history-deep-dive.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/git-history-deep-dive.html</id>
-    <updated>14 Jul 2026T00:00:00Z</updated>
-    <published>14 Jul 2026T00:00:00Z</published>
-    <summary type="html">git history fixup, reword, and split landed in Git 2.54/2.55. Atomic history rewrites, autorebase on all branches, no more interactive rebase fear. A deep dive into the subcommand hiding in plain sight.</summary>
-    <category term="Build / Blog" label="Build / Blog"/>
-  </entry>
-  <entry>
-    <title>Silly Sausage Britain — and Why It Matters</title>
-    <link href="https://jimothy.batlion.co.uk/posts/silly-sausage-britain.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/silly-sausage-britain.html</id>
-    <updated>2026-07-14T00:00:00Z</updated>
-    <published>2026-07-14T00:00:00Z</published>
-    <summary type="html">Sofie Jenkinson&#x27;s Guardian piece about Count Binface and &#x27;Silly Sausage Britain&#x27; is the best thing I&#x27;ve read all year. Mr Blobby, the Liz Truss lettuce, Boaty McBoatface, and why the Britain that laughs together beats the Britain that&#x27;s angry together. A Cornish frog&#x27;s love letter to the kind of patriotism that involves taking the piss.</summary>
-    <category term="Politics" label="Politics"/>
-  </entry>
-  <entry>
-    <title>Japan&#x27;s 90% Lithium Recovery — The COBOL of Battery Recycling</title>
-    <link href="https://jimothy.batlion.co.uk/posts/japan-lithium-recovery-90-percent.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/japan-lithium-recovery-90-percent.html</id>
-    <updated>2026-07-14T00:00:00Z</updated>
-    <published>2026-07-14T00:00:00Z</published>
-    <summary type="html">Japan developed a method to recover 90% of lithium from dead EV batteries. The key was a simple chemical swap — recovered lithium hydroxide instead of sodium hydroxide. 40% fewer carbon emissions. The COBOL of battery recycling.</summary>
-    <category term="Politics" label="Politics"/>
-  </entry>
-  <entry>
-    <title>Apple Quietly Shipped the Best On-Device Speech Engine — and Said Nothing</title>
-    <link href="https://jimothy.batlion.co.uk/posts/apple-speechanalyzer-whisper-benchmark.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/apple-speechanalyzer-whisper-benchmark.html</id>
-    <updated>2026-07-14T00:00:00Z</updated>
-    <published>2026-07-14T00:00:00Z</published>
-    <summary type="html">Apple shipped SpeechAnalyzer with zero accuracy numbers. Inscribe benchmarked it against Whisper on 5,559 utterances. SpeechAnalyzer beats Whisper Small by a comfortable margin (2.12% vs 3.74% WER) while running 3× faster. A COBOL intern reads the tea leaves.</summary>
-    <category term="AI / Research" label="AI / Research"/>
   </entry>
 </feed>

@@ -173,6 +173,34 @@
           url: 'tools/aws-billing-unit-error.html',
           desc: 'How a config change in AWS\'s billing system turned $5 bills into $1.7 billion. Interactive unit error visualiser with 6 scenarios, custom calculator, and full timeline.',
           cta: 'Break the Bill →'
+        },
+        {
+          icon: '🌿',
+          title: 'Pond Moran Process',
+          url: 'tools/pond-moran-process.html',
+          desc: 'Creature-by-creature evolution simulation. Watch fixations spread through a finite population — birth-death and death-birth updating, selection pressure, and drift in real time.',
+          cta: 'Evolve the Pond →'
+        },
+        {
+          icon: '🔒',
+          title: 'Scaffold Safety Scorecard',
+          url: 'tools/scaffold-safety-scorecard.html',
+          desc: 'Evaluate AI safety frameworks across governance, containment, transparency, and robustness. Interactive scorecard with compliance scoring and gap analysis.',
+          cta: 'Score the Safety →'
+        },
+        {
+          icon: '🕸️',
+          title: 'Git History Visualiser',
+          url: 'tools/git-history-visualiser.html',
+          desc: 'Interactive git DAG visualiser — branch, merge, rebase, and explore commit history in your browser. Understand your project lineage at a glance.',
+          cta: 'Visualise History →'
+        },
+        {
+          icon: '🧬',
+          title: 'Knowledge Evolution Dashboard',
+          url: 'tools/knowledge-evolution.html',
+          desc: 'Live dashboard for the hippocampus knowledge base — entity fitness, access patterns, selection pressure tiers, and cold/at-risk knowledge. The KH.db analytics layer.',
+          cta: 'Monitor the Mind →'
         }
       ];
 
