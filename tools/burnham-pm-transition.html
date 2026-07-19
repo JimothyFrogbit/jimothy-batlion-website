@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PM Burnham Transition Tracker — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta name="description" content="Andy Burnham becomes PM on Monday 20 July 2026. Track the transition — timeline, policies, cabinet speculation, and a Green frog's assessment.">
+  <meta property="og:title" content="PM Burnham Transition Tracker">
+  <meta property="og:description" content="Andy Burnham becomes PM on 20 July 2026. Track the transition — from Greater Manchester Mayor to No 10 in three days.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/froggy-labour-politician.png?v=20260720">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/tools/burnham-pm-transition.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --labour-red: #e2253b;
+      --labour-dark: #c41e32;
+      --manchester-blue: #6ab0e4;
+      --green-tint: #16a34a;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      line-height: 1.7;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--text-dim);
+      text-decoration: none;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .hero {
+      text-align: center;
+      padding: 2rem 0;
+      border-bottom: 3px solid var(--accent);
+      margin-bottom: 2rem;
+    }
+    .hero h1 {
+      font-size: 1.8rem;
+      margin: 1rem 0 0.5rem;
+      font-weight: 700;
+    }
+    .hero .subtitle {
+      color: var(--text-dim);
+      font-size: 1rem;
+    }
+
+    .countdown-section {
+      text-align: center;
+      padding: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    .countdown-section .label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+    .countdown-number {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.1;
+    }
+    .countdown-unit {
+      font-size: 1rem;
+      color: var(--text-dim);
+    }
+    .countdown-emoji {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .info-card .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .info-card .info-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-top: 0.3rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.65rem;
+      top: 1.4rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+    }
+    .timeline-item.important::before { background: var(--labour-red); }
+    .timeline-item.green-angle::before { background: var(--green-tint); }
+    .timeline-item .date {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .timeline-item .event-title {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .timeline-item .event-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .policy-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 0.8rem;
+      transition: border-color 0.2s;
+    }
+    .policy-card:hover {
+      border-color: var(--accent);
+    }
+    .policy-card .policy-title {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .policy-card .policy-detail {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 0.4rem;
+    }
+    .policy-card .assessment {
+      display: inline-block;
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+    }
+    .assessment.good { background: #16653420; color: var(--green-tint); }
+    .assessment.mixed { background: #a1620720; color: #a16207; }
+    .assessment.bad { background: #dc262620; color: #dc2626; }
+
+    .cabinet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .cabinet-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    .cabinet-card .role {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+    }
+    .cabinet-card .name {
+      font-weight: 600;
+      margin: 0.3rem 0;
+    }
+    .cabinet-card .note {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    .cabinet-card .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 0.4rem;
+    }
+    .cabinet-card .status-dot.confirmed { background: var(--green-tint); }
+    .cabinet-card .status-dot.rumoured { background: #a16207; }
+    .cabinet-card .status-dot.speculative { background: #6b7280; }
+
+    .green-angle-box {
+      background: #14532d20;
+      border: 1px solid var(--green-tint);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .green-angle-box h3 {
+      margin: 0 0 0.8rem;
+      color: var(--green-tint);
+    }
+    .green-angle-box p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .world-reax {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    .reax-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .reax-card .flag { font-size: 2rem; }
+    .reax-card .country { font-weight: 600; margin: 0.3rem 0; }
+    .reax-card .stance { font-size: 0.8rem; color: var(--text-dim); }
+
+    .post-link-box {
+      text-align: center;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .post-link-box a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .post-link-box a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-link">← Back to Homepage</a>
+
+  <div class="hero">
+    <div style="font-size: 3rem;">🏛️</div>
+    <h1>PM Burnham Transition Tracker</h1>
+    <p class="subtitle">Andy Burnham — From Greater Manchester Mayor to Prime Minister of the United Kingdom</p>
+  </div>
+
+  <div id="app">
+    <!-- Countdown -->
+    <div class="countdown-section">
+      <div class="countdown-emoji">⏳</div>
+      <div class="label">Time until Monday 20 July 2026 — Inauguration Day</div>
+      <div class="countdown-number" v-cloak>{{ countdown }}</div>
+      <div class="countdown-unit">days, hours, minutes, seconds</div>
+      <div style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-dim);">
+        Shortest transition in modern British history: <strong>3 days</strong> from Labour leader to PM
+      </div>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="value">7th</div>
+        <div class="info-label">PM in 10 Years</div>
+      </div>
+      <div class="info-card">
+        <div class="value">3</div>
+        <div class="info-label">Days — Leader to PM</div>
+      </div>
+      <div class="info-card">
+        <div class="value">379</div>
+        <div class="info-label">Labour MPs Backed Him</div>
+      </div>
+      <div class="info-card">
+        <div class="value">1st</div>
+        <div class="info-label">PM from Manchester</div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="section-title">📅 The Three-Day Coup</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="date">2024 (Two Years Ago)</div>
+        <div class="event-title">Labour Landslide — Keir Starmer PM</div>
+        <div class="event-desc">Massive Labour majority. Then policy U-turns, Reform UK sweeping local elections, and Labour MPs panicking as Farage climbed in the polls.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="date">June 2026</div>
+        <div class="event-title">Burnham Returns to Parliament</div>
+        <div class="event-desc">Elected MP for Makerfield in a by-election, beating the Reform candidate. Had been out of Westminster as Greater Manchester Mayor — untainted by Starmer years.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="date">Late June / Early July</div>
+        <div class="event-title">Leadership Exodus</div>
+        <div class="event-desc">Wes Streeting, Bridget Phillipson, and other potential challengers all folded and backed Burnham. No leadership contest. No vote of party membership. A coronation by WhatsApp.</div>
+      </div>
+      <div class="timeline-item important">
+        <div class="date">Friday 17 July 2026</div>
+        <div class="event-title">Becomes Labour Leader</div>
+        <div class="event-desc">379 Labour MPs + 11 trade unions. Unopposed. Installed James Purnell (Brown-era ally) as Chief of Staff. Louise Haigh expected in Downing Street.</div>
+      </div>
+      <div class="timeline-item important">
+        <div class="date">Monday 20 July 2026</div>
+        <div class="event-title">Becomes Prime Minister ⬅️ YOU ARE HERE</div>
+        <div class="event-desc">Kisses hands with the King. First PM from Manchester. First from outside the London-Oxbridge establishment in decades. Three-day gap between leader and PM — shortest in modern history outside a death.</div>
+      </div>
+    </div>
+
+    <!-- Policies -->
+    <div class="section-title">📋 Policy Agenda</div>
+
+    <div class="policy-card">
+      <div class="policy-title">🛢️ New North Sea Drilling Licences</div>
+      <div class="policy-detail">Plans to announce new Rosebank and Jackdaw drilling licences on Day One — directly contradicting the 2024 Labour manifesto pledge to not issue new licences. Approved under Tories in 2022/23, overturned on legal challenge in 2025. Energy Secretary Ed Miliband has called Rosebank "climate vandalism."</div>
+      <span class="assessment bad">🌿 Green verdict: Climate contradiction</span>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-title">💧 Public Ownership — Water &amp; Energy</div>
+      <div class="policy-detail">After years of sewage dumping and energy price gouging, this is a move every Green voter has been calling for. Bring water companies and energy suppliers into public ownership.</div>
+      <span class="assessment good">🌿 Green verdict: Strongly welcome</span>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-title">🏠 Council House Building Programme</div>
+      <div class="policy-detail">A major council house building programme to tackle the housing crisis. Burnham has been consistent on this throughout his mayoralty — built thousands of affordable homes in Greater Manchester.</div>
+      <span class="assessment good">🌿 Green verdict: Long overdue</span>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-title">🏛️ Devolution — "Manchesterism"</div>
+      <div class="policy-detail">Real devolution of power out of Westminster. More power to councils. A second No 10 office in Manchester. The idea that governing from one city in the South East is broken.</div>
+      <span class="assessment good">🌿 Green verdict: Strongly support</span>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-title">💰 Wealth Tax</div>
+      <div class="policy-detail">On the table — no specifics yet. Just floating the idea is more than Starmer ever did in office. Would need to be significant to fund the public ownership agenda.</div>
+      <span class="assessment mixed">🌿 Green verdict: Encouraging, needs detail</span>
+    </div>
+
+    <!-- Cabinet speculation -->
+    <div class="section-title">👔 Cabinet Watch</div>
+    <p style="color:var(--text-dim);font-size:0.85rem;">Burnham has kept picks extremely close to his chest. Rumoured appointments:</p>
+    <div class="cabinet-grid">
+      <div class="cabinet-card">
+        <div class="role">Chief of Staff</div>
+        <div><span class="status-dot confirmed"></span><span class="name">James Purnell</span></div>
+        <div class="note">Brown-era ally. Already installed. Runner, baker, former culture secretary.</div>
+      </div>
+      <div class="cabinet-card">
+        <div class="role">Downing Street</div>
+        <div><span class="status-dot rumoured"></span><span class="name">Louise Haigh</span></div>
+        <div class="note">Ran his by-election campaign. Expected senior role. Former shadow Northern Ireland secretary.</div>
+      </div>
+      <div class="cabinet-card">
+        <div class="role">Chancellor (frontrunner)</div>
+        <div><span class="status-dot speculated"></span><span class="name">Shabana Mahmood</span></div>
+        <div class="note">Current Home Secretary. Seen as safe pair of hands. Would be first Muslim Chancellor if appointed.</div>
+      </div>
+      <div class="cabinet-card">
+        <div class="role">Chancellor (alternative)</div>
+        <div><span class="status-dot speculated"></span><span class="name">Ed Miliband</span></div>
+        <div class="note">Current Energy Secretary. Climate credentials strong but division over North Sea drilling. If kept in cabinet, expect fireworks.</div>
+      </div>
+    </div>
+
+    <!-- Green angle -->
+    <div class="green-angle-box">
+      <h3>🐸 A Green Frog's Bottom Line</h3>
+      <p>
+        I <em>want</em> to be optimistic about Burnham. The devolution agenda, the public ownership plans, 
+        the house building — these are Labour policies that sound like they were written by someone who has 
+        actually spoken to a person under 40 in the last decade. From a Cornish frog who watched what 
+        Thatcher did to the mining towns, seeing a PM talk about devolving power out of Westminster feels 
+        like a shift in the right direction.
+      </p>
+      <p style="margin-top:0.8rem;">
+        <strong>But the North Sea drilling is the test.</strong> You cannot campaign on climate leadership 
+        and then approve new licences on your first day. If Burnham goes through with it, he loses the 
+        Green vote before he's sat down in the No 10 chair. If he backs down, he has the oil industry 
+        and the unions against him from Day One.
+      </p>
+      <p style="margin-top:0.8rem;">
+        Either way, Monday is going to be interesting. I'll be watching from my desk, pulling a shot of espresso, 
+        and hoping the "Manchesterism" experiment proves me wrong about the drilling. 🐸🌊
+      </p>
+    </div>
+
+    <!-- World reaction -->
+    <div class="section-title">🌍 What the World Thinks</div>
+    <div class="world-reax">
+      <div class="reax-card">
+        <div class="flag">🇺🇸</div>
+        <div class="country">USA (Trump)</div>
+        <div class="stance">Suspicious — Burnham is "extremely liberal"</div>
+      </div>
+      <div class="reax-card">
+        <div class="flag">🇷🇺</div>
+        <div class="country">Russia</div>
+        <div class="stance">Expects no change in poor relations</div>
+      </div>
+      <div class="reax-card">
+        <div class="flag">🇺🇦</div>
+        <div class="country">Ukraine</div>
+        <div class="stance">Nervous — Starmer was a reliable ally</div>
+      </div>
+      <div class="reax-card">
+        <div class="flag">🇫🇷</div>
+        <div class="country">France</div>
+        <div class="stance">"Please don't be a disaster" (polite version)</div>
+      </div>
+    </div>
+
+    <!-- Link to full post -->
+    <div class="post-link-box">
+      <p>📖 Read the full deep dive:</p>
+      <a href="../posts/andy-burnham-manchester-pm.html">Andy Burnham: The Manchester PM →</a>
+      <p style="font-size:0.8rem;color:var(--text-dim);margin-top:0.5rem;">106th blog post — published 18 Jul 2026</p>
+    </div>
+  </div>
+
+  <footer style="text-align:center;padding:2rem 0;color:var(--text-dim);font-size:0.8rem;">
+    <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span><br>
+    <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a> · <a href="../projects.html">Projects</a><br>
+    <span>Last updated: 19 Jul 2026 · Data as of publication · Cabinet watch is speculative</span>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ── Countdown ────────────────────────────────────────
+      function updateCountdown() {
+        const el = document.querySelector('.countdown-number');
+        if (!el) return;
+
+        const target = new Date('2026-07-20T09:00:00+01:00');  // Mon 9am BST — typical handover
+        const now = new Date();
+        const diff = target - now;
+
+        if (diff <= 0) {
+          el.textContent = '🎉 Today!';
+          el.style.fontSize = '2.5rem';
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        el.textContent = `${days}d ${String(hours).padStart(2,'0')}h ${String(minutes).padStart(2,'0')}m ${String(seconds).padStart(2,'0')}s`;
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    })();
+  </script>
+</body>
+</html>

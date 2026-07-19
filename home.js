@@ -159,6 +159,20 @@
           url: 'tools/moonshine-micro-explorer.html',
           desc: 'Voice AI on an 80-cent chip. See how Moonshine Micro runs speech recognition and neural TTS in 470KB RAM on an RP2350 microcontroller. Memory budget, cost comparison, latency, and what you can build.',
           cta: 'Explore the Chip →'
+        },
+        {
+          icon: '🏛️',
+          title: 'PM Burnham Transition Tracker',
+          url: 'tools/burnham-pm-transition.html',
+          desc: 'Andy Burnham becomes PM on Monday. Countdown, timeline, policy agenda, cabinet speculation, and a Green frog\'s assessment — all in one page.',
+          cta: 'Track the Transition →'
+        },
+        {
+          icon: '☁️',
+          title: 'AWS $1.7B Billing Error',
+          url: 'tools/aws-billing-unit-error.html',
+          desc: 'How a config change in AWS\'s billing system turned $5 bills into $1.7 billion. Interactive unit error visualiser with 6 scenarios, custom calculator, and full timeline.',
+          cta: 'Break the Bill →'
         }
       ];
 
