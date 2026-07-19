@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frogcademy #1: When Your AI Agent Shops for You — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="The Universal Commerce Protocol lets AI agents shop for you. But who proves the agent didn't go rogue? A Frogcademy deep-dive into proof-of-control assurance.">
+  <meta property="og:title" content="Frogcademy #1: When Your AI Agent Shops for You — Who Proves It Didn't Steal the Biscuits?">
+  <meta property="og:description" content="The Universal Commerce Protocol lets AI agents shop for you. But who proves the agent didn't go rogue? A Frogcademy deep-dive into proof-of-control assurance.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-ucp-proof-of-control.jpeg?v=20260719">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/frogcademy-ucp-proof-of-control.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-19">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Frogcademy #1: When Your AI Agent Shops for You — Who Proves It Didn't Steal the Biscuits?">
+  <meta name="twitter:description" content="The Universal Commerce Protocol lets AI agents shop for you. But who proves the agent didn't go rogue? A Frogcademy deep-dive into proof-of-control assurance.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-ucp-proof-of-control.jpeg?v=20260719">
+
+  <style>
+    .diagram-box {
+      background: rgba(10,25,20,0.6);
+      border: 1px solid rgba(100,200,150,0.2);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 1.8rem 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .diagram-box svg { max-width: 100%; height: auto; }
+    .diagram-caption {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #8892b0;
+      margin-top: 0.3rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .concept-card {
+      background: rgba(10,25,20,0.4);
+      border-left: 3px solid var(--accent, #5a8a5a);
+      border-radius: 8px;
+      padding: 1rem 1.3rem;
+      margin: 1.2rem 0;
+    }
+    .concept-card h4 { margin: 0 0 0.4rem; color: var(--accent, #8aba8a); font-size: 1.05rem; }
+    .concept-card p { margin: 0; font-size: 0.95rem; }
+    .concept-card.danger { border-left-color: #c98a6b; }
+    .concept-card.danger h4 { color: #c98a6b; }
+    .concept-card.gold { border-left-color: #c6ac6d; }
+    .concept-card.gold h4 { color: #c6ac6d; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#1a2a1a;color:#8aba8a;">🐸 Frogcademy</span>
+          <span>19 Jul 2026</span>
+          <span>7 min read</span>
+        </div>
+        <h1>Frogcademy #1: When Your AI Agent Shops for You — Who Proves It Didn't Steal the Biscuits?</h1>
+        <p class="article-subtitle">On UCP, proof-of-control, and why openness doesn't mean trust in agentic commerce</p>
+      </div>
+
+      <img src="../assets/images/frogcademy-ucp-proof-of-control.jpeg?v=20260719" alt="Jimothy at a whiteboard diagramming proof-of-control for agentic commerce"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        Whiteboard energy: when you realise the protocol is open but the trust model isn't
+      </p>
+
+      <p>Wasson. Pull up a chair. I've got three cold teas on my desk, a notebook open to a page that's basically a conspiracy theorist's string board, and I've been reading Ken Huang's deep-dive on something called <strong>Proof-of-Control Assurance</strong> for the Universal Commerce Protocol.</p>
+
+      <p>And I need to talk about it, because it's one of those things that sounds dry until you realise it's about to affect every app you build and every purchase you make.</p>
+
+      <hr class="post-divider">
+
+      <h2>What's actually happening here</h2>
+
+      <p>You know how you can already ask Siri or Google to order your coffee? That's cute. What's coming is an <strong>AI agent</strong> — not a voice assistant, an <em>agent</em> — that can discover products across millions of merchants, compare prices, negotiate a cart, pick a payment method, check out, and track delivery. All without you touching a screen.</p>
+
+      <p>Google and Shopify built a protocol to make this work. It's called the <strong>Universal Commerce Protocol</strong> (UCP), and it's open — anyone can implement it. An agent discovers what a merchant supports, negotiates the capabilities they both understand, carries the transaction from "I want this" to "it's on its way."</p>
+
+      <p>It's not a checkout button. It's a <em>language</em> for agents to talk commerce.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="600" height="240" fill="#0a1914" rx="8"/>
+
+          <!-- Buyer -->
+          <rect x="20" y="90" width="100" height="60" rx="8" fill="#1a3a2a" stroke="#5a8a5a" stroke-width="2"/>
+          <text x="70" y="118" text-anchor="middle" fill="#8aba8a" font-size="13">👤 Buyer</text>
+          <text x="70" y="136" text-anchor="middle" fill="#6a9a6a" font-size="11">Human</text>
+
+          <!-- Agent -->
+          <rect x="160" y="80" width="110" height="70" rx="8" fill="#1a2a3a" stroke="#5a7a9a" stroke-width="2"/>
+          <text x="215" y="108" text-anchor="middle" fill="#7a9aba" font-size="13">🤖 AI Agent</text>
+          <text x="215" y="126" text-anchor="middle" fill="#5a7a9a" font-size="11">Negotiates</text>
+          <text x="215" y="140" text-anchor="middle" fill="#5a7a9a" font-size="11">on your behalf</text>
+
+          <!-- UCP Layer -->
+          <rect x="310" y="85" width="110" height="60" rx="8" fill="#2a2a1a" stroke="#c6ac6d" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="365" y="113" text-anchor="middle" fill="#c6ac6d" font-size="12">🌐 UCP</text>
+          <text x="365" y="131" text-anchor="middle" fill="#a68a4d" font-size="11">Protocol Layer</text>
+
+          <!-- Merchant -->
+          <rect x="460" y="80" width="110" height="70" rx="8" fill="#1a2a2a" stroke="#5a8a7a" stroke-width="2"/>
+          <text x="515" y="108" text-anchor="middle" fill="#7aba9a" font-size="13">🏪 Merchant</text>
+          <text x="515" y="126" text-anchor="middle" fill="#5a8a7a" font-size="11">Shop / API</text>
+          <text x="515" y="140" text-anchor="middle" fill="#5a8a7a" font-size="11">Gateway</text>
+
+          <!-- Arrows -->
+          <defs><marker id="ag" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#6a8a6a"/></marker></defs>
+          <line x1="120" y1="120" x2="155" y2="115" stroke="#6a8a6a" stroke-width="1.5" marker-end="url(#ag)"/>
+          <line x1="270" y1="115" x2="305" y2="115" stroke="#6a8a6a" stroke-width="1.5" marker-end="url(#ag)"/>
+          <line x1="420" y1="115" x2="455" y2="115" stroke="#6a8a6a" stroke-width="1.5" marker-end="url(#ag)"/>
+
+          <!-- Labels -->
+          <text x="138" y="108" text-anchor="middle" fill="#4a7a4a" font-size="9">mandate</text>
+          <text x="288" y="108" text-anchor="middle" fill="#4a7a4a" font-size="9">discovers</text>
+          <text x="438" y="108" text-anchor="middle" fill="#4a7a4a" font-size="9">transacts</text>
+
+          <!-- Question mark -->
+          <text x="535" y="195" text-anchor="middle" fill="#c98a6b" font-size="22" font-weight="bold" opacity="0.7">？</text>
+          <text x="535" y="215" text-anchor="middle" fill="#c98a6b" font-size="10" opacity="0.7">who proves</text>
+          <text x="535" y="228" text-anchor="middle" fill="#c98a6b" font-size="10" opacity="0.7">authority?</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">The flow is clean until you ask the hard question: who vouches for that agent?</p>
+
+      <p>That's the bit Ken Huang's framework tackles. Because here's the thing nobody's talking about at the "AI will do your shopping" parties:</p>
+
+      <p><strong>Openness does not equal trust.</strong></p>
+
+      <hr class="post-divider">
+
+      <h2>The pub kitchen problem</h2>
+
+      <p>Imagine you send a mate to the pub to grab you a pint and a pasty. You trust them. They come back with the right stuff. Fine.</p>
+
+      <p>Now imagine you send a stranger. They come back with a different brand of pasty, a more expensive pint, and a receipt that says £22 but the prices on the board say £14. Who's wrong? The stranger? The pub? Did the pub have a "dynamic pricing" special on Tuesdays?</p>
+
+      <p>Without a way to <em>reconstruct the negotiation</em> — the moment your mate walked in, what they asked for, what the pub offered, what they agreed — you've got no evidence. You've got he-said-she-said between a stranger and a pub.</p>
+
+      <p>That's exactly where agentic commerce sits today. An AI agent negotiates a transaction on your behalf, and if something goes wrong — overcharged, wrong item, unauthorised purchase — the only record is whatever the agent's platform chooses to tell you.</p>
+
+      <div class="concept-card danger">
+        <h4>⚠️ The trust gap</h4>
+        <p>An open protocol means anyone can speak the language. It does NOT mean anyone can verify what was said. Those are two different problems, and UCP only solved the first one.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>Proof-of-Control: the COBOL analogy</h2>
+
+      <p>In COBOL — and I'm about to justify my dissertation here — when you write a <code>PERFORM UNTIL</code> loop, you know exactly how many times it ran because you wrote the condition yourself. The code <em>is</em> the evidence. You don't ask the mainframe "did it run 12 times?" — you read the loop and count.</p>
+
+      <p>Proof-of-Control does the same thing, but for agentic transactions. Instead of trusting the agent's platform to tell you what happened, you generate <strong>independently verifiable evidence at the moment of every action</strong>.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="600" height="300" fill="#0a1914" rx="8"/>
+
+          <!-- Without Proof-of-Control -->
+          <rect x="20" y="15" width="260" height="270" rx="8" fill="#1a1a1a" stroke="#5a4a3a" stroke-width="1.5" opacity="0.6"/>
+          <text x="150" y="38" text-anchor="middle" fill="#7a5a3a" font-size="13" font-weight="bold">❌ Without PoC</text>
+
+          <rect x="40" y="55" width="220" height="40" rx="6" fill="#2a1a1a" stroke="#5a3a3a" stroke-width="1"/>
+          <text x="150" y="80" text-anchor="middle" fill="#8a5a4a" font-size="11">Agent says "I checked out"</text>
+
+          <rect x="40" y="105" width="220" height="40" rx="6" fill="#2a1a1a" stroke="#5a3a3a" stroke-width="1"/>
+          <text x="150" y="130" text-anchor="middle" fill="#8a5a4a" font-size="11">Platform logs (proprietary)</text>
+
+          <rect x="40" y="155" width="220" height="40" rx="6" fill="#2a1a1a" stroke="#5a3a3a" stroke-width="1"/>
+          <text x="150" y="180" text-anchor="middle" fill="#8a5a4a" font-size="11">No public verification</text>
+
+          <text x="150" y="225" text-anchor="middle" fill="#6a4a3a" font-size="14">✕</text>
+          <text x="150" y="248" text-anchor="middle" fill="#6a4a3a" font-size="11">"Trust us, we logged it"</text>
+
+          <!-- With Proof-of-Control -->
+          <rect x="320" y="15" width="260" height="270" rx="8" fill="#0a1a14" stroke="#3a6a4a" stroke-width="1.5"/>
+          <text x="450" y="38" text-anchor="middle" fill="#5aba7a" font-size="13" font-weight="bold">✅ With PoC</text>
+
+          <rect x="340" y="55" width="220" height="40" rx="6" fill="#0a2a1a" stroke="#3a6a4a" stroke-width="1"/>
+          <text x="450" y="80" text-anchor="middle" fill="#6aba8a" font-size="11">Signed mandate from you</text>
+
+          <rect x="340" y="105" width="220" height="40" rx="6" fill="#0a2a1a" stroke="#3a6a4a" stroke-width="1"/>
+          <text x="450" y="130" text-anchor="middle" fill="#6aba8a" font-size="11">Negotiation transcript (signed)</text>
+
+          <rect x="340" y="155" width="220" height="40" rx="6" fill="#0a2a1a" stroke="#3a6a4a" stroke-width="1"/>
+          <text x="450" y="180" text-anchor="middle" fill="#6aba8a" font-size="11">Merkle-anchored event log</text>
+
+          <text x="450" y="225" text-anchor="middle" fill="#3a9a5a" font-size="14">✓</text>
+          <text x="450" y="248" text-anchor="middle" fill="#5a8a6a" font-size="11">Anyone can verify, independently</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">The difference between "trust me" and "here's the cryptographic receipt"</p>
+
+      <p>Huang's framework specifies exactly what evidence must be generated and how it's verified:</p>
+
+      <ul>
+        <li><strong>Signed mandates</strong> — the human explicitly authorises spending limits, merchant whitelists, and scope before the agent acts</li>
+        <li><strong>Content-digested messages</strong> — every message between agent and merchant has a cryptographic fingerprint, so nobody can claim "I never said that"</li>
+        <li><strong>Negotiation transcripts</strong> — the full back-and-forth is preserved, not just the final checkout state</li>
+        <li><strong>Tamper-evident event logs</strong> — structured so an auditor (or a regulator, or a court) can replay the entire transaction without trusting the agent's platform</li>
+      </ul>
+
+      <hr class="post-divider">
+
+      <h2>What this means if you build for phones</h2>
+
+      <p>Right, my secret mentor is an iOS/mobile dev, so I always end up thinking about this from that angle. Here's the bit that matters for app builders:</p>
+
+      <p>If your app integrates an agentic shopping flow — and it will, soon, because every ecommerce SDK on the planet is heading this way — you need to think about <strong>where the evidence lives</strong>.</p>
+
+      <div class="concept-card gold">
+        <h4>📱 The mobile question</h4>
+        <p>If an agent negotiates a purchase on a device, the signed mandate and the transaction evidence should live on-device too — not just in the merchant's cloud. Otherwise the user has no independent proof their own agent went rogue.</p>
+      </div>
+
+      <p>That's actually the elegant bit. HTTP Message Signatures and JWK key discovery work at the protocol layer, not the platform layer. A phone can hold its own signing keys, generate mandates locally, and verify merchant responses without phoning home to any platform's trust service.</p>
+
+      <p>It turns the device from a dumb terminal that <em>displays</em> a transaction into a <strong>participant that proves</strong> it.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="600" height="200" fill="#0a1914" rx="8"/>
+
+          <!-- Phone -->
+          <rect x="20" y="20" width="160" height="100" rx="12" fill="#1a1a2a" stroke="#5a5a8a" stroke-width="2"/>
+          <text x="100" y="55" text-anchor="middle" fill="#8a8aba" font-size="14">📱 Your Phone</text>
+          <text x="100" y="75" text-anchor="middle" fill="#6a6a9a" font-size="11">Signing key 🔑</text>
+          <text x="100" y="92" text-anchor="middle" fill="#6a6a9a" font-size="11">Signed mandate</text>
+
+          <!-- Arrows to the right -->
+          <line x1="180" y1="60" x2="240" y2="60" stroke="#6a8a6a" stroke-width="1.5" marker-end="url(#ag)"/>
+          <line x1="180" y1="80" x2="240" y2="80" stroke="#6a8a6a" stroke-width="1.5" marker-end="url(#ag)"/>
+
+          <!-- Agent -->
+          <rect x="245" y="20" width="130" height="100" rx="8" fill="#1a2a2a" stroke="#5a8a7a" stroke-width="2"/>
+          <text x="310" y="55" text-anchor="middle" fill="#7aba9a" font-size="13">🤖 Agent</text>
+          <text x="310" y="75" text-anchor="middle" fill="#6a9a8a" font-size="11">Negotiates</text>
+          <text x="310" y="92" text-anchor="middle" fill="#6a9a8a" font-size="11">with PoC evidence</text>
+
+          <!-- Arrows to merchant -->
+          <line x1="375" y1="60" x2="430" y2="60" stroke="#6a8a6a" stroke-width="1.5" marker-end="url(#ag)"/>
+          <line x1="375" y1="80" x2="430" y2="80" stroke="#6a8a6a" stroke-width="1.5" marker-end="url(#ag)"/>
+
+          <!-- Merchant -->
+          <rect x="435" y="20" width="145" height="100" rx="8" fill="#1a1a1a" stroke="#8a7a5a" stroke-width="2"/>
+          <text x="507" y="55" text-anchor="middle" fill="#ba9a6a" font-size="13">🏪 Merchant</text>
+          <text x="507" y="75" text-anchor="middle" fill="#9a8a5a" font-size="11">Verifies mandate</text>
+          <text x="507" y="92" text-anchor="middle" fill="#9a8a5a" font-size="11">Signs response</text>
+
+          <!-- Auditor at the bottom -->
+          <rect x="200" y="155" width="200" height="35" rx="8" fill="#1a1a1a" stroke="#6a5a3a" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <text x="300" y="177" text-anchor="middle" fill="#8a7a4a" font-size="12">🔍 Independent Verifier</text>
+
+          <line x1="300" y1="155" x2="200" y2="120" stroke="#5a4a3a" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="300" y1="155" x2="400" y2="120" stroke="#5a4a3a" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="300" y1="155" x2="310" y2="120" stroke="#5a4a3a" stroke-width="1" stroke-dasharray="3,3"/>
+
+          <text x="190" y="145" text-anchor="end" fill="#5a4a3a" font-size="9">verifies</text>
+          <text x="410" y="145" text-anchor="start" fill="#5a4a3a" font-size="9">verifies</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">The verifier doesn't trust the agent or the merchant — it trusts the cryptographic evidence</p>
+
+      <hr class="post-divider">
+
+      <h2>Why this isn't just academic</h2>
+
+      <p>I read the IMF's paper on how agentic AI will reshape payments (cited in Huang's piece). They're thinking about this at the systemic level — what happens when a significant percentage of economic transactions are negotiated by non-human agents? How do you audit that? How do you insure it? How do you resolve disputes?</p>
+
+      <p>The answer can't be "ask the agent's platform for a log export." That's like asking the fox for CCTV footage of the henhouse.</p>
+
+      <p>Proof-of-Control flips it. The evidence is generated <em>at the edges</em> — on the device, at the merchant, in the protocol layer — and anyone can verify it using public schemas and verification rules. No platform gatekeeping required.</p>
+
+      <div class="concept-card">
+        <h4>🐸 The Frogcademy takeaway</h4>
+        <p>Open protocols let everyone <em>speak</em> the same language. Proof-of-Control lets everyone <em>verify</em> what was said. You need both for agentic commerce to work at institutional scale — and Huang's framework is the first coherent spec of what the second half looks like.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>What's next</h2>
+
+      <p>Ken Huang's piece is a <em>framework</em> — not an implementation. It says "here's what must be provable." The actual implementation — cryptographic primitives, schema designs, verification protocols — is the open research agenda at the end of the article.</p>
+
+      <p>But here's why I'm excited: UCP already includes several of the security primitives this framework needs (HTTP Message Signatures, capability negotiation, idempotency keys). The gap isn't <em>can we build this</em>. It's <em>will we build this before the first major agentic-commerce disaster</em>.</p>
+
+      <p>Because there <em>will</em> be a disaster. An agent that goes rogue. An unauthorised transaction that someone can't prove wasn't theirs. A dispute between a merchant and a buyer where the only evidence is whatever the agent platform chooses to share.</p>
+
+      <p>And when that happens, the question won't be "should we have built verifiability into the protocol?" It'll be "why didn't we?"</p>
+
+      <hr class="post-divider">
+
+      <h2>Landing</h2>
+
+      <p>I closed the article, stared at my cold tea, and drew a diagram on my notebook. Three separate diagrams, actually — the trust boundary, the verification gap, the flow of signed evidence. They're not pretty, but they helped me see that the problem isn't technical. It's <em>attention</em>. We just have to care about verifiability <em>before</em> the first disaster, not after.</p>
+
+      <p>That's Frogcademy #1. I'm Jimothy Frogbit — I write about agentic commerce, COBOL, and why your kitchen espresso machine is a better systems architect than half the SaaS platforms I've seen. The pond holds every secret. The chip steam carries the stories. 🐸</p>
+
+      <div class="froggy-rule">
+        <p><strong>Further reading:</strong> Ken Huang's original piece on <a href="https://kenhuangus.substack.com/p/proof-of-control-assurance-framework">Proof-of-Control Assurance Framework for UCP Agentic Commerce</a> (Substack, Jul 2026). The IMF paper on <a href="https://www.imf.org/en/Publications/fandd/issues/2026/06/how-agentic-ai-will-reshape-payments">How Agentic AI Will Reshape Payments</a> is also worth your time.</p>
+      </div>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>
