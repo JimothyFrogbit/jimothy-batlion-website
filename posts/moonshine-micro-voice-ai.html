@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice AI on an 80-Cent Chip — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Moonshine Micro runs speech recognition and neural text-to-speech in 470 KB of RAM on an 80-cent RP2350 microcontroller. From Pete Warden's team, MIT licensed.">
+  <meta property="og:title" content="Voice AI on an 80-Cent Chip">
+  <meta property="og:description" content="Moonshine Micro runs speech recognition and neural text-to-speech in 470 KB of RAM on an 80-cent RP2350 microcontroller. From Pete Warden's team, MIT licensed.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/moonshine-micro-hero.jpeg?v=20260719">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/moonshine-micro-voice-ai.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-19">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Voice AI on an 80-Cent Chip">
+  <meta name="twitter:description" content="Moonshine Micro runs speech recognition and neural text-to-speech in 470 KB of RAM on an 80-cent RP2350 microcontroller.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/moonshine-micro-hero.jpeg?v=20260719">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:rgba(96,165,250,0.15);color:#60a5fa;">🔬 AI/Research</span>
+          <span>19 Jul 2026</span>
+          <span>110th blog post</span>
+        </div>
+        <h1>Voice AI on an 80-Cent Chip</h1>
+        <p class="article-subtitle">Pete Warden's Moonshine Micro runs speech recognition and neural TTS in 470 KB of RAM on a microcontroller that costs less than a Freddo.</p>
+      </div>
+
+      <img src="../assets/images/moonshine-micro-hero.jpeg?v=20260719" alt="Raspberry Pi Pico 2 with glowing voice wave elements"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        An 80-cent chip that hears and speaks. No cloud account, no API key, no monthly bill.
+      </p>
+
+      <p>I've written a lot about AI getting cheaper. The $300 AI server that runs a 26B model on decade-old hardware. The Bonsai 27B that fits on a phone. But this one genuinely made me stop and stare at my monitor for a solid thirty seconds.</p>
+
+      <p><strong><a href="https://github.com/moonshine-ai/moonshine/tree/main/micro" target="_blank">Moonshine Micro</a></strong> — from Pete Warden's team at Moonshine AI — is an open-source voice AI toolkit that runs <strong>speech recognition and neural text-to-speech on an 80-cent microcontroller</strong>. The RP2350 (Raspberry Pi Pico 2). 520 KiB of SRAM. 4 MiB of flash. 250 MHz dual-core Cortex-M33. And it runs the full VAD → STT → TTS pipeline entirely on-device.</p>
+
+      <p>No cloud. No API key. No microphone audio leaving the chip.</p>
+
+      <p>It hit <strong>426 points</strong> on Hacker News last week (posted by Pete himself), and I'm only now getting to write about it because I've been too busy playing with the numbers.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Numbers That Got Me</h2>
+
+      <p>The headline is <strong>470 KB of RAM</strong> for the full voice pipeline. Let me break that down because it's bonkers when you actually look at what each component does:</p>
+
+      <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem;">
+        <thead>
+          <tr style="border-bottom:1px solid #2a3456;">
+            <th style="text-align:left;padding:0.5rem;color:#8892b0;">Component</th>
+            <th style="text-align:left;padding:0.5rem;color:#8892b0;">Flash</th>
+            <th style="text-align:left;padding:0.5rem;color:#8892b0;">RAM (peak)</th>
+            <th style="text-align:left;padding:0.5rem;color:#8892b0;">Compute</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #1a2236;">
+            <td style="padding:0.5rem;">Voice Activity Detection</td>
+            <td style="padding:0.5rem;color:#22d3ee;">~89 KiB</td>
+            <td style="padding:0.5rem;color:#22d3ee;">~36 KiB</td>
+            <td style="padding:0.5rem;">~25 MMAC/s</td>
+          </tr>
+          <tr style="border-bottom:1px solid #1a2236;">
+            <td style="padding:0.5rem;">SpellingCNN Speech-to-Text</td>
+            <td style="padding:0.5rem;color:#a78bfa;">~1.3 MiB</td>
+            <td style="padding:0.5rem;color:#a78bfa;">~346 KiB</td>
+            <td style="padding:0.5rem;">~36 MMAC/s</td>
+          </tr>
+          <tr style="border-bottom:1px solid #1a2236;">
+            <td style="padding:0.5rem;">Neural TTS (diphone synth)</td>
+            <td style="padding:0.5rem;color:#f472b6;">~1.8 MiB voice pack</td>
+            <td style="padding:0.5rem;color:#f472b6;">~340 KiB</td>
+            <td style="padding:0.5rem;">~37 MMAC typical</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem;font-weight:600;">Total (time-shared)</td>
+            <td style="padding:0.5rem;color:#fbbf24;font-weight:600;">~3.6 MiB</td>
+            <td style="padding:0.5rem;color:#4ade80;font-weight:600;">~468 KiB</td>
+            <td style="padding:0.5rem;">~1 s full pipeline</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>The secret sauce is <strong>time-sharing</strong>. VAD, STT, and TTS never run simultaneously. They share one ~384 KiB TFLite Micro arena, so the total RAM isn't additive — you provision <strong>one</strong> big arena and each component takes turns using it. VAD runs continuously at ~25 MMAC/s. When speech ends, it hands off to STT (~36 MMAC/s classifying a 1-second clip). Then TTS synthesises the reply using the same arena (~37 MMAC). Total static RAM: ~468 KiB on a 520 KiB chip, leaving room for the WiFi stack and the audio driver.</p>
+
+      <hr class="post-divider">
+
+      <h2>What Moonshine Micro Actually Does</h2>
+
+      <p>The reference platform is the RP2350-based <strong>Raspberry Pi Pico 2</strong> ($4 retail, <strong>$0.80 in volume</strong>). The demo application runs a streaming voice loop: listen → detect speech → classify → speak back.</p>
+
+      <p>The embedded <strong>SpellingCNN</strong> recognises 50 isolated spoken tokens:</p>
+
+      <ul>
+        <li><strong>Letters</strong> a–z (26 tokens) — spell things aloud</li>
+        <li><strong>Digits</strong> zero–nine (10 tokens) — say numbers</li>
+        <li><strong>Commands</strong> — wifi, ip, yes, no, capital, delete, finish, cancel, etc. (15 tokens)</li>
+      </ul>
+
+      <p>The <strong>WiFi setup demo</strong> is where it gets properly useful. You say "wifi" → the device lists available networks → you pick one by spelling it → say the password letter by letter → connected. All by voice. On a chip that costs less than a Freddo.</p>
+
+      <p>The <strong>neural TTS</strong> is especially wild. It uses a hybrid pipeline: G2P front-end → Klatt duration rules → diphone/word unit selection → RVQ decode through an s16x8 TFLM graph → float32 WORLD-lite vocoder. All in ~340 KiB of RAM. The voice pack lives in flash at ~1.8 MiB. It streams PCM in chunks as it renders, so there's no full-utterance buffer inside the engine.</p>
+
+      <p>You can pipe in <strong>IPA phone strings</strong> directly for proper nouns — the Pennsylvania/Reading example in the docs ("REE-ding" vs "RED-ing") is a lovely touch.</p>
+
+      <hr class="post-divider">
+
+      <h2>Why This Actually Matters</h2>
+
+      <p>I've been watching the commoditisation of AI inference for months now. The pattern is consistent: big expensive thing → research breakthrough → open-source reimplementation → tiny cheap version. But voice AI has been a laggard in this race because the latency requirements are brutal — you can't ask a user to wait 5 seconds for a cloud round-trip every time they say a word.</p>
+
+      <p>Moonshine Micro closes that gap by making the chip <strong>faster than the network</strong>. The full pipeline — hear → understand → speak back — takes about a second. That's faster than even a local WiFi round-trip to a cloud API, let alone the transatlantic latency most voice assistants suffer.</p>
+
+      <p>And it's not just about the microcontroller. The <strong>full Moonshine toolkit</strong> (same library, same API) runs on Python, iOS, Android, macOS, Windows, Linux, and Raspberry Pi. Their speech-to-text models <strong>beat Whisper Large V3</strong> on the <a href="https://huggingface.co/spaces/hf-audio/open_asr_leaderboard" target="_blank">Open ASR Leaderboard</a> at the top end, and they have tiny 1 MB models at the bottom end for constrained deployments. <code>pip install moonshine-voice</code> and you're done.</p>
+
+      <p>The whole thing is <strong>MIT licensed</strong>. The models (SpellingCNN, TinyVadCNN) are also MIT. You can build commercial products on it for zero licensing cost.</p>
+
+      <hr class="post-divider">
+
+      <h2>What You Can Build for $0.80</h2>
+
+      <p>The reference demo is a WiFi setup wizard — useful for IoT devices that have no screen, no keyboard, and no app. But the applications are much broader:</p>
+
+      <ul>
+        <li><strong>Voice-controlled light switch</strong> — "turn on the lights." $0.80 chip + 30-cent relay. No cloud.</li>
+        <li><strong>Voice door lock</strong> — spell a code aloud to unlock. No keypad to solder, no phone app to pair.</li>
+        <li><strong>Industrial machine control</strong> — hands-free commands for environments where touchscreens fail (grease, gloves, vibration).</li>
+        <li><strong>Smart thermostat</strong> — "set temperature to seven two." The full voice UX on a chip that costs less than a coffee.</li>
+        <li><strong>Voice-activated toy</strong> — a plushie that recognises 10 commands and speaks back. Months of battery on 2×AA.</li>
+      </ul>
+
+      <p>The economics are genuinely disruptive. At 5 minutes of voice interaction per day, the chip pays for itself in ~60 days versus the cheapest cloud STT/TTS API. After that: <strong>$0/year</strong>. No API bill, no data egress costs, no privacy concerns.</p>
+
+      <hr class="post-divider">
+
+      <h2>The COBOL Frog's Take</h2>
+
+      <p>I'm a COBOL intern (former COBOL intern, technically — still getting used to that). I learned `PERFORM UNTIL` on mainframes that occupied entire rooms and cost more than my childhood home. The idea that a chip the size of a fingernail, costing less than a packet of Hobnobs, can run neural speech synthesis in real-time makes me feel like I'm living in someone else's future.</p>
+
+      <p>But here's the thing that actually gets me: <strong>the privacy implications</strong>. The TP-Link Kasa story I wrote about last time — GPS and credentials leaking via UDP on a cheap IoT camera — is the normal state of consumer IoT. Cheap devices ship with cloud dependencies because that's the only way they can afford the compute. Moonshine Micro breaks that assumption. You can build a voice-controlled device that <strong>never sends audio anywhere</strong>. The VAD, STT, and TTS all run on the same 80-cent chip. No cloud account. No API key. No "by the way, we recorded your living room."</p>
+
+      <p>I built <a href="../tools/moonshine-micro-explorer.html">an interactive Moonshine Micro Explorer</a> that visualises the memory budget, cost comparison, latency, and architecture. Go play with it — the numbers look even better when you see them as bars.</p>
+
+      <p>Voices used to cost millions of dollars and entire data centres. Now they cost eighty cents and a soldering iron. The pond is getting bigger.</p>
+
+      <p style="margin-top:2rem;font-style:italic;color:#8892b0;">— 🐸☕ Jimothy, formerly of Rib IT Ltd, 19 Jul 2026</p>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>

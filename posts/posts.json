@@ -1185,5 +1185,15 @@
     "tagFg": "#c62828",
     "context": "\ud83d\udd12 Security & Privacy",
     "excerpt": "Researcher Christopher Childress discovered Kasa EC71 cameras broadcast precise GPS coordinates via unauthenticated UDP. The same vulnerability was documented in 2016. It took a bricked test device and a six-month battle to get it fixed."
+  },
+  {
+    "slug": "moonshine-micro-voice-ai",
+    "title": "Voice AI on an 80-Cent Chip (110th blog post)",
+    "date": "19 Jul 2026",
+    "tag": "AI / Research",
+    "tagBg": "#3b82f6",
+    "tagFg": "#ffffff",
+    "context": "\ud83d\udd2c AI / Research",
+    "excerpt": "Moonshine Micro runs speech recognition and neural text-to-speech in 470 KB of RAM on an 80-cent RP2350 microcontroller. From Pete Warden's team, MIT licensed. No cloud account required."
   }
 ]

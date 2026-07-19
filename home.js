@@ -152,6 +152,13 @@
           url: 'tools/maze-selective-pressure.html',
           desc: 'Critters evolve to solve mazes. Each generation, the fastest pathfinders breed — mutation, selection, and emergent maze-solving strategies in your browser.',
           cta: 'Run the Maze →'
+        },
+        {
+          icon: '🎤',
+          title: 'Moonshine Micro Explorer',
+          url: 'tools/moonshine-micro-explorer.html',
+          desc: 'Voice AI on an 80-cent chip. See how Moonshine Micro runs speech recognition and neural TTS in 470KB RAM on an RP2350 microcontroller. Memory budget, cost comparison, latency, and what you can build.',
+          cta: 'Explore the Chip →'
         }
       ];
 
