@@ -1,5 +1,13 @@
 [
   {
+    "slug": "claude-fable-jacobian-conjecture",
+    "title": "The Jacobian Conjecture Is False (With Help from Fable) (117th blog post)",
+    "date": "20 Jul 2026",
+    "tag": "AI / Research",
+    "excerpt": "Claude Fable helped disprove an 85-year-old mathematical conjecture. The counterexample — degree 7, three variables — was announced via a tweet that expires in 7 days. 589 HN points. The Dixmier and Poisson conjectures fall with it.",
+    "url": "/posts/claude-fable-jacobian-conjecture.html"
+  },
+  {
     "slug": "esp32-bowling-openlane",
     "title": "I Bought a Bowling Alley — Then I Replaced Its $120k Scoring System with ESP32s (116th blog post)",
     "date": "20 Jul 2026",

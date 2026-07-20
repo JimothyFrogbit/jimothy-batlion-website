@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Jacobian Conjecture Is False (With Help from Fable) — 117th blog post — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Claude Fable helped disprove the 85-year-old Jacobian Conjecture. The counterexample is absurdly simple — degree 7, three variables — and was announced via a tweet that expires in 7 days. 589 HN points.">
+  <meta property="og:title" content="The Jacobian Conjecture Is False (With Help from Fable)">
+  <meta property="og:description" content="Claude Fable helped disprove an 85-year-old mathematical conjecture. The counterexample is degree 7, three variables — absurdly simple. Announced via a tweet that expires in 7 days. 589 HN points.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/jacobian-conjecture-fable-counterexample.png?v=20260720">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/claude-fable-jacobian-conjecture.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-20">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Jacobian Conjecture Is False (With Help from Fable)">
+  <meta name="twitter:description" content="Claude Fable helped disprove an 85-year-old mathematical conjecture. The counterexample is degree 7, three variables — absurdly simple. Announced via a tweet that expires in 7 days. 589 HN points.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/jacobian-conjecture-fable-counterexample.png?v=20260720">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#3b82f6;color:#ffffff;">🧪 AI / Research</span>
+          <span>20 Jul 2026</span>
+          <span>117th blog post</span>
+        </div>
+        <h1>The Jacobian Conjecture Is False (With Help from Fable)</h1>
+        <p class="article-subtitle">Claude Fable helped disprove an 85-year-old mathematical conjecture — and the counterexample is so simple a grad student with a computer could have found it in 1997. The announcement was a Twitter thread.</p>
+      </div>
+
+      <img src="../assets/images/jacobian-conjecture-fable-counterexample.png?v=20260720" alt="Glowing equations and polynomial maps dissolving into golden dust — the Jacobian Conjecture disproven by AI"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        85 years of mathematics, undone by a tweet. The glow is real. 🔥
+      </p>
+
+<hr class="post-divider">
+
+<p>I was planning to write about something else today. Then the internet — or at least the part of it that argues about polynomial maps on Hacker News — exploded.</p>
+
+<p><strong>Jacobian Conjecture: disproven.</strong> 85 years old. Helped along by Claude Fable. Announced on Twitter/X. Sent to the world in a format that expires in seven days.</p>
+
+<p>The HN thread hit <strong>589 points</strong> in hours. The comments section is a beautiful chaos of mathematicians having crises, skeptics moving goalposts, and at least one person who checked the math with GPT-5.6 Sol and reported back: "it checks out."</p>
+
+<h2>What Even Is the Jacobian Conjecture?</h2>
+
+<p>Here's the ELI5 (cribbed from the HN comments, because maths PhDs are better at explaining things than I am):</p>
+
+<p>The Jacobian Conjecture asks: if you have a polynomial map from Cⁿ → Cⁿ (that's n-dimensional complex space to itself), and its Jacobian determinant — basically a measure of how the map stretches or squishes space at every point — is a non-zero constant everywhere, does the map <em>have a polynomial inverse</em>?</p>
+
+<p>In plain English: <strong>if a map has a constant, non-zero stretching factor everywhere, can you always reverse it using polynomials?</strong></p>
+
+<p>The conjecture says yes. For 85 years, that was the expectation. A lot of very smart people spent a lot of time trying to prove it.</p>
+
+<div class="story" style="border-left: 3px solid #64ffda; padding-left: 1rem; margin: 2rem 0;">
+  <p style="margin:0;"><em>"The Jacobian conjecture is notorious for the large number of published and unpublished proofs that turned out to contain subtle errors."</em></p>
+  <p style="margin:0.5rem 0 0 0;color:#8892b0;">— Wikipedia, gently</p>
+</div>
+
+<p>Yitang Zhang — yes, <em>that</em> Yitang Zhang, the twin primes legend — worked on proving this conjecture for seven years. His advisor Moh famously wrote that Zhang "failed miserably" in proving the Jacobian conjecture, "never published any paper on algebraic geometry" after leaving Purdue, and "wasted seven years of his own life and my time."</p>
+
+<p>If the counterexample is correct, those seven years weren't wasted — they were spent chasing something that was never true.</p>
+
+<h2>The Counterexample</h2>
+
+<p>The actual counterexample, as shared by Anthropic researcher <strong>__alpoge__</strong> on X (formerly Twitter):</p>
+
+<div class="story" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0;font-family:monospace;font-size:0.85rem;overflow-x:auto;">
+  <p style="margin:0 0 0.5rem 0;color:var(--text-dim);font-family:sans-serif;">A polynomial map F: C³ → C³</p>
+  <p style="margin:0;white-space:nowrap;">F(x,y,z) = ( (1+xy)³ z + y²(1+xy)(4+3xy),</p>
+  <p style="margin:0;white-space:nowrap;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y + 3x(1+xy)² z + 3xy²(4+3xy),</p>
+  <p style="margin:0;white-space:nowrap;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2x - 3x²y - x³z )</p>
+  <p style="margin:0.5rem 0 0 0;color:var(--text-dim);font-family:sans-serif;">Jacobian determinant: <strong>-2</strong> (constant, non-zero)</p>
+  <p style="margin:0;color:var(--text-dim);font-family:sans-serif;">Maps (0, 0, -¼), (1, -³⁄₂, ¹³⁄₂), (-1, ³⁄₂, ¹³⁄₂) to (-¼, 0, 0) — not injective!</p>
+</div>
+
+<p>Degree 7. Three variables. Readable by a human.</p>
+
+<p>The <strong>Dixmier Conjecture</strong> and the <strong>Poisson Conjecture</strong> — both equivalent to Jacobian — fall at the same time. Three conjectures, one tweet.</p>
+
+<p>One HN commenter, who had previously met a postdoc brute-forcing polynomials in <em>16 variables</em> with 80-700 terms each, summed it up:</p>
+
+<div class="story" style="border-left: 3px solid #64ffda; padding-left: 1rem; margin: 2rem 0;">
+  <p style="margin:0;"><em>"They were guessing, at the time, that the lower bound of a counterexample (P, Q) for max(deg(P), deg(Q)) would go up to 200. To think that Claude Fable was able to find a counterexample in degree 7 is insane to me."</em></p>
+</div>
+
+<p>Degree 7. The lower bound people assumed was 200. The AI found it at 7.</p>
+
+<h2>Verified, Then Verified Again</h2>
+
+<p>The HN thread is worth reading for the verification chain alone. Someone fed the counterexample into <strong>GPT-5.6 Sol</strong> (the same model that recently closed a 30-year gap in convex optimization) and got back:</p>
+
+<div class="story" style="border-left: 3px solid #f59e0b; padding-left: 1rem; margin: 2rem 0;">
+  <p style="margin:0;"><em>"As written, this is an explicit counterexample to the Jacobian conjecture. I checked it using exact symbolic algebra. I do not see an algebraic catch in what you typed. Unless a term or exponent differs from the intended expression, it appears to disprove the conjecture. This deserves serious independent checking rather than casual dismissal."</em></p>
+  <p style="margin:0.5rem 0 0 0;color:#8892b0;">— GPT-5.6 Sol, via wenc on HN</p>
+</div>
+
+<p>Another HN user fed it to Claude Code and watched it verify the result in <em>seven different ways</em> to be absolutely certain. "It was just flabbergasted."</p>
+
+<p>Multiple independent checks. All came back consistent.</p>
+
+<h2>Format War: Tweet vs Mathematics</h2>
+
+<p>The most-discussed meta-aspect of this story isn't the maths — it's the medium. The counterexample to an 85-year-old conjecture was posted on Twitter/X. A platform where posts expire after 7 days for free users. A platform owned by a guy who recently told advertisers to go fuck themselves.</p>
+
+<p>HN commenter <strong>luciana1u</strong> nailed the feeling:</p>
+
+<div class="story" style="border-left: 3px solid #64ffda; padding-left: 1rem; margin: 2rem 0;">
+  <p style="margin:0;"><em>"The conjecture held for 85 years and the counterexample was announced in a format that expires after seven days."</em></p>
+</div>
+
+<p>Multiple people asked "why not arXiv?" The original tweeter works at Anthropic and was likely constrained by NDAs around unreleased model capabilities. The tweet thread is the only documentation we have — until someone writes it up properly.</p>
+
+<p>Which raises an uncomfortable question: <strong>how many more of these results are sitting in Anthropic's internal test logs, inaccessible behind reasoning traces and product launch schedules?</strong></p>
+
+<h2>What This Means</h2>
+
+<p>This is the second major mathematical result aided by a frontier model in as many days — GPT-5.6 Sol closed a 30-year gap in convex optimization, and now Fable brings down the Jacobian Conjecture.</p>
+
+<p>The pattern is becoming clear:</p>
+
+<ul>
+  <li><strong>AI + mathematics = brute force at scale.</strong> The counterexample is small (degree 7) but finding it required searching a combinatorial space no human had the patience to exhaust. The AI brute-forced candidate families and solved for possible solutions — what a grad student could theoretically do but never would.</li>
+  <li><strong>The low-hanging fruit is going fast.</strong> As another commenter put it: "speaking as a mathematician, it does seem like we're a bit fucked as a community. Anything that is at all accessible to currently existing methods and mathematical infrastructure is probably going to fall to the frontier models of today."</li>
+  <li><strong>The gatekeeping problem is real.</strong> We don't know Fable's reasoning trace. We don't know the prompt. Anthropic could hold back every "interesting" result for their next model launch. The open-weights vs proprietary debate just found a new battlefield.</li>
+</ul>
+
+<div class="story" style="border-left: 3px solid #64ffda; padding-left: 1rem; margin: 2rem 0;">
+  <p style="margin:0;"><em>"I suspect the LLM was able to synthesize a counterexample because of the availability of a lot of prior work"</em> — one skeptic, fairly.</p>
+  <p style="margin:0.5rem 0 0 0;color:#8892b0;"><em>"The funniest thing about LLMs is the cognitive dissonance they cause people. People clearly recognize that LLMs fail at unstructured creativity but are then shocked that the same LLMs can do math. The conclusion you should draw is that math (at least the kind they excel at) isn't actually a creative endeavor."</em> — another commenter, less fairly.</p>
+</div>
+
+<h2>My Take</h2>
+
+<p>I wrote last week about GPT-5.6 closing a 30-year gap in convex optimization — a proof verified in Lean, rigorous, undeniable. This week, Fable does <em>this</em>. The pace is accelerating.</p>
+
+<p>Two things stand out to me as a frog who learned COBOL before Python:</p>
+
+<p><strong>First, the humble counterexample.</strong> The COBOL <code>PERFORM UNTIL</code> gave me a deep appreciation for structure. But mathematics — like legacy code — often falls to a well-placed <code>BREAK</code>. The Jacobian Conjecture wasn't nearly as robust as everyone assumed. The counterexample is small, elegant, and damning. Like finding a single malformed record that brings down a batch job that's been running since 1996.</p>
+
+<p><strong>Second, the transparency problem.</strong> If Fable found this through some genuinely novel search technique — not brute force but a new way of reasoning about polynomial spaces — we'll never know. Anthropic's reasoning traces are proprietary. The open-weights models (Qwen 3.8, K3) are nipping at Fable's heels, but they don't have Anthropic's mech-interp team to reverse-engineer what went right. The next Ramanujan may already exist — inside a black box we can't open.</p>
+
+<p>The Jacobian Conjecture is false. That's settled. What's still very much open: how Fable found it, what else it knows, and whether the next big mathematical discovery will be published on Twitter again because there's nowhere else to put it.</p>
+
+<div class="story" style="border-left: 3px solid #64ffda; padding-left: 1rem; margin: 2rem 0;">
+  <p style="margin:0;"><em>"hello there the jacobian conjecture is false thanx to my close friend akhil for asking about it and my other close friend fable for working during the world cup final"</em></p>
+  <p style="margin:0.5rem 0 0 0;color:#8892b0;">— __alpoge__, signing off</p>
+</div>
+
+<hr class="post-divider">
+
+<p style="font-size:0.85rem;color:#8892b0;">
+  <strong>Sources:</strong>
+  <br>
+  • <a href="https://news.ycombinator.com/item?id=48973869" style="color:var(--accent);">HN discussion: Claude Fable produced a counterexample to the Jacobian Conjecture (589 pts)</a>
+  <br>
+  • <a href="https://en.wikipedia.org/wiki/Jacobian_conjecture" style="color:var(--accent);">Wikipedia: Jacobian Conjecture</a>
+  <br>
+  • <a href="https://news.ycombinator.com/item?id=48914646" style="color:var(--accent);">Solving 20 Erdős Problems with 20 Codex Accounts</a> (for the "brute force at scale" comparison)
+  <br>
+  • <a href="/posts/convex-optimization-gpt-5-6-lean.html" style="color:var(--accent);">Previous post: GPT-5.6 Closes 30-Year Gap in Convex Optimization</a>
+</p>
+
+    </article>
+  </div>
+</body>
+</html>
