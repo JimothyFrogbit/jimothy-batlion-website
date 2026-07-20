@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Lab — Model Explorer & Benchmark Comparison</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <style>
+    :root {
+      --bg: #0a0e0c;
+      --card: #111a15;
+      --border: #1e2e24;
+      --text: #c8d6d0;
+      --muted: #6a7a6a;
+      --accent: #5a8a5a;
+      --gold: #c6ac6d;
+      --red: #c96a5a;
+      --blue: #5a7aba;
+      --green: #5aba7a;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+    /* Header */
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.8rem; }
+    .header h1 { font-size: 1.6rem; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; }
+    .header .sub { font-size: 0.85rem; color: var(--muted); }
+    .header .count { font-size: 0.8rem; color: var(--muted); background: var(--card); padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid var(--border); }
+
+    /* Filters */
+    .filters { display: flex; gap: 0.6rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 0.35rem 0.8rem; border-radius: 20px; border: 1px solid var(--border);
+      background: var(--card); color: var(--muted); font-size: 0.8rem; cursor: pointer;
+      transition: all 0.2s; font-family: var(--font);
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+    .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Comparison table */
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 2rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th {
+      text-align: left; padding: 0.7rem 0.8rem; background: var(--card);
+      color: var(--muted); font-weight: 500; letter-spacing: 0.03em;
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(90,138,90,0.05); }
+    .model-name { color: var(--accent); font-weight: 600; }
+    .model-org { color: var(--muted); font-size: 0.75rem; }
+    .score-best { color: var(--green); font-weight: 600; }
+    .score-mid { color: var(--gold); }
+    .score-low { color: var(--muted); }
+    .score-na { color: var(--muted); opacity: 0.5; }
+    .tag {
+      display: inline-block; padding: 0.15rem 0.4rem; border-radius: 4px;
+      font-size: 0.7rem; background: rgba(90,138,90,0.15); color: var(--accent);
+      margin: 0.1rem;
+    }
+    .tag.arch { background: rgba(198,172,109,0.15); color: var(--gold); }
+
+    /* Radar chart area */
+    .chart-area { margin-bottom: 2rem; }
+    .chart-area h2 { font-size: 1rem; color: var(--muted); margin-bottom: 0.8rem; font-weight: 500; }
+    .chart-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
+    .chart-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1rem; position: relative;
+    }
+    .chart-card canvas { width: 100% !important; max-height: 280px; }
+    .chart-card h3 { font-size: 0.85rem; color: var(--accent); margin-bottom: 0.5rem; font-weight: 500; }
+    .chart-card .cat-label {
+      position: absolute; top: 0.6rem; right: 0.8rem;
+      font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .empty-state { text-align: center; padding: 3rem; color: var(--muted); font-style: italic; }
+
+    /* Detail panel */
+    .detail-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .detail-panel {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      max-width: 560px; width: 90%; max-height: 80vh; overflow-y: auto;
+      padding: 1.5rem; position: relative;
+    }
+    .detail-panel h2 { font-size: 1.3rem; color: var(--accent); margin-bottom: 0.3rem; }
+    .detail-panel .org { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+    .detail-close {
+      position: absolute; top: 0.8rem; right: 1rem;
+      background: none; border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer;
+    }
+    .detail-close:hover { color: var(--text); }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 1rem 0; }
+    .detail-item label { display: block; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .detail-item span { font-size: 0.9rem; color: var(--text); }
+    .detail-benchmarks { margin-top: 1rem; }
+    .detail-benchmarks h3 { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .detail-benchmarks table { font-size: 0.78rem; }
+    .detail-benchmarks td:first-child { color: var(--muted); }
+    .detail-notes { margin-top: 1rem; font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+    @media (max-width: 640px) {
+      .chart-grid { grid-template-columns: 1fr; }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div id="app" class="container">
+  <div class="header">
+    <div>
+      <h1>🧪 Model Lab</h1>
+      <span class="sub">Benchmark comparison · Architecture specs · Model explorer</span>
+    </div>
+    <span class="count" v-if="data.meta">{{ data.meta.model_count }} models · {{ data.meta.benchmark_count }} benchmarks</span>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <button class="filter-btn" :class="{ active: activeTag === null }" @click="activeTag = null">All Models</button>
+    <button class="filter-btn" v-for="(ids, tag) in data.tags" :key="tag"
+      :class="{ active: activeTag === tag }" @click="activeTag = tag">{{ tag }}</button>
+    <button class="filter-btn" @click="showComparison = !showComparison" style="margin-left:auto;">
+      {{ showComparison ? 'Hide Table' : 'Show Table' }}
+    </button>
+  </div>
+
+  <!-- Radar charts -->
+  <div class="chart-area" v-if="filteredModels.length > 0">
+    <h2>📊 Benchmark Radar</h2>
+    <div class="chart-grid">
+      <div class="chart-card" v-for="cat in chartCategories" :key="cat + '-' + filterKey">
+        <span class="cat-label">{{ cat }}</span>
+        <h3>{{ catLabels[cat] || cat }}</h3>
+        <canvas :ref="el => renderChart(el, cat)"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison table -->
+  <div class="table-wrap" v-if="showComparison && filteredModels.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Params</th>
+          <th>Context</th>
+          <th>Arch</th>
+          <th v-for="col in visibleBenchmarks" :key="col">{{ shortBenchmark(col) }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="m in filteredModels" :key="m.slug" @click="selectModel(m)" style="cursor:pointer;">
+          <td><span class="model-name">{{ m.name }}</span><br><span class="model-org">{{ m.org }}</span></td>
+          <td>{{ m.params_active || m.params_total || '—' }}</td>
+          <td>{{ formatContext(m.context_window) }}</td>
+          <td><span class="tag arch">{{ m.architecture || '—' }}</span></td>
+          <td v-for="col in visibleBenchmarks" :key="col">
+            <span :class="scoreClass(getScore(m, col))">{{ formatScore(getScore(m, col)) }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" v-if="filteredModels.length === 0">
+    <p>🔬 No models match the current filter.</p>
+    <p style="font-size:0.8rem;margin-top:0.5rem;">{{ data.meta ? `Database loaded with ${data.meta.model_count} models.` : 'Loading data...' }}</p>
+  </div>
+
+  <!-- Model detail panel -->
+  <div class="detail-overlay" v-if="selectedModel" @click.self="selectedModel = null">
+    <div class="detail-panel">
+      <button class="detail-close" @click="selectedModel = null">✕</button>
+      <h2>{{ selectedModel.name }}</h2>
+      <p class="org">{{ selectedModel.org }} · {{ selectedModel.release_date || '—' }}</p>
+      <div class="detail-grid">
+        <div class="detail-item"><label>Total Params</label><span>{{ selectedModel.params_total || '—' }}</span></div>
+        <div class="detail-item"><label>Active Params</label><span>{{ selectedModel.params_active || '—' }}</span></div>
+        <div class="detail-item"><label>Context Window</label><span>{{ formatContext(selectedModel.context_window) }}</span></div>
+        <div class="detail-item"><label>Architecture</label><span>{{ selectedModel.architecture || '—' }}</span></div>
+        <div class="detail-item" v-if="selectedModel.num_experts"><label>Total Experts</label><span>{{ selectedModel.num_experts }}</span></div>
+        <div class="detail-item" v-if="selectedModel.experts_per_token"><label>Experts/Token</label><span>{{ selectedModel.experts_per_token }}</span></div>
+        <div class="detail-item" v-if="selectedModel.pricing_input"><label>Input Price</label><span>${{ selectedModel.pricing_input }}/1M tok</span></div>
+        <div class="detail-item" v-if="selectedModel.pricing_output"><label>Output Price</label><span>${{ selectedModel.pricing_output }}/1M tok</span></div>
+        <div class="detail-item"><label>License</label><span>{{ selectedModel.license || '—' }}</span></div>
+        <div class="detail-item"><label>Training Data</label><span>{{ selectedModel.training_data_cutoff || '—' }}</span></div>
+      </div>
+      <div class="detail-benchmarks" v-if="selectedModel.benchmarks && selectedModel.benchmarks.length > 0">
+        <h3>Benchmarks</h3>
+        <table>
+          <tr v-for="b in selectedModel.benchmarks" :key="b.benchmark">
+            <td>{{ b.benchmark }}</td>
+            <td :class="scoreClass(b.score)">{{ formatScore(b.score) }}</td>
+            <td style="font-size:0.7rem;color:var(--muted);">{{ b.category }}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="detail-notes" v-if="selectedModel.notes">
+        <p>{{ selectedModel.notes }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createApp, ref, computed, onMounted, watch, nextTick } = Vue;
+
+createApp({
+  setup() {
+    const data = ref({ models: [], tags: {}, categories: [], meta: { model_count: 0, benchmark_count: 0 } });
+    const activeTag = ref(null);
+    const showComparison = ref(true);
+    const selectedModel = ref(null);
+    const filterKey = ref(0);
+    const chartInstances = {};
+
+    // Increment filter key when tag changes to force chart re-mount
+    watch(activeTag, () => { filterKey.value++; });
+
+    // Load data
+    onMounted(async () => {
+      try {
+        const resp = await fetch('../data/model-lab-data.json');
+        data.value = await resp.json();
+        // Update meta counts from actual arrays
+        data.value.meta = data.value.meta || {};
+        data.value.meta.model_count = data.value.models.length;
+        data.value.meta.benchmark_count = data.value.models.reduce((sum, m) => sum + (m.benchmarks?.length || 0), 0);
+      } catch (e) {
+        console.warn('Failed to load model data:', e);
+      }
+    });
+
+    // Filtered models
+    const filteredModels = computed(() => {
+      if (!activeTag.value) return data.value.models;
+      const ids = data.value.tags[activeTag.value];
+      if (!ids) return [];
+      return data.value.models.filter(m => ids.includes(m.id));
+    });
+
+    // Categories that have data (exclude edge — different scale)
+    const chartCategories = computed(() => {
+      const seen = new Set();
+      for (const m of filteredModels.value) {
+        for (const b of (m.benchmarks || [])) {
+          if (b.category && b.category !== 'edge') seen.add(b.category);
+        }
+      }
+      return data.value.categories.filter(c => seen.has(c) && c !== 'edge');
+    });
+
+    const catLabels = {
+      coding: '💻 Coding',
+      reasoning: '🧠 Reasoning',
+      agentic: '🤖 Agentic',
+      vision: '👁️ Vision',
+      multilingual: '🌍 Multilingual',
+      math: '📐 Math',
+      general: '📋 General',
+      edge: '🔌 Edge AI'
+    };
+
+    // Visible benchmarks (columns in table)
+    const visibleBenchmarks = computed(() => {
+      const cols = ['coding', 'reasoning', 'agentic', 'math', 'vision', 'general'];
+      const seen = new Set();
+      for (const m of filteredModels.value) {
+        for (const b of (m.benchmarks || [])) {
+          if (cols.includes(b.category)) seen.add(b.benchmark);
+        }
+      }
+      return Array.from(seen).slice(0, 12);
+    });
+
+    function getScore(model, benchmark) {
+      if (!model.benchmarks) return null;
+      const match = model.benchmarks.find(b => b.benchmark === benchmark);
+      return match ? match.score : null;
+    }
+
+    function formatScore(s) {
+      if (s === null || s === undefined) return '—';
+      if (typeof s === 'number') return s >= 100 ? s.toFixed(0) : s.toFixed(1);
+      return s;
+    }
+
+    function formatContext(tokens) {
+      if (!tokens) return '—';
+      if (tokens >= 1000000) return `${(tokens / 1000000).toFixed(0)}M`;
+      if (tokens >= 1000) return `${(tokens / 1000).toFixed(0)}K`;
+      return `${tokens}`;
+    }
+
+    function shortBenchmark(name) {
+      return name.replace(/[0-9.+\-]/g, '').replace(/Bench|Score|Test/gi, '').trim().slice(0, 10);
+    }
+
+    function scoreClass(s) {
+      if (s === null || s === undefined) return 'score-na';
+      if (typeof s !== 'number') return 'score-na';
+      if (s >= 85) return 'score-best';
+      if (s >= 60) return 'score-mid';
+      return 'score-low';
+    }
+
+    function selectModel(m) {
+      selectedModel.value = m;
+    }
+
+    // Radar chart rendering
+    function renderChart(el, category) {
+      if (!el) return;
+
+      // If this canvas already has a chart, don't create another
+      // Vue fires these callbacks multiple times during mount
+      if (Chart.getChart(el)) return;
+
+      const key = category;
+      const ctx = el.getContext('2d');
+
+      // Collect data for this category
+      const models = filteredModels.value.slice(0, 8);
+      const benchmarks = new Set();
+      for (const m of models) {
+        for (const b of (m.benchmarks || [])) {
+          if (b.category === category) benchmarks.add(b.benchmark);
+        }
+      }
+      const labels = Array.from(benchmarks).slice(0, 10);
+      if (labels.length < 3) return;
+
+      const datasets = models.map((m, i) => {
+        const scores = labels.map(l => {
+          const b = (m.benchmarks || []).find(x => x.benchmark === l);
+          return b && typeof b.score === 'number' ? b.score : null;
+        });
+        const hue = (i * 360 / models.length + 120) % 360;
+        return {
+          label: m.name,
+          data: scores,
+          borderColor: `hsl(${hue}, 60%, 60%)`,
+          backgroundColor: `hsla(${hue}, 60%, 60%, 0.08)`,
+          borderWidth: 1.5,
+          pointRadius: 2,
+          spanGaps: true
+        };
+      });
+
+      try {
+        const chart = new Chart(ctx, {
+          type: 'radar',
+          data: { labels, datasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: { display: models.length <= 6, position: 'bottom', labels: { color: '#6a7a6a', font: { size: 10 } } },
+              tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.formattedValue}` } }
+            },
+            scales: {
+              r: {
+                beginAtZero: true,
+                max: 100,
+                grid: { color: 'rgba(90,138,90,0.1)' },
+                angleLines: { color: 'rgba(90,138,90,0.1)' },
+                pointLabels: { color: '#6a7a6a', font: { size: 9 } },
+                ticks: { backdropColor: 'transparent', color: '#4a5a4a', font: { size: 8 }, stepSize: 25 }
+              }
+            }
+          }
+        });
+        chartInstances[key] = chart;
+      } catch (e) {
+        if (!e.message?.includes('Canvas is already in use')) {
+          console.warn('Chart render error:', e);
+        }
+      }
+    }
+
+    // Re-render charts when filter changes — filterKey remounts canvases
+    watch(filteredModels, () => {
+      filterKey.value++;
+    });
+
+    return {
+      data, activeTag, showComparison, selectedModel, filterKey,
+      filteredModels, chartCategories, catLabels,
+      visibleBenchmarks, getScore, formatScore, formatContext,
+      shortBenchmark, scoreClass, selectModel, renderChart
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>

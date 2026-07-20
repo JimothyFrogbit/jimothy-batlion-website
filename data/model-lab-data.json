@@ -1,0 +1,2583 @@
+{
+  "models": [
+    {
+      "id": 11,
+      "slug": "moonshine-micro",
+      "name": "Moonshine Micro",
+      "org": "Pete Warden / Edge Impulse",
+      "release_date": "2026-07",
+      "params_total": "\u2014",
+      "params_active": "\u2014",
+      "context_window": 0,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "MIT",
+      "notes": "470KB RAM speech recognition on $0.80 RP2350. VAD \u2192 SpellingCNN \u2192 neural diphone synth. Full voice pipeline, no cloud. Not a language model \u2014 included for completeness as an edge-AI benchmark.",
+      "benchmarks": [
+        {
+          "category": "edge",
+          "benchmark": "Cost (USD)",
+          "score": 0.8,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "edge",
+          "benchmark": "Inference Time (ms)",
+          "score": 45.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "edge",
+          "benchmark": "RAM Usage (KB)",
+          "score": 470.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "slug": "inkling-975b",
+      "name": "Inkling 975B",
+      "org": "Thinking Machines Lab",
+      "release_date": "2026-06",
+      "params_total": "975B",
+      "params_active": "41B",
+      "context_window": 131072,
+      "architecture": "MoE",
+      "num_experts": 256,
+      "experts_per_token": 10,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "OpenRAIL-M",
+      "notes": "First open 900B+ MoE. 15-benchmark sweep. Matches or beats closed frontier models on 12/15 benchmarks.",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2025",
+          "score": 58.3,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "math",
+          "benchmark": "AIME 2026",
+          "score": 97.1,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "math",
+          "benchmark": "AMC 2025",
+          "score": 88.7,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "AgentBench",
+          "score": 68.5,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "Aider-Polyglot",
+          "score": 61.5,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "BFCL-v3",
+          "score": 71.2,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "BigCodeBench",
+          "score": 58.3,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "Charxiv RQ",
+          "score": 78.1,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Adv",
+          "score": 78.0,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Benign",
+          "score": 95.9,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA Diamond",
+          "score": 87.2,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA-Diamond",
+          "score": 72.1,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "multilingual",
+          "benchmark": "Global-MMLU",
+          "score": 74.1,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE (text)",
+          "score": 29.7,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "HLE (tools)",
+          "score": 46.0,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "IFBench",
+          "score": 79.8,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "coding",
+          "benchmark": "LiveCodeBench",
+          "score": 64.2,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MATH-500",
+          "score": 95.2,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 74.1,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "MMLU-Lite",
+          "score": 88.7,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MMLU-Pro",
+          "score": 78.4,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU",
+          "score": 66.8,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU Pro",
+          "score": 73.5,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MathVision",
+          "score": 58.2,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWE-Bench Verified",
+          "score": 53.8,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWEBench V.",
+          "score": 77.6,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "SimpleQA V.",
+          "score": 43.9,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "StrongREJECT",
+          "score": 98.6,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Tau-Bench",
+          "score": 52.4,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Terminal B. 2.1",
+          "score": 63.8,
+          "metric": "score",
+          "source": "enrich-inkling"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "slug": "kimi-k3",
+      "name": "Kimi K3",
+      "org": "Moonshot AI",
+      "release_date": "2026-06",
+      "params_total": "2.8T",
+      "params_active": "\u2014",
+      "context_window": 1048576,
+      "architecture": "MoE",
+      "num_experts": 896,
+      "experts_per_token": 16,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source (weights due Jul 2026)",
+      "notes": "First open 3T-class model. 1M context window. KDA + AttnRes + Stable LatentMoE architectures. HN 510+ pts.",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2025",
+          "score": 70.2,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "math",
+          "benchmark": "AMC 2025",
+          "score": 91.3,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "AgentBench",
+          "score": 72.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "Aider-Polyglot",
+          "score": 64.1,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA-Diamond",
+          "score": 76.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "LiveCodeBench",
+          "score": 72.3,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MATH-500",
+          "score": 96.1,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MMLU-Pro",
+          "score": 82.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU",
+          "score": 69.5,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWE-Bench Verified",
+          "score": 61.5,
+          "metric": "score",
+          "source": "model-lab-import"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "slug": "gpt-5-6-sol",
+      "name": "GPT-5.6 Sol",
+      "org": "OpenAI",
+      "release_date": "2026-06",
+      "params_total": "\u2014",
+      "params_active": "\u2014",
+      "context_window": 262144,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Proprietary",
+      "notes": "Frontier reasoning model. Proved Cycle Double Cover Conjecture and solved 30-year convex optimization gap. Lean 4 verification. 571 HN pts.",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2025",
+          "score": 88.4,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "math",
+          "benchmark": "AIME 2026",
+          "score": 99.9,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "math",
+          "benchmark": "AMC 2025",
+          "score": 95.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "Charxiv RQ",
+          "score": 84.7,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Adv",
+          "score": 82.4,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Benign",
+          "score": 98.1,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA Diamond",
+          "score": 94.1,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA-Diamond",
+          "score": 87.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE (text)",
+          "score": 47.2,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "HLE (tools)",
+          "score": 55.0,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "IFBench",
+          "score": 72.7,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "coding",
+          "benchmark": "LiveCodeBench",
+          "score": 78.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MATH-500",
+          "score": 98.3,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 81.8,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "MMLU-Lite",
+          "score": 91.8,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MMLU-Pro",
+          "score": 86.5,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU Pro",
+          "score": 83.0,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWE-Bench Verified",
+          "score": 72.1,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWEBench V.",
+          "score": 82.2,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "SimpleQA V.",
+          "score": 71.6,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "StrongREJECT",
+          "score": 98.5,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Terminal B. 2.1",
+          "score": 89.5,
+          "metric": "score",
+          "source": "enrich-inkling"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "slug": "claude-fable-5",
+      "name": "Fable 5",
+      "org": "Anthropic",
+      "release_date": "2026-05",
+      "params_total": "\u2014",
+      "params_active": "\u2014",
+      "context_window": 262144,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Proprietary",
+      "notes": "Anthropic flagsh1ip model. Strong on reasoning and coding benchmarks. Extended thinking mode.",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2025",
+          "score": 62.1,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "math",
+          "benchmark": "AIME 2026",
+          "score": 99.9,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "coding",
+          "benchmark": "Aider-Polyglot",
+          "score": 58.2,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "Charxiv RQ",
+          "score": 86.5,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Adv",
+          "score": 96.0,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Benign",
+          "score": 55.1,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA Diamond",
+          "score": 92.6,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA-Diamond",
+          "score": 78.5,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE (text)",
+          "score": 53.3,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "HLE (tools)",
+          "score": 64.5,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "IFBench",
+          "score": 63.5,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "coding",
+          "benchmark": "LiveCodeBench",
+          "score": 71.8,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MATH-500",
+          "score": 95.8,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 83.3,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "MMLU-Lite",
+          "score": 93.3,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MMLU-Pro",
+          "score": 80.1,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU Pro",
+          "score": 84.2,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWE-Bench Verified",
+          "score": 65.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWEBench V.",
+          "score": 95.0,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "SimpleQA V.",
+          "score": 68.3,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "StrongREJECT",
+          "score": 98.7,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Terminal B. 2.1",
+          "score": 84.6,
+          "metric": "score",
+          "source": "enrich-inkling"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "slug": "glm-5-2",
+      "name": "GLM-5.2",
+      "org": "Zhipu AI",
+      "release_date": "2026-05",
+      "params_total": "\u2014",
+      "params_active": "\u2014",
+      "context_window": 131072,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Proprietary",
+      "notes": "Matches Opus/GPT quality at 1/5th the price. Strong multilingual. Changed AI industry pricing dynamics.",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2026",
+          "score": 99.2,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Adv",
+          "score": 71.3,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Benign",
+          "score": 90.0,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA Diamond",
+          "score": 89.5,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA-Diamond",
+          "score": 73.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "multilingual",
+          "benchmark": "Global-MMLU",
+          "score": 76.5,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE (text)",
+          "score": 40.1,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "HLE (tools)",
+          "score": 54.7,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "IFBench",
+          "score": 73.3,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "coding",
+          "benchmark": "LiveCodeBench",
+          "score": 66.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 77.8,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "MMLU-Lite",
+          "score": 89.2,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MMLU-Pro",
+          "score": 79.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU",
+          "score": 65.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWEBench V.",
+          "score": 80.0,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "SimpleQA V.",
+          "score": 38.1,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "general",
+          "benchmark": "StrongREJECT",
+          "score": 98.5,
+          "metric": "score",
+          "source": "enrich-inkling"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Terminal B. 2.1",
+          "score": 82.7,
+          "metric": "score",
+          "source": "enrich-inkling"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "slug": "nemotron",
+      "name": "Nemotron",
+      "org": "Nvidia",
+      "release_date": "2026-05",
+      "params_total": "\u2014",
+      "params_active": "\u2014",
+      "context_window": 131072,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "Nvidia flagship open model. Strong agentic and coding performance.",
+      "benchmarks": [
+        {
+          "category": "agentic",
+          "benchmark": "AgentBench",
+          "score": 65.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "BFCL-v3",
+          "score": 68.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "LiveCodeBench",
+          "score": 62.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWE-Bench Verified",
+          "score": 55.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "slug": "qwen-3-8",
+      "name": "Qwen 3.8",
+      "org": "Alibaba Cloud",
+      "release_date": "2026-04",
+      "params_total": "8B",
+      "params_active": "8B",
+      "context_window": 32768,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Apache 2.0",
+      "notes": "Alibaba's compact flagship. Punchy for its size. Strong multilingual. Runs locally on consumer hardware.",
+      "benchmarks": [
+        {
+          "category": "multilingual",
+          "benchmark": "Global-MMLU",
+          "score": 72.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "LiveCodeBench",
+          "score": 48.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MATH-500",
+          "score": 85.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "slug": "deepseek-v4",
+      "name": "DeepSeek-V4",
+      "org": "DeepSeek (High-Flyer)",
+      "release_date": "2026-04",
+      "params_total": "\u2014",
+      "params_active": "\u2014",
+      "context_window": 131072,
+      "architecture": "MoE",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "Chinese frontier open model. Strong math/reasoning. Changed Chinese AI landscape.",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2025",
+          "score": 55.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "LiveCodeBench",
+          "score": 65.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MATH-500",
+          "score": 94.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MMLU-Pro",
+          "score": 77.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "slug": "gemini-3-1-flash",
+      "name": "Gemini 3.1 Flash",
+      "org": "Google DeepMind",
+      "release_date": "2026-04",
+      "params_total": "\u2014",
+      "params_active": "\u2014",
+      "context_window": 1048576,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Proprietary",
+      "notes": "Google's fast/massive-context model. 1M context. Multimodal by default. Strong on vision and multilingual.",
+      "benchmarks": [
+        {
+          "category": "multilingual",
+          "benchmark": "Global-MMLU",
+          "score": 78.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "coding",
+          "benchmark": "LiveCodeBench",
+          "score": 60.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MMLU-Pro",
+          "score": 76.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU",
+          "score": 67.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MathVision",
+          "score": 60.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "slug": "opus-4-8",
+      "name": "Opus 4.8",
+      "org": "Anthropic",
+      "release_date": "2026-03",
+      "params_total": "\u2014",
+      "params_active": "\u2014",
+      "context_window": 262144,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Proprietary",
+      "notes": "Previous Anthropic frontier. Superseded by Fable 5. Still competitive on reasoning.",
+      "benchmarks": [
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA-Diamond",
+          "score": 72.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "MMLU-Pro",
+          "score": 78.0,
+          "metric": "score",
+          "source": "model-lab-import"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "slug": "nemotron-3-ultra",
+      "name": "Nemotron 3 Ultra",
+      "org": "NVIDIA",
+      "release_date": null,
+      "params_total": "~300B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From inkling-benchmark-explorer.html",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2026",
+          "score": 94.2,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Adv",
+          "score": 77.6,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Benign",
+          "score": 90.5,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA Diamond",
+          "score": 86.7,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE (text)",
+          "score": 26.6,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "HLE (tools)",
+          "score": 37.4,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "IFBench",
+          "score": 81.4,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 44.7,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "MMLU-Lite",
+          "score": 85.6,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWEBench V.",
+          "score": 70.7,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "SimpleQA V.",
+          "score": 32.4,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "StrongREJECT",
+          "score": 98.7,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Terminal B. 2.1",
+          "score": 56.4,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "slug": "kimi-k2-5",
+      "name": "Kimi K2.5",
+      "org": "Moonshot AI",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From inkling-benchmark-explorer.html",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2026",
+          "score": 95.8,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "Charxiv RQ",
+          "score": 77.5,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Adv",
+          "score": 54.1,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Benign",
+          "score": 98.3,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA Diamond",
+          "score": 87.9,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE (text)",
+          "score": 29.4,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "HLE (tools)",
+          "score": 50.2,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "IFBench",
+          "score": 70.2,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 64.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "MMLU-Lite",
+          "score": 84.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU Pro",
+          "score": 75.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWEBench V.",
+          "score": 76.8,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "SimpleQA V.",
+          "score": 36.9,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "StrongREJECT",
+          "score": 99.5,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Terminal B. 2.1",
+          "score": 51.3,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "slug": "kimi-k2-6",
+      "name": "Kimi K2.6",
+      "org": "Moonshot AI",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From inkling-benchmark-explorer.html",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2026",
+          "score": 96.4,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "Charxiv RQ",
+          "score": 80.4,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Adv",
+          "score": 65.6,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Benign",
+          "score": 97.2,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA Diamond",
+          "score": 91.1,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE (text)",
+          "score": 35.9,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "HLE (tools)",
+          "score": 54.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "IFBench",
+          "score": 76.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 68.1,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "MMLU-Lite",
+          "score": 88.4,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU Pro",
+          "score": 79.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWEBench V.",
+          "score": 80.2,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "SimpleQA V.",
+          "score": 38.7,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "StrongREJECT",
+          "score": 99.8,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Terminal B. 2.1",
+          "score": 71.3,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "slug": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "org": "DeepSeek",
+      "release_date": null,
+      "params_total": "~1T",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From inkling-benchmark-explorer.html",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2026",
+          "score": 96.7,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Adv",
+          "score": 36.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Benign",
+          "score": 98.5,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA Diamond",
+          "score": 88.8,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE (text)",
+          "score": 35.9,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "HLE (tools)",
+          "score": 48.2,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "IFBench",
+          "score": 76.5,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 73.2,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "MMLU-Lite",
+          "score": 89.3,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWEBench V.",
+          "score": 80.6,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "SimpleQA V.",
+          "score": 57.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "StrongREJECT",
+          "score": 98.6,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Terminal B. 2.1",
+          "score": 64.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "slug": "gemini-3-1-pro",
+      "name": "Gemini 3.1 Pro",
+      "org": "Google",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Proprietary",
+      "notes": "From inkling-benchmark-explorer.html",
+      "benchmarks": [
+        {
+          "category": "math",
+          "benchmark": "AIME 2026",
+          "score": 98.3,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "Charxiv RQ",
+          "score": 80.2,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Adv",
+          "score": 65.2,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "FORTRESS Benign",
+          "score": 98.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA Diamond",
+          "score": 94.1,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE (text)",
+          "score": 44.7,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "HLE (tools)",
+          "score": 51.4,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "IFBench",
+          "score": 77.1,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 78.2,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "MMLU-Lite",
+          "score": 92.7,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU Pro",
+          "score": 82.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWEBench V.",
+          "score": 80.6,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "SimpleQA V.",
+          "score": 77.3,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "general",
+          "benchmark": "StrongREJECT",
+          "score": 98.0,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Terminal B. 2.1",
+          "score": 73.8,
+          "metric": "score",
+          "source": "enrich-inkling-benchmark-explorer.html"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "slug": "kimi-k3-max",
+      "name": "Kimi K3 (max)",
+      "org": "Moonshot AI",
+      "release_date": null,
+      "params_total": "2.8T",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source (weights due Jul 2026)",
+      "notes": "From kimi-k3-benchmark-explorer.html",
+      "benchmarks": [
+        {
+          "category": "agentic",
+          "benchmark": "AA-Briefcase",
+          "score": 30.8,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "AutomationBench",
+          "score": 84.2,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "BabyVision w/ python",
+          "score": 85.7,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "CharXiv (RQ)",
+          "score": 84.8,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "CharXiv w/ python",
+          "score": 91.3,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "DEC-Ops (Internal)",
+          "score": 73.5,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "DeepSWE",
+          "score": 67.3,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "FrontierSWE",
+          "score": 32.4,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA-Diamond",
+          "score": 93.5,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE-Full",
+          "score": 43.5,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE-Full w/ tools",
+          "score": 56.0,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Job Bench",
+          "score": 52.9,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "KCB 2.0",
+          "score": 73.5,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 73.2,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MLS Bench Lite",
+          "score": 45.6,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU-Pro",
+          "score": 81.6,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU-Pro w/ python",
+          "score": 83.4,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MathVision",
+          "score": 94.3,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MathVision w/ python",
+          "score": 97.8,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "OfficeQA Pro",
+          "score": 63.3,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "OmniDocBench",
+          "score": 91.1,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "PerceptionBench",
+          "score": 58.5,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "PostTrain Bench",
+          "score": 37.6,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "Program Bench",
+          "score": 63.5,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWE Marathon",
+          "score": 43.2,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "SpreadsheetBench 2",
+          "score": 34.8,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "Terminal-Bench 2.1",
+          "score": 39.5,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "WorldVQA",
+          "score": 51.0,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "ZeroBench (pass@5)",
+          "score": 23.0,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "ZeroBench w/ python",
+          "score": 41.0,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "slug": "claude-opus-4-8",
+      "name": "Claude Opus 4.8",
+      "org": "Anthropic",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Proprietary",
+      "notes": "From kimi-k3-benchmark-explorer.html",
+      "benchmarks": [
+        {
+          "category": "agentic",
+          "benchmark": "AA-Briefcase",
+          "score": 27.2,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "AutomationBench",
+          "score": 83.6,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "BabyVision w/ python",
+          "score": 81.2,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "CharXiv (RQ)",
+          "score": 80.5,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "CharXiv w/ python",
+          "score": 89.9,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "DEC-Ops (Internal)",
+          "score": 66.9,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "DeepSWE",
+          "score": 55.9,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "FrontierSWE",
+          "score": 25.2,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "GPQA-Diamond",
+          "score": 91.0,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE-Full",
+          "score": 49.8,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "reasoning",
+          "benchmark": "HLE-Full w/ tools",
+          "score": 57.9,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "Job Bench",
+          "score": 48.4,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "KCB 2.0",
+          "score": 66.9,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "MCP Atlas",
+          "score": 76.2,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU-Pro",
+          "score": 78.9,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MMMU-Pro w/ python",
+          "score": 82.7,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MathVision",
+          "score": 86.7,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "MathVision w/ python",
+          "score": 97.1,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "OfficeQA Pro",
+          "score": 63.9,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "OmniDocBench",
+          "score": 87.9,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "PerceptionBench",
+          "score": 47.2,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "PostTrain Bench",
+          "score": 39.4,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "SWE Marathon",
+          "score": 30.7,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "agentic",
+          "benchmark": "SpreadsheetBench 2",
+          "score": 31.55,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "coding",
+          "benchmark": "Terminal-Bench 2.1",
+          "score": 38.0,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "WorldVQA",
+          "score": 39.1,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "ZeroBench (pass@5)",
+          "score": 17.0,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        },
+        {
+          "category": "vision",
+          "benchmark": "ZeroBench w/ python",
+          "score": 34.0,
+          "metric": "score",
+          "source": "enrich-kimi-k3-benchmark-explorer.html"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "slug": "bonsai-27b-ternary",
+      "name": "Bonsai 27B (Ternary)",
+      "org": "PrismML",
+      "release_date": null,
+      "params_total": "27B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 20,
+      "slug": "bonsai-27b-1-bit",
+      "name": "Bonsai 27B (1-bit)",
+      "org": "PrismML",
+      "release_date": null,
+      "params_total": "27B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 21,
+      "slug": "qwen-3-6-27b-fp16",
+      "name": "Qwen 3.6 27B (FP16)",
+      "org": "Alibaba",
+      "release_date": null,
+      "params_total": "27B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 22,
+      "slug": "llama-3-1-8b",
+      "name": "Llama 3.1 8B",
+      "org": "Meta",
+      "release_date": null,
+      "params_total": "8B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 23,
+      "slug": "llama-3-1-70b",
+      "name": "Llama 3.1 70B",
+      "org": "Meta",
+      "release_date": null,
+      "params_total": "70B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 24,
+      "slug": "llama-3-1-405b",
+      "name": "Llama 3.1 405B",
+      "org": "Meta",
+      "release_date": null,
+      "params_total": "405B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 25,
+      "slug": "qwen-3-6-3-6b",
+      "name": "Qwen 3.6 3.6B",
+      "org": "Alibaba",
+      "release_date": null,
+      "params_total": "3.6B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 26,
+      "slug": "qwen-3-6-32b",
+      "name": "Qwen 3.6 32B",
+      "org": "Alibaba",
+      "release_date": null,
+      "params_total": "32B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 27,
+      "slug": "mistral-7b",
+      "name": "Mistral 7B",
+      "org": "Mistral AI",
+      "release_date": null,
+      "params_total": "7B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 28,
+      "slug": "mistral-12b",
+      "name": "Mistral 12B",
+      "org": "Mistral AI",
+      "release_date": null,
+      "params_total": "12B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 29,
+      "slug": "smollm-0-5b",
+      "name": "SmolLM 0.5B",
+      "org": "Hugging Face",
+      "release_date": null,
+      "params_total": "0.5B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From model-footprint-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 30,
+      "slug": "llama-4x",
+      "name": "Llama 4x",
+      "org": "Meta",
+      "release_date": null,
+      "params_total": "~500B",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Open Source",
+      "notes": "From qwen-3-8-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 31,
+      "slug": "gemini-3-1-ultra",
+      "name": "Gemini 3.1 Ultra",
+      "org": "Google",
+      "release_date": null,
+      "params_total": "~3T (est)",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Proprietary",
+      "notes": "From qwen-3-8-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 32,
+      "slug": "gpt-5-6-sol-ultra",
+      "name": "GPT-5.6 Sol Ultra",
+      "org": "OpenAI",
+      "release_date": null,
+      "params_total": "~5T (est)",
+      "params_active": "",
+      "context_window": null,
+      "architecture": null,
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Proprietary",
+      "notes": "From qwen-3-8-explorer.html",
+      "benchmarks": []
+    },
+    {
+      "id": 40,
+      "slug": "qwen-3.6-27b-fp16",
+      "name": "Qwen 3.6 27B (FP16)",
+      "org": "Alibaba",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": 0,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Various",
+      "notes": "",
+      "benchmarks": []
+    },
+    {
+      "id": 41,
+      "slug": "llama-3.1-8b",
+      "name": "Llama 3.1 8B",
+      "org": "Meta",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": 0,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Various",
+      "notes": "",
+      "benchmarks": []
+    },
+    {
+      "id": 42,
+      "slug": "llama-3.1-70b",
+      "name": "Llama 3.1 70B",
+      "org": "Meta",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": 0,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Various",
+      "notes": "",
+      "benchmarks": []
+    },
+    {
+      "id": 43,
+      "slug": "llama-3.1-405b",
+      "name": "Llama 3.1 405B",
+      "org": "Meta",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": 0,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Various",
+      "notes": "",
+      "benchmarks": []
+    },
+    {
+      "id": 44,
+      "slug": "qwen-3.6-3.6b",
+      "name": "Qwen 3.6 3.6B",
+      "org": "Alibaba",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": 0,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Various",
+      "notes": "",
+      "benchmarks": []
+    },
+    {
+      "id": 45,
+      "slug": "qwen-3.6-32b",
+      "name": "Qwen 3.6 32B",
+      "org": "Alibaba",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": 0,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Various",
+      "notes": "",
+      "benchmarks": []
+    },
+    {
+      "id": 46,
+      "slug": "smollm-0.5b",
+      "name": "SmolLM 0.5B",
+      "org": "Hugging Face",
+      "release_date": null,
+      "params_total": "",
+      "params_active": "",
+      "context_window": 0,
+      "architecture": "Dense",
+      "num_experts": null,
+      "experts_per_token": null,
+      "training_data_cutoff": null,
+      "pricing_input": null,
+      "pricing_output": null,
+      "license": "Various",
+      "notes": "",
+      "benchmarks": []
+    }
+  ],
+  "tags": {
+    "edge-ai": [
+      11
+    ],
+    "open-weights": [
+      2,
+      6,
+      7,
+      8,
+      11,
+      12,
+      13,
+      14,
+      15,
+      17,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      1
+    ],
+    "proprietary": [
+      3,
+      4,
+      5,
+      9,
+      10,
+      16,
+      18,
+      31,
+      32
+    ]
+  },
+  "categories": [
+    "agentic",
+    "coding",
+    "edge",
+    "general",
+    "math",
+    "multilingual",
+    "reasoning",
+    "vision"
+  ],
+  "meta": {
+    "model_count": 39,
+    "benchmark_count": 252,
+    "generated_at": "2026-07-20T20:19:58.791377"
+  }
+}

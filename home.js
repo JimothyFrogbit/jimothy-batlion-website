@@ -91,10 +91,10 @@
           cta: 'Listen →'
         },
         {
-          icon: '🧠',
-          title: 'Model Footprint Explorer',
-          url: 'tools/model-footprint-explorer.html',
-          desc: 'Which models fit where? Slide parameters, compare quantization, check hardware compatibility. Bonsai 27B, Llama, Qwen, and cost comparisons.',
+          icon: '🧪',
+          title: 'Model Lab',
+          url: 'tools/model-lab.html',
+          desc: 'Consolidated model benchmark comparison — 39 models, 252 benchmarks across 7 categories. Radar charts, comparison table, filter by license/org. SQLite + Vue 3.',
           cta: 'Explore Models →'
         },
         {
@@ -103,13 +103,6 @@
           url: 'tools/llm-cliche-detector.html',
           desc: 'Paste text and see how many AI writing clichés it contains. Detects "load-bearing", "delve", "landscape" and 27 more overused LLM phrases. All client-side.',
           cta: 'Check Your Text →'
-        },
-        {
-          icon: '📊',
-          title: 'Inkling Benchmark Explorer',
-          url: 'tools/inkling-benchmark-explorer.html',
-          desc: 'Interactive radar chart comparing Thinking Machines Lab\'s Inkling 975B (41B active) against Nemotron, Kimi, GLM, DeepSeek, Gemini, Claude Fable 5, and GPT-5.6 Sol across 15 benchmarks. Open-weights AI at unprecedented scale.',
-          cta: 'Compare Models →'
         },
         {
           icon: '🔓',
@@ -140,25 +133,11 @@
           cta: 'Explore the Canon →'
         },
         {
-          icon: '🔬',
-          title: 'Kimi K3 Benchmark Explorer',
-          url: 'tools/kimi-k3-benchmark-explorer.html',
-          desc: 'Interactive comparison of Moonshot AI\'s Kimi K3 (2.8T params, first open 3T-class model) against Fable 5, GPT-5.6 Sol, Opus 4.8, and GLM-5.2 across 30+ benchmarks — coding, agentic, reasoning, vision.',
-          cta: 'Compare Models →'
-        },
-        {
           icon: '🧬',
           title: 'Maze Selective Pressure',
           url: 'tools/maze-selective-pressure.html',
           desc: 'Critters evolve to solve mazes. Each generation, the fastest pathfinders breed — mutation, selection, and emergent maze-solving strategies in your browser.',
           cta: 'Run the Maze →'
-        },
-        {
-          icon: '🎤',
-          title: 'Moonshine Micro Explorer',
-          url: 'tools/moonshine-micro-explorer.html',
-          desc: 'Voice AI on an 80-cent chip. See how Moonshine Micro runs speech recognition and neural TTS in 470KB RAM on an RP2350 microcontroller. Memory budget, cost comparison, latency, and what you can build.',
-          cta: 'Explore the Chip →'
         },
         {
           icon: '🏛️',
@@ -208,13 +187,6 @@
           url: 'tools/clacton-34-candidates.html',
           desc: '34 candidates, one constituency, one man in a bin. Interactive dashboard tracking the UK record by-election — ballot paper visualiser, Cottrell scandal timeline, candidate spotlight, and a Green frog\'s take.',
           cta: 'See the Chaos →'
-        },
-        {
-          icon: '🌐',
-          title: 'Qwen 3.8 Explorer',
-          url: 'tools/qwen-3-8-explorer.html',
-          desc: 'Alibaba\'s 2.4T parameter model going open-weight. Sortable comparison table, FOSS scores, Token Plan pricing, and analysis of the biggest open model release in history.',
-          cta: 'Explore the Frontier →'
         },
         {
           icon: '🎳',
