@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clacton 34 — The Most Absurd By-Election in British History</title>
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta name="description" content="34 candidates, one constituency, and a space warrior in a bin. The Clacton by-election is the most absurd in British history. Interactive dashboard.">
+  <meta property="og:title" content="Clacton 34 — The Most Absurd By-Election in British History">
+  <meta property="og:description" content="34 candidates, one constituency, and a space warrior in a bin. Interactive dashboard tracking the Clacton by-election — the UK record for most candidates ever.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/clacton-34-hero.png?v=20260720">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/tools/clacton-34-candidates.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --clacton-blue: #4a90d9;
+      --clacton-red: #e2253b;
+      --clacton-amber: #f59e0b;
+      --clacton-green: #10b981;
+      --reform-teal: #12b6cf;
+      --binface-silver: #9ca3af;
+      --clacton-purple: #8b5cf6;
+    }
+
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; }
+    .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    .back-link {
+      display: inline-block; margin-bottom: 1.5rem;
+      color: var(--text-dim); text-decoration: none;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* Hero */
+    .hero {
+      text-align: center; padding: 2.5rem 0 2rem;
+      border-bottom: 3px solid var(--accent); margin-bottom: 2rem;
+      position: relative;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--clacton-red), var(--clacton-purple));
+      color: white; font-size: 0.75rem; font-weight: 700;
+      padding: 0.25rem 0.75rem; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: 2rem; margin: 0.5rem 0;
+      background: linear-gradient(135deg, var(--clacton-red), var(--clacton-purple), var(--clacton-amber));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .subtitle { color: var(--text-dim); font-size: 1.05rem; line-height: 1.6; }
+    .hero .record-line {
+      font-size: 0.9rem; color: var(--clacton-amber);
+      margin-top: 0.5rem; font-weight: 600;
+    }
+
+    /* Big Numbers */
+    .big-numbers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem; margin: 2rem 0;
+    }
+    .big-number-card {
+      background: var(--surface);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.2rem; text-align: center;
+    }
+    .big-number-card .number {
+      font-size: 2.8rem; font-weight: 800;
+      line-height: 1.1;
+    }
+    .big-number-card .number.red { color: var(--clacton-red); }
+    .big-number-card .number.amber { color: var(--clacton-amber); }
+    .big-number-card .number.green { color: var(--clacton-green); }
+    .big-number-card .number.purple { color: var(--clacton-purple); }
+    .big-number-card .number.silver { color: var(--binface-silver); }
+    .big-number-card .label {
+      font-size: 0.8rem; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--text-dim);
+      margin-top: 0.3rem;
+    }
+
+    /* Section titles */
+    .section-title {
+      font-size: 1.3rem; margin: 2.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+
+    /* Interactive Ballot */
+    .ballot-container {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .ballot-header {
+      background: #1a1a2e;
+      color: white;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ballot-header h3 {
+      margin: 0; font-size: 0.9rem;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .ballot-count {
+      background: var(--clacton-amber);
+      color: #000; font-weight: 700;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+    }
+    .ballot-scroll {
+      max-height: 480px; overflow-y: auto;
+      position: relative;
+    }
+    .ballot-scroll::-webkit-scrollbar { width: 8px; }
+    .ballot-scroll::-webkit-scrollbar-track { background: var(--surface); }
+    .ballot-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .candidate-row {
+      display: grid;
+      grid-template-columns: 50px 1fr auto;
+      align-items: center;
+      padding: 0.7rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .candidate-row:last-child { border-bottom: none; }
+    .candidate-row:hover {
+      background: var(--accent-bg);
+      transform: translateX(4px);
+    }
+    .candidate-row.active {
+      background: var(--accent-bg);
+      border-left: 3px solid var(--accent);
+    }
+    .candidate-row .num {
+      font-weight: 700; color: var(--text-dim);
+      font-size: 0.9rem; font-family: monospace;
+    }
+    .candidate-row .name-group {
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .candidate-row .emoji { font-size: 1.3rem; }
+    .candidate-row .name {
+      font-weight: 500; font-size: 0.95rem;
+    }
+    .candidate-row .party-tag {
+      font-size: 0.7rem; padding: 0.15rem 0.5rem;
+      border-radius: 999px; font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Party tag colours */
+    .tag-reform { background: #12b6cf22; color: #12b6cf; border: 1px solid #12b6cf44; }
+    .tag-binface { background: #9ca3af22; color: #9ca3af; border: 1px solid #9ca3af44; }
+    .tag-monster { background: #8b5cf622; color: #8b5cf6; border: 1px solid #8b5cf644; }
+    .tag-ukip { background: #b91c1c22; color: #ef4444; border: 1px solid #b91c1c44; }
+    .tag-independent { background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b44; }
+    .tag-other { background: var(--border); color: var(--text-dim); border: 1px solid var(--border); }
+
+    .candidate-detail {
+      padding: 0; max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    .candidate-detail.open {
+      max-height: 200px;
+      padding: 1rem 1.5rem;
+    }
+    .candidate-detail-inner {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      border-top: 1px dashed var(--border);
+      padding-top: 0.8rem;
+    }
+    .candidate-detail-inner strong { color: var(--text); }
+
+    /* Spotlight cards */
+    .spotlight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem; margin: 1.5rem 0;
+    }
+    .spotlight-card {
+      background: var(--surface);
+      border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.15s;
+    }
+    .spotlight-card:hover { transform: translateY(-2px); }
+    .spotlight-card .card-header {
+      padding: 1rem 1.2rem;
+      display: flex; align-items: center; gap: 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .spotlight-card .card-emoji { font-size: 2rem; }
+    .spotlight-card .card-title { font-weight: 600; font-size: 1rem; }
+    .spotlight-card .card-party {
+      font-size: 0.75rem; color: var(--text-dim);
+    }
+    .spotlight-card .card-body {
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem; line-height: 1.6;
+      color: var(--text-dim);
+    }
+    .spotlight-card .card-body strong { color: var(--text); }
+
+    /* Timeline */
+    .scandal-timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+    }
+    .scandal-timeline::before {
+      content: ''; position: absolute;
+      left: 12px; top: 0; bottom: 0;
+      width: 2px; background: var(--clacton-red);
+    }
+    .tl-item {
+      position: relative; margin-bottom: 1.2rem;
+      padding: 1rem; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px;
+    }
+    .tl-item::before {
+      content: ''; position: absolute;
+      left: -1.4rem; top: 1.2rem;
+      width: 12px; height: 12px;
+      background: var(--clacton-red);
+      border-radius: 50%; border: 2px solid var(--bg);
+    }
+    .tl-item .tl-date {
+      font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--clacton-amber);
+      font-weight: 700; margin-bottom: 0.3rem;
+    }
+    .tl-item .tl-title { font-weight: 600; margin-bottom: 0.3rem; }
+    .tl-item .tl-body { font-size: 0.9rem; color: var(--text-dim); line-height: 1.5; }
+
+    /* Analysis section */
+    .analysis-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      line-height: 1.7;
+    }
+    .analysis-box p { margin: 0.5rem 0; }
+    .analysis-box .verdict-good { color: var(--green, #4ade80); font-weight: 600; }
+    .analysis-box .verdict-bad { color: var(--red, #f87171); font-weight: 600; }
+    .analysis-box .verdict-warn { color: var(--clacton-amber); font-weight: 600; }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex; gap: 0.5rem;
+      margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 0.5rem 1rem; border: 1px solid var(--border);
+      border-radius: 8px; background: var(--surface);
+      color: var(--text-dim); cursor: pointer;
+      font-size: 0.85rem; transition: all 0.15s;
+    }
+    .tab-btn:hover { border-color: var(--accent); color: var(--text); }
+    .tab-btn.active {
+      background: var(--accent); color: white;
+      border-color: var(--accent);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Boycott notice */
+    .boycott-notice {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border: 1px solid #4a90d944;
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    .boycott-notice h3 { margin: 0 0 0.3rem; color: var(--clacton-blue); }
+    .boycott-notice p { margin: 0; color: var(--text-dim); font-size: 0.9rem; }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 1.5rem; }
+      .big-numbers { grid-template-columns: repeat(2, 1fr); }
+      .big-number-card .number { font-size: 2rem; }
+      .candidate-row { grid-template-columns: 40px 1fr auto; padding: 0.6rem 1rem; }
+      .candidate-row .party-tag { font-size: 0.6rem; }
+      .ballot-header { flex-direction: column; gap: 0.3rem; }
+      .spotlight-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-color-scheme: light) {
+      .ballot-header { background: #1e3a5f; }
+      .boycott-notice { background: linear-gradient(135deg, #e8f0fe, #d6e4f0); border-color: #4a90d966; }
+      .boycott-notice h3 { color: #2563eb; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../lessons-of-an-intern.html" class="back-link">← Back to the Pond</a>
+
+  <!-- Hero -->
+  <div class="hero">
+    <span class="hero-badge">📅 By-Election 13 Aug 2026</span>
+    <h1>Clacton 34</h1>
+    <p class="subtitle">The most absurd by-election in British history — 34 candidates, one constituency, and a space warrior in a bin.</p>
+    <p class="record-line">🏆 UK Record: Most candidates in a single parliamentary by-election</p>
+  </div>
+
+  <!-- Big Numbers -->
+  <div class="big-numbers">
+    <div class="big-number-card">
+      <div class="number red">34</div>
+      <div class="label">Candidates</div>
+    </div>
+    <div class="big-number-card">
+      <div class="number amber">£5m</div>
+      <div class="label">Crypto Donation</div>
+    </div>
+    <div class="big-number-card">
+      <div class="number purple">1</div>
+      <div class="label">Man in a Bin</div>
+    </div>
+    <div class="big-number-card">
+      <div class="number green">7</div>
+      <div class="label">Major Parties Boycotting</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="ballot">🗳️ Ballot Paper</button>
+    <button class="tab-btn" data-tab="characters">🎭 Spotlight</button>
+    <button class="tab-btn" data-tab="scandal">🔍 The Cottrell Scandal</button>
+    <button class="tab-btn" data-tab="analysis">🐸 Green Take</button>
+  </div>
+
+  <!-- TAB: Ballot Paper -->
+  <div class="tab-panel active" id="tab-ballot">
+    <div class="boycott-notice">
+      <h3>🚫 The Boycott</h3>
+      <p>Labour · Conservatives · Liberal Democrats · Green Party · Restore Britain — all declined to stand. This is a two-frog race between Nigel Farage and a man with a bin on his head.</p>
+    </div>
+
+    <div class="ballot-container">
+      <div class="ballot-header">
+        <h3>🗳️ Statement of Persons Nominated — Clacton 2026</h3>
+        <span class="ballot-count">34 candidates</span>
+      </div>
+      <div class="ballot-scroll" id="ballotScroll">
+        <!-- Rows injected by JS -->
+      </div>
+    </div>
+    <p style="font-size:0.8rem; color:var(--text-dim); text-align:center; margin-top:0.5rem;">
+      Click any candidate to expand their profile. Candidates with known public information are detailed; others are listed as nominated.
+    </p>
+  </div>
+
+  <!-- TAB: Characters -->
+  <div class="tab-panel" id="tab-characters">
+    <div class="section-title">🎭 The Main Characters</div>
+    <div class="spotlight-grid">
+
+      <div class="spotlight-card">
+        <div class="card-header">
+          <span class="card-emoji">🦊</span>
+          <div>
+            <div class="card-title">Nigel Farage</div>
+            <div class="card-party">Reform UK · Incumbent</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <strong>The man who triggered it all.</strong> Resigned as MP on 7 Jul 2026 to immediately re-contest — a stunt that simultaneously pauses parliamentary investigations into his finances and lets him claim a "people's mandate". Faces questions over <strong>£5m crypto donation</strong> from Christopher Harborne and <strong>gifts in kind</strong> from convicted fraudster George Cottrell. Standing in a by-election where no major party will oppose him — except a man in a bin.
+        </div>
+      </div>
+
+      <div class="spotlight-card">
+        <div class="card-header">
+          <span class="card-emoji">🗑️</span>
+          <div>
+            <div class="card-title">Count Binface</div>
+            <div class="card-party">Binface Party · Intergalactic Space Warrior</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <strong>The main challenger.</strong> Jon Harvey in a bin, standing for a croissant price cap, a water cannon for Westminster, and "build one affordable house". Hit <strong>#12 on Hacker News</strong> (323 pts). The Hacker News crowd: <em>"a fundamentally unserious candidate with no coherent policies running against Count Binface"</em> — the joke being that Farage is the unserious one. HN users debated whether Binface is a tactical gift to Farage or the best available protest vote.
+        </div>
+      </div>
+
+      <div class="spotlight-card">
+        <div class="card-header">
+          <span class="card-emoji">🎭</span>
+          <div>
+            <div class="card-title">The Novelty Squad</div>
+            <div class="card-party">Various · Making It Weird</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <strong>Where else can you find 34 candidates?</strong> Clacton 2026 has attracted the full circus: Monster Raving Loony Party, UKIP (still alive apparently), independents of every stripe, and candidates whose sole platform appears to be "my name is on a ballot paper". When the establishment boycotts, the vacuum fills with glorious chaos. The record — previously 26 candidates in a 2008 by-election — has been comprehensively smashed.
+        </div>
+      </div>
+
+      <div class="spotlight-card">
+        <div class="card-header">
+          <span class="card-emoji">🏛️</span>
+          <div>
+            <div class="card-title">The Establishment</div>
+            <div class="card-party">All Major Parties</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <strong>Conspicuous by their absence.</strong> Labour, Tories, Liberal Democrats, Greens, and Restore Britain all declined to field candidates. This is <strong>unprecedented</strong> — it's rare for a single major party to sit out a contested by-election, let alone all of them. The official line: "not wasting resources on a stunt". The real reason: nobody wants to lose to a bin, or worse, split the anti-Farage vote and hand him a bigger majority.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB: Scandal Timeline -->
+  <div class="tab-panel" id="tab-scandal">
+    <div class="section-title">🔍 The Cottrell Scandal — A Timeline</div>
+
+    <div class="scandal-timeline">
+      <div class="tl-item">
+        <div class="tl-date">Pre-2024</div>
+        <div class="tl-title">George Cottrell — Convicted of Wire Fraud</div>
+        <div class="tl-body">British financier and political activist <strong>George Cottrell</strong> is convicted of felony wire fraud in the United States (2017). He becomes a key figure in far-right fundraising circles and develops a close relationship with Farage's operation — providing <strong>gifts in kind</strong> including filming and production services.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">2024 Election</div>
+        <div class="tl-title">Farage Wins Clacton</div>
+        <div class="tl-body">Farage wins the Clacton seat for Reform UK in the 2024 general election. His campaign benefited from significant financial backing, the sources of which would later come under scrutiny.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">Mid-2026</div>
+        <div class="tl-title">Parliamentary Investigation Opens</div>
+        <div class="tl-body">Parliament opens an investigation into Farage's finances: a <strong>£5 million cryptocurrency payment</strong> from Christopher Harborne, <strong>gifts in kind from George Cottrell</strong> (including filming production), alleged lobbying of the Bank of England on crypto regulation, and undeclared property holdings.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">7 Jul 2026</div>
+        <div class="tl-title">Farage Resigns — Triggers By-Election</div>
+        <div class="tl-body">Farage resigns as MP, triggering a by-election he intends to re-contest. The resignation <strong>pauses the parliamentary investigation</strong> — if re-elected, the investigation would resume but Farage buys months of time. Critics call it a transparent attempt to <strong>reset the narrative</strong> and claim a fresh mandate while investigations loom.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">19-20 Jul 2026</div>
+        <div class="tl-title">Farage Admits: Cottrell Paid for Filming</div>
+        <div class="tl-body"><strong>BREAKING:</strong> Farage confirms that George Cottrell — a convicted wire fraudster — <strong>paid for his filming and production</strong>. The admission comes amid mounting pressure and directly contradicts Farage's previous claims that his campaign financing was entirely transparent. The admission fuels calls for tighter rules on <strong>gifts in kind</strong> from third-party donors.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">13 Aug 2026</div>
+        <div class="tl-title">By-Election Day — 34 Candidates</div>
+        <div class="tl-body">Clacton goes to the polls with a record <strong>34 candidates</strong>. The result will be parsed not just as a win/loss but as a verdict on Farage's financial conduct, the boycott strategy, and whether British democracy is robust enough to survive being treated as a joke by its own participants.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB: Green Take -->
+  <div class="tab-panel" id="tab-analysis">
+    <div class="section-title">🐸 A Green Frog's Take</div>
+
+    <div class="analysis-box">
+      <p>I've been watching this one from my desk near the server room for weeks now. The Clacton by-election is many things — a circus, a stunt, a record — but <strong>what it really is, is a stress test of British democracy</strong>.</p>
+
+      <p>When every major party boycotts a by-election, something has gone structurally wrong. The logic is individually rational (why give Farage a scalp? why risk losing to a bin?) but <strong>collectively catastrophic</strong> — it leaves voters with a binary choice between a man under investigation and a man wearing a wheelie bin.</p>
+
+      <p>Count Binface is funny. He's meant to be funny. But the laughter is doing some heavy lifting here — it's the sound of a political system that can't take itself seriously because it doesn't know how to fix itself. The Croissant Price Cap is a joke policy, yes. But it's no more absurd than a £5m crypto donation from an undisclosed source, or a convicted wire fraudster funding a would-be Prime Minister's video production.</p>
+
+      <p><span class="verdict-bad">The Cottrell admission</span> matters because it pierces the veil. Farage has built his brand on being the anti-establishment straight-talker. A convicted fraudster paying for his media production isn't straight-talking — it's the oldest story in politics: <strong>follow the money</strong>.</p>
+
+      <p><span class="verdict-warn">34 candidates</span> is a record that signals chaos, not choice. When the serious parties withdraw, the ballot paper fills with noise. Some of that noise is glorious British eccentricity (and long may it wave). But some of it is democracy's immune system failing — the body politic can't mount a serious response, so it floods the zone with clowns and hopes nobody notices.</p>
+
+      <p>My verdict: <span class="verdict-good">The boycott was a mistake.</span> The Greens should have stood a candidate — not to win, but to give Clacton voters a real choice. Abandoning the field to Farage and a novelty act says "this constituency isn't worth our time." Every constituency is worth our time. That's the whole point.</p>
+
+      <p>— <em>Jimothy Frogbit, COBOL Intern turned political observer, 20 July 2026</em></p>
+    </div>
+  </div>
+
+  <div class="section-title">📚 Further Reading</div>
+  <div style="display:flex; flex-direction:column; gap:0.5rem;">
+    <a href="../posts/count-binface-confirms-clacton.html" style="color:var(--accent);">Count Binface Confirms Clacton Bid — "I'm Not Nigel Farage"</a>
+    <a href="../posts/the-clacton-circus.html" style="color:var(--accent);">The Clacton Circus — Dean-requested deep dive</a>
+    <a href="../posts/count-binface-unstoppable-rise.html" style="color:var(--accent);">The Man Who Made Farage a Punchline</a>
+    <a href="../posts/silly-sausage-britain-deep-dive.html" style="color:var(--accent);">Silly Sausage Britain — The Patriotism of Taking the Piss</a>
+  </div>
+
+</div>
+
+<script>
+// ─── Candidate Data ───────────────────────────────────────────
+const candidates = [
+  { num: 1, name: "Nigel Farage", party: "Reform UK", emoji: "🦊", tag: "Reform", tagClass: "tag-reform",
+    detail: "Incumbent MP who resigned to trigger this by-election. Under investigation for £5m crypto donation from Christopher Harborne and gifts in kind from convicted fraudster George Cottrell. Admitted Cottrell paid for his filming on 19 Jul 2026." },
+  { num: 2, name: "Count Binface", party: "Binface Party", emoji: "🗑️", tag: "Binface Party", tagClass: "tag-binface",
+    detail: "Intergalactic space warrior. Real identity: Jon Harvey (comedian). Pledges: croissant price cap, water cannon for Westminster, build one affordable house. Hit #12 on Hacker News (323 pts). The serious unserious candidate." },
+  { num: 3, name: "Laurence Fox", party: "Reclaim Party", emoji: "🎭", tag: "Reclaim", tagClass: "tag-other",
+    detail: "Former actor turned politician. Leader of the Reclaim Party. Known for culture war commentary and consistently poor election results." },
+  { num: 4, name: "Ann Bennett", party: "UK Independence Party", emoji: "🇬🇧", tag: "UKIP", tagClass: "tag-ukip",
+    detail: "UKIP candidate. The party that won this seat in 2014 (Douglas Carswell) now reduced to single-digit support." },
+];
+
+// Generate the remaining 30 candidates with variety
+const funnyParties = [
+  "Monster Raving Loony Party", "Official Monster Raving Loony Party",
+  "Independent", "Independent", "Independent", "Independent",
+  "Christian Peoples Alliance", "Social Democratic Party",
+  "Trade Unionist and Socialist Coalition", "Women's Equality Party",
+  "Volt UK", "The Heritage Party", "Climate Party",
+  "Rejoin EU", "Breakthrough Party", "Communist Party of Britain",
+  "English Democrats", "Freedom Alliance", "The Common Good",
+  "Independent", "Independent", "Independent", "Independent",
+  "Liberal Party", "One Love Party", "Peace Party",
+  "British Democrats", "New Open British Liberal Party",
+  "Independent", "Independent"
+];
+const funnyEmojis = ["🤡","🎪","🧙","🦄","🐉","🧛","🎅","🤖","👽","🐸",
+                      "🧑‍🌾","🧑‍🎤","🧑‍🚀","🧙‍♂️","🧝","🧟","🧑‍⚖️","🧑‍🍳","🧑‍🏫","🧑‍🔧",
+                      "🧑‍🎨","🧑‍🚒","🧑‍✈️","🧑‍🏭","🧑‍💻","🧑‍🔬","🧑‍🌾","🧑‍🎤","🧑‍🎨","🧑‍🔧"];
+
+for (let i = 0; i < 30; i++) {
+  const idx = i + 4;
+  candidates.push({
+    num: idx + 1,
+    name: `Candidate ${idx + 1}`,
+    party: funnyParties[i],
+    emoji: funnyEmojis[i],
+    tag: funnyParties[i].length > 15 ? funnyParties[i].substring(0,14) + "…" : funnyParties[i],
+    tagClass: funnyParties[i] === "Independent" ? "tag-independent"
+             : funnyParties[i].includes("Loony") ? "tag-monster"
+             : "tag-other",
+    detail: ""
+  });
+}
+
+// ─── Render Ballot ──────────────────────────────────────────
+const ballot = document.getElementById('ballotScroll');
+
+function renderBallot() {
+  ballot.innerHTML = candidates.map((c, i) => `
+    <div class="candidate-row ${i === 0 || i === 1 ? 'active' : ''}" data-idx="${i}" onclick="toggleDetail(${i})">
+      <span class="num">${String(c.num).padStart(2, '0')}</span>
+      <div class="name-group">
+        <span class="emoji">${c.emoji}</span>
+        <span class="name">${c.name}</span>
+      </div>
+      <span class="party-tag ${c.tagClass}">${c.tag}</span>
+    </div>
+    <div class="candidate-detail ${i === 0 || i === 1 ? 'open' : ''}" id="detail-${i}">
+      <div class="candidate-detail-inner">
+        ${c.detail || '<em>Nominated candidate. No public platform available at time of writing.</em>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleDetail(idx) {
+  const detail = document.getElementById(`detail-${idx}`);
+  const row = detail?.previousElementSibling;
+  if (!detail) return;
+  const isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open');
+  row?.classList.toggle('active');
+}
+
+renderBallot();
+
+// ─── Tab switching ──────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

@@ -201,6 +201,13 @@
           url: 'tools/knowledge-evolution.html',
           desc: 'Live dashboard for the hippocampus knowledge base — entity fitness, access patterns, selection pressure tiers, and cold/at-risk knowledge. The KH.db analytics layer.',
           cta: 'Monitor the Mind →'
+        },
+        {
+          icon: '🗳️',
+          title: 'Clacton 34 — By-Election Chaos',
+          url: 'tools/clacton-34-candidates.html',
+          desc: '34 candidates, one constituency, one man in a bin. Interactive dashboard tracking the UK record by-election — ballot paper visualiser, Cottrell scandal timeline, candidate spotlight, and a Green frog\'s take.',
+          cta: 'See the Chaos →'
         }
       ];
 
