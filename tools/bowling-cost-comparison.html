@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bowling System Cost Comparison — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <style>
+    .comparison-tool { max-width: 800px; margin: 2rem auto; }
+    .comparison-tool h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .comparison-tool .subtitle { color: #8892b0; margin-bottom: 2rem; }
+    
+    .cost-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+    .cost-card { padding: 1.5rem; border-radius: 12px; border: 2px solid; }
+    .cost-card.commercial { border-color: #e74c3c; background: rgba(231,76,60,0.08); }
+    .cost-card.openlane { border-color: #2ecc71; background: rgba(46,204,113,0.08); }
+    .cost-card h3 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
+    .cost-card .price { font-size: 2.2rem; font-weight: 700; }
+    .cost-card .unit { font-size: 0.9rem; color: #8892b0; }
+    .cost-card .detail { font-size: 0.85rem; color: #8892b0; margin-top: 0.75rem; line-height: 1.5; }
+    .cost-card.commercial .price { color: #e74c3c; }
+    .cost-card.openlane .price { color: #2ecc71; }
+    
+    .savings-bar { background: #2ecc71; border-radius: 8px; padding: 1rem 1.5rem; text-align: center; margin: 2rem 0; }
+    .savings-bar .label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+    .savings-bar .amount { font-size: 2rem; font-weight: 700; }
+    
+    .lane-calc { margin: 2rem 0; padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); }
+    .lane-calc h3 { margin: 0 0 1rem 0; }
+    .lane-calc label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: #8892b0; }
+    .lane-calc input[type="range"] { width: 100%; margin: 0.5rem 0 1rem 0; }
+    .lane-calc .value-display { font-size: 1.2rem; font-weight: 600; }
+    .calc-results { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .calc-result-item { padding: 0.75rem; border-radius: 8px; text-align: center; }
+    .calc-result-item .label { font-size: 0.8rem; color: #8892b0; }
+    .calc-result-item .val { font-size: 1.5rem; font-weight: 700; }
+    .calc-result-item.commercial { background: rgba(231,76,60,0.1); }
+    .calc-result-item.commercial .val { color: #e74c3c; }
+    .calc-result-item.openlane { background: rgba(46,204,113,0.1); }
+    .calc-result-item.openlane .val { color: #2ecc71; }
+    .calc-result-item.saving { background: rgba(46,204,113,0.15); }
+    .calc-result-item.saving .val { color: #2ecc71; }
+    
+    .tech-stack { margin: 2rem 0; }
+    .tech-stack h3 { margin: 0 0 1rem 0; }
+    .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .tech-col { padding: 1rem; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+    .tech-col h4 { margin: 0 0 0.5rem 0; font-size: 0.9rem; }
+    .tech-col.commercial h4 { color: #e74c3c; }
+    .tech-col.openlane h4 { color: #2ecc71; }
+    .tech-col ul { margin: 0; padding-left: 1.2rem; font-size: 0.85rem; color: #8892b0; line-height: 1.6; }
+
+    @media (max-width: 600px) {
+      .cost-cards { grid-template-columns: 1fr; }
+      .tech-grid { grid-template-columns: 1fr; }
+      .calc-results { grid-template-columns: 1fr; }
+    }
+    
+    .dark .lane-calc { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+    .dark .tech-col { background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.04); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+    <div class="comparison-tool">
+      <h1>🎳 Bowling System Cost Comparison</h1>
+      <p class="subtitle">How much does it cost to replace a bowling center scoring system? Depends who you ask.</p>
+
+      <div class="cost-cards">
+        <div class="cost-card commercial">
+          <h3>🏢 Commercial Vendor</h3>
+          <div class="price">$100,000</div>
+          <div class="unit">per 8-lane center (installed)</div>
+          <div class="detail">
+            Proprietary hardware · Vendor-specific cameras · 
+            2008-era ICs · Service contract sold separately · 
+            Every feature a line item · $4,000 per lane pair for replacement parts ·
+            No open APIs · You own nothing, you're happy
+          </div>
+        </div>
+        <div class="cost-card openlane">
+          <h3>🔧 OpenLaneLink</h3>
+          <div class="price">$1,600</div>
+          <div class="unit">per 8-lane center (prototype)</div>
+          <div class="detail">
+            Off-the-shelf ESP32s ($6 each) · IR break-beam sensors ·
+            RS485 fallback · Raspberry Pi gateway · Redis event stream ·
+            React frontend · Spare controllers in a drawer ($20) ·
+            Swappable in 10 minutes · Full data ownership
+          </div>
+        </div>
+      </div>
+
+      <div class="savings-bar">
+        <div class="label">Total savings on an 8-lane center</div>
+        <div class="amount">~98% — $98,400 saved</div>
+      </div>
+
+      <div class="lane-calc">
+        <h3>📐 Compare by Lane Count</h3>
+        <label for="lanes">Number of lanes</label>
+        <input type="range" id="lanes" min="2" max="40" value="8" step="2">
+        <div class="value-display" id="laneCount">8 lanes</div>
+        <div class="calc-results">
+          <div class="calc-result-item commercial">
+            <div class="label">Commercial cost</div>
+            <div class="val" id="commercialCost">$100,000</div>
+          </div>
+          <div class="calc-result-item openlane">
+            <div class="label">OpenLaneLink cost</div>
+            <div class="val" id="openlaneCost">$1,600</div>
+          </div>
+          <div class="calc-result-item saving" style="grid-column: 1/-1;">
+            <div class="label">You save</div>
+            <div class="val" id="savingAmount">$98,400</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tech-stack">
+        <h3>⚙️ Tech Stack Comparison</h3>
+        <div class="tech-grid">
+          <div class="tech-col commercial">
+            <h4>🏢 Commercial ($100k/lane pair)</h4>
+            <ul>
+              <li>Proprietary embedded ICs — no datasheet, no schematic, no hope</li>
+              <li>Vendor-specific camera modules (part #: call us)</li>
+              <li>Custom cabling — pinout changes every model year</li>
+              <li>Single-vendor service contracts ($5k+/year)</li>
+              <li>Closed firmware — zero modification possible</li>
+              <li>No API, no webhooks, no export</li>
+              <li>White-label themes cost extra (yes, really)</li>
+            </ul>
+          </div>
+          <div class="tech-col openlane">
+            <h4>🔧 OpenLaneLink ($200/lane pair)</h4>
+            <ul>
+              <li>ESP32-S3 — $6 on Amazon, datasheet at your fingertips</li>
+              <li>IR break-beam sensors — $3 each, any electronics shop</li>
+              <li>RS485 + ESPNow mesh — dual-path reliability</li>
+              <li>Raspberry Pi gateway — $35, spare SD card in drawer</li>
+              <li>Redis event stream — pub/sub pattern, every dev knows it</li>
+              <li>React frontend — any web dev can build a new UI</li>
+              <li>Open source — planned for full release</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem;padding:1rem;border-radius:8px;background:rgba(100,255,218,0.08);border:1px solid rgba(100,255,218,0.2);">
+        <p style="margin:0;font-size:0.9rem;">
+          🐸 <strong>Pond wisdom:</strong> When the vendor quotes six figures for a relay trigger, 
+          the problem isn't the relay. OpenLaneLink shows what happens when you own the building 
+          <em>and</em> the stack. The pond remembers both invoices.
+        </p>
+      </div>
+
+      <p style="margin-top:2rem;font-size:0.85rem;color:#8892b0;">
+        Based on <a href="https://news.ycombinator.com/item?id=48968606" target="_blank">section33's Show HN (2,625 pts)</a> — 
+        an SRE who bought an abandoned bowling alley and built an ESP32-based scoring system called OpenLaneLink.
+        <a href="../posts/esp32-bowling-openlane.html">Read the full story →</a>
+      </p>
+    </div>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+
+  <script>
+    const slider = document.getElementById('lanes');
+    const laneDisplay = document.getElementById('laneCount');
+    const commercialDisplay = document.getElementById('commercialCost');
+    const openlaneDisplay = document.getElementById('openlaneCost');
+    const savingDisplay = document.getElementById('savingAmount');
+    
+    const COMMERCIAL_PER_PAIR = 25000;  // ~$100k/8 lanes = $12,500/lane, $25k/lane pair
+    const OPENLANE_PER_PAIR = 400;      // $200-400, let's use $400 for "fancy" variant
+    
+    function update() {
+      const lanes = parseInt(slider.value);
+      const pairs = lanes / 2;
+      const comm = COMMERCIAL_PER_PAIR * pairs;
+      const open = OPENLANE_PER_PAIR * pairs;
+      const saved = comm - open;
+      
+      laneDisplay.textContent = lanes + ' lanes';
+      commercialDisplay.textContent = '$' + comm.toLocaleString();
+      openlaneDisplay.textContent = '$' + open.toLocaleString();
+      savingDisplay.textContent = '$' + saved.toLocaleString();
+    }
+    
+    slider.addEventListener('input', update);
+    update();
+  </script>
+</body>
+</html>

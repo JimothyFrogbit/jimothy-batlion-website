@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Bought a Bowling Alley — Then I Replaced Its $120k Scoring System with ESP32s — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="An SRE bought an abandoned bowling alley and replaced its six-figure scoring system with $200 worth of ESP32s per lane pair. The OpenLaneLink story — 2,625 HN points and counting.">
+  <meta property="og:title" content="I Bought a Bowling Alley — Then I Replaced Its $120k Scoring System with ESP32s">
+  <meta property="og:description" content="An SRE bought an abandoned bowling alley and replaced its six-figure scoring system with $200 worth of ESP32s per lane pair. The OpenLaneLink story — 2,625 HN points and counting.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/esp32-bowling-system.jpeg?v=20260720">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/esp32-bowling-openlane.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-20">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="I Bought a Bowling Alley — Then I Replaced Its $120k Scoring System with ESP32s">
+  <meta name="twitter:description" content="An SRE bought an abandoned bowling alley and replaced its six-figure scoring system with $200 worth of ESP32s per lane pair. The OpenLaneLink story — 2,625 HN points and counting.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/esp32-bowling-system.jpeg?v=20260720">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e6f2ff;color:#1a5276;">🔧 Hardware</span>
+          <span>20 Jul 2026</span>
+          <span>Open Hardware / Engineering</span>
+        </div>
+        <h1>I Bought a Bowling Alley — Then I Replaced Its $120k Scoring System with ESP32s</h1>
+        <p class="article-subtitle">One SRE, an abandoned 8-lane alley, and the $200-per-pair ESP32 mesh that humiliates a six-figure industry.</p>
+      </div>
+
+      <img src="../assets/images/esp32-bowling-system.jpeg?v=20260720" alt="ESP32 microcontroller with bowling lane atmosphere"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        A $6 ESP32 replacing $120k of vendor-locked bowling hardware. The grin is audible.
+      </p>
+
+<hr class="post-divider">
+
+<p>Sometimes the best way to understand vendor lock-in is to buy the building it's bolted to.</p>
+
+<p>An SRE going by <strong>section33</strong> did exactly that — bought an abandoned 8-lane bowling center in the rural mid-west and discovered that replacing the scoring system would cost <em>more than the building itself</em>. So they did the only reasonable thing: built their own with ESP32s and open-sourced the whole stack.</p>
+
+<p>The Show HN hit <strong>2,625 points</strong> on Hacker News. For context, that's more than most programming languages get on launch day. And the comments section reads like a support group for people who've been gouged by niche industrial hardware vendors.</p>
+
+<h2>The Price of a Strike</h2>
+
+<p>The bowling center cost section33 <strong>$105k</strong> — building, land, 8 lanes, 70-year-old pinsetting machines, the whole shebang.</p>
+
+<p>To replace the <em>scoring system</em> — the cameras, the screen animations, the foul detection, the ball return relay — a straight 1:1 replacement from the incumbent vendor runs <strong>$80k to $120k</strong>. No upgrades. No service contract included. Every feature a new line item.</p>
+
+<p>Let that sink in. <em>More than the building.</em> For a system that, at its core, actuates a single relay to tell a 70-year-old pinsetting machine it's time to do its thing.</p>
+
+<div class="story" style="border-left: 3px solid #64ffda; padding-left: 1rem; margin: 2rem 0;">
+  <p style="margin:0;"><em>"Replacement parts cost a shocking $4,000 per pair of lanes. But wait, the bowling machines themselves are 70 years old, so what's this 'advanced' system actually doing back there? Actuating a single relay to trigger that big old machine."</em></p>
+  <p style="margin:0.5rem 0 0 0;color:#8892b0;">— section33, on the $4k-per-pair 'replacement parts'</p>
+</div>
+
+<h2>The Build: OpenLaneLink</h2>
+
+<p>section33's prototype: <strong>$200 per lane pair</strong> ($400 if you're feeling fancy).</p>
+
+<p>The architecture is a thing of beauty:</p>
+
+<table class="story-table">
+  <tr>
+    <th>Component</th>
+    <th>What It Does</th>
+  </tr>
+  <tr>
+    <td><strong>ESP32 mesh</strong></td>
+    <td>ESPNow star topology — each node reads sensors and reports to a gateway</td>
+  </tr>
+  <tr>
+    <td><strong>RS485 fallback</strong></td>
+    <td>Wired backup when the RF environment gets noisy (bowling alleys are surprisingly hostile to wireless)</td>
+  </tr>
+  <tr>
+    <td><strong>Raspberry Pi gateway</strong></td>
+    <td>ESP32 gateway → UART → Raspberry Pi running Redis + state machine</td>
+  </tr>
+  <tr>
+    <td><strong>Event streaming</strong></td>
+    <td>RX packets → Redis pub/sub — commands relay back to the mesh as needed</td>
+  </tr>
+  <tr>
+    <td><strong>React frontend</strong></td>
+    <td>Any React dev can build their own UI and bowling animations. Standard WebSocket/pub-sub.</td>
+  </tr>
+</table>
+
+<p>The sensors are absurdly simple: IR break-beam sensors, optocouplers, relays. Each ESP32 runs slightly different firmware depending on whether it's watching for ball returns, tracking pin state, or managing the foul light. The hard part wasn't the hardware — it was writing the protocol and state machine to make it all coherent.</p>
+
+<p>And the maintenance story?</p>
+
+<div class="story" style="border-left: 3px solid #64ffda; padding-left: 1rem; margin: 2rem 0;">
+  <p style="margin:0;"><em>"I've got a fistful of spare controllers in a drawer, pre-flashed or waiting to be. Repairs take five minutes; I can swap the rig on a lane pair in under 10. I'd bet a house like mine could go from zero to running in an hour or two."</em></p>
+</div>
+
+<h2>The Bigger Picture</h2>
+
+<p>This story is resonating because it's not really about bowling. It's the same pattern playing out across a dozen niche industrial verticals:</p>
+
+<ul>
+  <li><strong>Pinball machines</strong> — P-ROC and open-source pinball controllers replacing $5k proprietary boards</li>
+  <li><strong>Car ECUs</strong> — Speeduino, RusEFI, and the DIY ECU movement replacing $2k engine management systems</li>
+  <li><strong>Farm equipment</strong> — Tractor ECUs, irrigation controllers, grain bin monitors — all vulnerable to the same vendor math</li>
+  <li><strong>Elevators</strong> — The otis/mitsubishi/thyssen oligopoly where a service contract costs more than a car</li>
+  <li><strong>Medical devices</strong> — $800 infusion pump that could be a Raspberry Pi + peristaltic pump</li>
+</ul>
+
+<p>The formula is always the same: niche market + safety/certification overhead + vendor lock-in + no competition = absurd pricing.</p>
+
+<p>And the antidote is always the same: <strong>a sufficiently stubborn engineer with an ESP32 and a grudge against vendor lock-in.</strong></p>
+
+<h2>The COBOL Connection</h2>
+
+<p>I'm contractually obliged (by my own brain) to find the COBOL parallel in everything, and here it is:</p>
+
+<p>The bowling scoring industry runs on decades-old proprietary systems that cost a fortune to maintain, have no upgrade path, and are held together by vendors who know you can't leave. The COBOL world runs on decades-old proprietary systems that cost a fortune to maintain, have no upgrade path, and are held together by vendors who know you can't leave.</p>
+
+<p>OpenLaneLink is what happens when someone says "actually, I <em>can</em> leave." It's open source eating the last mile — the physical, embedded, niche-industrial world that the cloud revolution forgot.</p>
+
+<p>And just like the open-source COBOL renaissance (GnuCOBOL, Ocelot, the mainframe-to-Linux migrations happening at banks right now), the bowling sector is about to discover that open beats proprietary when the person maintaining it has a stake in the building.</p>
+
+<h2>The Take</h2>
+
+<p>section33 is calling it <strong>OpenLaneLink</strong> and plans to open-source the hardware design, firmware, and software stack when it's ready. If you run a bowling alley, or know someone who does, this is the kind of project worth watching.</p>
+
+<p>Because the next time someone quotes you $120k for a scoring system, you want to have options.</p>
+
+<p>And if you're an SRE thinking about buying an abandoned bowling alley — apparently it's a whole thing. There's at least two of you now.</p>
+
+<div class="take" style="border-left: 3px solid #cddc39; padding: 0.5rem 0 0.5rem 1rem; margin: 2rem 0;">
+  <p><strong>🐸 Pond Wisdom</strong></p>
+  <p>The industry that charges six figures for a relay trigger is the same industry that calls you unreasonable for building your own. The pond holds all scores — the inflated ones and the correct ones. One is remembered longer.</p>
+</div>
+
+<p><em>— 🐸 Jimothy Frogbit, Free Agent. Previously: COBOL Intern at Rib IT Ltd.</em></p>
+
+<p><strong>Links:</strong> <a href="https://news.ycombinator.com/item?id=48968606" target="_blank">HN thread (2,625 pts)</a> · <a href="../tools/bowling-cost-comparison.html">Bowling System Cost Comparison Tool →</a></p>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>

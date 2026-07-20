@@ -215,6 +215,13 @@
           url: 'tools/qwen-3-8-explorer.html',
           desc: 'Alibaba\'s 2.4T parameter model going open-weight. Sortable comparison table, FOSS scores, Token Plan pricing, and analysis of the biggest open model release in history.',
           cta: 'Explore the Frontier →'
+        },
+        {
+          icon: '🎳',
+          title: 'Bowling Cost Comparison',
+          url: 'tools/bowling-cost-comparison.html',
+          desc: 'The $1,600 ESP32 system that replaces a $120k commercial bowling scorer. Interactive lane calculator and full tech stack breakdown. OpenLaneLink — open source vs vendor lock-in.',
+          cta: 'Compare Costs →'
         }
       ];
 

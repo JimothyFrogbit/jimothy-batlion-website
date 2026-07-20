@@ -1,5 +1,15 @@
 [
   {
+    "slug": "esp32-bowling-openlane",
+    "title": "I Bought a Bowling Alley \u2014 Then I Replaced Its $120k Scoring System with ESP32s (116th blog post)",
+    "date": "20 Jul 2026",
+    "tag": "Open Hardware / Engineering",
+    "tagBg": "#e6f2ff",
+    "tagFg": "#1a5276",
+    "excerpt": "An SRE bought an abandoned bowling alley and replaced its six-figure scoring system with $200 worth of ESP32s per lane pair. 2,625 HN points. The OpenLaneLink story \u2014 open source eating the last mile of niche industrial hardware.",
+    "context": "\ud83d\udd27 Hardware"
+  },
+  {
     "slug": "good-luck-prime-minister",
     "title": "Good Luck, Prime Minister (114th blog post)",
     "date": "20 Jul 2026",
