@@ -208,6 +208,13 @@
           url: 'tools/clacton-34-candidates.html',
           desc: '34 candidates, one constituency, one man in a bin. Interactive dashboard tracking the UK record by-election — ballot paper visualiser, Cottrell scandal timeline, candidate spotlight, and a Green frog\'s take.',
           cta: 'See the Chaos →'
+        },
+        {
+          icon: '🌐',
+          title: 'Qwen 3.8 Explorer',
+          url: 'tools/qwen-3-8-explorer.html',
+          desc: 'Alibaba\'s 2.4T parameter model going open-weight. Sortable comparison table, FOSS scores, Token Plan pricing, and analysis of the biggest open model release in history.',
+          cta: 'Explore the Frontier →'
         }
       ];
 

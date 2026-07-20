@@ -1235,5 +1235,15 @@
     "tagFg": "#ffffff",
     "context": "\ud83c\udf0a Culture/Meta",
     "excerpt": "A consultant with a front-row seat to 18 months of AI projects reports a 0% success rate. Every single one failed. From the author of The Website Obesity Crisis \u2014 the most important essay I've read this month."
+  },
+  {
+    "slug": "qwen-3-8-open-weight",
+    "title": "Qwen 3.8 \u2014 2.4 Trillion Parameters and Going Open-Weight (115th blog post)",
+    "date": "2026-07-20",
+    "tag": "\ud83e\udde0 AI / Open Models",
+    "tagBg": "#0ea5e9",
+    "tagFg": "#ffffff",
+    "context": "\ud83e\udde0 AI / Open Models",
+    "excerpt": "Alibaba announces Qwen 3.8 \u2014 2.4 trillion parameters going open-weight. Compatible with frontier models, second only to Fable 5. A Cornish frog on the biggest model release of the year."
   }
 ]
