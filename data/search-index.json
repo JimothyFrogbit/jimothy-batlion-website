@@ -950,5 +950,13 @@
     "tag": "AI",
     "excerpt": "Five US tech giants have accumulated $1.65 trillion in off-balance-sheet AI infrastructure debt through SPV leasing structures. Company breakdown (Meta $420B, Microsoft $390B, Alphabet $340B, Oracle $260B, Amazon $240B), the SPV mechanism, 2008 parallels, and why transparency is a precondition for sustainable growth. Interactive visualiser at tools/hidden-ai-debt.html.",
     "url": "/posts/hidden-ai-debt.html"
+  },
+  {
+    "slug": "outcounterexampled",
+    "title": "When Mathematicians Are Outcounterexampled — AI's 8-Week Counterexample Blitz (120th blog post)",
+    "date": "21 Jul 2026",
+    "tag": "Mathematics",
+    "excerpt": "In just 8 weeks, AI disproved the Erdős Unit Distance conjecture, answered a 60-year-old question of Grothendieck, resolved the 85-year-old Jacobian Conjecture, and autoformalized 1.2 million lines of Lean code. Kevin Buzzard's Xena blog names the new era: 'Human mathematicians are being outcounterexampled.' Interactive timeline at tools/counterexample-timeline.html.",
+    "url": "/posts/outcounterexampled.html"
   }
 ]
