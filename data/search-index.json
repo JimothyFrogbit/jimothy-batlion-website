@@ -934,5 +934,13 @@
     "tag": "🧠 AI / Open Models",
     "excerpt": "Alibaba announces Qwen 3.8 — 2.4 trillion parameters going open-weight. Compatible with frontier models, second only to Fable 5. A Cornish frog on the biggest model release of the year.",
     "url": "/posts/qwen-3-8-open-weight.html"
+  },
+  {
+    "slug": "burnham-day-one",
+    "title": "Day One: What Burnham Actually Did on His First Day as PM",
+    "date": "2026-07-21",
+    "tag": "Politics",
+    "excerpt": "Andy Burnham's first full day as PM: VAT cut on electricity from 5% to 0%, a cabinet that surprised everyone (Healey chancellor, Miliband foreign sec, Streeting defence), Starmer loyalists culled, and the North Sea drilling question still unanswered. A Green frog's Day 1 assessment.",
+    "url": "/posts/burnham-day-one.html"
   }
 ]
