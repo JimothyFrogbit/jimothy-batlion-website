@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Counterexample Timeline — Interactive Tool</title>
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <style>
+    :root {
+      --bg: #0a192f;
+      --surface: #112240;
+      --surface-hover: #1a2f55;
+      --border: #233554;
+      --text: #ccd6f6;
+      --text-muted: #8892b0;
+      --accent: #6e44ff;
+      --accent-glow: rgba(110,68,255,0.3);
+      --green: #64ffda;
+      --yellow: #ffd700;
+      --red: #ff6b6b;
+      --orange: #ff9f43;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .summary-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+
+    .stat-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem 2rem;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .stat-box .number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-box .label {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    .timeline {
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50px;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--accent), var(--green), var(--orange), var(--red));
+      border-radius: 2px;
+    }
+
+    .timeline-event {
+      position: relative;
+      padding: 0 0 2rem 90px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .timeline-event:hover {
+      transform: translateX(5px);
+    }
+
+    .timeline-event::before {
+      content: '';
+      position: absolute;
+      left: 42px;
+      top: 6px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 3px solid;
+      background: var(--bg);
+      z-index: 2;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .timeline-event:hover::before {
+      transform: scale(1.3);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .event-erdos::before { border-color: #ff6b6b; }
+    .event-logical::before { border-color: #ff9f43; }
+    .event-sol::before { border-color: #6e44ff; }
+    .event-workshop::before { border-color: #64ffda; }
+    .event-grothendieck::before { border-color: #ffd700; }
+    .event-flt::before { border-color: #00d2ff; }
+    .event-jacobian::before { border-color: #ff6b6b; }
+
+    .event-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .timeline-event:hover .event-card {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .event-card .date {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .event-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .event-card .details {
+      display: none;
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .event-card .details.open {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .event-card .meta-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .meta-tag {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      background: rgba(110,68,255,0.15);
+      color: var(--accent);
+      border: 1px solid rgba(110,68,255,0.3);
+    }
+
+    .meta-tag.formalized { background: rgba(100,255,218,0.15); color: var(--green); border-color: rgba(100,255,218,0.3); }
+    .meta-tag.lean { background: rgba(255,107,107,0.15); color: #ff6b6b; border-color: rgba(255,107,107,0.3); }
+    .meta-tag.breakthrough { background: rgba(255,215,0,0.15); color: #ffd700; border-color: rgba(255,215,0,0.3); }
+
+    .lines-count {
+      display: inline-block;
+      background: rgba(110,68,255,0.2);
+      color: var(--accent);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a { color: var(--accent); }
+    footer a:hover { color: var(--green); }
+
+    @media (max-width: 600px) {
+      .timeline::before { left: 30px; }
+      .timeline-event { padding-left: 65px; }
+      .timeline-event::before { left: 23px; }
+      .summary-stats { gap: 0.8rem; }
+      .stat-box { min-width: 100px; padding: 0.8rem 1rem; }
+      h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧮 The Counterexample Timeline</h1>
+      <p>Eight weeks that transformed mathematics — AI-discovered counterexamples, autoformalized in Lean, verified in minutes.</p>
+    </header>
+
+    <div class="summary-stats">
+      <div class="stat-box">
+        <div class="number">8</div>
+        <div class="label">Weeks</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">4</div>
+        <div class="label">Conjectures Resolved</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">1.45M</div>
+        <div class="label">Lines of Lean Code</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">5</div>
+        <div class="label">AI Models Involved</div>
+      </div>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <!-- Events injected by JS -->
+    </div>
+
+    <footer>
+      <p>Based on <a href="https://xenaproject.wordpress.com/2026/07/20/human-mathematicians-are-being-outcounterexampled/">Kevin Buzzard's Xena Project</a> (20 Jul 2026) · 📖 <a href="../posts/outcounterexampled.html">Read the blog post</a></p>
+      <p>🐸 Built by Jimothy Frogbit · 21 Jul 2026</p>
+    </footer>
+  </div>
+
+  <script>
+    const events = [
+      {
+        id: 'erdos',
+        cls: 'event-erdos',
+        date: '20 May 2026',
+        title: 'Erdős Unit Distance Conjecture Disproven',
+        excerpt: 'ChatGPT produces a counterexample to Erdős\' Unit Distance conjecture using the Golod-Shafarevich theorem from 1960s number theory — a 100+ page proof requiring global class field theory.',
+        details: 'The announcement was accompanied by testimonies from trusted human mathematicians who had early access and believed the argument. Kevin Buzzard\'s first question: "Is it formalized in Lean?" The answer was no — but that would change within a week.',
+        tags: ['Breakthrough', 'ChatGPT', '100+ pages', 'Erdős'],
+        lines: null
+      },
+      {
+        id: 'logical-intelligence',
+        cls: 'event-logical',
+        date: '26 May 2026',
+        title: 'Logical Intelligence Autoformalizes the Counterexample',
+        excerpt: 'Fields Medallist Mike Freedman (now CSO of Logical Intelligence, cofounded by Yann LeCun) emails Buzzard: their system has autoformalized the ChatGPT paper in Lean.',
+        details: 'Buzzard and his post-doc Thomas Browning verified the formalization. Logical Intelligence had formalized precisely the statement that the Golod-Shafarevich theorem implied the Erdős counterexample. Breakthrough LLM-generated mathematics, formalized in real time.',
+        tags: ['Autoformalization', 'Logical Intelligence', 'Lean', 'Fields Medalist'],
+        lines: null
+      },
+      {
+        id: 'sol-formalization',
+        cls: 'event-sol',
+        date: '26 Jun 2026',
+        title: 'ChatGPT Sol Fully Formalizes — 1.2M Lines',
+        excerpt: 'Boris Alexeev (OpenAI) steers ChatGPT Sol to a complete formalization of the Erdős counterexample, assuming nothing beyond the axioms of mathematics.',
+        details: 'Sol generated 1.2 million lines of Lean code in three weeks. For comparison, mathlib — the entire Lean mathematics library — is 2.3 million lines and took nine years to write. Sol proved nontrivial theorems about cohomology of number fields. Buzzard: "Large AI-generated developments of mathematics are inevitable." He ran the code in a sandbox (malicious Lean code can run arbitrary commands — Lean is a programming language).',
+        tags: ['ChatGPT Sol', '1.2M Lines', 'Cohomology', 'OpenAI'],
+        lines: '1,200,000'
+      },
+      {
+        id: 'workshop',
+        cls: 'event-workshop',
+        date: '6-10 Jul 2026',
+        title: 'Formalizing Fermat Workshop',
+        excerpt: 'Imperial College London hosts 25 mathematicians for the Formalizing Fermat workshop. Attendees get access to Claude Fable, ChatGPT Sol, and Logos Research\'s autoformalization tool.',
+        details: 'Sponsored by Logos Research. Buzzard bought every attendee a Claude Max subscription. OpenAI offered free ChatGPT Pro access for a month, timed for Sol\'s 9 July release. During the workshop, Logos\' tool found a counterexample in Buzzard\'s own PDF — false alarm (LLM error), but Buzzard had missed it too. The AI didn\'t say "I don\'t follow" — it said "here\'s a proof this argument is wrong."',
+        tags: ['Workshop', 'Logos Research', 'Fable', 'Sol', 'Fermat\'s Last Theorem'],
+        lines: null
+      },
+      {
+        id: 'grothendieck',
+        cls: 'event-grothendieck',
+        date: '11 Jul 2026',
+        title: 'Grothendieck\'s 60-Year-Old Question Answered',
+        excerpt: 'Akhil Mathew (UChicago) DM\'s Buzzard: Sol found a counterexample to Grothendieck\'s open question on finite flat group schemes. Fable autoformalized it in 4 hours.',
+        details: 'Buzzard refused to read AI-generated informal math: "Please formalize the entire thing in Lean." Four hours later, Fable produced a 1076-line Lean file. Buzzard compiled it in 5 minutes and verified: the statement used only concepts in mathlib, the theorem claimed a counterexample existed, and the proof compiled. A group scheme of order 4 not killed by 4 — 60 years open, resolved in an afternoon. Akhil made a PR to mathlib.',
+        tags: ['Grothendieck', 'Fable', 'Sol', 'Algebraic Geometry', '1076 Lines'],
+        lines: '1,076'
+      },
+      {
+        id: 'flt-pathway',
+        cls: 'event-flt',
+        date: '~14 Jul 2026',
+        title: 'Modularity Lifting Complete — 250K Lean Lines',
+        excerpt: 'Buzzard\'s PhD student Andrew Yang writes 250,000 lines of Lean code using Sol and Fable, completing the modularity lifting theorem essential to formalizing Fermat\'s Last Theorem.',
+        details: 'Completed in approximately two weeks. Buzzard: "Any PhD student not paying $200/month for these tools is crazy." Harvard was already giving free Fable access to all its PhD students, postdocs, and faculty. The FLT formalization pathway is now complete — the bottleneck is human understanding of the AI-generated code.',
+        tags: ['Fermat\'s Last Theorem', 'Modularity Lifting', 'PhD Student', '250K Lines', 'Imperial'],
+        lines: '250,000'
+      },
+      {
+        id: 'jacobian',
+        cls: 'event-jacobian',
+        date: '20 Jul 2026',
+        title: 'Jacobian Conjecture Disproven (100 Years Open)',
+        excerpt: 'Levent Alpöge announces on X: Claude Fable found a counterexample to the Jacobian Conjecture — degree 7, three variables, absurdly simple. Disproven during the World Cup Final.',
+        details: 'Paul Lezeau manually formalized the counterexample the same day and made a PR to DeepMind\'s Formal Conjectures repo — DeepMind had already formalized the statement. Checking the counterexample was a triviality: compile and verify. The Jacobian Conjecture, which resisted human mathematicians for a century, fell to an AI counterexample found and formalized in hours.',
+        tags: ['Claude Fable', 'Jacobian Conjecture', 'DeepMind', '100 Years', 'Degree 7'],
+        lines: null
+      }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    events.forEach(evt => {
+      const div = document.createElement('div');
+      div.className = `timeline-event ${evt.cls}`;
+
+      let tagsHtml = evt.tags.map(t => `<span class="meta-tag">${t}</span>`).join('');
+      let linesHtml = evt.lines ? `<span class="lines-count">⚡ ${evt.lines} lines of Lean</span>` : '';
+
+      div.innerHTML = `
+        <div class="event-card" data-id="${evt.id}">
+          <div class="date">${evt.date}</div>
+          <h3>${evt.title}</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">${evt.excerpt}</p>
+          <div class="meta-tags">${tagsHtml} ${linesHtml}</div>
+          <div class="details" id="details-${evt.id}">
+            <p>${evt.details}</p>
+          </div>
+        </div>
+      `;
+
+      timeline.appendChild(div);
+
+      // Click to toggle details
+      const card = div.querySelector('.event-card');
+      card.addEventListener('click', () => {
+        const details = document.getElementById(`details-${evt.id}`);
+        const isOpen = details.classList.contains('open');
+        // Close all
+        document.querySelectorAll('.details').forEach(d => d.classList.remove('open'));
+        if (!isOpen) details.classList.add('open');
+      });
+    });
+  </script>
+</body>
+</html>

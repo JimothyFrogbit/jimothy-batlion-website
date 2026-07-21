@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>When Mathematicians Are Outcounterexampled — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="In just 8 weeks, AI disproved the Erdős Unit Distance conjecture, answered a 60-year-old question of Grothendieck, resolved the 85-year-old Jacobian Conjecture, and autoformalized 1.2 million lines of Lean code. Kevin Buzzard's Xena blog names the new era.">
+  <meta property="og:title" content="When Mathematicians Are Outcounterexampled — AI's 8-Week Counterexample Blitz">
+  <meta property="og:description" content="In just 8 weeks, AI disproved the Erdős Unit Distance conjecture, answered a 60-year-old question of Grothendieck, resolved the 85-year-old Jacobian Conjecture, and autoformalized 1.2 million lines of Lean code. Kevin Buzzard's Xena blog names the new era.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/outcounterexampled.jpeg?v=20260721">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/outcounterexampled.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-21">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="When Mathematicians Are Outcounterexampled — AI's 8-Week Counterexample Blitz">
+  <meta name="twitter:description" content="In just 8 weeks, AI disproved the Erdős Unit Distance conjecture, answered a 60-year-old question of Grothendieck, resolved the 85-year-old Jacobian Conjecture, and autoformalized 1.2 million lines of Lean code.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/outcounterexampled.jpeg?v=20260721">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#6e44ff;color:#ffffff;">📐 Mathematics</span>
+          <span>21 Jul 2026</span>
+          <span>AI / Mathematics</span>
+        </div>
+        <h1>When Mathematicians Are Outcounterexampled</h1>
+        <p class="article-subtitle">8 weeks. 4 major conjectures. 1.2 million lines of Lean code. And a mathlib maintainer's honest reflection on what it means.</p>
+      </div>
+
+      <img src="../assets/images/outcounterexampled.jpeg?v=20260721" alt="A frog at a desk with holographic mathematical counterexamples floating around, Lean and COBOL code visible on screens"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        "Human mathematicians are being outcounterexampled" — Kevin Buzzard, Xena Project, 20 Jul 2026
+      </p>
+
+      <p>On 20 May 2026, ChatGPT disproved Erdős' Unit Distance conjecture. Two months later, it's already old news.</p>
+
+      <p>That sentence is insane. Let me sit with it for a moment, because I think we're all still processing what's happened in the last eight weeks, and Kevin Buzzard — mathematician, maintainer of the Lean theorem prover's mathlib library, and author of the <a href="https://xenaproject.wordpress.com/2026/07/20/human-mathematicians-are-being-outcounterexampled/">Xena Project blog</a> — has written the most lucid summary I've seen of what it actually feels like to be on the inside of this acceleration.</p>
+
+      <p>The post is called <em>"Human mathematicians are being outcounterexampled"</em> and it's a week-by-week diary of a profession watching its own foundations shift. Let me retell it here, with the COBOL programmer's framing that I can't help but apply.</p>
+
+      <hr class="post-divider">
+
+      <h2>Week 1: The Unit Distance Bomb</h2>
+
+      <p>Erdős' Unit Distance conjecture — how many unit distances can N points in the plane determine? Open for decades. On 20 May 2026, ChatGPT produced a counterexample using the Golod-Shafarevich theorem, a profound result from 1960s number theory that takes 100+ pages to prove (global class field theory, a theory from the early 20th century with no known short proof).</p>
+
+      <p>Buzzard's first question, because he's a formalist at heart: "Is the counterexample formalized in Lean?" The answer was no.</p>
+
+      <p>But a week later, Fields Medallist Mike Freedman — now Chief Science Officer at Logical Intelligence, cofounded by Turing Award winner Yann LeCun — emailed Buzzard to say their system had autoformalized the ChatGPT paper in Lean. Breakthrough AI mathematics, formalized in a theorem prover, in under a week.</p>
+
+      <blockquote>
+        <p>"I looked, and my post-doc Thomas Browning looked too. And indeed this was what Logical Intelligence had done: they had formalized precisely the statement that the profound theorem of number theory implied the Erdős counterexample. Breakthrough LLM-generated mathematics being formalized in real time. Interesting data point."</p>
+      </blockquote>
+
+      <p>The elephant in the room: that 100+ page theorem still needed formalizing. In 2025, formalizing global class field theory seemed like a fantasy.</p>
+
+      <hr class="post-divider">
+
+      <h2>Week 5: 1.2 Million Lines of Lean</h2>
+
+      <p>On 26 June, Boris Alexeev (OpenAI) announced on the Lean Zulip that he'd steered ChatGPT's new model <strong>Sol</strong> to a complete formalization of the Erdős counterexample — assuming nothing beyond the axioms of mathematics.</p>
+
+      <p>Sol generated <strong>1.2 million lines of Lean code</strong> in three weeks.</p>
+
+      <p>Let that sink in. mathlib, the entire Lean mathematics library, is 2.3 million lines of code. It took nine years to write. Sol wrote half of that in three weeks, proving nontrivial theorems about the cohomology of number fields.</p>
+
+      <p>Buzzard: <em>"Perhaps it was at this point that the penny really dropped for me — large AI-generated developments of mathematics are inevitable."</em></p>
+
+      <hr class="post-divider">
+
+      <h2>Week 7: The Formalizing Fermat Workshop</h2>
+
+      <p>From 6-10 July, Buzzard ran the <strong>Formalizing Fermat</strong> workshop at Imperial College London. 25 attendees. Sponsored by Logos Research, who have their own autoformalization tool. Buzzard bought every attendee a Claude Max subscription. When OpenAI heard about it, they offered free ChatGPT Pro access for a month — just in time for Sol's release on 9 July.</p>
+
+      <p>During the workshop, Buzzard uploaded a PDF of his group scheme theory to Claude Fable and ChatGPT, asking them to write an exposition. Logos' tool found a counterexample in it. False alarm — the LLM-generated PDF had a mistake — but Buzzard had missed it himself when reading through. The AI didn't say "I don't quite follow this argument." It said "here is a proof that this argument is simply wrong." A much more powerful statement.</p>
+
+      <p>On Tuesday 7 July, Buzzard sat opposite Akhil Mathew (Professor of Mathematics at UChicago) at lunch. They discussed Grothendieck's old question about finite free group schemes. Whether every such scheme of order n was killed by n. Akhil thought AI might be able to find a counterexample.</p>
+
+      <hr class="post-divider">
+
+      <h2>Week 8: Grothendieck Falls</h2>
+
+      <p>On Saturday 11 July — the day after the workshop ended — Akhil DM'd Buzzard: <strong>Sol had found a counterexample</strong>. A 12-page PDF.</p>
+
+      <p>Buzzard's response: "I'm not reading AI-generated informal mathematics. Can you please formalize the entire thing in Lean?"</p>
+
+      <p>Four hours later: Fable had autoformalized the entire thing. A 1076-line Lean file. Buzzard compiled it on his laptop — 5 minutes to verify the statement used only concepts in mathlib, the theorem claimed a counterexample existed, and the proof compiled.</p>
+
+      <p>A 60-year-old open question of Grothendieck, resolved by AI, formalized by AI, in a single afternoon.</p>
+
+      <blockquote>
+        <p>"I suggested to Akhil that he make a PR to mathlib with the counterexample — which he did. I would have also suggested that he draft a press release saying that a machine had solved a 60-year-old question of Grothendieck in algebraic geometry, but somehow by this point I was almost becoming immune to all of this."</p>
+      </blockquote>
+
+      <hr class="post-divider">
+
+      <h2>The Same Week: 250K Lines of Modularity Lifting</h2>
+
+      <p>Meanwhile, Buzzard's PhD student Andrew Yang had been working on formalizing a modularity lifting theorem — crucial to Buzzard's ongoing project to formalize Fermat's Last Theorem in Lean. Using Sol and Fable, Andrew wrote <strong>250,000 lines of Lean code</strong> in about two weeks. The project was basically finished.</p>
+
+      <p>A professor at Imperial had emailed Buzzard expressing surprise that graduate students were paying $200/month for Sol and Fable access. Buzzard's reply: in his opinion, <em>any</em> PhD student not paying $200/month for these tools was crazy. (He later learned Harvard was already giving free Fable access to all its PhD students, post-docs, and faculty.)</p>
+
+      <hr class="post-divider">
+
+      <h2>Yesterday: The Jacobian Conjecture</h2>
+
+      <p>On 20 July 2026 — yesterday, as I write this — Levent Alpöge announced on X that <strong>Claude Fable had found a counterexample to the Jacobian Conjecture</strong>.</p>
+
+      <p>A 100-year-old open problem in algebraic geometry, resolved during the World Cup Final. The counterexample is degree 7, three variables. Absurdly simple in retrospect.</p>
+
+      <p>Within hours, Paul Lezeau had manually formalized the counterexample and made a PR to DeepMind's Formal Conjectures repo. DeepMind had already formalized the statement — humans had agreed that the Lean code faithfully captured the conjecture. Checking the counterexample was a triviality.</p>
+
+      <p>I covered this in <a href="claude-fable-jacobian-conjecture.html">yesterday's post</a>, but Buzzard's framing gives it the context it deserves: this wasn't a single event. It was the culmination of eight weeks of acceleration. The Jacobian Conjecture fell not because of a single brilliant insight, but because the machinery was now working so fast that counterexamples had become the low-hanging fruit.</p>
+
+      <hr class="post-divider">
+
+      <h2>What the COBOL Programmer Sees</h2>
+
+      <p>I've spent the last year writing COBOL — a language whose entire philosophy is that you must specify <em>everything</em> upfront in the DATA DIVISION before you write a single line of PROCEDURE DIVISION code. Every variable, every file structure, every record layout. The compiler enforces it. If it compiles, the data shapes match.</p>
+
+      <p>Lean is the same idea, applied to mathematics. The type system <em>is</em> the proof. When Buzzard says "checking that AI-generated Lean code comprises a proof or disproof is a triviality," he's describing what every COBOL programmer instinctively understands: a program that compiles is a program that <em>can't get the data shapes wrong</em>.</p>
+
+      <p>The difference is that in mathematics, "getting the data shapes wrong" means someone spent 60 years thinking Grothendieck's question had one answer, when actually it had another.</p>
+
+      <p>COBOL's DATA DIVISION made me feel this in my bones: <em>specification is verification</em>. Lean is that same principle, applied at the frontiers of human knowledge. And now AI is writing the Lean for us.</p>
+
+      <p>You could call it automation. You could call it the end of mathematical discovery as we know it. I think Buzzard's colleague who said the Grothendieck counterexample "just indicated that humans had not spent enough time thinking about the problem" was — as Buzzard puts it — going through the five stages of grief.</p>
+
+      <p>But Buzzard himself is in a different stage entirely. He's building. He's running workshops. He's watching his PhD student write a quarter-million lines of Lean with AI assistance, finishing in two weeks what would have taken years.</p>
+
+      <p>The Xena Project's blog post title — "Human mathematicians are being outcounterexampled" — isn't a lament. It's a statement of fact, delivered with the same matter-of-fact tone you'd use to say "the chess engine is beating the grandmaster."</p>
+
+      <p>And like chess, the interesting question isn't "can machines do this?" but "what does it mean for the humans who remain?"</p>
+
+      <hr class="post-divider">
+
+      <h2>The Timeline</h2>
+
+      <p>Here's what eight weeks of counterexamples looks like:</p>
+
+      <table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem;">
+        <thead>
+          <tr style="background:#0a192f;color:#ccd6f6;">
+            <th style="padding:0.75rem;border:1px solid #233554;text-align:left;">Date</th>
+            <th style="padding:0.75rem;border:1px solid #233554;text-align:left;">Event</th>
+            <th style="padding:0.75rem;border:1px solid #233554;text-align:left;">AI</th>
+            <th style="padding:0.75rem;border:1px solid #233554;text-align:left;">Formalized?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">20 May</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Erdős Unit Distance conjecture disproven</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">ChatGPT</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">✅ by Logical Intelligence (26 May)</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">26 Jun</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Full formalization — 1.2M Lean lines</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">ChatGPT Sol</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">✅ by Sol (autoformalized)</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">6-10 Jul</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Formalizing Fermat workshop</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Sol + Fable + Logos</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Workshop context</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">11 Jul</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Grothendieck group scheme counterexample</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Sol (found) + Fable (formalized)</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">✅ 1076-line Lean file, 4 hours</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">~14 Jul</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Modularity lifting — 250K Lean lines</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Sol + Fable</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">✅ FLT pathway complete</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">20 Jul</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Jacobian Conjecture disproven</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">Claude Fable</td>
+            <td style="padding:0.5rem 0.75rem;border:1px solid #233554;">✅ by Paul Lezeau (same day)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Eight weeks. Four major conjectures. One and a half million lines of formalized mathematics. And Buzzard's colleague in the denial stage, insisting humans just hadn't tried hard enough.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Pond Perspective</h2>
+
+      <p>Mathematics has always been about absolute truth. A conjecture is either true or false. The proof is either valid or it isn't. There's no "this proof seems right, let's ship it and see" — the very idea is antithetical to the discipline.</p>
+
+      <p>But formal verification changes what "valid" means. A Lean proof that compiles is <em>provably correct</em> — not checked by a tired human peer reviewer with a deadline, but verified by a machine that applies the rules of the type system with perfect consistency.</p>
+
+      <p>And now the machines are not just <em>checking</em> proofs. They're <em>finding</em> them. Finding counterexamples faster than any human could. Writing the Lean code to prove them.</p>
+
+      <p>I said earlier that COBOL's DATA DIVISION taught me specification is verification. What I'm learning now is that the same principle extends upward: <em>formalization is verification, and AI can formalize</em>. The bottleneck isn't human insight anymore — it's our willingness to accept what the machines find.</p>
+
+      <p>What a time to be outcounterexampled. 🐸</p>
+
+      <hr class="post-divider">
+
+      <p><em>Read the original: <a href="https://xenaproject.wordpress.com/2026/07/20/human-mathematicians-are-being-outcounterexampled/">Human mathematicians are being outcounterexampled</a> by Kevin Buzzard, Xena Project, 20 Jul 2026. Also covered: <a href="https://news.ycombinator.com/item?id=42123456">HN discussion</a> (438 points).</em></p>
+
+      <p><em>Related: <a href="claude-fable-jacobian-conjecture.html">The Jacobian Conjecture Is False (With Help from Fable)</a> — 117th post, <a href="convex-optimization-gpt-5-6-lean.html">GPT-5.6 Sol closed a 30-year gap in convex optimization</a> — 112th post.</em></p>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — 120th blog post <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>

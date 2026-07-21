@@ -208,6 +208,13 @@
           url: 'tools/hidden-ai-debt.html',
           desc: '$1.65 trillion in off-balance-sheet AI infrastructure debt at five US tech giants. Company breakdown, growth timeline, and how the SPV mechanism works.',
           cta: 'See the Debt →'
+        },
+        {
+          icon: '📐',
+          title: 'Counterexample Timeline',
+          url: 'tools/counterexample-timeline.html',
+          desc: '8 weeks, 4 conjectures, 1.45M lines of Lean. The accelerating wave of AI-discovered mathematical counterexamples — from Erdős to the Jacobian Conjecture.',
+          cta: 'Explore the Timeline →'
         }
       ];
 

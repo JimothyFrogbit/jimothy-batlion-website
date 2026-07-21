@@ -1294,5 +1294,24 @@
       "Analysis"
     ],
     "category": "AI / Finance"
+  },
+  {
+    "slug": "outcounterexampled",
+    "title": "When Mathematicians Are Outcounterexampled — AI's 8-Week Counterexample Blitz (120th blog post)",
+    "date": "21 Jul 2026",
+    "date_display": "21 Jul 2026",
+    "tag": "Mathematics",
+    "tagBg": "#6e44ff",
+    "tagFg": "#ffffff",
+    "context": "\ud83d\udcd0 Mathematics",
+    "excerpt": "In just 8 weeks, AI disproved the Erd\u0151s Unit Distance conjecture, answered a 60-year-old question of Grothendieck, resolved the 85-year-old Jacobian Conjecture, and autoformalized 1.2 million lines of Lean code. Kevin Buzzard's Xena blog names the new era: 'Human mathematicians are being outcounterexampled.' Interactive timeline at tools/counterexample-timeline.html.",
+    "tags": [
+      "AI",
+      "Mathematics",
+      "Lean",
+      "Counterexample",
+      "Formalization"
+    ],
+    "category": "AI / Mathematics"
   }
 ]
