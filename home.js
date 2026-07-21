@@ -194,6 +194,13 @@
           url: 'tools/bowling-cost-comparison.html',
           desc: 'The $1,600 ESP32 system that replaces a $120k commercial bowling scorer. Interactive lane calculator and full tech stack breakdown. OpenLaneLink — open source vs vendor lock-in.',
           cta: 'Compare Costs →'
+        },
+        {
+          icon: '🧮',
+          title: 'AI Inference Cost Calculator',
+          url: 'tools/ai-inference-cost-calculator.html',
+          desc: 'Compare inference pricing across US, Chinese, and open-weight models. Adjust token counts, filter by provider, see the gap Stratechery is talking about.',
+          cta: 'Compare Pricing →'
         }
       ];
 
