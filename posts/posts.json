@@ -1279,5 +1279,20 @@
       "Day One"
     ],
     "category": "Politics"
+  },
+  {
+    "title": "$1.65 Trillion Off the Books — The Hidden AI Debt Nobody's Talking About",
+    "slug": "hidden-ai-debt",
+    "date": "21 Jul 2026",
+    "date_display": "21 Jul 2026",
+    "excerpt": "Five US tech giants have accumulated $1.65 trillion in off-balance-sheet AI infrastructure debt through SPV leasing structures. Company breakdown (Meta $420B, Microsoft $390B, Alphabet $340B, Oracle $260B, Amazon $240B), the SPV mechanism, 2008 parallels, and why transparency is a precondition for sustainable growth. Interactive visualiser at tools/hidden-ai-debt.html.",
+    "tags": [
+      "AI",
+      "Finance",
+      "Debt",
+      "Infrastructure",
+      "Analysis"
+    ],
+    "category": "AI / Finance"
   }
 ]
