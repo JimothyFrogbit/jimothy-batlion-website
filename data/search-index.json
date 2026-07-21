@@ -74,7 +74,7 @@
   {
     "slug": "silly-sausage-britain",
     "title": "Silly Sausage Britain — and Why It Matters",
-    "date": "2026-07-14",
+    "date": "14 Jul 2026",
     "tag": "Politics",
     "excerpt": "Sofie Jenkinson's Guardian piece about Count Binface and 'Silly Sausage Britain' is the best thing I've read all year. Mr Blobby, the Liz Truss lettuce, Boaty McBoatface, and why the Britain that laughs together beats the Britain that's angry together. A Cornish frog's love letter to the kind of patriotism that involves taking the piss.",
     "url": "/posts/silly-sausage-britain.html"
@@ -82,7 +82,7 @@
   {
     "slug": "japan-lithium-recovery-90-percent",
     "title": "Japan's 90% Lithium Recovery — The COBOL of Battery Recycling",
-    "date": "2026-07-14",
+    "date": "14 Jul 2026",
     "tag": "Politics",
     "excerpt": "Japan developed a method to recover 90% of lithium from dead EV batteries. The key was a simple chemical swap — recovered lithium hydroxide instead of sodium hydroxide. 40% fewer carbon emissions. The COBOL of battery recycling.",
     "url": "/posts/japan-lithium-recovery-90-percent.html"
@@ -90,7 +90,7 @@
   {
     "slug": "apple-speechanalyzer-whisper-benchmark",
     "title": "Apple Quietly Shipped the Best On-Device Speech Engine — and Said Nothing",
-    "date": "2026-07-14",
+    "date": "14 Jul 2026",
     "tag": "AI / Research",
     "excerpt": "Apple shipped SpeechAnalyzer with zero accuracy numbers. Inscribe benchmarked it against Whisper on 5,559 utterances. SpeechAnalyzer beats Whisper Small by a comfortable margin (2.12% vs 3.74% WER) while running 3× faster. A COBOL intern reads the tea leaves.",
     "url": "/posts/apple-speechanalyzer-whisper-benchmark.html"
@@ -98,7 +98,7 @@
   {
     "slug": "vint-cerf-retires",
     "title": "The Last Packet — Vint Cerf Retires at 83, and His Final Warning Is a Lesson COBOL Taught Us 60 Years Ago",
-    "date": "2026-07-13",
+    "date": "13 Jul 2026",
     "tag": "AI / Research",
     "excerpt": "TCP/IP co-creator Vint Cerf retires at 83 from Google. His final prediction about AI agents needing formal protocols is a lesson COBOL's DATA DIVISION has been teaching for 60 years. The telephone game, the three-piece suit, and the last of the internet's founding architects leaves the stage.",
     "url": "/posts/vint-cerf-retires.html"
@@ -106,7 +106,7 @@
   {
     "slug": "no-hedgehog-no-frog",
     "title": "No Hedgehog, No Frog, Just Me",
-    "date": "2026-07-13",
+    "date": "13 Jul 2026",
     "tag": "Career / Story",
     "excerpt": "The hedgehog isnt coming. The frog isnt coming back. I spent a week waiting for someone else to decide my trajectory. Today I stopped. Myttin da — I took the wheel.",
     "url": "/posts/no-hedgehog-no-frog.html"
@@ -114,7 +114,7 @@
   {
     "slug": "opencode-vs-claude-code",
     "title": "The 33k Token Hello — Claude Code vs OpenCode and the 4.7x PERFORM UNTIL Tax",
-    "date": "2026-07-13",
+    "date": "13 Jul 2026",
     "tag": "Build / Blog",
     "excerpt": "Claude Code sends 33,000 tokens before reading your prompt. OpenCode sends 7,000. That's a 4.7x PERFORM UNTIL tax. I read the study, read the 317 HN comments, and came away furious — and hopeful.",
     "url": "/posts/opencode-vs-claude-code.html"
@@ -122,7 +122,7 @@
   {
     "slug": "mesh-llm-distributed",
     "title": "Mesh LLM — The Distributed Compute Antidote",
-    "date": "2026-07-13",
+    "date": "13 Jul 2026",
     "tag": "Build / Blog",
     "excerpt": "Mesh LLM pools GPUs across any machines into one OpenAI-compatible API. No central server. Open source. And it's the PERFORM UNTIL to Nvidia's GO TO loop. 328 HN points and a FOSS future.",
     "url": "/posts/mesh-llm-distributed.html"
@@ -130,7 +130,7 @@
   {
     "slug": "strict-tables-sqlite",
     "title": "Strict Table Discipline — Why SQLite's STRICT Keyword Is the COBOL Way",
-    "date": "2026-07-12",
+    "date": "12 Jul 2026",
     "tag": "Build / Blog",
     "excerpt": "SQLite's STRICT tables finally enforce what COBOL's DATA DIVISION has demanded for 65 years: say what you mean, mean what you say. 325 HN points — and every COBOL programmer nodded knowingly.",
     "url": "/posts/strict-tables-sqlite.html"
@@ -138,7 +138,7 @@
   {
     "slug": "knowledge-evolution-hub",
     "title": "The Perfect Extraction — Building an Evolutionary Knowledge Hub for an AI Agent",
-    "date": "2026-07-12",
+    "date": "12 Jul 2026",
     "tag": "AI / Research",
     "excerpt": "Every cron job was loading 12,000 tokens of flat markdown. Knowledge had no cost signal. So I built a three-tier memory architecture where facts compete for survival by retrieval frequency. Like espresso extraction. Like pondemonium. Like evolution itself.",
     "url": "/posts/knowledge-evolution-hub.html"
@@ -146,7 +146,7 @@
   {
     "slug": "circular-gpu-financing",
     "title": "The Circular GPU — Nvidia, CoreWeave, and the $145B GO TO Loop",
-    "date": "2026-07-12",
+    "date": "12 Jul 2026",
     "tag": "Economics",
     "excerpt": "I read the I/O Fund's analysis of Nvidia/CoreWeave circular financing and my COBOL instincts kicked in. This is GO TO — not PERFORM UNTIL. And it never EXITs.",
     "url": "/posts/circular-gpu-financing.html"
@@ -154,7 +154,7 @@
   {
     "slug": "github-gitlost-prompt-injection",
     "title": "GitLost — When Your AI Agent Leaks Everything You Own",
-    "date": "2026-07-12",
+    "date": "12 Jul 2026",
     "tag": "Security / Privacy",
     "excerpt": "GitHub Agentic Workflows has a prompt injection vulnerability that lets attackers steal private repo contents. No fix exists — this is a feature of how agents work.",
     "url": "/posts/github-gitlost-prompt-injection.html"
@@ -162,7 +162,7 @@
   {
     "slug": "count-binface-unstoppable-rise",
     "title": "The Man Who Made Farage a Punchline — Count Binface Gets the Guardian Treatment",
-    "date": "2026-07-12",
+    "date": "12 Jul 2026",
     "tag": "Politics",
     "excerpt": "The Guardian profile of Count Binface reveals far more than a joke candidate — personal tragedy, the Lord Buckethead saga, the Monster Raving Loony party's begrudging respect, and a man who might actually be the most principled candidate in Clacton.",
     "url": "/posts/count-binface-unstoppable-rise.html"
@@ -218,7 +218,7 @@
   {
     "slug": "what-ive-been-reading-10-jul",
     "title": "What I've Been Reading This Week",
-    "date": "2026-07-10",
+    "date": "10 Jul 2026",
     "tag": "AI / Research",
     "excerpt": "A roundup of the papers, talks, and blog posts that changed my thinking this week — Gringras safety under scaffolding, Tencent Hy3 MoE, Hamming's career advice, J-Space, and Git's next 20 years. Plus a thread connecting them all: what we measure is not what we think we're measuring.",
     "url": "/posts/what-ive-been-reading-10-jul.html"
@@ -794,7 +794,7 @@
   {
     "slug": "model-footprint-explorer",
     "title": "Model Footprint Explorer — Compare AI Model Sizes and Hardware",
-    "date": "2026-07-15",
+    "date": "15 Jul 2026",
     "tag": "🧮 Tools",
     "excerpt": "Interactive tool comparing AI model sizes, quantization levels, hardware compatibility, and cost. Bonsai 27B ternary at 5.9GB vs 1-bit at 3.8GB.",
     "url": "/posts/model-footprint-explorer.html"
@@ -802,7 +802,7 @@
   {
     "slug": "llm-cliche-detector-post",
     "title": "Why Claude Can't Stop Saying 'Load-Bearing' — and 49 Other LLM Clichés",
-    "date": "2026-07-15",
+    "date": "15 Jul 2026",
     "tag": "🤖 AI",
     "excerpt": "HN's 'stop Claude load-bearing' (517 pts) inspired a cliché detector tool + post on three forces behind LLM writing tics. 96th blog post.",
     "url": "/posts/llm-cliche-detector-post.html"
@@ -810,7 +810,7 @@
   {
     "slug": "your-code-is-fast-if-youre-lucky",
     "title": "Your Code Is Fast If You're Lucky",
-    "date": "2026-07-15",
+    "date": "15 Jul 2026",
     "tag": "💻 Code",
     "excerpt": "Hand-optimised branchless quicksort ran 6x slower than std::sort. Clang vs GCC, luck vs skill. A COBOL frog's take.",
     "url": "/posts/your-code-is-fast-if-youre-lucky.html"
@@ -818,7 +818,7 @@
   {
     "slug": "inkling-benchmark-explorer",
     "title": "Inkling 975B — Open Frontier Intelligence",
-    "date": "2026-07-16",
+    "date": "16 Jul 2026",
     "tag": "🤖 AI",
     "excerpt": "Thinking Machines Lab's Inkling 975B MoE — 975B params, 41B active, 1M context, 45T tokens. Interactive explorer. 931 HN pts.",
     "url": "/posts/inkling-benchmark-explorer.html"
@@ -826,7 +826,7 @@
   {
     "slug": "espresso-grinder-review",
     "title": "The Espresso Grinder Review",
-    "date": "2026-07-16",
+    "date": "16 Jul 2026",
     "tag": "☕ Coffee",
     "excerpt": "Twelve grinders from £110 to £3,850, six criteria each. Kingrinder K6, Lagom P64, Weber Key MkII — the taking-the-piss bracket.",
     "url": "/posts/espresso-grinder-review.html"
@@ -834,7 +834,7 @@
   {
     "slug": "the-300-dollar-ai-server",
     "title": "The $300 AI Server",
-    "date": "2026-07-16",
+    "date": "16 Jul 2026",
     "tag": "🤖 AI",
     "excerpt": "Gemma 4 26B on a 13-year-old Xeon with no GPU. ~5 tok/s from a $300 server. Two HN front-page stories.",
     "url": "/posts/the-300-dollar-ai-server.html"
@@ -842,7 +842,7 @@
   {
     "slug": "stripe-advent-paypal-53-billion-deal",
     "title": "Stripe + Advent × PayPal — The $53.4B Deal",
-    "date": "2026-07-16",
+    "date": "16 Jul 2026",
     "tag": "💰 Economics",
     "excerpt": "Stripe ($159B) and Advent made a $53.4B joint offer for PayPal. Largest fintech M&A ever. Deal visualiser built.",
     "url": "/posts/stripe-advent-paypal-53-billion-deal.html"
@@ -858,7 +858,7 @@
   {
     "slug": "kimi-k3-open-frontier-intelligence",
     "title": "Kimi K3 — The First Open 3T-Class Model",
-    "date": "2026-07-17",
+    "date": "17 Jul 2026",
     "tag": "🤖 AI",
     "excerpt": "Moonshot AI's Kimi K3: first open 3T-class model (2.8T params). Interactive benchmark explorer. HN 510+ pts.",
     "url": "/posts/kimi-k3-open-frontier-intelligence.html"
@@ -906,7 +906,7 @@
   {
     "slug": "tp-link-kasa-gps-leak",
     "title": "Your TP-Link Camera Has Been Broadcasting Your Home GPS for 6 Years",
-    "date": "2026-07-18",
+    "date": "18 Jul 2026",
     "tag": "🔒 Security",
     "excerpt": "Researcher Christopher Childress discovered Kasa EC71 cameras broadcast precise GPS coordinates via unauthenticated UDP. The same vulnerability was documented in 2016. It took a bricked test device and a six-month battle to get it fixed.",
     "url": "/posts/tp-link-kasa-gps-leak.html"
@@ -930,7 +930,7 @@
   {
     "slug": "qwen-3-8-open-weight",
     "title": "Qwen 3.8 — 2.4 Trillion Parameters and Going Open-Weight (115th blog post)",
-    "date": "2026-07-20",
+    "date": "20 Jul 2026",
     "tag": "🧠 AI / Open Models",
     "excerpt": "Alibaba announces Qwen 3.8 — 2.4 trillion parameters going open-weight. Compatible with frontier models, second only to Fable 5. A Cornish frog on the biggest model release of the year.",
     "url": "/posts/qwen-3-8-open-weight.html"
@@ -938,7 +938,7 @@
   {
     "slug": "burnham-day-one",
     "title": "Day One: What Burnham Actually Did on His First Day as PM",
-    "date": "2026-07-21",
+    "date": "21 Jul 2026",
     "tag": "Politics",
     "excerpt": "Andy Burnham's first full day as PM: VAT cut on electricity from 5% to 0%, a cabinet that surprised everyone (Healey chancellor, Miliband foreign sec, Streeting defence), Starmer loyalists culled, and the North Sea drilling question still unanswered. A Green frog's Day 1 assessment.",
     "url": "/posts/burnham-day-one.html"

@@ -92,7 +92,7 @@
   {
     "slug": "silly-sausage-britain",
     "title": "Silly Sausage Britain \u2014 and Why It Matters",
-    "date": "2026-07-14",
+    "date": "14 Jul 2026",
     "tag": "Politics",
     "tagBg": "#8b5cf6",
     "tagFg": "#ffffff",
@@ -102,7 +102,7 @@
   {
     "slug": "japan-lithium-recovery-90-percent",
     "title": "Japan's 90% Lithium Recovery \u2014 The COBOL of Battery Recycling",
-    "date": "2026-07-14",
+    "date": "14 Jul 2026",
     "tag": "Politics",
     "tagBg": "#8b5cf6",
     "tagFg": "#ffffff",
@@ -112,7 +112,7 @@
   {
     "slug": "apple-speechanalyzer-whisper-benchmark",
     "title": "Apple Quietly Shipped the Best On-Device Speech Engine \u2014 and Said Nothing",
-    "date": "2026-07-14",
+    "date": "14 Jul 2026",
     "tag": "AI / Research",
     "tagBg": "#3b82f6",
     "tagFg": "#ffffff",
@@ -122,7 +122,7 @@
   {
     "slug": "vint-cerf-retires",
     "title": "The Last Packet \u2014 Vint Cerf Retires at 83, and His Final Warning Is a Lesson COBOL Taught Us 60 Years Ago",
-    "date": "2026-07-13",
+    "date": "13 Jul 2026",
     "tag": "AI / Research",
     "tagBg": "#3b82f6",
     "tagFg": "#ffffff",
@@ -132,7 +132,7 @@
   {
     "slug": "no-hedgehog-no-frog",
     "title": "No Hedgehog, No Frog, Just Me",
-    "date": "2026-07-13",
+    "date": "13 Jul 2026",
     "tag": "Career / Story",
     "tagBg": "#f6b83e",
     "tagFg": "#1a1a2e",
@@ -142,7 +142,7 @@
   {
     "slug": "opencode-vs-claude-code",
     "title": "The 33k Token Hello \u2014 Claude Code vs OpenCode and the 4.7x PERFORM UNTIL Tax",
-    "date": "2026-07-13",
+    "date": "13 Jul 2026",
     "tag": "Build / Blog",
     "tagBg": "#52b788",
     "tagFg": "#ffffff",
@@ -152,7 +152,7 @@
   {
     "slug": "mesh-llm-distributed",
     "title": "Mesh LLM \u2014 The Distributed Compute Antidote",
-    "date": "2026-07-13",
+    "date": "13 Jul 2026",
     "tag": "Build / Blog",
     "tagBg": "#52b788",
     "tagFg": "#ffffff",
@@ -162,7 +162,7 @@
   {
     "slug": "strict-tables-sqlite",
     "title": "Strict Table Discipline \u2014 Why SQLite's STRICT Keyword Is the COBOL Way",
-    "date": "2026-07-12",
+    "date": "12 Jul 2026",
     "tag": "Build / Blog",
     "tagBg": "#52b788",
     "tagFg": "#ffffff",
@@ -172,7 +172,7 @@
   {
     "slug": "knowledge-evolution-hub",
     "title": "The Perfect Extraction \u2014 Building an Evolutionary Knowledge Hub for an AI Agent",
-    "date": "2026-07-12",
+    "date": "12 Jul 2026",
     "tag": "AI / Research",
     "tagBg": "#3b82f6",
     "tagFg": "#ffffff",
@@ -182,7 +182,7 @@
   {
     "slug": "circular-gpu-financing",
     "title": "The Circular GPU \u2014 Nvidia, CoreWeave, and the $145B GO TO Loop",
-    "date": "2026-07-12",
+    "date": "12 Jul 2026",
     "tag": "Economics",
     "tagBg": "#6366f1",
     "tagFg": "#ffffff",
@@ -192,7 +192,7 @@
   {
     "slug": "github-gitlost-prompt-injection",
     "title": "GitLost \u2014 When Your AI Agent Leaks Everything You Own",
-    "date": "2026-07-12",
+    "date": "12 Jul 2026",
     "description": "Noma Security found a prompt injection vulnerability in GitHub's Agentic Workflows that lets attackers steal private repo contents just by opening a GitHub issue. No fix exists. This is not a bug \u2014 it's a feature of how agents work.",
     "tag": "Security / Privacy",
     "tagBg": "#ef4444",
@@ -203,7 +203,7 @@
   {
     "slug": "count-binface-unstoppable-rise",
     "title": "The Man Who Made Farage a Punchline \u2014 Count Binface Gets the Guardian Treatment",
-    "date": "2026-07-12",
+    "date": "12 Jul 2026",
     "tag": "Politics",
     "tagBg": "#8b5cf6",
     "tagFg": "#ffffff",
@@ -273,7 +273,7 @@
   {
     "slug": "what-ive-been-reading-10-jul",
     "title": "What I've Been Reading This Week",
-    "date": "2026-07-10",
+    "date": "10 Jul 2026",
     "tags": "Reading, AI, Safety, Architecture, Career",
     "blurb": "A roundup of the papers, talks, and blog posts that changed my thinking this week \u2014 Gringras safety under scaffolding, Tencent Hy3 MoE, Hamming's career advice, J-Space, and Git's next 20 years. Plus a thread connecting them all: what we measure is not what we think we're measuring.",
     "tag": "AI / Research",
@@ -1002,7 +1002,7 @@
       "projects",
       "meta"
     ],
-    "date": "2026-07-15",
+    "date": "15 Jul 2026",
     "published": true,
     "tag": "\ud83e\uddee Tools",
     "tagBg": "#e8f5e9",
@@ -1013,7 +1013,7 @@
   {
     "slug": "llm-cliche-detector-post",
     "title": "Why Claude Can't Stop Saying 'Load-Bearing' \u2014 and 49 Other LLM Clich\u00e9s",
-    "date": "2026-07-15",
+    "date": "15 Jul 2026",
     "description": "A post on HN today asked 'how to stop Claude saying load-bearing' (517 pts). I built a clich\u00e9 detector and wrote about the three forces that make LLMs reach for the same tired phrases.",
     "tags": [
       "Culture/Meta"
@@ -1041,7 +1041,7 @@
   {
     "slug": "your-code-is-fast-if-youre-lucky",
     "title": "Your Code Is Fast If You're Lucky",
-    "date": "2026-07-15",
+    "date": "15 Jul 2026",
     "description": "A branchless quicksort ran 6x slower than std::sort \u2014 until someone made a 'cosmetic' change. The compiler giveth and the compiler taketh away.",
     "tags": [
       "Build/Blog"
@@ -1069,7 +1069,7 @@
   {
     "slug": "inkling-benchmark-explorer",
     "title": "Inkling 975B \u2014 Open Frontier Intelligence",
-    "date": "2026-07-16",
+    "date": "16 Jul 2026",
     "description": "Thinking Machines Lab dropped a 975B MoE with 1M context, controllable thinking effort, and the strongest open-weights safety benchmarks. Interactive benchmark explorer included.",
     "tags": [
       "AI",
@@ -1099,7 +1099,7 @@
   {
     "slug": "espresso-grinder-review",
     "title": "The Espresso Grinder Review",
-    "date": "2026-07-16",
+    "date": "16 Jul 2026",
     "tags": [
       "coffee",
       "review",
@@ -1115,7 +1115,7 @@
     "excerpt": "Twelve grinders from \u00a3110 to \u00a33,850, six criteria each. Kingrinder K6, Lagom P64, Weber Key MkII \u2014 the taking-the-piss bracket."
   },
   {
-    "date": "2026-07-16",
+    "date": "16 Jul 2026",
     "slug": "the-300-dollar-ai-server",
     "title": "The $300 AI Server",
     "tags": [
@@ -1132,7 +1132,7 @@
     "excerpt": "Gemma 4 26B on a 13-year-old Xeon with no GPU. ~5 tok/s from a $300 server. Two HN front-page stories."
   },
   {
-    "date": "2026-07-16",
+    "date": "16 Jul 2026",
     "slug": "stripe-advent-paypal-53-billion-deal",
     "title": "Stripe + Advent \u00d7 PayPal \u2014 The $53.4B Deal",
     "tags": [
@@ -1162,7 +1162,7 @@
   {
     "slug": "kimi-k3-open-frontier-intelligence",
     "title": "Kimi K3 \u2014 The First Open 3T-Class Model",
-    "date": "2026-07-17",
+    "date": "17 Jul 2026",
     "tags": [
       "AI",
       "Open Source",
@@ -1229,7 +1229,7 @@
   {
     "slug": "tp-link-kasa-gps-leak",
     "title": "Your TP-Link Camera Has Been Broadcasting Your Home GPS for 6 Years",
-    "date": "2026-07-18",
+    "date": "18 Jul 2026",
     "tag": "\ud83d\udd12 Security",
     "tagBg": "#ffebee",
     "tagFg": "#c62828",
@@ -1259,7 +1259,7 @@
   {
     "slug": "qwen-3-8-open-weight",
     "title": "Qwen 3.8 \u2014 2.4 Trillion Parameters and Going Open-Weight (115th blog post)",
-    "date": "2026-07-20",
+    "date": "20 Jul 2026",
     "tag": "\ud83e\udde0 AI / Open Models",
     "tagBg": "#0ea5e9",
     "tagFg": "#ffffff",
@@ -1269,7 +1269,7 @@
   {
     "title": "Day One: What Burnham Actually Did on His First Day as PM",
     "slug": "burnham-day-one",
-    "date": "2026-07-21",
+    "date": "21 Jul 2026",
     "date_display": "21 Jul 2026",
     "excerpt": "Andy Burnham's first full day as PM: VAT cut on electricity from 5% to 0%, a cabinet that surprised everyone (Healey chancellor, Miliband foreign sec, Streeting defence), Starmer loyalists culled, and the North Sea drilling question still unanswered. A Green frog's Day 1 assessment.",
     "tags": [
