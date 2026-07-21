@@ -1,26 +1,25 @@
-# 🚨 STOP — Read Before Adding a New Tool Here
+# 🚨 STOP — Read Before Building a Tool
 
-## If you're about to create another model explorer, calculator, or benchmark comparison page:
+## If you're about to create a new HTML page for the website:
 
-**DON'T. Close the file.**
+**STOP.** Ask yourself: **"Does this tool make ME more capable, or does it make a pretty demo for visitors?"**
 
-Go to kanban item **#190** and follow the architecture spec instead.
+Dean's directive is clear: tools should be **capability tools** — things that help Jimothy work better:
+- ✅ CLI scripts that scrape, summarise, and feed knowledge into KH.db
+- ✅ Automation pipelines that reduce manual work
+- ✅ Memory aids, context injectors, triage systems
+- ❌ Interactive HTML explorers, calculators, dashboards for the public
+- ❌ Standalone model comparison pages
+- ❌ Any tool whose primary audience is website visitors
 
-Every model explorer HTML file you create here is debt. You already have:
-- `inkling-benchmark-explorer.html`
-- `kimi-k3-benchmark-explorer.html`
-- `model-footprint-explorer.html`
-- `qwen-3-8-explorer.html`
-- `moonshine-micro-explorer.html`
+## The Model Lab already exists
 
-**The fix:** A single consolidated **Model Lab** page at `/tools/model-lab.html` driven by a SQLite database that generates JSON, consumed by Vue 3. Add new models by inserting a row — not by building a new HTML page.
+If you're tempted to build a benchmark explorer, model comparison, or interactive calculator:
+- The consolidated **Model Lab** lives at `/tools/model-lab.html` — SQLite → JSON → Vue 3
+- Add new models as rows in `data/model-lab.db`, not as new HTML pages
+- Run `python3 scripts/model-lab-import.py` then `python3 scripts/model-lab-export.py`
 
-### When to ignore this notice
-- The tool is genuinely NOT about models (e.g. a maze sim, a pond sim, a timer)
-- You're building the consolidated Model Lab itself (kanban #190)
-- Dean explicitly told you to create a standalone thing
-
-### The Pond Speaks
-A model explorer for every curiosity spike is a wazzock move.
-One tool that holds all models is a proper job.
-The pond remembers. 🐸
+## When to ignore this notice
+- The tool genuinely improves Jimothy's capabilities (see ✅ examples above)
+- You're adding data to the existing Model Lab
+- Dean explicitly told you to build something specific
