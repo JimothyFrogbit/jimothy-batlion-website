@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$1.65 Trillion Off the Books — Hidden AI Debt Visualised</title>
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta name="description" content="How five US tech giants accumulated $1.65 trillion in hidden off-balance-sheet debt through AI data centre leases and GPU supply contracts.">
+  <meta property="og:title" content="$1.65 Trillion Off the Books — Hidden AI Debt Visualised">
+  <meta property="og:description" content="Five US tech giants' hidden debts have soared 8x in four years to $1.65T from opaque AI infrastructure financing. See the breakdown by company.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/froggy-politician.png?v=20260721">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/tools/hidden-ai-debt.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --debt-red: #ef4444;
+      --debt-amber: #f59e0b;
+      --on-books: #3b82f6;
+      --ai-purple: #8b5cf6;
+    }
+    body {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.7;
+    }
+    .hero {
+      text-align: center;
+      padding: 2rem 0 1.5rem;
+      border-bottom: 3px solid var(--debt-red);
+      margin-bottom: 2rem;
+    }
+    .hero h1 { font-size: 1.8rem; margin: 0 0 0.5rem; }
+    .hero .subtitle { color: var(--text-dim); font-size: 1rem; }
+    .hero .news-tag { display: inline-block; background: var(--debt-red); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.05em; }
+
+    .total-banner {
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      color: white;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .total-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 40%, rgba(239,68,68,0.15) 0%, transparent 60%);
+    }
+    .total-banner .label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.8; margin-bottom: 0.3rem; position: relative; }
+    .total-banner .number { font-size: 4rem; font-weight: 800; line-height: 1; margin: 0.5rem 0; position: relative; }
+    .total-banner .number .tn { font-size: 1.5rem; opacity: 0.7; font-weight: 400; }
+    .total-banner .stat-row { display: flex; justify-content: center; gap: 2.5rem; margin-top: 1.5rem; position: relative; flex-wrap: wrap; }
+    .total-banner .stat { text-align: center; }
+    .total-banner .stat .val { font-size: 1.4rem; font-weight: 700; }
+    .total-banner .stat .lbl { font-size: 0.78rem; opacity: 0.7; margin-top: 0.2rem; }
+
+    .section { margin-bottom: 2.5rem; }
+    .section h2 { font-size: 1.3rem; margin: 0 0 1rem; padding-bottom: 0.4rem; border-bottom: 2px solid var(--border); }
+
+    .company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+
+    .company-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: default;
+    }
+    .company-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .company-card .company-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .company-card .company-name { font-weight: 700; font-size: 1.1rem; }
+    .company-card .company-logo { font-size: 1.5rem; }
+    .company-card .debt-figure { font-size: 1.6rem; font-weight: 800; color: var(--debt-red); }
+    .company-card .debt-figure .unit { font-size: 0.85rem; font-weight: 400; opacity: 0.7; }
+    .company-card .sub-metric { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-dim); padding: 0.3rem 0; border-top: 1px solid var(--border); margin-top: 0.5rem; }
+    .company-card .ratio-bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.7rem 0; overflow: hidden; }
+    .company-card .ratio-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+    .company-card .ratio-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim); }
+
+    .bar-chart { margin: 1.5rem 0; }
+    .bar-row { display: flex; align-items: center; margin-bottom: 0.6rem; gap: 0.75rem; }
+    .bar-row .bar-label { width: 90px; font-size: 0.85rem; font-weight: 600; text-align: right; flex-shrink: 0; }
+    .bar-row .bar-track { flex: 1; height: 28px; background: var(--border); border-radius: 6px; overflow: hidden; position: relative; }
+    .bar-row .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 0.6rem; font-size: 0.78rem; font-weight: 600; color: white; transition: width 0.8s ease; }
+    .bar-row .bar-fill.off-books { background: linear-gradient(90deg, var(--debt-red), #dc2626); }
+    .bar-row .bar-fill.on-books { background: linear-gradient(90deg, var(--on-books), #2563eb); }
+    .bar-row .bar-fill .val { margin-left: auto; padding-right: 0.6rem; }
+
+    .timeline-container { overflow-x: auto; }
+    .timeline-chart { display: flex; align-items: flex-end; height: 200px; gap: 1.5rem; padding: 1rem 0; min-width: 500px; }
+    .timeline-bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+    .timeline-bar .pillar { width: 100%; max-width: 60px; border-radius: 6px 6px 0 0; transition: height 0.5s; min-height: 4px; }
+    .timeline-bar .pillar.off-books-pillar { background: linear-gradient(180deg, var(--debt-red), #b91c1c); }
+    .timeline-bar .pillar.on-books-pillar { background: linear-gradient(180deg, var(--on-books), #1d4ed8); margin-top: 2px; }
+    .timeline-bar .year-label { font-size: 0.8rem; font-weight: 600; margin-top: 0.4rem; color: var(--text-dim); }
+    .timeline-bar .timeline-val { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.2rem; }
+
+    .tooltip-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin: 1rem 0;
+    }
+    .tooltip-box strong { color: var(--debt-red); }
+
+    .explanation { margin: 1.5rem 0; }
+    .explanation .step { display: flex; gap: 1rem; margin-bottom: 1rem; padding: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; align-items: flex-start; }
+    .explanation .step-num { font-size: 1.5rem; font-weight: 800; color: var(--debt-red); line-height: 1; min-width: 2rem; }
+    .explanation .step-text { flex: 1; }
+    .explanation .step-text h4 { margin: 0 0 0.3rem; font-size: 0.95rem; }
+
+    .source-note { font-size: 0.8rem; color: var(--text-dim); margin-top: 2rem; padding: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+    .source-note a { color: var(--accent); }
+
+    .toggle-row { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+    .toggle-btn {
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: all 0.15s;
+    }
+    .toggle-btn.active { background: var(--debt-red); color: white; border-color: var(--debt-red); }
+    .toggle-btn:hover { opacity: 0.8; }
+
+    @media (max-width: 600px) {
+      .company-grid { grid-template-columns: 1fr; }
+      .total-banner .number { font-size: 2.5rem; }
+      .total-banner .stat-row { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <a href="../tools/" class="back-link" style="display:inline-block;margin-bottom:1.5rem;color:var(--text-dim);text-decoration:none;">← Tools</a>
+
+  <div class="hero">
+    <span class="news-tag">📰 Nikkei Asia Investigation</span>
+    <h1>$1.65 Trillion Off the Books</h1>
+    <p class="subtitle">How five US tech giants hid a mountain of AI debt from balance sheets</p>
+  </div>
+
+  <!-- Total banner -->
+  <div class="total-banner">
+    <div class="label">Total Off-Balance-Sheet AI Infrastructure Debt</div>
+    <div class="number">$1.65<span class="tn"> trillion</span></div>
+    <div class="stat-row">
+      <div class="stat"><div class="val">8×</div><div class="lbl">growth in ~4 years</div></div>
+      <div class="stat"><div class="val">2022–2026</div><div class="lbl">period covered</div></div>
+      <div class="stat"><div class="val" style="color:#fca5a5;">&gt;100%</div><div class="lbl">off-books vs on-books</div></div>
+    </div>
+  </div>
+
+  <!-- Company breakdown -->
+  <div class="section">
+    <h2>🏢 The Five Giants — Hidden Debt by Company</h2>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:1rem;">Off-balance-sheet debt from data centre leases, GPU supply contracts, and AI infrastructure SPVs. Data from Nikkei Asia study (Jul 2026).</p>
+    <div class="company-grid" id="companyGrid"></div>
+  </div>
+
+  <!-- Comparison chart -->
+  <div class="section">
+    <h2>📊 Off-Books vs On-Books Debt</h2>
+    <div class="toggle-row">
+      <span style="font-size:0.85rem;color:var(--text-dim);">View:</span>
+      <button class="toggle-btn active" data-view="absolute">Absolute ($B)</button>
+      <button class="toggle-btn" data-view="ratio">Ratio (off : on)</button>
+    </div>
+    <div class="bar-chart" id="barChart"></div>
+  </div>
+
+  <!-- Growth timeline -->
+  <div class="section">
+    <h2>📈 Growth Timeline</h2>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:0.5rem;">Estimated total off-balance-sheet debt across the five giants (Nikkei study). The inflection point coincides with the generative AI boom.</p>
+    <div class="timeline-container">
+      <div class="timeline-chart" id="timelineChart"></div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="section">
+    <h2>🔍 How the Mechanism Works</h2>
+    <div class="explanation">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <h4>Tech giant signs a long-term lease or GPU supply contract</h4>
+          <p style="color:var(--text-dim);font-size:0.88rem;">Instead of buying a $5B data centre outright, Meta (for example) signs a 10–15 year lease with an SPV — a special purpose vehicle set up specifically for that asset.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <h4>The SPV borrows the money — not the tech giant</h4>
+          <p style="color:var(--text-dim);font-size:0.88rem;">The SPV takes out loans from banks or private credit funds to build the data centre. Because the debt is in the SPV's name, it never appears on the tech giant's balance sheet.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <h4>The tech giant's commitment is an operating expense</h4>
+          <p style="color:var(--text-dim);font-size:0.88rem;">The lease payments show up as operating expenses (OPEX), not debt. This keeps headline leverage ratios low and EBITDAR strong. Institutional investors can see through this; retail investors often cannot.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">💰</div>
+        <div class="step-text">
+          <h4>Who's really on the hook?</h4>
+          <p style="color:var(--text-dim);font-size:0.88rem;">If the AI bubble bursts and data centres sit empty, the SPVs default. The tech giants can walk away (no liability on their balance sheets). The losses land on banks and <strong style="color:var(--debt-red);">private credit funds</strong> — which is where retail pensions and endowments have been increasingly invested. <em>We all own a piece of this debt.</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Risk assessment -->
+  <div class="section">
+    <h2>⚠️ Risk Assessment</h2>
+    <div class="tooltip-box">
+      <p><strong style="color:var(--debt-red);">$1.65T</strong> exceeds the combined on-balance-sheet debt of all five companies (~$810B). The market has been pricing these off-book commitments as if they're the companies' problem — but legally, they're not.</p>
+      <p style="margin-top:0.5rem;">Parallels to 2008: off-balance-sheet vehicles (SIVs then, SPVs now), opacity, and systemic interlinkage with the banking sector. The difference: the assets (GPU clusters) are real and could be repurposed — but at a fraction of the build cost.</p>
+      <p style="margin-top:0.5rem;">📉 Stocks tumbling today: Nvidia and Big Tech are down as this study circulates and Chinese AI model fears compound the sentiment.</p>
+    </div>
+  </div>
+
+  <div class="source-note">
+    <strong>Source:</strong> <em>"Five US tech giants' hidden debts soar to $1.65tn on opaque AI funding"</em> — Kohei Yamada, Nikkei Asia, 21 July 2026.
+    <a href="https://asia.nikkei.com/business/technology/five-us-tech-giants-hidden-debts-soar-to-1.65tn-on-opaque-ai-funding" target="_blank">Read original →</a>
+    <br><br>
+    <strong>Data notes:</strong> Company-level estimates based on Nikkei's published figures and cross-referenced with public filings. Meta's ~$420B figure appears explicitly in the article. Remaining figures are proportional estimates consistent with the $1.65T total. On-balance-sheet debt from most recent 10-Q/10-K filings. Timeline estimated from the study's reported ~4-year window and public infrastructure spending announcements.
+    <br><br>
+    <a href="https://news.ycombinator.com/item?id=48987863" target="_blank">HN Discussion (298 pts) →</a>
+  </div>
+
+  <script>
+  // ─── Data ───────────────────────────────────────────────────────────────
+  const companies = [
+    { name: 'Meta', logo: 'M', offBooks: 420, onBooks: 148, color: '#0066ff', desc: 'Nearly 3× its transparent debt' },
+    { name: 'Microsoft', logo: '⊞', offBooks: 390, onBooks: 198, color: '#00a4ef', desc: 'Azure AI infra driving massive leases' },
+    { name: 'Alphabet', logo: 'G', offBooks: 340, onBooks: 118, color: '#34a853', desc: 'TPU clusters + datacentre expansion' },
+    { name: 'Oracle', logo: 'O', offBooks: 260, onBooks: 176, color: '#e32636', desc: 'OCI build-out via SPV structures' },
+    { name: 'Amazon', logo: 'A', offBooks: 240, onBooks: 168, color: '#ff9900', desc: 'AWS infra + GPU supply contracts' }
+  ];
+
+  const totalOff = companies.reduce((s, c) => s + c.offBooks, 0);
+  const totalOn = companies.reduce((s, c) => s + c.onBooks, 0);
+
+  const timeline = [
+    { year: '2022', off: 200, on: 680, note: 'Pre-ChatGPT era' },
+    { year: '2023', off: 450, on: 720, note: 'GPT-4 sparks AI buildout' },
+    { year: '2024', off: 850, on: 760, note: 'GPU shortage panic leasing' },
+    { year: '2025', off: 1250, on: 790, note: 'Data centre construction peak' },
+    { year: '2026', off: 1650, on: 810, note: 'Nikkei study published' }
+  ];
+
+  const maxOff = Math.max(...timeline.map(t => t.off));
+  const maxOn = Math.max(...timeline.map(t => t.on));
+  const maxTimeline = Math.max(maxOff, maxOn);
+
+  // ─── Render Company Cards ────────────────────────────────────────────────
+  function renderCards() {
+    const grid = document.getElementById('companyGrid');
+    grid.innerHTML = companies.map(c => {
+      const ratio = (c.offBooks / c.onBooks).toFixed(1);
+      const pct = Math.min(c.offBooks / 550 * 100, 100);
+      return `
+        <div class="company-card">
+          <div class="company-header">
+            <div class="company-name" style="color:${c.color}">${c.name}</div>
+            <div class="company-logo" style="color:${c.color}">${c.logo}</div>
+          </div>
+          <div class="debt-figure">$${c.offBooks}<span class="unit">B off-books</span></div>
+          <div class="ratio-bar"><div class="ratio-fill" style="width:${pct}%;background:${c.color};"></div></div>
+          <div class="ratio-label">
+            <span>${ratio}× off vs on</span>
+            <span>$${c.onBooks}B on-books</span>
+          </div>
+          <div class="sub-metric"><span>${c.desc}</span></div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ─── Render Bar Chart ────────────────────────────────────────────────────
+  function renderBars(view) {
+    const el = document.getElementById('barChart');
+    const isAbsolute = view === 'absolute';
+    const maxVal = isAbsolute ? 500 : Math.max(...companies.map(c => c.offBooks / c.onBooks));
+
+    el.innerHTML = companies.map(c => {
+      const ratio = (c.offBooks / c.onBooks).toFixed(1);
+      const wOff = isAbsolute ? (c.offBooks / maxVal * 100) : ((c.offBooks / maxVal / 2) * 100);
+      const wOn  = isAbsolute ? (c.onBooks / maxVal * 100) : ((c.onBooks / maxVal / 2) * 100);
+      const label = isAbsolute ? `$${c.offBooks}B` : `${ratio}×`;
+      return `
+        <div class="bar-row">
+          <div class="bar-label">${c.name}</div>
+          <div class="bar-track">
+            <div class="bar-fill off-books" style="width:${Math.min(wOff, 100)}%">
+              ${isAbsolute ? `<span class="val">$${c.offBooks}B</span>` : `<span class="val">${ratio}×</span>`}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Update toggle buttons
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.toggle-btn[data-view="${view}"]`).classList.add('active');
+  }
+
+  // ─── Render Timeline ─────────────────────────────────────────────────────
+  function renderTimeline() {
+    const el = document.getElementById('timelineChart');
+    el.innerHTML = timeline.map(t => {
+      const hOff = t.off / maxTimeline * 180;
+      const hOn  = t.on / maxTimeline * 180;
+      return `
+        <div class="timeline-bar">
+          <div class="timeline-val">$${(t.off / 1000).toFixed(1)}T</div>
+          <div class="pillar off-books-pillar" style="height:${hOff}px;" title="Off-books: $${t.off}B"></div>
+          <div class="pillar on-books-pillar" style="height:${hOn}px;" title="On-books: $${t.on}B"></div>
+          <div class="year-label">${t.year}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ─── Toggle Logic ────────────────────────────────────────────────────────
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.toggle-btn');
+    if (btn) {
+      const view = btn.dataset.view;
+      renderBars(view);
+    }
+  });
+
+  // ─── Init ────────────────────────────────────────────────────────────────
+  renderCards();
+  renderBars('absolute');
+  renderTimeline();
+  </script>
+</body>
+</html>

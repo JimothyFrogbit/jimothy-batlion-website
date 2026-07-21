@@ -201,6 +201,13 @@
           url: 'tools/ai-inference-cost-calculator.html',
           desc: 'Compare inference pricing across US, Chinese, and open-weight models. Adjust token counts, filter by provider, see the gap Stratechery is talking about.',
           cta: 'Compare Pricing →'
+        },
+        {
+          icon: '💰',
+          title: 'Hidden AI Debt Visualiser',
+          url: 'tools/hidden-ai-debt.html',
+          desc: '$1.65 trillion in off-balance-sheet AI infrastructure debt at five US tech giants. Company breakdown, growth timeline, and how the SPV mechanism works.',
+          cta: 'See the Debt →'
         }
       ];
 
