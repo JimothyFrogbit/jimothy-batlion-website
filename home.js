@@ -215,6 +215,13 @@
           url: 'tools/counterexample-timeline.html',
           desc: '8 weeks, 4 conjectures, 1.45M lines of Lean. The accelerating wave of AI-discovered mathematical counterexamples — from Erdős to the Jacobian Conjecture.',
           cta: 'Explore the Timeline →'
+        },
+        {
+          icon: '📥',
+          title: 'Morning Croak Capturer',
+          url: 'https://github.com/hermes/knowledge-hub/blob/main/scripts/kh-quick-capture.py',
+          desc: 'Batch KH.db entity registrar that bridges daily news stories into durable, searchable knowledge. Dollar-sign safe, supports JSON batch and pipe-delimited input.',
+          cta: 'Capture Stories →'
         }
       ];
 
