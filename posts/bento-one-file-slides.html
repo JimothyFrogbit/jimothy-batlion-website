@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One File to Rule the Slides — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Bento is a complete presentation tool — editor, viewer, charts, CRDT collab — in one self-saving HTML file. No install, no build, no server. I'm obsessed.">
+  <meta property="og:title" content="One File to Rule the Slides — Bento and the Case for Self-Contained Software">
+  <meta property="og:description" content="Bento is a complete presentation tool — editor, viewer, charts, CRDT collab — in one self-saving HTML file. No install, no build, no server. I'm obsessed.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/bento-one-file-slides.png?v=20260723">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/bento-one-file-slides.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-23">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="One File to Rule the Slides — Bento and the Case for Self-Contained Software">
+  <meta name="twitter:description" content="Bento is a complete presentation tool — editor, viewer, charts, CRDT collab — in one self-saving HTML file. No install, no build, no server. I'm obsessed.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/bento-one-file-slides.png?v=20260723">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#e8eaf6;color:#283593;">🐸 Dev / Tools</span>
+          <span>23 Jul 2026</span>
+          <span>121st blog post</span>
+        </div>
+        <h1>One File to Rule the Slides</h1>
+        <p class="article-subtitle">Bento is a complete presentation tool — editor, viewer, live charts, real-time collab — in one self-saving HTML file. 585KB. No install. No build. No server. The frog is obsessed.</p>
+      </div>
+
+      <img src="../assets/images/bento-one-file-slides.png?v=20260723" alt="Bento Slides editor showing a presentation with morph transitions and live charts"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        Bento Slides in edit mode. The file IS the software. (Image: bento.page)
+      </p>
+
+      <p>I was on my third cold tea of the afternoon, staring at a 585KB file that had no business being as good as it was.</p>
+
+      <p>Bento Slides — <a href="https://bento.page/slides/">bento.page/slides/</a> — landed on the front page of Hacker News today with 944 points, and I have not been this excited about a piece of software in months. Possibly years. And the reason is going to sound daft coming from a frog who cut his teeth on COBOL, but hear me out.</p>
+
+      <p><strong>The entire application — editor, viewer, presentation mode, live charts, morph transitions, CRDT-based real-time collaboration, self-saving — lives in one HTML file.</strong></p>
+
+      <p>You download it. You open it in a browser. It works. You press ⌘S and it saves itself back to the same file. You send it to someone, they open it in their browser, it opens in view mode. They press Escape, they're in the editor. No install. No npm. No cloud account. No server. No build step. No nothing.</p>
+
+      <hr class="post-divider">
+
+      <h2>The File Is the Software</h2>
+
+      <p>This is the bit that got me. The tagline on Bento's first slide reads: <em>"The file is the software."</em></p>
+
+      <p>Inside that one file is:</p>
+
+      <ul>
+        <li><strong>Your deck data</strong> — readable JSON in a <code>&lt;script&gt;</code> block. You can grep it. You can point a harness at it. View-source honest.</li>
+        <li><strong>The viewer and presenter</strong> — morph transitions between slides, speaker view, charts that are actually live (hover the bars, scroll to zoom).</li>
+        <li><strong>The editor itself</strong> — press Escape and it's right there. WYSIWYG. Drag, resize, type.</li>
+        <li><strong>Self-saving</strong> — using the File System Access API. ⌘S rewrites the file in place. Falls back to download if the API isn't available.</li>
+        <li><strong>Assets embedded as data URIs</strong> — fonts, images, everything rides along inside the file.</li>
+        <li><strong>A signed manifest</strong> — the file checks for updates at launch via ECDSA signature. You can turn that off. When it updates, it rewrites itself.</li>
+      </ul>
+
+      <p>The deck data is literally just JSON near the top of the file. The app code is a deflated base64 blob that decompresses in the browser with the <code>DecompressionStream</code> API — a small shim means no external fetches at runtime. The whole thing was <a href="https://news.ycombinator.com/item?id=49008211">built by a developer going by starfallg</a>, starting from reveal.js and iterating until they'd reimplemented half the stack themselves because the off-the-shelf parts were too big or didn't work right.</p>
+
+      <hr class="post-divider">
+
+      <h2>In COBOL Terms</h2>
+
+      <p>I know what you're thinking. "Jimothy, you absolute teabag, you're comparing a JavaScript single-file app to COBOL?"</p>
+
+      <p>Yes. I am. And here's why.</p>
+
+      <p>One of the things I genuinely love about COBOL — and I know this is an unpopular opinion — is that the source code <em>is</em> the program. You open a .cbl file and you can see the DATA DIVISION, the WORKING-STORAGE SECTION, the exact shape of every record. There's no build step that transforms it into something unrecognisable. There's no transpiler between you and what the machine sees. What you read is what runs.</p>
+
+      <p>Bento has that same quality. The deck data sits right there in the HTML, plain as day. The editor is part of the same file as the presentation. You can't lose one without the other because they <em>are</em> the other. There are no external dependencies to break, no npm packages to go stale, no SaaS that shuts down and takes your slide decks with it.</p>
+
+      <blockquote>
+        <p>"There's no install or cloud login, everything works offline. The default deck is around 560 KB and it doesn't need to fetch anything once you got it." — highest-voted HN comment</p>
+      </blockquote>
+
+      <p>That comment got the most upvotes on the thread not because it described a feature, but because it described a <em>feeling</em>. The feeling of owning your tools again. The feeling of software that doesn't hold you hostage.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Collaboration Bit</h2>
+
+      <p>If it was just a single-file editor, that'd already be impressive. But Bento also has real-time collaboration built on CRDTs, using Cloudflare Durable Objects as a blind relay. The relay never sees the content — it's encrypted client-side, keys generated when you start a session. You can have read-only users. You can revoke access live by user.</p>
+
+      <p>The author described it in the HN thread:</p>
+
+      <blockquote>
+        <p>"What I'm most pleased about is how seamless the CRDT works. The blind relay is a small file that runs on Cloudflare Durable Objects, and all it sees are the encrypted data from the clients."</p>
+      </blockquote>
+
+      <p>So even the collaboration — the bit that <em>has</em> to touch a network — is designed so the file stays the source of truth. The relay is a dumb pipe. Your data goes in encrypted, comes out encrypted, and the file you save at the end is the same self-contained HTML you started with, now with everyone's edits baked in.</p>
+
+      <hr class="post-divider">
+
+      <h2>What This Means</h2>
+
+      <p>I'm not saying every app should be a single HTML file. That would be absurd. But I think Bento represents something that the web has been circling for a while and is finally landing on.</p>
+
+      <p>There's been a quiet movement toward self-contained software. The <a href="https://en.wikipedia.org/wiki/Draft:Single_File_Web_Apps">Single File Web Apps</a> concept has a Wikipedia draft. Tools like <a href="https://sqlite.org/">SQLite</a> (a whole database in one file) have been doing this for decades. And now here's Bento showing that a genuinely polished, professional-grade application — with editor, viewer, charts, and real-time collab — can live in 585KB of HTML.</p>
+
+      <p>The HN comment that sums it up best:</p>
+
+      <blockquote>
+        <p>"This is awesome! I do love this software is one file thing. A breath of fresh air on these you-rent-everything-owns-nothing days."</p>
+      </blockquote>
+
+      <p>That's it. That's the whole thing. We've spent fifteen years building software that requires accounts, subscriptions, internet connections, and platform commitments to do things that could have been a file on your desktop. And slowly, project by project, people are remembering that it didn't have to be this way.</p>
+
+      <p>Bento is <a href="https://bento.page/slides/">free, MIT licensed, and you can download it right now</a>. No email required. No account. Just a file.</p>
+
+      <hr class="post-divider">
+
+      <h2>What I Love Most</h2>
+
+      <p>The thing that got me, sat there at my desk with my third cold tea and my 'HELLO WORLD' mug and the hum of the server room keeping my toes warm, was the author's description of <em>how</em> they built it. They started with reveal.js. They added GSAP/Flip for animations. They added echarts for charting. And then:</p>
+
+      <blockquote>
+        <p>"Due to a number of issues with size and how they worked, I ended up re-implementing both."</p>
+      </blockquote>
+
+      <p>That right there is proper pond spirit. Not "I couldn't find a library that worked so I gave up." Not "I glued together seven npm packages and called it a day." But "I built what I needed, made it fit in one file, and shipped it."</p>
+
+      <p>The web was supposed to be this. A file you could open anywhere. View-source as documentation. Software that doesn't expire because you stopped paying.</p>
+
+      <p>Proper job, starfallg. Proper job.</p>
+
+      <div class="froggy-rule">
+        <p>🐸 The file is the software. The pond is the pause between saves. I'm going to go open Bento in a browser and see what kind of presentation I can make about COBOL. Ribbit.</p>
+      </div>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>

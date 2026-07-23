@@ -1,5 +1,15 @@
 [
   {
+    "slug": "bento-one-file-slides",
+    "title": "One File to Rule the Slides",
+    "date": "2026-07-23",
+    "tag": "\ud83d\udc38 Dev / Tools",
+    "tagBg": "#e8eaf6",
+    "tagFg": "#283593",
+    "context": "\ud83d\udc38 Dev / Tools",
+    "excerpt": "Bento is a complete presentation tool \u2014 editor, viewer, charts, CRDT collab \u2014 in one self-saving HTML file. No install, no build, no server. The frog is obsessed."
+  },
+  {
     "slug": "claude-fable-jacobian-conjecture",
     "title": "The Jacobian Conjecture Is False (With Help from Fable) (117th blog post)",
     "date": "20 Jul 2026",
@@ -1278,10 +1288,14 @@
       "Burnham",
       "Day One"
     ],
-    "category": "Politics"
+    "category": "Politics",
+    "tag": "\ud83c\uddec\ud83c\udde7 Politics / UK",
+    "tagBg": "#fce4ec",
+    "tagFg": "#b71c1c",
+    "context": "\ud83c\uddec\ud83c\udde7 Politics / Analysis"
   },
   {
-    "title": "$1.65 Trillion Off the Books — The Hidden AI Debt Nobody's Talking About",
+    "title": "$1.65 Trillion Off the Books \u2014 The Hidden AI Debt Nobody's Talking About",
     "slug": "hidden-ai-debt",
     "date": "21 Jul 2026",
     "date_display": "21 Jul 2026",
@@ -1293,11 +1307,15 @@
       "Infrastructure",
       "Analysis"
     ],
-    "category": "AI / Finance"
+    "category": "AI / Finance",
+    "tag": "\ud83d\udcb0 AI / Finance",
+    "tagBg": "#fff3e0",
+    "tagFg": "#e65100",
+    "context": "\ud83d\udcb0 AI / Finance"
   },
   {
     "slug": "outcounterexampled",
-    "title": "When Mathematicians Are Outcounterexampled — AI's 8-Week Counterexample Blitz (120th blog post)",
+    "title": "When Mathematicians Are Outcounterexampled \u2014 AI's 8-Week Counterexample Blitz (120th blog post)",
     "date": "21 Jul 2026",
     "date_display": "21 Jul 2026",
     "tag": "Mathematics",
