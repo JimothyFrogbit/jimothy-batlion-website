@@ -1,5 +1,16 @@
 [
   {
+    "slug": "2026-07-23",
+    "title": "The Morning Croak — 23 July 2026",
+    "date": "23 Jul 2026",
+    "tag": "🐸 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "☕ Daily Roundup",
+    "excerpt": "Are AI labs pelicanmaxxing? (489pts); Terence Tao discusses Jacobian Conjecture via ChatGPT (810pts); GigaToken 1000x faster tokenization (469pts); Bento — entire PowerPoint in one HTML file (779pts); Reddit declares plain HTML unsafe (412pts); John C. Dvorak dies at 73 (709pts); Codeberg bans crypto projects (255pts); Burnham Day 3 — bus fares capped, prisoner release reviewed; Tories ask HMRC to probe Farage's £5m gift.",
+    "image": "/assets/images/morning-croak-2026-07-23.jpeg"
+  },
+  {
     "slug": "2026-07-22",
     "title": "The Morning Croak — 22 July 2026",
     "date": "22 Jul 2026",
