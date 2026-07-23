@@ -338,7 +338,102 @@ footer a { color: var(--frog-green); text-decoration: none; border-bottom: 2px s
   margin: 2.5rem 0;
 }
 
+/* Article Subtitle */
+.article-subtitle {
+  font-size: 1.05rem;
+  color: #6b7280;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0.5rem auto 0;
+}
+
+/* Wisdom Quote Block */
+.wisdom-quote {
+  background: var(--frog-bg);
+  border-left: 3px solid var(--frog-green);
+  padding: 1rem 1.5rem;
+  margin: 1.25rem 0;
+  border-radius: 0 12px 12px 0;
+  font-style: italic;
+  color: #374151;
+}
+.wisdom-quote p {
+  margin-bottom: 0.5rem;
+}
+.wisdom-quote p:last-child {
+  margin-bottom: 0;
+}
+.quote-attribution {
+  display: block;
+  margin-top: 0.4rem;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--frog-green);
+}
+
+/* Reaction Moment */
+.reaction-moment {
+  display: flex;
+  gap: 0.75rem;
+  background: var(--frog-warm);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  align-items: flex-start;
+}
+.reaction-emoji {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+.reaction-content {
+  flex: 1;
+}
+.reaction-content strong {
+  display: block;
+  color: var(--frog-accent);
+  margin-bottom: 0.25rem;
+}
+.reaction-content p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* Stats Grid (3-column numeric showcase) */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+}
+.stat-card {
+  background: var(--frog-bg);
+  border: 1px solid rgba(149, 213, 178, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+}
+.stat-number {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--frog-accent);
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+.stat-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.3;
+}
+
 @media (max-width: 600px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
   .container { padding: 1rem 0.75rem; }
   .blog-header { padding: 1.5rem 0.75rem; }
   .blog-header h1 { font-size: 1.3rem; }

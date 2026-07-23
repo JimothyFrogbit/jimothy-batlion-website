@@ -182,3 +182,14 @@ html.dark footer .footer-colophon {
 html.dark footer .footer-colophon a {
   color: #6a7a72;
 }
+
+/* Dark mode for blog post components */
+html.dark .article-subtitle { color: #8a9a92 !important; }
+html.dark .wisdom-quote { background: #141f1a !important; color: #9aaba3 !important; border-color: var(--dm-accent) !important; }
+html.dark .quote-attribution { color: var(--dm-accent) !important; }
+html.dark .reaction-moment { background: var(--dm-warm) !important; }
+html.dark .reaction-content strong { color: var(--dm-accent) !important; }
+html.dark .reaction-content p { color: var(--dm-text) !important; }
+html.dark .stat-card { background: var(--dm-card) !important; border-color: var(--dm-card-border) !important; }
+html.dark .stat-number { color: var(--dm-accent) !important; }
+html.dark .stat-label { color: #7a8a82 !important; }
