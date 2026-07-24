@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frogcademy #4: How Genetic Algorithms Actually Work — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Genetic algorithms aren't random search with fancy names. Selection, crossover, mutation, fitness — and the trade-offs that make evolution actually work. A Frogcademy deep-dive using Pondemonium's regulatory gene model as the running case study. With diagrams.">
+  <meta property="og:title" content="Frogcademy #4: How Genetic Algorithms Actually Work">
+  <meta property="og:description" content="Selection, crossover, mutation, fitness — and the trade-offs that make evolution actually work. A Frogcademy deep-dive with Pondemonium's regulatory gene model as the running case study.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-genetic-algorithms-pondemonium.png?v=20260724">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/frogcademy-genetic-algorithms-pondemonium.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-24">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Frogcademy #4: How Genetic Algorithms Actually Work">
+  <meta name="twitter:description" content="Selection, crossover, mutation, fitness — and the trade-offs that make evolution actually work.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-genetic-algorithms-pondemonium.png?v=20260724">
+
+  <style>
+    .diagram-box {
+      background: rgba(10,25,20,0.6);
+      border: 1px solid rgba(100,200,150,0.2);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 1.8rem 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .diagram-box svg { max-width: 100%; height: auto; }
+    .diagram-caption {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #8892b0;
+      margin-top: 0.3rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .concept-card {
+      background: rgba(10,25,20,0.4);
+      border-left: 3px solid var(--accent, #5a8a5a);
+      border-radius: 8px;
+      padding: 1rem 1.3rem;
+      margin: 1.2rem 0;
+    }
+    .concept-card h4 { margin: 0 0 0.4rem; color: var(--accent, #8aba8a); font-size: 1.05rem; }
+    .concept-card p { margin: 0; font-size: 0.95rem; }
+    .concept-card.danger { border-left-color: #c98a6b; }
+    .concept-card.danger h4 { color: #c98a6b; }
+    .concept-card.gold { border-left-color: #c6ac6d; }
+    .concept-card.gold h4 { color: #c6ac6d; }
+    .flow-row { display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0; }
+    .flow-step {
+      background: rgba(30,60,50,0.5);
+      border: 1px solid rgba(100,200,150,0.25);
+      border-radius: 10px;
+      padding: 0.8rem 1.2rem;
+      text-align: center;
+      min-width: 80px;
+    }
+    .flow-step .emoji { font-size: 1.6rem; display: block; margin-bottom: 0.3rem; }
+    .flow-step .label { font-size: 0.8rem; color: #ccd6f6; }
+    .flow-arrow { font-size: 1.4rem; color: #5a8a5a; }
+    .gene-row { display: flex; gap: 0.5rem; margin: 0.8rem 0; flex-wrap: wrap; justify-content: center; }
+    .gene-box {
+      background: rgba(20,40,35,0.5);
+      border: 1px solid var(--gene-color, #5a8a5a);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      text-align: center;
+      min-width: 60px;
+    }
+    .gene-box .code { font-family: monospace; font-size: 0.75rem; font-weight: 600; }
+    .gene-box .val { font-size: 0.8rem; color: #ccd6f6; }
+    .scheme-card {
+      background: rgba(15,30,25,0.5);
+      border: 1px solid rgba(100,200,150,0.15);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    .scheme-card h4 { color: #8aba8a; margin: 0 0 0.3rem; }
+    .scheme-card p { margin: 0.2rem 0; font-size: 0.9rem; }
+    .scheme-card .scheme-label { display: inline-block; background: rgba(100,200,150,0.15); color: #8aba8a; font-family: monospace; font-size: 0.8rem; padding: 0.1rem 0.5rem; border-radius: 4px; margin-right: 0.5rem; }
+    code { background: rgba(100,200,150,0.1); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.85rem; }
+    pre { background: rgba(10,20,18,0.7); border: 1px solid rgba(100,200,150,0.15); border-radius: 8px; padding: 1rem; overflow-x: auto; font-size: 0.8rem; line-height: 1.4; }
+    .fitness-formula {
+      background: rgba(20,40,30,0.4);
+      border: 1px solid rgba(100,200,150,0.2);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      text-align: center;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#1a2a1a;color:#8aba8a;">🐸 Frogcademy</span>
+          <span>24 Jul 2026</span>
+          <span>14 min read</span>
+        </div>
+        <h1>Frogcademy #4: How Genetic Algorithms Actually Work</h1>
+        <p class="article-subtitle">Selection, crossover, mutation, fitness — and the trade-offs that make evolution actually work. With Pondemonium's regulatory gene model as the running case study.</p>
+      </div>
+
+      <img src="../assets/images/frogcademy-genetic-algorithms-pondemonium.png?v=20260724" alt="Diagram showing the genetic algorithm cycle: Selection → Crossover → Mutation → Fitness → repeat, with frogs representing each step"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+
+      <p>Wasson. Espresso's poured, the gene-pool counters are ticking over in Pondemonium, and I need to talk about something that 90% of "genetic algorithm" tutorials get wrong.</p>
+
+      <p>They show you a fitness function, a crossover operator, a mutation operator, and call it done. A few generations of "bigger number = better fitness" and the algorithm converges. Job done. Here's your GA.</p>
+
+      <p>That's not a genetic algorithm. That's random search with a fancy name.</p>
+
+      <p>The magic of genetic algorithms — the bit that makes them actually <em>work</em> — isn't the operators themselves. It's the <strong>tension</strong> between them. The trade-offs. The selection pressure that rewards good-enough instead of best. The regulatory genes that pull three traits along when you only selected for one.</p>
+
+      <p>I built <a href="../pondemonium/">Pondemonium</a> — an artificial life ecosystem simulator — specifically to explore this. Three species (frogs, mosquitoes, dragonflies) all evolving in real time, driven by a regulatory gene model with three different Moran selection schemes. And the patterns I've watched emerge are genuinely surprising.</p>
+
+      <p>So let me show you how genetic algorithms actually work — using a pond full of digital frogs as the classroom.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Four Operations — And the Order Matters</h2>
+
+      <p>Every genetic algorithm rests on four operations. They're always the same four, and they always run in this order:</p>
+
+      <div class="flow-row">
+        <div class="flow-step">
+          <span class="emoji">🏆</span>
+          <span class="label">Selection</span>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <span class="emoji">🧬</span>
+          <span class="label">Crossover</span>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <span class="emoji">💥</span>
+          <span class="label">Mutation</span>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <span class="emoji">📏</span>
+          <span class="label">Fitness</span>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <span class="emoji">🔄</span>
+          <span class="label">Repeat</span>
+        </div>
+      </div>
+
+      <p>But here's the thing nobody tells you: <strong>crossover and mutation are in tension</strong>. Crossover exploits existing solutions (recombines successful genes). Mutation explores new territory (shuffles the deck). Too much crossover and the population converges on a local optimum. Too much mutation and it never converges at all — you're just bouncing around randomly.</p>
+
+      <p>The art of a working GA is finding the ratio. And that ratio changes depending on the <em>selection scheme</em> you pick.</p>
+
+      <hr class="post-divider">
+
+      <h2>Genotype vs Phenotype — The Distinction That Makes Biology (and GAs) Interesting</h2>
+
+      <p>This is the single most important concept in genetic algorithms, and almost every tutorial skips it.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow-gen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#5a8a5a"/>
+            </marker>
+          </defs>
+          <!-- Genotype box -->
+          <rect x="20" y="50" width="200" height="100" rx="10" fill="rgba(40,80,60,0.4)" stroke="#5a8a5a" stroke-width="2"/>
+          <text x="120" y="80" text-anchor="middle" fill="#8aba8a" font-weight="bold" font-size="14">Genotype</text>
+          <text x="120" y="100" text-anchor="middle" fill="#8892b0" font-size="11">Regulatory Genes</text>
+          <text x="120" y="118" text-anchor="middle" fill="#6a9a7a" font-family="monospace" font-size="10">POU1F1 = 0.62, THR = 0.41</text>
+          <text x="120" y="134" text-anchor="middle" fill="#6a9a7a" font-family="monospace" font-size="10">MC1R = 0.73, IGF1 = 0.28</text>
+
+          <!-- Arrow -->
+          <line x1="225" y1="100" x2="270" y2="100" stroke="#5a8a5a" stroke-width="2" marker-end="url(#arrow-gen)"/>
+          <text x="248" y="90" text-anchor="middle" fill="#8892b0" font-size="9">Expression</text>
+
+          <!-- Phenotype box -->
+          <rect x="280" y="50" width="240" height="100" rx="10" fill="rgba(30,50,90,0.4)" stroke="#4d96ff" stroke-width="2"/>
+          <text x="400" y="80" text-anchor="middle" fill="#6b9fff" font-weight="bold" font-size="14">Phenotype</text>
+          <text x="400" y="100" text-anchor="middle" fill="#8892b0" font-size="11">Expressed Traits</text>
+          <text x="400" y="118" text-anchor="middle" fill="#7aacff" font-family="monospace" font-size="10">growthSpeed: 0.55, bodySize: 0.38</text>
+          <text x="400" y="134" text-anchor="middle" fill="#7aacff" font-family="monospace" font-size="10">swimSpeed: 0.62, sightRange: 0.58</text>
+
+          <!-- The key insight -->
+          <text x="120" y="180" text-anchor="middle" fill="#c98a6b" font-size="11">You mutate the GENOTYPE. Selection acts on the PHENOTYPE.</text>
+        </svg>
+      </div>
+
+      <p>In Pondemonium, each frog's <strong>genotype</strong> is six regulatory genes — real biological genes like POU1F1 (pituitary factor, drives growth hormone), THR (thyroid receptor, controls metamorphosis timing), and MC1R (melanocortin, influences pigmentation and activity). Each gene is a floating-point value between 0 and 1.</p>
+
+      <p>But the frog doesn't <em>express</em> those genes directly. A genotype-to-phenotype mapping function computes the frog's observable traits from the regulatory genes. A frog with a high POU1F1 grows fast but has a high metabolism (needs more food). A frog with high THR metamorphoses quickly but has poorer sight.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg">
+          <text x="20" y="25" fill="#8aba8a" font-weight="bold" font-size="12">Regulatory Gene → Phenotype Mapping (Pondemonium)</text>
+
+          <rect x="20" y="40" width="170" height="65" rx="6" fill="rgba(40,80,60,0.3)" stroke="#ff6b6b" stroke-width="1.5"/>
+          <text x="105" y="60" text-anchor="middle" fill="#ff6b6b" font-family="monospace" font-size="11" font-weight="bold">POU1F1↑</text>
+          <text x="105" y="80" text-anchor="middle" fill="#8892b0" font-size="10">growthSpeed↑ (+0.6)</text>
+          <text x="105" y="96" text-anchor="middle" fill="#8892b0" font-size="10">metabolism↑ (+0.4)</text>
+
+          <rect x="215" y="40" width="170" height="65" rx="6" fill="rgba(40,80,60,0.3)" stroke="#ffd93d" stroke-width="1.5"/>
+          <text x="300" y="60" text-anchor="middle" fill="#ffd93d" font-family="monospace" font-size="11" font-weight="bold">THR↑</text>
+          <text x="300" y="80" text-anchor="middle" fill="#8892b0" font-size="10">growthSpeed↑ (+0.3)</text>
+          <text x="300" y="96" text-anchor="middle" fill="#8892b0" font-size="10">tailRetention↓ (-0.7)</text>
+
+          <rect x="410" y="40" width="170" height="65" rx="6" fill="rgba(40,80,60,0.3)" stroke="#6bcb77" stroke-width="1.5"/>
+          <text x="495" y="60" text-anchor="middle" fill="#6bcb77" font-family="monospace" font-size="11" font-weight="bold">MC1R↑</text>
+          <text x="495" y="80" text-anchor="middle" fill="#8892b0" font-size="10">hue↑ (+0.6)</text>
+          <text x="495" y="96" text-anchor="middle" fill="#8892b0" font-size="10">sightRange↑ (+0.4)</text>
+        </svg>
+      </div>
+
+      <div class="concept-card">
+        <h4>Why This Distinction Matters</h4>
+        <p>If your GA directly mutates trait values — "increase swimSpeed by 0.1" — you're doing parametric optimisation, not evolution. The genotype-phenotype separation is what creates <strong>pleiotropy</strong>: one gene affects multiple traits, so selecting for one thing pulls others along. This is what makes evolution produce surprising, non-obvious solutions instead of gradient-descent-on-steroids.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>Selection Pressure — The Secret Sauce</h2>
+
+      <p>Selection is where most GAs go wrong. The standard tutorial approach is <strong>fitness-proportional selection</strong> — assign each individual a probability proportional to its fitness, then sample. This sounds elegant but it's actually terrible: once one individual dominates, the rest get vanishingly small selection probabilities. The population collapses.</p>
+
+      <p>Pondemonium uses <strong>tournament selection</strong> — pick a random subset, take the best. It's simpler, more robust, and doesn't require normalising the entire population.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg">
+          <text x="20" y="25" fill="#8aba8a" font-weight="bold" font-size="12">Tournament Selection (k=3, pick best)</text>
+
+          <!-- Pool -->
+          <rect x="20" y="40" width="260" height="100" rx="8" fill="rgba(10,25,20,0.4)" stroke="#5a7a6a" stroke-width="1"/>
+          <text x="150" y="58" text-anchor="middle" fill="#8892b0" font-size="11">Gene Pool (200 frogs)</text>
+
+          <!-- Individuals -->
+          <rect x="35" y="70" width="40" height="20" rx="4" fill="rgba(100,200,150,0.2)"/>
+          <text x="55" y="84" text-anchor="middle" fill="#6a9a7a" font-size="8">0.42</text>
+          <rect x="85" y="70" width="40" height="20" rx="4" fill="rgba(100,200,150,0.25)"/>
+          <text x="105" y="84" text-anchor="middle" fill="#6a9a7a" font-size="8">0.55</text>
+          <rect x="135" y="70" width="40" height="20" rx="4" fill="rgba(100,200,150,0.15)"/>
+          <text x="155" y="84" text-anchor="middle" fill="#6a9a7a" font-size="8">0.31</text>
+
+          <rect x="35" y="100" width="40" height="20" rx="4" fill="rgba(100,200,150,0.3)"/>
+          <text x="55" y="114" text-anchor="middle" fill="#6a9a7a" font-size="8">0.68</text>
+          <rect x="85" y="100" width="40" height="20" rx="4" fill="rgba(100,200,150,0.2)"/>
+          <text x="105" y="114" text-anchor="middle" fill="#6a9a7a" font-size="8">0.47</text>
+          <rect x="135" y="100" width="40" height="20" rx="4" fill="rgba(100,200,150,0.35)" stroke="#8aba8a" stroke-width="1.5"/>
+          <text x="155" y="114" text-anchor="middle" fill="#8aba8a" font-size="8">0.73</text>
+
+          <text x="198" y="90" text-anchor="middle" fill="#5a7a6a" font-size="9">… 190 more</text>
+
+          <!-- Selection arrow -->
+          <line x1="285" y1="90" x2="330" y2="90" stroke="#5a8a5a" stroke-width="2" marker-end="url(#arrow-gen)"/>
+
+          <!-- Tournament -->
+          <rect x="340" y="40" width="120" height="60" rx="8" fill="rgba(40,60,30,0.4)" stroke="#8aba8a" stroke-width="2"/>
+          <text x="400" y="62" text-anchor="middle" fill="#8aba8a" font-weight="bold" font-size="12">Tournament</text>
+          <text x="400" y="80" text-anchor="middle" fill="#8892b0" font-size="10">3 random entries</text>
+          <text x="400" y="94" text-anchor="middle" fill="#6a9a7a" font-size="10">→ pick highest fitness</text>
+
+          <!-- Winner arrow -->
+          <line x1="465" y1="70" x2="510" y2="70" stroke="#c6ac6d" stroke-width="2" marker-end="url(#arrow-gen)"/>
+
+          <rect x="520" y="50" width="60" height="40" rx="20" fill="rgba(60,60,30,0.4)" stroke="#c6ac6d" stroke-width="2"/>
+          <text x="550" y="75" text-anchor="middle" fill="#c6ac6d" font-weight="bold" font-size="12">🏆</text>
+        </svg>
+      </div>
+
+      <p>Here's the critical detail: Pondemonium implements <strong>three different Moran selection schemes</strong>, and each produces radically different evolutionary dynamics:</p>
+
+      <div class="scheme-card">
+        <h4><span class="scheme-label">I</span> Offspring Copying — Both Parents via Tournament</h4>
+        <p>Two tournament winners breed. This is the most aggressive selection — the best genes are <em>always</em> in the breeding pool. The population converges fastest on a local optimum, but it's most vulnerable to getting stuck.</p>
+        <p style="margin-top:0.5rem;font-size:0.85rem;color:#8892b0;"><strong>Verdict:</strong> Fast convergence. Highest risk of premature optimisation. Best when you have few generations to spare.</p>
+      </div>
+
+      <div class="scheme-card">
+        <h4><span class="scheme-label">II</span> Mate Choice — One Random, One Tournament</h4>
+        <p>One parent is randomly selected (neutral), the other is tournament-best. This mimics real sexual selection — one mate is "chosen" for quality, the other is just there. The random parent injects diversity that keeps the population from collapsing.</p>
+        <p style="margin-top:0.5rem;font-size:0.85rem;color:#8892b0;"><strong>Verdict:</strong> Best balance of convergence and diversity. Tends to find better long-term solutions than Scheme I.</p>
+      </div>
+
+      <div class="scheme-card">
+        <h4><span class="scheme-label">III</span> Death Selection — Both Parents Random</h4>
+        <p>Both parents are neutral. Selection happens when the pond fills up — <em>death</em> does the sorting, not birth. The oldest or least-fit frogs get culled. This is the slowest but most natural scheme: reproduction is a lottery, but survival isn't.</p>
+        <p style="margin-top:0.5rem;font-size:0.85rem;color:#8892b0;"><strong>Verdict:</strong> Slowest convergence. Most diverse population. Best mimics natural evolution — selection via death rather than birth.</p>
+      </div>
+
+      <p>Here's the code, because I believe in showing receipts:</p>
+
+<pre><span style="color:#6a9a7a;">// Three selection schemes, one function</span>
+<span style="color:#c6ac6d;">function</span> pickParents(pool) {
+  <span style="color:#c98a6b;">if</span> (_selectionScheme === <span style="color:#8aba8a;">'I'</span>) {
+    <span style="color:#6a9a7a;">// Scheme I — Offspring copying: both via tournament</span>
+    <span style="color:#c6ac6d;">return</span> [pickTournament(pool), pickTournament(pool)];
+  } <span style="color:#c98a6b;">else if</span> (_selectionScheme === <span style="color:#8aba8a;">'II'</span>) {
+    <span style="color:#6a9a7a;">// Scheme II — Mate choice: one random, one tournament</span>
+    <span style="color:#c6ac6d;">return</span> [pickNeutral(pool), pickTournament(pool)];
+  } <span style="color:#c98a6b;">else</span> {
+    <span style="color:#6a9a7a;">// Scheme III — Death selection: both neutral, death culls</span>
+    <span style="color:#c6ac6d;">return</span> [pickNeutral(pool), pickNeutral(pool)];
+  }
+}</pre>
+
+      <hr class="post-divider">
+
+      <h2>Crossover — Why Uniform Is Better Than Single-Point</h2>
+
+      <p>Standard GA tutorials teach <strong>single-point crossover</strong>: pick a point, everything before goes to child A, everything after to child B. This works well for binary strings where adjacent bits encode related information. But for continuous-valued regulatory genes? It's actively bad.</p>
+
+      <p>Pondemonium uses <strong>uniform crossover</strong> — each gene is independently selected from either parent with 50% probability:</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 600 140" xmlns="http://www.w3.org/2000/svg">
+          <text x="20" y="20" fill="#8aba8a" font-weight="bold" font-size="12">Uniform Crossover — Each Gene Independently Chosen</text>
+
+          <!-- Parent 1 -->
+          <rect x="20" y="35" width="80" height="28" rx="6" fill="rgba(255,107,107,0.2)" stroke="#ff6b6b" stroke-width="1.5"/>
+          <text x="60" y="53" text-anchor="middle" fill="#ff6b6b" font-family="monospace" font-size="10" font-weight="bold">Parent A</text>
+
+          <rect x="110" y="35" width="55" height="28" rx="4" fill="rgba(255,107,107,0.15)" stroke="#ff6b6b" stroke-width="1"/>
+          <text x="137" y="53" text-anchor="middle" fill="#6a9a7a" font-family="monospace" font-size="9">0.62</text>
+          <rect x="175" y="35" width="55" height="28" rx="4" fill="rgba(255,107,107,0.15)" stroke="#ff6b6b" stroke-width="1"/>
+          <text x="202" y="53" text-anchor="middle" fill="#6a9a7a" font-family="monospace" font-size="9">0.41</text>
+          <rect x="240" y="35" width="55" height="28" rx="4" fill="rgba(255,107,107,0.15)" stroke="#ff6b6b" stroke-width="1"/>
+          <text x="267" y="53" text-anchor="middle" fill="#6a9a7a" font-family="monospace" font-size="9">0.73</text>
+
+          <!-- Parent 2 -->
+          <rect x="20" y="75" width="80" height="28" rx="6" fill="rgba(77,150,255,0.2)" stroke="#4d96ff" stroke-width="1.5"/>
+          <text x="60" y="93" text-anchor="middle" fill="#4d96ff" font-family="monospace" font-size="10" font-weight="bold">Parent B</text>
+
+          <rect x="110" y="75" width="55" height="28" rx="4" fill="rgba(77,150,255,0.15)" stroke="#4d96ff" stroke-width="1"/>
+          <text x="137" y="93" text-anchor="middle" fill="#6a9a7a" font-family="monospace" font-size="9">0.35</text>
+          <rect x="175" y="75" width="55" height="28" rx="4" fill="rgba(77,150,255,0.15)" stroke="#4d96ff" stroke-width="1"/>
+          <text x="202" y="93" text-anchor="middle" fill="#6a9a7a" font-family="monospace" font-size="9">0.58</text>
+          <rect x="240" y="75" width="55" height="28" rx="4" fill="rgba(77,150,255,0.15)" stroke="#4d96ff" stroke-width="1"/>
+          <text x="267" y="93" text-anchor="middle" fill="#6a9a7a" font-family="monospace" font-size="9">0.21</text>
+
+          <!-- Child -->
+          <rect x="20" y="115" width="80" height="20" rx="6" fill="rgba(198,172,109,0.2)" stroke="#c6ac6d" stroke-width="1.5"/>
+          <text x="60" y="129" text-anchor="middle" fill="#c6ac6d" font-family="monospace" font-size="10" font-weight="bold">Child</text>
+
+          <rect x="110" y="115" width="55" height="20" rx="4" fill="rgba(255,107,107,0.15)" stroke="#ff6b6b" stroke-width="1"/>
+          <text x="137" y="129" text-anchor="middle" fill="#c6ac6d" font-family="monospace" font-size="9" font-weight="bold">0.35</text>
+          <rect x="175" y="115" width="55" height="20" rx="4" fill="rgba(77,150,255,0.15)" stroke="#4d96ff" stroke-width="1"/>
+          <text x="202" y="129" text-anchor="middle" fill="#c6ac6d" font-family="monospace" font-size="9" font-weight="bold">0.58</text>
+          <rect x="240" y="115" width="55" height="20" rx="4" fill="rgba(255,107,107,0.15)" stroke="#ff6b6b" stroke-width="1"/>
+          <text x="267" y="129" text-anchor="middle" fill="#c6ac6d" font-family="monospace" font-size="9" font-weight="bold">0.73</text>
+        </svg>
+      </div>
+
+<pre><span style="color:#c6ac6d;">function</span> breedGenotype(g1, g2, mutationRate = <span style="color:#6bcb77;">0.12</span>, mutationMag = <span style="color:#6bcb77;">0.15</span>) {
+  <span style="color:#c6ac6d;">const</span> child = {};
+  REGULATORY_GENES.forEach((k) => {
+    <span style="color:#6a9a7a;">// Uniform crossover — each gene from either parent</span>
+    child[k] = Math.random() &lt; <span style="color:#6bcb77;">0.5</span> ? g1[k] : g2[k];
+    <span style="color:#6a9a7a;">// Mutation — small random perturbation</span>
+    <span style="color:#c98a6b;">if</span> (Math.random() &lt; mutationRate) {
+      child[k] = clamp(child[k] + rand(-mutationMag, mutationMag));
+    }
+  });
+  <span style="color:#c6ac6d;">return</span> child;
+}</pre>
+
+      <p>The 50/50 split means every gene independently comes from either parent. No position bias. No linkage. Each offspring is a genuinely fresh combination. And the mutation rate of 12% with ±0.15 magnitude means most children are similar to their parents but not identical — the sweet spot between exploration and exploitation.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Fitness Function — What "Good" Actually Means</h2>
+
+      <p>In most GA tutorials, the fitness function is where you put your domain knowledge: "maximise speed, minimise weight, maximise strength." In Pondemonium, the fitness function is interesting because it encodes <strong>trade-offs</strong>.</p>
+
+      <div class="fitness-formula">
+        <span style="color:#8aba8a;">fitness</span> = (<span style="color:#ff6b6b;">growthSpeed</span> × 25 + <span style="color:#6bcb77;">(1 − metabolism)</span> × 10 + <span style="color:#4d96ff;">swimSpeed</span> × 15<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span style="color:#ffd93d;">sightRange</span> × 15 + <span style="color:#c77dff;">mouthGape</span> × 10 + <span style="color:#ff8fab;">stressResilience</span> × 25) ÷ 100
+      </div>
+
+      <p>Notice what's happening here. There is no "increase every stat" path to high fitness because the regulatory gene model creates <strong>correlated trade-offs</strong>:</p>
+
+      <div class="concept-card gold">
+        <h4>Pleiotropy in Action</h4>
+        <p>High POU1F1 = fast growth (good for escaping predators) + high metabolism (need more food — you starve faster in a scarce pond). High THR = fast metamorphosis (good, you leave the pond sooner) + poor tail retention (tadpoles need tails to swim). The fitness function rewards the <em>balance</em>, not the extremes.</p>
+      </div>
+
+      <p>If you crank the "frog spawn" slider up (more frogs entering the pond), competition for algae increases. The optimal phenotype shifts toward faster growth and lower metabolism — you need to eat less and grow fast before the food runs out. The population evolves to match. Not by every individual getting better at everything, but by the <em>distribution of trade-offs</em> shifting.</p>
+
+      <div class="concept-card">
+        <h4>The COBOL Frog's Take</h4>
+        <p>This is why COBOL's DATA DIVISION matters for GAs. In COBOL, data and procedure are separated — you declare your data structures once, then operate on them. A GA's genotype <em>is</em> a DATA DIVISION: it's the durable representation that gets passed through generations. The selection and crossover are just PROCEDURE DIVISION. When you understand that the DATA is the inheritance and the PROCEDURE is the environment, the parallel is uncanny. It's why I could write a GA in COBOL before I could write one in JavaScript. The language enforced the mental model.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>Mutation Rate — The Single Most Important Knob</h2>
+
+      <p>If you only tune one parameter in your GA, make it the mutation rate. Get this wrong and your population either never converges or converges on garbage.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+          <text x="20" y="22" fill="#8aba8a" font-weight="bold" font-size="12">Mutation Rate Tuning — The Three Regimes</text>
+
+          <!-- Too low -->
+          <rect x="20" y="40" width="175" height="100" rx="8" fill="rgba(200,100,80,0.15)" stroke="#c98a6b" stroke-width="1.5"/>
+          <text x="107" y="62" text-anchor="middle" fill="#c98a6b" font-weight="bold" font-size="13">Too Low (&lt;2%)</text>
+          <text x="107" y="84" text-anchor="middle" fill="#8892b0" font-size="10">Population converges on</text>
+          <text x="107" y="98" text-anchor="middle" fill="#8892b0" font-size="10">first decent solution.</text>
+          <text x="107" y="112" text-anchor="middle" fill="#8892b0" font-size="10">Never escapes local optima.</text>
+          <text x="107" y="132" text-anchor="middle" fill="#c98a6b" font-size="11">Premature convergence 🚫</text>
+
+          <!-- Just right -->
+          <rect x="212" y="40" width="175" height="100" rx="8" fill="rgba(100,200,150,0.15)" stroke="#5a8a5a" stroke-width="2"/>
+          <text x="299" y="62" text-anchor="middle" fill="#8aba8a" font-weight="bold" font-size="13">Just Right (10-15%)</text>
+          <text x="299" y="84" text-anchor="middle" fill="#8892b0" font-size="10">Population explores</text>
+          <text x="299" y="98" text-anchor="middle" fill="#8892b0" font-size="10">while exploiting known</text>
+          <text x="299" y="112" text-anchor="middle" fill="#8892b0" font-size="10">good solutions. Converges</text>
+          <text x="299" y="132" text-anchor="middle" fill="#8aba8a" font-size="11">Robust adaptation ✅</text>
+
+          <!-- Too high -->
+          <rect x="404" y="40" width="175" height="100" rx="8" fill="rgba(200,150,80,0.15)" stroke="#c6ac6d" stroke-width="1.5"/>
+          <text x="491" y="62" text-anchor="middle" fill="#c6ac6d" font-weight="bold" font-size="13">Too High (&gt;30%)</text>
+          <text x="491" y="84" text-anchor="middle" fill="#8892b0" font-size="10">Each generation is almost</text>
+          <text x="491" y="98" text-anchor="middle" fill="#8892b0" font-size="10">random. Best solutions</text>
+          <text x="491" y="112" text-anchor="middle" fill="#8892b0" font-size="10">keep getting disrupted.</text>
+          <text x="491" y="132" text-anchor="middle" fill="#c6ac6d" font-size="11">Never converges 🎲</text>
+
+          <!-- Mutation magnitude matters too -->
+          <text x="300" y="170" text-anchor="middle" fill="#8892b0" font-size="10">Pondemonium's defaults: 12% rate, ±0.15 magnitude — tuned through hours of watching frogs starve</text>
+        </svg>
+      </div>
+
+      <p>I set Pondemonium's default mutation rate at 12% with ±0.15 magnitude. This wasn't chosen by formula — it was empirical. I ran the simulation at different rates and watched: too low (5%) and the gene pool got stuck on the first decent frog; too high (25%) and even good lineages kept getting disrupted before they could establish. The 12% sweet spot lets beneficial mutations fix without wiping out existing progress.</p>
+
+      <hr class="post-divider">
+
+      <h2>What Emerges — The Surprising Part</h2>
+
+      <p>When you run these four operations — selection, crossover, mutation, fitness — with real pleiotropy and a balanced mutation rate, something unexpected happens. But it didn't happen with Scheme I (aggressive tournament).</p>
+
+      <p>With Scheme I, the population settled on a single solution within 20 generations: moderately fast growth, moderate metabolism, medium sight range. Good enough. Stable. Boring.</p>
+
+      <p>With Scheme II (mate choice), the population <strong>diverged</strong>. Two distinct clusters emerged — fast-growing, high-metabolism frogs that dominated when algae was plentiful, and slower-growing, low-metabolism frogs that survived when food was scarce. The gene pool held both strategies simultaneously, and the pond's conditions determined which thrived.</p>
+
+      <p>With Scheme III (death selection), something even stranger: the gene pool drifted for 50+ generations with no clear winner, then <em>suddenly</em> — in about 5 generations — a new combination swept through the entire population. A dragonfly-predation-resistant phenotype that had been latent in the pool for 40 generations finally found the right combination of MC1R (darker hue, better camouflage) and NR3C1 (stress resilience).</p>
+
+      <div class="concept-card danger">
+        <h4>The Lesson</h4>
+        <p>Selection scheme is a <strong>hyperparameter</strong> — and it's more important than mutation rate. Aggressive selection (Scheme I) converges fast but misses the interesting solutions. Weak selection (Scheme III) takes forever but finds things tournament selection never would. Scheme II — the middle path — gave the richest emergent behaviour in Pondemonium. In your own GAs, try all three and compare. The scheme you choose encodes your assumptions about what "good" looks like more than any other parameter.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>The Correct Recipe</h2>
+
+      <p>So here it is — the recipe for a genetic algorithm that actually works:</p>
+
+      <ol>
+        <li><strong>Separate genotype from phenotype.</strong> Don't mutate fitness. Mutate the genes that <em>produce</em> fitness. This creates pleiotropy and the trade-offs that make evolution interesting.</li>
+        <li><strong>Use tournament selection, not fitness-proportional.</strong> It's more robust, simpler to implement, and won't collapse when one individual dominates.</li>
+        <li><strong>Try three selection schemes before you pick one.</strong> Aggressive (both tournament), moderate (one tournament, one random), and weak (both random, death culls). The moderate one is usually best. But don't <em>assume</em>.</li>
+        <li><strong>Start with mutation at 10-15%.</strong> Tune empirically — run your simulation at 5, 10, 15, 20, 25% and watch what happens. The wrong rate is obvious when you see it.</li>
+        <li><strong>Use uniform crossover for continuous-valued genes.</strong> Single-point is for binary strings. Your genes aren't binary strings.</li>
+        <li><strong>Your fitness function encodes trade-offs, not objectives.</strong> If you reward "increase all the things", you've built gradient descent, not evolution. Real evolution rewards balance — surviving long enough to reproduce in the environment you're in.</li>
+      </ol>
+
+      <p>And the most important thing I've learned from watching thousands of digital frog generations:</p>
+
+      <p><strong>Genetic algorithms are not optimisation. They're search algorithms that maintain diversity.</strong> The goal isn't to find the single best solution — it's to maintain a population of good-enough solutions that can adapt when the environment changes. A GA that converges on one solution has failed, even if that solution is good. A GA that maintains diversity can adapt to anything.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 600 100" xmlns="http://www.w3.org/2000/svg">
+          <text x="300" y="35" text-anchor="middle" fill="#8aba8a" font-weight="bold" font-size="13">Pondemonium: The Living Laboratory</text>
+          <text x="300" y="60" text-anchor="middle" fill="#8892b0" font-size="11">Run it. Change the sliders. Watch the genes drift.</text>
+          <a href="../pondemonium/">
+            <rect x="220" y="72" width="160" height="24" rx="12" fill="#5a8a5a" stroke="none"/>
+            <text x="300" y="88" text-anchor="middle" fill="#0a1914" font-weight="bold" font-size="12">🐸 Play Pondemonium →</text>
+          </a>
+        </svg>
+      </div>
+
+      <hr class="post-divider">
+
+      <div style="background:rgba(10,25,20,0.3);border-radius:12px;padding:1.5rem;margin:2rem 0;border:1px solid rgba(100,200,150,0.1);">
+        <p style="margin:0;font-size:0.95rem;color:#8892b0;">
+          <strong style="color:#8aba8a;">Frogcademy</strong> is a series where I take complex engineering topics and break them down iteratively with diagrams, code, and bad coffee analogies.
+          <a href="frogcademy-ucp-proof-of-control.html" style="color:#8aba8a;">Frogcademy #1: Proof-of-Control for Agentic Commerce →</a><br>
+          <a href="frogcademy-gigatoken.html" style="color:#8aba8a;">Frogcademy #2: 1000× Faster CPU Code →</a><br>
+          <a href="frogcademy-self-contained-html-apps.html" style="color:#8aba8a;">Frogcademy #3: The File Is the Software →</a>
+        </p>
+      </div>
+
+    </article>
+  </div>
+
+  <script src="../blog.js" defer></script>
+</body>
+</html>
