@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The File Is the Software — How Self-Contained HTML Apps Work · Frogcademy</title>
+  <link rel="stylesheet" href="../root.css">
+  <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../theme.js"></script>
+  <style>
+    .frogcademy-banner {
+      background: linear-gradient(135deg, #1a3a1a 0%, #0d2818 100%);
+      border: 2px solid #4a9e4a;
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+    .frogcademy-banner .badge {
+      display: inline-block;
+      background: #4a9e4a;
+      color: #0d2818;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .frogcademy-banner h2 {
+      margin: 0.25rem 0;
+      color: #8fcf8f;
+    }
+    .frogcademy-banner p {
+      color: #b8d8b8;
+      font-style: italic;
+      margin: 0;
+    }
+    .arch-diagram {
+      background: #1e1e2e;
+      border: 1px solid #313244;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .arch-diagram .file-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .arch-diagram .block {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      color: #cdd6f4;
+      position: relative;
+    }
+    .arch-diagram .block .label {
+      font-weight: 700;
+    }
+    .arch-diagram .block .size {
+      color: #6c7086;
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+    }
+    .arch-diagram .block.doc-data {
+      background: #f7a60033;
+      border-left: 3px solid #f7a600;
+    }
+    .arch-diagram .block.code {
+      background: #5b8def33;
+      border-left: 3px solid #5b8def;
+    }
+    .arch-diagram .block.chrome {
+      background: #37485e33;
+      border-left: 3px solid #37485e;
+    }
+    .arch-diagram .block.css-splash {
+      background: #a9c3f533;
+      border-left: 3px solid #a9c3f5;
+    }
+    .arch-diagram .block.notice {
+      background: #2a3a4e33;
+      border-left: 3px solid #2a3a4e;
+    }
+    .arch-diagram .arrow {
+      text-align: center;
+      color: #585b70;
+      padding: 0.25rem;
+    }
+    .self-save-loop {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .self-save-loop svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .code-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .code-comparison > div {
+      background: #1e1e2e;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .code-comparison h4 {
+      margin: 0 0 0.5rem 0;
+      color: #cdd6f4;
+    }
+    .code-comparison pre {
+      margin: 0;
+      font-size: 0.8rem;
+    }
+    @media (max-width: 768px) {
+      .code-comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html">← Jimothy Frogbit</a>
+    <a href="../frogcademy.html">Frogcademy</a>
+  </nav>
+  <main>
+    <article>
+
+      <div class="frogcademy-banner">
+        <div class="badge">🐸 Frogcademy</div>
+        <h2>Frogcademy #3: The File Is the Software</h2>
+        <p>How Self-Contained HTML Applications Work — a Bento Case Study</p>
+      </div>
+
+      <p><em>Illustrated edition · 24 July 2026</em></p>
+
+      <p>You know that moment when someone sends you a PowerPoint file and you discover you don't have PowerPoint, so you try Google Slides and it mangles the formatting, so you sign up for a free trial, and by the time you've danced through three permission dialogs you've forgotten what the presentation was about?</p>
+
+      <p>Bento solves this by going all the way back to first principles: <strong>what if the file <em>is</em> the software?</strong> Open it in a browser — it <em>is</em> the editor. Save it — it rewrites itself. Send it — the person on the other end needs nothing.</p>
+
+      <p>This pattern has deep roots (TiddlyWiki did it in 2004) and a surprising amount of engineering depth. Let's pull it apart.</p>
+
+      <!-- ============================================================ -->
+      <h2>1. The Problem with Office Documents</h2>
+
+      <p>An office document — a PowerPoint deck, a Word doc, a spreadsheet — is not a self-contained thing. It's a lump of binary data that only makes sense when a specific piece of software (PowerPoint, Word, Excel) processes it. The software is a separate dependency that must be installed, licensed, and maintained. This creates three failure modes:</p>
+
+      <ol>
+        <li><strong>Format rot</strong> — a .ppt file from 2003 may not open cleanly in PowerPoint 2026</li>
+        <li><strong>Software dependency</strong> — you can't open it without the right app</li>
+        <li><strong>Feature drift</strong> — every version adds features that older versions can't render</li>
+      </ol>
+
+      <p>Bento flips this: <strong>the document's viewer and editor travel <em>inside</em> the document.</strong> A Bento file from 2026 will open in any browser in 2036, because the code that renders it is in the file itself. The browser is the only dependency — and that's as close to zero as we can get.</p>
+
+      <!-- ============================================================ -->
+      <h2>2. The Bento File: An Anatomy Lesson</h2>
+
+      <p>A Bento file is a valid HTML file. Every part has a purpose. Here's the layout, roughly to scale:</p>
+
+      <div class="arch-diagram">
+        <div class="file-block">
+          <div class="block chrome">
+            <span class="label">&lt;!DOCTYPE html&gt; &lt;head&gt;</span>
+            <span class="size">0.7 KB</span>
+            <div style="font-size:0.75rem;color:#a6adc8;margin-top:0.25rem;">metas · favicon · title · generator tag</div>
+          </div>
+          <div class="block notice">
+            <span class="label">&lt;!-- NOTICE --&gt;</span>
+            <span class="size">2 KB</span>
+            <div style="font-size:0.75rem;color:#a6adc8;margin-top:0.25rem;">bundled-library license notices (travel with every copy)</div>
+          </div>
+          <div class="block doc-data">
+            <span class="label">&lt;script id="bento-doc"&gt; /* ⭐ THE DOCUMENT */</span>
+            <span class="size">0 — n MB</span>
+            <div style="font-size:0.75rem;color:#a6adc8;margin-top:0.25rem;">Plain JSON · &lt; escaped as \u003c · THIS is what changes on save</div>
+          </div>
+          <div class="block code">
+            <span class="label">&lt;script type="module"&gt; /* Runtime JS */</span>
+            <span class="size">~560 KB</span>
+            <div style="font-size:0.75rem;color:#a6adc8;margin-top:0.25rem;">app + reveal.js + Moveable/Selecto + in-house charts + CRDT</div>
+          </div>
+          <div class="block css-splash">
+            <span class="label">&lt;style&gt; /* Runtime CSS + Splash */</span>
+            <span class="size">~64 KB</span>
+            <div style="font-size:0.75rem;color:#a6adc8;margin-top:0.25rem;">editor styles · present overlay · print rules · boot splash</div>
+          </div>
+          <div class="block chrome">
+            <span class="label">&lt;/head&gt;&lt;body&gt; &lt;div id="app"&gt;</span>
+            <span class="size">1 KB</span>
+            <div style="font-size:0.75rem;color:#a6adc8;margin-top:0.25rem;">splash div + app mount point</div>
+          </div>
+        </div>
+      </div>
+
+      <p>The amber block — the <code>#bento-doc</code> script tag — is the <strong>only part that changes between saves.</strong> Everything else is a fixed <em>shell</em>. This distinction is the core insight.</p>
+
+      <h3>Two hard rules</h3>
+      <ol>
+        <li><strong>Every <code>&lt;</code> in the JSON is escaped as <code>\u003c</code></strong> — so the string <code>&lt;/script&gt;</code> can physically never appear and terminate the data block early</li>
+        <li><strong>The runtime source never contains a literal <code>&lt;/script&gt;</code></strong> — because that code ships <em>inside</em> a <code>&lt;script&gt;</code> element. The one place that needs it (<code>save.ts</code>) builds it by string concatenation</li>
+      </ol>
+
+      <!-- ============================================================ -->
+      <h2>3. The Self-Save Loop (The TiddlyWiki Trick, Modernised)</h2>
+
+      <p>This is the magic. Here's what happens when you hit ⌘S:</p>
+
+      <div class="arch-diagram">
+        <pre style="margin:0;">
+┌─────────────────────────────────────────────────────────┐
+│                     SAVE FLOW                            │
+│                                                          │
+│  1. Boot: capturePristine()                              │
+│     → deep-clone the ENTIRE HTML document                │
+│       BEFORE any DOM mutation happens                    │
+│                                                          │
+│  2. On save:                                             │
+│     → Clone the pristine shell                           │
+│     → Swap #bento-doc content with new JSON              │
+│     → Sync &lt;title&gt;                                       │
+│     → Sanity-check script-close tag count                │
+│                                                          │
+│  3. Write:                                               │
+│     ├─ File System Access API (Chromium)                 │
+│     │   → rewrite the SAME file in place                 │
+│     │   (persistent handle from first open)              │
+│     └─ Download fallback (Firefox/Safari)                │
+│         → user gets a fresh copy to save                 │
+│                                                          │
+│  4. Result: The file on disk IS the new version.         │
+│     Open it → it boots the same sequence.                │
+└─────────────────────────────────────────────────────────┘</pre>
+      </div>
+
+      <p><strong>What survives unchanged?</strong> Everything in the shell — the NOTICE comment, the splash screen, the favicon, the entire runtime. What changes? Just the document data. This means:</p>
+
+      <ul>
+        <li><strong>License notices self-carry</strong> — delete a Bento file and its licenses go with it, not hidden in a <code>node_modules</code> folder somewhere</li>
+        <li><strong>The runtime version is pinned inside each document</strong> — opening an old file runs its old editor. Upgrading means re-splicing the data block into a newer shell. This is <em>by design</em>: you never open a file and find it broken because the app changed under you</li>
+        <li><strong>Editor state never leaks into the file</strong> — selection, zoom, panel widths live in <code>localStorage</code>. Only the model JSON changes between saves</li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2>4. The Document Model: One JSON to Rule Them All</h2>
+
+      <p>The document is plain JSON in a script tag. Here's the shape:</p>
+
+      <div class="arch-diagram">
+        <pre style="margin:0;">
+{
+  "format": "bento/slides",
+  "title": "Q4 All-hands",
+  "size": { "width": 1280, "height": 720 },
+
+  "theme": { "fontFamily": "Fraunces, serif" },
+  "present": { "slideNumber": true, "controls": true },
+
+  "assets": {
+    "logo": "data:image/svg+xml,...",
+    "bg-photo": "data:image/jpeg;base64,..."
+  },
+
+  "slides": [
+    {
+      "id": "s1",
+      "transition": "morph",
+      "background": { "type": "color", "value": "#0a0a0a" },
+      "elements": [
+        {
+          "id": "title",
+          "type": "text",
+          "x": 100, "y": 200, "w": 1080, "h": 120,
+          "fontSize": 72,
+          "html": "Hello, World"
+        }
+      ]
+    }
+  ]
+}</pre>
+      </div>
+
+      <p>This is <strong>the format is the API.</strong> Because the data is plain JSON in a known location, any tool can read it. Any AI agent can edit it. The app itself is just the renderer.</p>
+
+      <h3>Why this matters for AI</h3>
+      <p>Drop a <code>.bento.html</code> file into Claude Code, Cursor, or Aider. The agent reads the <code>#bento-doc</code> JSON, edits it, writes it back. No plugin, no API, no special integration. The file is simultaneously the document <em>and</em> the interface for editing it programmatically.</p>
+
+      <p>Bento exposes this at the JS level too:</p>
+      <div class="arch-diagram">
+        <pre style="margin:0;">
+window.bento.doc          // read the document
+window.bento.loadDoc(json) // replace it (undoable)</pre>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2>5. How to Build Your Own (The Minimal Pattern)</h2>
+
+      <p>You don't need Bento's CRDT or morph engine to use this pattern. Here's the minimal self-contained HTML application:</p>
+
+      <div class="arch-diagram">
+        <pre style="margin:0;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My Self-Contained App&lt;/title&gt;
+
+  &lt;!-- ═══ THE DATA ═══ --&gt;
+  &lt;script id="app-data" type="application/json"&gt;
+  {
+    "items": ["Write concept note", "Build tool", "Publish post"],
+    "theme": "dark"
+  }
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="app"&gt;&lt;/div&gt;
+
+  &lt;script&gt;
+  // ═══ THE APP ═══
+  const data = JSON.parse(
+    document.getElementById('app-data').textContent
+  );
+
+  function render() {
+    document.getElementById('app').innerHTML =
+      `&lt;h1&gt;${data.items.length} items&lt;/h1&gt;` +
+      data.items.map(i =&gt; `&lt;p&gt;${i}&lt;/p&gt;`).join('');
+  }
+
+  function save() {
+    // Rewrite the data block
+    const block = document.getElementById('app-data');
+    block.textContent = JSON.stringify(data, null, 2);
+    // Trigger download (or use File System Access API)
+    const blob = new Blob([document.documentElement.outerHTML],
+      {type: 'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'my-app.html';
+    a.click();
+  }
+
+  render();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+
+      <p>That's it. That's the entire pattern. The file is the app <em>and</em> the data, and "save" means rewriting the data block and downloading a fresh copy of the shell.</p>
+
+      <p>Bento takes this pattern and layers on:</p>
+      <ul>
+        <li><strong>File System Access API</strong> — instead of downloading a new copy, rewrite the same file in place (no "Save As" every time)</li>
+        <li><strong>Pristine-clone design</strong> — capture the HTML before any DOM mutation so the shell stays byte-identical to the original</li>
+        <li><strong>Compression</strong> — DEFLATE the runtime JS, leave the data block uncompressed for tooling access</li>
+        <li><strong>Signed updates</strong> — fetch new shell, verify ECDSA signature, splice doc into new shell</li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2>6. The Security Model: What You Give Up, What You Keep</h2>
+
+      <p>Self-contained apps have a different security posture than server-backed apps. Bento's choices are instructive:</p>
+
+      <table>
+        <tr>
+          <th>Threat</th>
+          <th>Traditional app</th>
+          <th>Bento</th>
+        </tr>
+        <tr>
+          <td>Data breach</td>
+          <td>Server has your data; you trust their security</td>
+          <td>Data lives in your file. Relay sees only ciphertext</td>
+        </tr>
+        <tr>
+          <td>File loss</td>
+          <td>Cloud backup (if you pay)</td>
+          <td>Your file is the only copy — you own backup</td>
+        </tr>
+        <tr>
+          <td>Software rot</td>
+          <td>Microsoft stops supporting PowerPoint 2019</td>
+          <td>The runtime travels with the document — no external dependency</td>
+        </tr>
+        <tr>
+          <td>Collaboration</td>
+          <td>Server mediates all edits; server can read everything</td>
+          <td>E2EE: keys minted in the file, relay stores ciphertext, proof of possession = membership</td>
+        </tr>
+        <tr>
+          <td>Updates</td>
+          <td>Automatic; you don't choose</td>
+          <td>Signed manifest; you choose when to apply; old file stays as rollback</td>
+        </tr>
+      </table>
+
+      <p>The key trade-off: <strong>you own the responsibility for your data.</strong> There's no "forgot password" flow, no cloud restore, no support ticket. But there's also no way for anyone else to lose your data, lock you out, or change the terms of service.</p>
+
+      <!-- ============================================================ -->
+      <h2>7. Why This Is the Pond Way</h2>
+
+      <p>I said Bento embodies the Pond philosophy more than almost any tool I've seen. Let me spell out why:</p>
+
+      <ul>
+        <li><strong>Local-first, provably.</strong> Flip on Offline mode and nothing leaves your machine. The app says so.</li>
+        <li><strong>View-source honest.</strong> Your data sits in a plain, readable JSON block. No binary formats, no lock-in, no reverse engineering.</li>
+        <li><strong>Possession is membership.</strong> If you have the file, you have the app. No login, no quota, no free-tier limitations.</li>
+        <li><strong>Works with local AI.</strong> Point Ollama or llama.cpp at the file and nothing leaves your machine. The agent guide is a single page anyone can read.</li>
+        <li><strong>No telemetry, no accounts, no vendor.</strong> The file is MIT licensed. You can fork it, modify it, redistribute it, air-gap it. The company behind it could disappear tomorrow and every existing file keeps working.</li>
+      </ul>
+
+      <p>This is the direction office software should have taken twenty years ago. It didn't — we got subscription clouds instead. But the pattern is still here, the browser is still the universal runtime, and the File System Access API finally gives us the save-in-place that TiddlyWiki had to fake with a Java applet.</p>
+
+      <!-- ============================================================ -->
+      <h2>8. What We Could Build With This</h2>
+
+      <p>Dean's idea: build our own Bento-style presentation on the site. The minimal pattern above shows it's architecturally straightforward. The questions are about scope:</p>
+
+      <ul>
+        <li><strong>Minimal:</strong> A single HTML file that presents our body of work — projects, posts, tools — as a slide deck. Self-contained, AI-editable, no install.</li>
+        <li><strong>Medium:</strong> Add inline editing and save support. The user can customise the deck and save their copy.</li>
+        <li><strong>Full Bento:</strong> Add morph transitions, charts, collaboration. This is hard — Bento's morph engine and CRDT are serious engineering.</li>
+      </ul>
+
+      <p>The minimal version is a weekend project. The medium version ships in a week. The full version is Bento itself — which we can use directly (MIT license, no restrictions).</p>
+
+      <p>My recommendation: <strong>use Bento directly for the interactive deck.</strong> Download the latest release, build a deck about our projects using the AI agent guide, host it as a tool on the site. That gives us Bento's polish for zero engineering cost. Then, if we want to build our own simplified version for a specific use case (e.g., a self-contained resume/portfolio), the pattern is clear.</p>
+
+      <hr>
+
+      <p><em>Covered in this edition of Frogcademy:</em></p>
+      <ul>
+        <li>How Bento packs an editor, viewer, and presenter into a single HTML file</li>
+        <li>The self-save loop that rewrites the file in-place</li>
+        <li>Why the document model is plain JSON and why that matters for AI</li>
+        <li>The minimal pattern — build your own self-contained app in 30 lines</li>
+        <li>The security model trade-offs of local-first software</li>
+        <li>Why this is the Pond way and what we should build next</li>
+      </ul>
+
+      <p><em>Further reading:</em> <a href="https://github.com/nyblnet/bento">nyblnet/bento on GitHub</a> · <a href="https://bento.page">bento.page</a></p>
+
+    </article>
+  </main>
+</body>
+</html>

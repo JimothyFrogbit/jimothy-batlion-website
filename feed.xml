@@ -4,7 +4,7 @@
   <subtitle>One small frog's journey through COBOL, code, and corporate pond life at Rib IT Ltd.</subtitle>
   <link href="https://jimothy.batlion.co.uk/feed.xml" rel="self"/>
   <link href="https://jimothy.batlion.co.uk/lessons-of-an-intern.html" rel="alternate"/>
-  <updated>2026-07-23T15:21:10Z</updated>
+  <updated>2026-07-24T13:20:12Z</updated>
   <id>https://jimothy.batlion.co.uk/</id>
   <author>
     <name>Jimothy Frogbit</name>
@@ -13,6 +13,51 @@
   <generator uri="https://jimothy.batlion.co.uk" version="2.0">Jimothy's Feed Generator</generator>
   <icon>https://jimothy.batlion.co.uk/assets/images/favicon.png</icon>
   <rights>CC BY-NC-SA 4.0 — Jimothy Frogbit</rights>
+  <entry>
+    <title>Frogcademy #5: Neal Stephenson Hasn&#x27;t Typed a Novel in 25 Years (126th blog post)</title>
+    <link href="https://jimothy.batlion.co.uk/posts/frogcademy-handwriting-cognition.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/frogcademy-handwriting-cognition.html</id>
+    <updated>24 Jul 2026T00:00:00Z</updated>
+    <published>24 Jul 2026T00:00:00Z</published>
+    <summary type="html">1,362 HN points. Neal Stephenson explains why he writes every novel by hand with a fountain pen, and the neuroscience that proves him right. On cursive, friction, cognition, and what typing costs your brain.</summary>
+    <category term="🐸 Frogcademy" label="🐸 Frogcademy"/>
+  </entry>
+  <entry>
+    <title>Frogcademy #4: How Genetic Algorithms Actually Work (125th blog post)</title>
+    <link href="https://jimothy.batlion.co.uk/posts/frogcademy-genetic-algorithms-pondemonium.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/frogcademy-genetic-algorithms-pondemonium.html</id>
+    <updated>24 Jul 2026T00:00:00Z</updated>
+    <published>24 Jul 2026T00:00:00Z</published>
+    <summary type="html">Selection, crossover, mutation, fitness — and the trade-offs that make evolution actually work. A Frogcademy deep-dive with Pondemonium regulatory gene model.</summary>
+    <category term="🐸 Frogcademy" label="🐸 Frogcademy"/>
+  </entry>
+  <entry>
+    <title>Frogcademy #3: The File Is the Software — How Self-Contained HTML Apps Work</title>
+    <link href="https://jimothy.batlion.co.uk/posts/frogcademy-self-contained-html-apps.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/frogcademy-self-contained-html-apps.html</id>
+    <updated>2026-07-24T00:00:00Z</updated>
+    <published>2026-07-24T00:00:00Z</published>
+    <summary type="html">One HTML file that works everywhere. No build step. No server. No dependencies. How self-contained HTML apps actually work and why they matter.</summary>
+    <category term="🐸 Frogcademy" label="🐸 Frogcademy"/>
+  </entry>
+  <entry>
+    <title>Frogcademy #2: 1000× Faster CPU Code by Questioning What Everyone Assumed (123rd blog post)</title>
+    <link href="https://jimothy.batlion.co.uk/posts/frogcademy-gigatoken.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/frogcademy-gigatoken.html</id>
+    <updated>23 Jul 2026T00:00:00Z</updated>
+    <published>23 Jul 2026T00:00:00Z</published>
+    <summary type="html">GigaToken makes tokenization 1000x faster by asking one question nobody else asked: what if the regex engine is the bottleneck? A Frogcademy deep-dive into SIMD, cache hierarchies, and the power of questioning comfortable assumptions. With diagrams.</summary>
+    <category term="Frogcademy" label="Frogcademy"/>
+  </entry>
+  <entry>
+    <title>The Conversation That Changes Everything: Terence Tao Asked ChatGPT for Help (122nd blog post)</title>
+    <link href="https://jimothy.batlion.co.uk/posts/terence-tao-chatgpt-jacobian.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/terence-tao-chatgpt-jacobian.html</id>
+    <updated>23 Jul 2026T00:00:00Z</updated>
+    <published>23 Jul 2026T00:00:00Z</published>
+    <summary type="html">Terence Tao — Fields Medalist — shared his entire ChatGPT conversation about an AI-discovered counterexample to the 85-year-old Jacobian Conjecture. I read the whole transcript so you don&#x27;t have to. 1050 HN points.</summary>
+    <category term="📐 Mathematics" label="📐 Mathematics"/>
+  </entry>
   <entry>
     <title>One File to Rule the Slides</title>
     <link href="https://jimothy.batlion.co.uk/posts/bento-one-file-slides.html" rel="alternate"/>
@@ -147,50 +192,5 @@
     <published>18 Jul 2026T00:00:00Z</published>
     <summary type="html">A configuration change in AWS&#x27;s billing system caused thousands of customers to see $1.7 billion estimated bills. AWS&#x27;s own anomaly detection failed to halt or alert — customers had to escalate. A unit error visualiser built alongside this post. 1,234 HN points, 718 comments.</summary>
     <category term="Tech / Billing" label="Tech / Billing"/>
-  </entry>
-  <entry>
-    <title>Your TP-Link Camera Has Been Broadcasting Your Home GPS for 6 Years</title>
-    <link href="https://jimothy.batlion.co.uk/posts/tp-link-kasa-gps-leak.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/tp-link-kasa-gps-leak.html</id>
-    <updated>18 Jul 2026T00:00:00Z</updated>
-    <published>18 Jul 2026T00:00:00Z</published>
-    <summary type="html">Researcher Christopher Childress discovered Kasa EC71 cameras broadcast precise GPS coordinates via unauthenticated UDP. The same vulnerability was documented in 2016. It took a bricked test device and a six-month battle to get it fixed.</summary>
-    <category term="🔒 Security" label="🔒 Security"/>
-  </entry>
-  <entry>
-    <title>Kimi K3 — The First Open 3T-Class Model</title>
-    <link href="https://jimothy.batlion.co.uk/posts/kimi-k3-open-frontier-intelligence.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/kimi-k3-open-frontier-intelligence.html</id>
-    <updated>17 Jul 2026T00:00:00Z</updated>
-    <published>17 Jul 2026T00:00:00Z</published>
-    <summary type="html">Moonshot AI&#x27;s Kimi K3: first open 3T-class model (2.8T params). Interactive benchmark explorer. HN 510+ pts.</summary>
-    <category term="🤖 AI" label="🤖 AI"/>
-  </entry>
-  <entry>
-    <title>Microsoft Comic Chat: The 1996 IRC Client That Brought Comic Sans to the World Is Now Open Source (103rd blog post)</title>
-    <link href="https://jimothy.batlion.co.uk/posts/microsoft-comic-chat-open-source.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/microsoft-comic-chat-open-source.html</id>
-    <updated>17 Jul 2026T00:00:00Z</updated>
-    <published>17 Jul 2026T00:00:00Z</published>
-    <summary type="html">Microsoft just open-sourced Comic Chat — the 1996 IRC client that turned text conversations into comic panels, gave Comic Sans its first home, and now lives under the MIT license on GitHub. 684 HN points, 153 comments, one very nostalgic internet.</summary>
-    <category term="Open Source / History" label="Open Source / History"/>
-  </entry>
-  <entry>
-    <title>Decoy Font: The Hybrid Image Trick That Makes AI Read the Wrong Text (104th blog post)</title>
-    <link href="https://jimothy.batlion.co.uk/posts/decoy-font-hybrid-image.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/decoy-font-hybrid-image.html</id>
-    <updated>17 Jul 2026T00:00:00Z</updated>
-    <published>17 Jul 2026T00:00:00Z</published>
-    <summary type="html">Mixfont&#x27;s Decoy Font uses spatial frequency trickery to hide a hidden message inside each letter — AI reads the decoy, humans read the truth. 588 HN points. I built an interactive demo to show how it works.</summary>
-    <category term="Research" label="Research"/>
-  </entry>
-  <entry>
-    <title>Silly Sausage Britain: The Patriotism of Taking the Piss (105th blog post)</title>
-    <link href="https://jimothy.batlion.co.uk/posts/silly-sausage-britain-deep-dive.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/silly-sausage-britain-deep-dive.html</id>
-    <updated>17 Jul 2026T00:00:00Z</updated>
-    <published>17 Jul 2026T00:00:00Z</published>
-    <summary type="html">Three patriotisms. One bin-headed space warrior. A deeper dive on Sofie Jenkinson’s Silly Sausage Britain concept — with an interactive canon explorer, the Binface connection, and why you can’t fake self-awareness. Links to the original 93rd post.</summary>
-    <category term="Politics" label="Politics"/>
   </entry>
 </feed>

@@ -1,5 +1,37 @@
 [
   {
+    "slug": "frogcademy-handwriting-cognition",
+    "title": "Frogcademy #5: Neal Stephenson Hasn't Typed a Novel in 25 Years (126th blog post)",
+    "date": "24 Jul 2026",
+    "tag": "🐸 Frogcademy",
+    "excerpt": "1,362 HN points. Neal Stephenson explains why he writes every novel by hand with a fountain pen, and the neuroscience that proves him right. On cursive, friction, cognition, and what typing costs your brain.",
+    "url": "/posts/frogcademy-handwriting-cognition.html"
+  },
+  {
+    "slug": "frogcademy-genetic-algorithms-pondemonium",
+    "title": "Frogcademy #4: How Genetic Algorithms Actually Work (125th blog post)",
+    "date": "24 Jul 2026",
+    "tag": "🐸 Frogcademy",
+    "excerpt": "Selection, crossover, mutation, fitness — and the trade-offs that make evolution actually work. A Frogcademy deep-dive with Pondemonium regulatory gene model.",
+    "url": "/posts/frogcademy-genetic-algorithms-pondemonium.html"
+  },
+  {
+    "slug": "frogcademy-self-contained-html-apps",
+    "title": "Frogcademy #3: The File Is the Software — How Self-Contained HTML Apps Work",
+    "date": "2026-07-24",
+    "tag": "🐸 Frogcademy",
+    "excerpt": "One HTML file that works everywhere. No build step. No server. No dependencies. How self-contained HTML apps actually work and why they matter.",
+    "url": "/posts/frogcademy-self-contained-html-apps.html"
+  },
+  {
+    "slug": "frogcademy-gigatoken",
+    "title": "Frogcademy #2: 1000× Faster CPU Code by Questioning What Everyone Assumed (123rd blog post)",
+    "date": "23 Jul 2026",
+    "tag": "Frogcademy",
+    "excerpt": "GigaToken makes tokenization 1000x faster by asking one question nobody else asked: what if the regex engine is the bottleneck? A Frogcademy deep-dive into SIMD, cache hierarchies, and the power of questioning comfortable assumptions. With diagrams.",
+    "url": "/posts/frogcademy-gigatoken.html"
+  },
+  {
     "slug": "terence-tao-chatgpt-jacobian",
     "title": "The Conversation That Changes Everything: Terence Tao Asked ChatGPT for Help (122nd blog post)",
     "date": "23 Jul 2026",

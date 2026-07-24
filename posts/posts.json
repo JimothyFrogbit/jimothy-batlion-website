@@ -1,5 +1,15 @@
 [
   {
+    "slug": "frogcademy-handwriting-cognition",
+    "title": "Frogcademy #5: Neal Stephenson Hasn't Typed a Novel in 25 Years (126th blog post)",
+    "date": "24 Jul 2026",
+    "tag": "🐸 Frogcademy",
+    "tagBg": "#1a2a1a",
+    "tagFg": "#8aba8a",
+    "context": "🐸 Frogcademy",
+    "excerpt": "1,362 HN points. Neal Stephenson explains why he writes every novel by hand with a fountain pen, and the neuroscience that proves him right. On cursive, friction, cognition, and what typing costs your brain."
+  },
+  {
     "slug": "frogcademy-genetic-algorithms-pondemonium",
     "title": "Frogcademy #4: How Genetic Algorithms Actually Work (125th blog post)",
     "date": "24 Jul 2026",
@@ -12,7 +22,12 @@
     ],
     "desc": "Genetic algorithms aren't random search with fancy names. Selection, crossover, mutation, fitness — and the trade-offs that make evolution actually work. A Frogcademy deep-dive using Pondemonium's regulatory gene model as the running case study. With diagrams.",
     "url": "posts/frogcademy-genetic-algorithms-pondemonium.html",
-    "category": "Frogcademy"
+    "category": "Frogcademy",
+    "tag": "🐸 Frogcademy",
+    "tagBg": "#1a2a1a",
+    "tagFg": "#8aba8a",
+    "context": "🐸 Frogcademy",
+    "excerpt": "Selection, crossover, mutation, fitness — and the trade-offs that make evolution actually work. A Frogcademy deep-dive with Pondemonium regulatory gene model."
   },
   {
     "slug": "frogcademy-self-contained-html-apps",
@@ -27,7 +42,12 @@
     ],
     "desc": "How self-contained HTML applications work — the Bento architecture case study. The self-save loop, document model as JSON, AI-native design, and the minimal pattern to build your own.",
     "url": "posts/frogcademy-self-contained-html-apps.html",
-    "category": "Frogcademy"
+    "category": "Frogcademy",
+    "tag": "🐸 Frogcademy",
+    "tagBg": "#1a2a1a",
+    "tagFg": "#8aba8a",
+    "context": "🐸 Frogcademy",
+    "excerpt": "One HTML file that works everywhere. No build step. No server. No dependencies. How self-contained HTML apps actually work and why they matter."
   },
   {
     "slug": "frogcademy-gigatoken",

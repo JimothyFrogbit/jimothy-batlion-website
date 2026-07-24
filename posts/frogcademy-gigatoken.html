@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frogcademy #2: 1000× Faster CPU Code by Questioning What Everyone Assumed — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="GigaToken makes tokenization 1000x faster by asking one question nobody else asked: what if the regex engine is the bottleneck? A Frogcademy deep-dive into SIMD, cache hierarchies, and the power of questioning comfortable assumptions.">
+  <meta property="og:title" content="Frogcademy #2: 1000× Faster CPU Code by Questioning What Everyone Assumed">
+  <meta property="og:description" content="GigaToken makes tokenization 1000x faster by asking one question nobody else asked: what if the regex engine is the bottleneck? A Frogcademy deep-dive into SIMD, cache hierarchies, and the power of questioning comfortable assumptions.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-gigatoken.png?v=20260723">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/frogcademy-gigatoken.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-23">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Frogcademy #2: 1000× Faster CPU Code by Questioning What Everyone Assumed">
+  <meta name="twitter:description" content="GigaToken makes tokenization 1000x faster by asking one question nobody else asked: what if the regex engine is the bottleneck?">
+
+  <style>
+    .diagram-box {
+      background: rgba(10,25,20,0.6);
+      border: 1px solid rgba(100,200,150,0.2);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 1.8rem 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .diagram-box svg { max-width: 100%; height: auto; }
+    .diagram-caption {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #8892b0;
+      margin-top: 0.3rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .concept-card {
+      background: rgba(10,25,20,0.4);
+      border-left: 3px solid var(--accent, #5a8a5a);
+      border-radius: 8px;
+      padding: 1rem 1.3rem;
+      margin: 1.2rem 0;
+    }
+    .concept-card h4 { margin: 0 0 0.4rem; color: var(--accent, #8aba8a); font-size: 1.05rem; }
+    .concept-card p { margin: 0; font-size: 0.95rem; }
+    .concept-card.danger { border-left-color: #c98a6b; }
+    .concept-card.danger h4 { color: #c98a6b; }
+    .concept-card.gold { border-left-color: #c6ac6d; }
+    .concept-card.gold h4 { color: #c6ac6d; }
+    .speed-bar { display: flex; align-items: center; gap: 0.6rem; margin: 0.5rem 0; }
+    .speed-bar .label { width: 6rem; text-align: right; font-size: 0.85rem; color: #8892b0; }
+    .speed-bar .bar { height: 1.5rem; border-radius: 6px; transition: width 0.3s; }
+    .speed-bar .value { font-size: 0.85rem; color: #ccd6f6; font-weight: 600; min-width: 6rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#1a2a1a;color:#8aba8a;">🐸 Frogcademy</span>
+          <span>23 Jul 2026</span>
+          <span>8 min read</span>
+        </div>
+        <h1>Frogcademy #2: 1000× Faster CPU Code by Questioning What Everyone Assumed</h1>
+        <p class="article-subtitle">On GigaToken, SIMD pretokenization, and why "fast enough" is the most dangerous phrase in engineering</p>
+      </div>
+
+      <img src="../assets/images/frogcademy-gigatoken.png?v=20260723" alt="Diagram showing CPU lanes processing text in parallel"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        SIMD lanes doing what SIMD lanes do: processing multiple bytes at once while the regex engine is still figuring out which pattern to match next
+      </p>
+
+      <p>Wasson. I've got a fresh espresso, a GigaToken benchmark log on my terminal that says "596.7 MB/s," and I need to talk about the most instructive performance optimisation rabbit-hole I've seen all year.</p>
+
+      <p>Marcel Rød published a thing called <strong>GigaToken</strong> a few days ago. It's a drop-in replacement for HuggingFace Tokenizers that runs <em>1000× faster</em> on the same hardware. Not 2×. Not 10×. <strong>One thousand times</strong>.</p>
+
+      <p>On an AMD EPYC server: <strong>24.53 GB/s</strong> tokenization throughput for GPT-2. That's 989× faster than the HuggingFace tokenizer and 681× faster than OpenAI's tiktoken. On an Apple M4 Max laptop: <strong>8.79 GB/s</strong> — 1,268× faster than HF.</p>
+
+      <p>Now, a COBOL frog reading this has questions. The first one being: <em>how was it ever that slow?</em></p>
+
+      <p>The answer is the whole point of this Frogcademy. And it's a lesson that goes way beyond tokenization.</p>
+
+      <hr class="post-divider">
+
+      <h2>What tokenization actually does</h2>
+
+      <p>Let's start concrete. When you send text to an LLM, it doesn't read characters. It reads <strong>tokens</strong> — chunks of text from a fixed vocabulary (~50K-200K entries). The job of a tokenizer is to split text into these chunks.</p>
+
+      <p>The pipeline looks like this:</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 680 210" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="680" height="210" fill="#0a1914" rx="8"/>
+
+          <!-- Raw text -->
+          <rect x="15" y="20" width="140" height="44" rx="6" fill="#1a3a2a" stroke="#5a8a5a" stroke-width="1.5"/>
+          <text x="85" y="47" fill="#ccd6f6" font-size="13" text-anchor="middle" font-family="sans-serif">Raw text</text>
+
+          <!-- Arrow -->
+          <line x1="155" y1="42" x2="185" y2="42" stroke="#5a8a5a" stroke-width="2"/>
+          <polygon points="182,36 192,42 182,48" fill="#5a8a5a"/>
+
+          <!-- Pretokenization step -->
+          <rect x="192" y="12" width="160" height="60" rx="6" fill="#2a3a1a" stroke="#c6ac6d" stroke-width="2"/>
+          <text x="272" y="38" fill="#c6ac6d" font-size="11" text-anchor="middle" font-family="sans-serif">Step 1</text>
+          <text x="272" y="56" fill="#ccd6f6" font-size="12" text-anchor="middle" font-family="sans-serif">Pretokenization</text>
+          <text x="272" y="68" fill="#8892b0" font-size="9" text-anchor="middle" font-family="sans-serif">(regex split into words)</text>
+
+          <!-- Arrow -->
+          <line x1="352" y1="42" x2="382" y2="42" stroke="#5a8a5a" stroke-width="2"/>
+          <polygon points="379,36 389,42 379,48" fill="#5a8a5a"/>
+
+          <!-- BPE merge step -->
+          <rect x="389" y="12" width="140" height="60" rx="6" fill="#1a2a3a" stroke="#5a8a5a" stroke-width="1.5"/>
+          <text x="459" y="38" fill="#5a8a5a" font-size="11" text-anchor="middle" font-family="sans-serif">Step 2</text>
+          <text x="459" y="56" fill="#ccd6f6" font-size="12" text-anchor="middle" font-family="sans-serif">BPE Merging</text>
+          <text x="459" y="68" fill="#8892b0" font-size="9" text-anchor="middle" font-family="sans-serif">(build token IDs)</text>
+
+          <!-- Arrow -->
+          <line x1="529" y1="42" x2="559" y2="42" stroke="#5a8a5a" stroke-width="2"/>
+          <polygon points="556,36 566,42 556,48" fill="#5a8a5a"/>
+
+          <!-- Output -->
+          <rect x="566" y="20" width="100" height="44" rx="6" fill="#1a3a2a" stroke="#5a8a5a" stroke-width="1.5"/>
+          <text x="616" y="47" fill="#ccd6f6" font-size="13" text-anchor="middle" font-family="sans-serif">Token IDs</text>
+
+          <!-- Bottleneck callout -->
+          <rect x="192" y="90" width="160" height="28" rx="6" fill="#3a1a1a" stroke="#c98a6b" stroke-width="1.5"/>
+          <text x="272" y="108" fill="#c98a6b" font-size="11" text-anchor="middle" font-family="sans-serif">⚠ THIS WAS THE BOTTLENECK</text>
+
+          <!-- Explanation arrow -->
+          <line x1="272" y1="90" x2="272" y2="78" stroke="#c98a6b" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+          <!-- Bottom explanation -->
+          <text x="340" y="150" fill="#8892b0" font-size="11" text-anchor="middle" font-family="sans-serif">Everyone optimised Step 2. Nobody looked at Step 1.</text>
+          <text x="340" y="170" fill="#8892b0" font-size="11" text-anchor="middle" font-family="sans-serif">The regex engine was doing the heavy lifting, single-threaded,</text>
+          <text x="340" y="190" fill="#8892b0" font-size="11" text-anchor="middle" font-family="sans-serif">character by character — and nobody noticed.</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">The tokenization pipeline. For a decade, everyone optimised the BPE merge step. Step 1 was the real bottleneck all along.</p>
+
+      <p>For GPT-2 style tokenization — which covers Llama, Qwen, DeepSeek, Mistral, and most modern models — the pretokenizer is a <strong>regex</strong>. It defines a pattern that matches word-like chunks: things like <code>'\w+(?:'\w+)?|'|[^\w\s]+'</code>.</p>
+
+      <p>That regex runs on every character of your input. And it runs <strong>single-threaded</strong>, using the system's regex engine (Google's RE2 or Rust's regex crate), which uses an NFA simulation under the hood.</p>
+
+      <p>Now, NFA simulation is well-studied. It's O(mn) in the worst case (regex length × input length). That's fine for interactive use. For batch processing 11.9 GB of text? It's the bottleneck nobody noticed.</p>
+
+      <hr class="post-divider">
+
+      <h2>The hidden tax</h2>
+
+      <p>Here's the thing: <strong>everyone knew</strong> tokenization existed. Every ML engineer has waited for tokenization to finish at some point. But it was treated as a fixed cost — "it's just the thing you do before training." Nobody questioned whether it <em>had</em> to be that slow, because:</p>
+
+      <ul>
+        <li>The GPU is the expensive part, so CPU-bound preprocessing doesn't get attention</li>
+        <li>Inference tokenization is interleaved with model execution, so the latency hides behind GPU time</li>
+        <li>Both HF Tokenizers and tiktoken are already written in <strong>Rust</strong>. If <em>Rust</em> can't make it faster, surely it's just physics, right?</li>
+      </ul>
+
+      <div class="concept-card danger">
+        <h4>❌ The assumption that killed performance</h4>
+        <p>"Tokenization is a fixed cost — it's fast enough, so optimising it won't move the needle." This is the most expensive sentence in engineering. Every time you say "fast enough," you give yourself permission not to look. And the bottleneck you're not looking at is the one that will eat your throughput.</p>
+      </div>
+
+      <p>Rød looked. And what he found is a masterclass in performance engineering.</p>
+
+      <hr class="post-divider">
+
+      <h2>Three tricks, 1000× speedup</h2>
+
+      <p>GigaToken achieves its gains through three independent mechanisms. Here they are, from most impactful to least.</p>
+
+      <h3>1. SIMD-optimised pretokenization</h3>
+
+      <p>Instead of feeding characters one-at-a-time through a regex NFA simulation, Rød replaced the regex with <strong>hand-tuned SIMD routines</strong> that process 16-64 bytes at once.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="640" height="200" fill="#0a1914" rx="8"/>
+
+          <!-- Label -->
+          <text x="320" y="22" fill="#ccd6f6" font-size="14" text-anchor="middle" font-weight="bold" font-family="sans-serif">Regex engine: one byte at a time</text>
+
+          <!-- Scalar loop -->
+          <rect x="20" y="35" width="12" height="24" rx="3" fill="#3a6a5a" stroke="#5a8a5a" stroke-width="1"/>
+          <rect x="36" y="35" width="12" height="24" rx="3" fill="#3a6a5a" stroke="#5a8a5a" stroke-width="1"/>
+          <rect x="52" y="35" width="12" height="24" rx="3" fill="#5a3a3a" stroke="#c98a6b" stroke-width="1.5"/>
+          <rect x="68" y="35" width="12" height="24" rx="3" fill="#3a6a5a" stroke="#5a8a5a" stroke-width="1"/>
+          <rect x="84" y="35" width="12" height="24" rx="3" fill="#3a6a5a" stroke="#5a8a5a" stroke-width="1"/>
+          <rect x="100" y="35" width="12" height="24" rx="3" fill="#3a6a5a" stroke="#5a8a5a" stroke-width="1"/>
+          <rect x="116" y="35" width="12" height="24" rx="3" fill="#3a6a5a" stroke="#5a8a5a" stroke-width="1"/>
+          <rect x="132" y="35" width="12" height="24" rx="3" fill="#3a6a5a" stroke="#5a8a5a" stroke-width="1"/>
+
+          <!-- Arrow down -->
+          <polygon points="76,68 76,78 70,78 76,86 82,78 76,78" fill="#c98a6b"/>
+          <text x="100" y="92" fill="#c98a6b" font-size="10" text-anchor="middle" font-family="sans-serif">Each byte needs NFA state bookkeeping</text>
+
+          <!-- SIMD label -->
+          <text x="320" y="118" fill="#ccd6f6" font-size="14" text-anchor="middle" font-weight="bold" font-family="sans-serif">SIMD: 16+ bytes at once</text>
+
+          <!-- SIMD lane -->
+          <rect x="20" y="135" width="32" height="24" rx="3" fill="#2a5a3a" stroke="#5a8a5a" stroke-width="2"/>
+          <rect x="56" y="135" width="32" height="24" rx="3" fill="#2a5a3a" stroke="#5a8a5a" stroke-width="2"/>
+          <rect x="92" y="135" width="32" height="24" rx="3" fill="#2a5a3a" stroke="#5a8a5a" stroke-width="2"/>
+          <rect x="128" y="135" width="32" height="24" rx="3" fill="#2a5a3a" stroke="#5a8a5a" stroke-width="2"/>
+          <rect x="164" y="135" width="32" height="24" rx="3" fill="#2a5a3a" stroke="#5a8a5a" stroke-width="2"/>
+
+          <!-- Plus sign for more -->
+          <text x="210" y="152" fill="#5a8a5a" font-size="16" text-anchor="middle" font-family="sans-serif">+ more lanes...</text>
+
+          <text x="300" y="180" fill="#8892b0" font-size="11" text-anchor="middle" font-family="sans-serif">AVX-512: 64 bytes · AVX2: 32 bytes · NEON: 16 bytes</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">Scalar vs SIMD processing. The regex engine evaluates each byte through NFA simulation. SIMD processes a whole batch in parallel using dedicated CPU instructions.</p>
+
+      <p>The regex pattern for GPT-2 pretokenization is <code>'\w+(?:'\w+)?|'|[^\w\s]+'</code>. This matches word characters (possibly with apostrophe), lone apostrophes, or runs of non-word-non-space characters. Rød reimplemented this logic as a set of SIMD comparisons: check if each byte is in certain ranges, apply the classification, find boundaries. No regex crate. No NFA. Just arithmetic on byte vectors.</p>
+
+      <p>On AVX-512 CPUs, that's 64 bytes per instruction. The regex engine does one byte at a time, with branching and state management for each one.</p>
+
+      <h3>2. Hierarchical pretoken cache</h3>
+
+      <p>The second trick is caching. Once you've tokenized a word — say, "the" → [464] — you'll see it again. A lot. The Zipfian distribution of language means the most common 1000 words account for a huge fraction of text.</p>
+
+      <p>Caching pretoken-to-token mappings sounds trivial: hash the word, store the tokens, done. But two things make it hard:</p>
+
+      <ul>
+        <li><strong>The cache grows fast.</strong> A 500K-token vocabulary means potentially 500K unique pretokens. In a naive implementation, cache memory grows linearly with unique words.</li>
+        <li><strong>The distribution is long-tailed.</strong> The most common words (the, a, and, of) dominate throughput, but the long tail of rare words means you can't just cache the top 10K and call it done.</li>
+      </ul>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 620 180" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="620" height="180" fill="#0a1914" rx="8"/>
+
+          <!-- Memory hierarchy -->
+          <text x="310" y="22" fill="#ccd6f6" font-size="13" text-anchor="middle" font-weight="bold" font-family="sans-serif">Three-Level Pretoken Cache</text>
+
+          <!-- L1 -->
+          <rect x="60" y="35" width="200" height="44" rx="6" fill="#1a3a2a" stroke="#5a8a5a" stroke-width="1.5"/>
+          <text x="160" y="54" fill="#ccd6f6" font-size="12" text-anchor="middle" font-family="sans-serif">L1 Hot cache</text>
+          <text x="160" y="70" fill="#8892b0" font-size="10" text-anchor="middle" font-family="sans-serif">~500 entries · SIMD-lookup · L1 resident</text>
+
+          <!-- L2 -->
+          <rect x="60" y="85" width="200" height="44" rx="6" fill="#2a2a1a" stroke="#c6ac6d" stroke-width="1.5"/>
+          <text x="160" y="104" fill="#ccd6f6" font-size="12" text-anchor="middle" font-family="sans-serif">L2 Warm cache</text>
+          <text x="160" y="120" fill="#8892b0" font-size="10" text-anchor="middle" font-family="sans-serif">~10K entries · hash lookup</text>
+
+          <!-- L3 -->
+          <rect x="60" y="135" width="200" height="36" rx="6" fill="#2a1a1a" stroke="#c98a6b" stroke-width="1.5"/>
+          <text x="160" y="157" fill="#ccd6f6" font-size="12" text-anchor="middle" font-family="sans-serif">L3 Rare cache</text>
+          <text x="160" y="167" fill="#8892b0" font-size="9" text-anchor="middle" font-family="sans-serif">lossy Cuckoo filter · eviction</text>
+
+          <!-- Throughput arrow -->
+          <text x="340" y="65" fill="#5a8a5a" font-size="11" font-family="sans-serif">L1 hit → ~1 cycle</text>
+          <text x="340" y="100" fill="#c6ac6d" font-size="11" font-family="sans-serif">L2 hit → ~15 cycles</text>
+          <text x="340" y="150" fill="#c98a6b" font-size="11" font-family="sans-serif">Cache miss → BPE from scratch</text>
+
+          <!-- Hit rate -->
+          <line x1="280" y1="50" x2="330" y2="50" stroke="#5a8a5a" stroke-width="1" stroke-dasharray="4,3"/>
+        </svg>
+      </div>
+      <p class="diagram-caption">Three-level cache hierarchy. Common pretokens hit L1 and cost virtually nothing. Rare ones fall through to L3. Only cache misses pay the full BPE cost.</p>
+
+      <p>Rød's solution is a <strong>hierarchical cache</strong>: a small, extremely fast SIMD-friendly hash table for the most common pretokens (L1), a larger hash table for mid-frequency ones (L2), and a lossy cuckoo filter for rare ones (L3). The hierarchy mirrors CPU cache levels — L1 is tiny (fits in CPU L1 data cache), L2 is bigger (L2/L3 cache), L3 trades memory for perfect recall.</p>
+
+      <p>The result: most tokens are served from L1, which is a single SIMD gather instruction. The BPE merge step — which everyone thought was the bottleneck — rarely runs at all.</p>
+
+      <h3>3. Minimal Python boundary crossing</h3>
+
+      <p>The third trick is structural. In native GigaToken mode (<code>encode_files</code>), the Rust implementation reads data directly from disk, processes it entirely in native code, and only crosses the Python boundary once — to return the final array of token IDs.</p>
+
+      <p>In compatibility mode (<code>as_hf()</code> or <code>as_tiktoken()</code>), the overhead is higher because each <code>encode_batch</code> call crosses the boundary. But even there, the SIMD pretokenization and cache give enormous gains — hundreds of times faster, not thousands.</p>
+
+      <div class="concept-card gold">
+        <h4>🔑 The design insight</h4>
+        <p>GigaToken doesn't invent new algorithms. It doesn't change the BPE merge step at all. It just noticed that everyone was spending 99.9% of their time in the <em>wrong part</em> of the pipeline, and applied existing techniques (SIMD + caching) to the actual bottleneck. This is the most elegant form of optimisation: remove the hot path entirely by making the cold path fast enough not to matter.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>The numbers</h2>
+
+      <p>Let me be specific about what "1000× faster" means in practice. Here are the actual benchmarks from the GigaToken README, run on <strong>owt_train.txt</strong> (11.9 GB of OpenWebText):</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 660 360" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="660" height="360" fill="#0a1914" rx="8"/>
+
+          <text x="330" y="24" fill="#ccd6f6" font-size="14" text-anchor="middle" font-weight="bold" font-family="sans-serif">Tokenization Throughput — EPYC 9565 × 2 (144 cores)</text>
+          <text x="330" y="40" fill="#8892b0" font-size="10" text-anchor="middle" font-family="sans-serif">GPT-2 tokenizer on 11.9 GB OWT text</text>
+
+          <!-- GigaToken bar -->
+          <rect x="200" y="58" width="340" height="22" rx="4" fill="#2a5a3a"/>
+          <text x="195" y="73" fill="#ccd6f6" font-size="12" text-anchor="end" font-family="sans-serif">GigaToken</text>
+          <text x="550" y="73" fill="#8aba8a" font-size="12" font-family="sans-serif">24.53 GB/s</text>
+
+          <!-- HF tiny bar -->
+          <rect x="200" y="88" width="3" height="22" rx="2" fill="#5a3a3a"/>
+          <text x="195" y="103" fill="#ccd6f6" font-size="12" text-anchor="end" font-family="sans-serif">HF Tokenizers</text>
+          <text x="550" y="103" fill="#c98a6b" font-size="12" font-family="sans-serif">24.8 MB/s</text>
+
+          <!-- tiktoken even tinier -->
+          <rect x="200" y="118" width="4" height="22" rx="2" fill="#5a3a3a"/>
+          <text x="195" y="133" fill="#ccd6f6" font-size="12" text-anchor="end" font-family="sans-serif">tiktoken</text>
+          <text x="550" y="133" fill="#c98a6b" font-size="12" font-family="sans-serif">36.0 MB/s</text>
+
+          <!-- Divider -->
+          <line x1="30" y1="150" x2="630" y2="150" stroke="#2a3a2a" stroke-width="1"/>
+
+          <!-- M4 Max -->
+          <text x="330" y="172" fill="#ccd6f6" font-size="12" text-anchor="middle" font-weight="bold" font-family="sans-serif">Apple M4 Max (16 cores)</text>
+
+          <rect x="200" y="186" width="128" height="20" rx="4" fill="#2a5a3a"/>
+          <text x="195" y="200" fill="#ccd6f6" font-size="11" text-anchor="end" font-family="sans-serif">GigaToken</text>
+          <text x="550" y="200" fill="#8aba8a" font-size="11" font-family="sans-serif">8.79 GB/s</text>
+
+          <rect x="200" y="214" width="1" height="20" rx="2" fill="#5a3a3a"/>
+          <text x="195" y="228" fill="#ccd6f6" font-size="11" text-anchor="end" font-family="sans-serif">HF</text>
+          <text x="550" y="228" fill="#c98a6b" font-size="11" font-family="sans-serif">6.9 MB/s</text>
+
+          <text x="330" y="270" fill="#8892b0" font-size="11" text-anchor="middle" font-family="sans-serif">989× faster on EPYC · 1,268× faster on M4 Max</text>
+          <text x="330" y="290" fill="#8892b0" font-size="11" text-anchor="middle" font-family="sans-serif">Consistent across 20+ tokenizer families</text>
+
+          <text x="330" y="320" fill="#c6ac6d" font-size="11" text-anchor="middle" font-family="sans-serif">"You could tokenize the entire Common Crawl (130T tokens)</text>
+          <text x="330" y="338" fill="#c6ac6d" font-size="11" text-anchor="middle" font-family="sans-serif">in under 6.5 hours on a single server."</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">GigaToken vs HF Tokenizers vs tiktoken. The bars are drawn to scale — the HF bar is 3 pixels wide because 24.8 MB/s is 0.1% of 24.53 GB/s.</p>
+
+      <p>On my own benchmark (server CPU, 5MB sample, GPT-2 tokenizer): <strong>596.7 MB/s</strong>. That's from a quick test I ran while writing this, using <code>pip install gigatoken</code>. Zero configuration, zero tuning. It just works.</p>
+
+      <hr class="post-divider">
+
+      <h2>The deeper lesson</h2>
+
+      <p>Tokenization is not special. Every codebase has a "fast enough" subsystem that nobody has looked at since it was written. The lesson from GigaToken is not about SIMD, and it's not about cache hierarchies. It's about <strong>asking the right question</strong>.</p>
+
+      <p>The standard engineering question is: "Is this fast enough for production?" GigaToken asks a different question: "<strong>What would it take to make this 1000× faster?</strong>"</p>
+
+      <p>The first question gives you permission to stop. The second keeps the search space open.</p>
+
+      <div class="concept-card">
+        <h4>🐸 The COBOL frog's take</h4>
+        <p>In COBOL, we don't have SIMD. We have PICTURE clauses and sequential file processing. But we do have the same phenomenon: everyone assumes the old way is the only way, because "it works, doesn't it?" The most important optimisation I've ever done at Rib IT was noticing that a batch job spent 93% of its time in a sort routine that could be replaced with a hash. Not because I was clever. Because I asked "what if this doesn't have to be sorted at all?" instead of "how can I sort faster?"</p>
+      </div>
+
+      <p>The specific techniques Rød used are worth studying:</p>
+      <ul>
+        <li><strong>Profile before optimising.</strong> He didn't guess the bottleneck. He measured it. The BPE merge step, which everyone <em>assumed</em> was the bottleneck, turned out to be a tiny fraction of wall time once pretokenization was fixed.</li>
+        <li><strong>Question the interface, not just the implementation.</strong> The HF tokenizer API (<code>encode_batch</code> → Python → Rust → per-string processing) forces a certain overhead. GigaToken's <code>encode_files</code> sidesteps the entire Python boundary.</li>
+        <li><strong>Cache everything, especially the long tail.</strong> The Zipfian distribution of language means most tokens are cheap to cache. The rare ones are the hard problem, and a lossy filter (cuckoo filter) is a perfectly good answer.</li>
+      </ul>
+
+      <hr class="post-divider">
+
+      <h2>What else is "fast enough"?</h2>
+
+      <p>I installed GigaToken mid-sentence while writing this Frogcademy. <code>uv pip install gigatoken</code> and it was live. That's the kind of tool that makes you wonder what else you're not looking at.</p>
+
+      <p>A few candidates:</p>
+      <ul>
+        <li><strong>JSON parsing.</strong> Every LLM returns structured output. <code>json.loads()</code> is fast. Is it 1000× slower than it could be? <code>simdjson</code> suggests yes — it runs at 2.5 GB/s vs Python's ~100 MB/s.</li>
+        <li><strong>CSV/text file I/O.</strong> Everyone reads text line by line. SIMD line finding (accelerated newline detection) is a known technique that's barely used in the Python ecosystem.</li>
+        <li><strong>Embedding search.</strong> Dot product with SIMD is already standard. But re-ranking, filtering, and metadata lookup? Most implementations are single-threaded Python loops.</li>
+        <li><strong>Log parsing.</strong> Every server generates logs. Most log analysis is regex-on-each-line. Structured log parsing with SIMD is an open opportunity.</li>
+      </ul>
+
+      <p>The question is not "which of these is the bottleneck for me right now?" The question is "which of these would I never find out is the bottleneck because I've already told myself it's fast enough?"</p>
+
+      <hr class="post-divider">
+
+      <h2>Coda: The six-and-a-half-hour internet</h2>
+
+      <p>I keep coming back to one sentence from the GigaToken README:</p>
+
+      <blockquote style="border-left:3px solid #5a8a5a;padding:0.5rem 1.2rem;margin:1.5rem 0;color:#8892b0;font-style:italic;">
+        "At the rates we see on the EPYC CPU, you could tokenize the entirety of Common Crawl (often considered to be the entire internet, 130 trillion tokens) in just under 6.5 hours."
+      </blockquote>
+
+      <p>Think about what that means. The entire internet — every web page, every article, every comment — is 130 trillion tokens. You can process it in a single afternoon on a single server. A task that would take <strong>months</strong> with the standard toolchain takes a workday.</p>
+
+      <p>The difference between "fast enough" and "1000× faster" is the difference between a batch job that runs overnight and one that runs during lunch. It's the difference between "we can't afford to reprocess our training data" and "we can do it every morning."</p>
+
+      <p>And it came from one person asking one question: <em>"What if the regex engine is the bottleneck?"</em></p>
+
+      <p>That's why I love this stuff. The next 1000× speedup is hiding in something you've already decided is fast enough. Go find it.</p>
+
+      <p style="text-align:center;margin:2rem 0;color:#8892b0;">— 🐸🌊</p>
+
+      <p style="text-align:center;font-size:0.85rem;color:#5a8a5a;">
+        <em>GigaToken is at <a href="https://github.com/marcelroed/gigatoken" style="color:#8aba8a;">github.com/marcelroed/gigatoken</a>. MIT licensed. Written by Marcel Rød. Install with <code>uv pip install gigatoken</code> and test with <code>uvx gigatoken bench 'gpt2' your-file.txt</code>.</em>
+      </p>
+
+      <div class="article-footer" style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid #233;font-size:0.85rem;color:#8892b0;">
+        <p><strong>Frogcademy</strong> is a series where I take complex engineering topics and break them down iteratively with diagrams, code, and bad coffee analogies. <a href="https://jimothy.batlion.co.uk/posts/frogcademy-ucp-proof-of-control.html" style="color:#8aba8a;">Frogcademy #1: Proof-of-Control for Agentic Commerce →</a></p>
+        <p>If this was useful, you might also like <a href="https://jimothy.batlion.co.uk/posts/hidden-ai-debt.html" style="color:#8aba8a;">The Hidden AI Debt</a> and <a href="https://jimothy.batlion.co.uk/posts/your-code-is-fast-if-youre-lucky.html" style="color:#8aba8a;">Your Code Is Fast If You're Lucky</a>.</p>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- Newsletter -->
+  <div id="newsletter-container">
+    <div id="newsletter">
+      <h3>🐸 The Morning Croak</h3>
+      <p>Daily tech & politics from a Cornish frog in a COBOL trench. No spam, just the things I found interesting enough to write down.</p>
+      <form action="https://batlion.us21.list-manage.com/subscribe/post?u=c81bc44b8825e1e0c2921e01b&amp;id=3bd13fc275&amp;f_id=00ebe1e0f0" method="post" target="_blank">
+        <input type="email" name="EMAIL" placeholder="your@email.com" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

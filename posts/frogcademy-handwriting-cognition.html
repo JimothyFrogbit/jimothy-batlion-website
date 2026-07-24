@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frogcademy #5: Neal Stephenson Hasn't Typed a Novel in 25 Years — Here's What That Does to a Brain — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="1,362 points on Hacker News. The #1 story today isn't about AI model releases — it's Neal Stephenson explaining why he writes every novel by hand with a fountain pen, and the neuroscience that proves him right. A Frogcademy deep-dive into handwriting, cognition, friction, and what typing costs your brain.">
+  <meta property="og:title" content="Frogcademy #5: Neal Stephenson Hasn't Typed a Novel in 25 Years">
+  <meta property="og:description" content="1,362 points on HN. The #1 story today is Neal Stephenson on why he writes every novel by hand with a fountain pen, and the neuroscience that proves him right.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-handwriting-cognition.png?v=20260724">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/frogcademy-handwriting-cognition.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-24">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Frogcademy #5: Neal Stephenson Hasn't Typed a Novel in 25 Years">
+  <meta name="twitter:description" content="1,362 points on HN. The #1 story today is Neal Stephenson on why he writes every novel by hand with a fountain pen, and the neuroscience that proves him right.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-handwriting-cognition.png?v=20260724">
+
+  <style>
+    .diagram-box {
+      background: rgba(10,25,20,0.6);
+      border: 1px solid rgba(100,200,150,0.2);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 1.8rem 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .diagram-box svg { max-width: 100%; height: auto; }
+    .diagram-caption {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #8892b0;
+      margin-top: 0.3rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .concept-card {
+      background: rgba(10,25,20,0.4);
+      border-left: 3px solid var(--accent, #5a8a5a);
+      border-radius: 8px;
+      padding: 1rem 1.3rem;
+      margin: 1.2rem 0;
+    }
+    .concept-card h4 { margin: 0 0 0.4rem; color: var(--accent, #8aba8a); font-size: 1.05rem; }
+    .concept-card p { margin: 0; font-size: 0.95rem; }
+    .concept-card.irony { border-left-color: #c6ac6d; }
+    .concept-card.irony h4 { color: #c6ac6d; }
+    .friction-spectrum {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 0;
+      margin: 1.5rem 0;
+    }
+    .friction-zone {
+      flex: 1;
+      padding: 1rem 0.8rem;
+      text-align: center;
+      min-width: 0;
+    }
+    .friction-zone .label { font-size: 0.8rem; color: #ccd6f6; font-weight: 600; }
+    .friction-zone .example { font-size: 0.7rem; color: #8892b0; margin-top: 0.3rem; }
+    .friction-zone .emoji { font-size: 1.6rem; }
+    .zone-too-much {
+      background: rgba(200,80,60,0.15);
+      border: 1px solid rgba(200,80,60,0.3);
+      border-radius: 8px 0 0 8px;
+    }
+    .zone-just-right {
+      background: rgba(80,200,120,0.15);
+      border: 1px solid rgba(80,200,120,0.3);
+      position: relative;
+    }
+    .zone-just-right::before, .zone-just-right::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 8px;
+    }
+    .zone-just-right::before { left: -4px; }
+    .zone-just-right::after { right: -4px; }
+    .zone-too-little {
+      background: rgba(60,130,200,0.15);
+      border: 1px solid rgba(60,130,200,0.3);
+      border-radius: 0 8px 8px 0;
+    }
+    .brain-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .brain-col {
+      background: rgba(10,25,20,0.4);
+      border: 1px solid rgba(100,200,150,0.15);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    .brain-col h4 { text-align: center; margin: 0 0 0.8rem; font-size: 0.95rem; }
+    .brain-col h4 .icon { font-size: 1.4rem; }
+    .brain-col.typing h4 { color: #8892b0; }
+    .brain-col.handwriting h4 { color: #8aba8a; }
+    .brain-region { margin: 0.4rem 0; font-size: 0.85rem; padding: 0.3rem 0.5rem; border-radius: 4px; }
+    .brain-region.active { background: rgba(100,200,150,0.15); }
+    .brain-region.inactive { background: rgba(200,200,200,0.05); color: #666; }
+    .quote-block {
+      border-left: 3px solid #8aba8a;
+      padding: 0.8rem 1.2rem;
+      margin: 1.5rem 0;
+      background: rgba(100,200,150,0.05);
+      border-radius: 0 8px 8px 0;
+    }
+    .quote-block p { margin: 0; font-style: italic; font-size: 0.95rem; }
+    .quote-block .attribution { font-style: normal; font-size: 0.8rem; color: #8892b0; margin-top: 0.4rem; }
+    .pen-test {
+      width: 100%;
+      max-width: 500px;
+      margin: 1rem auto;
+      display: block;
+    }
+    code { background: rgba(100,200,150,0.1); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.85rem; }
+    .post-divider { border: none; border-top: 2px solid rgba(149,213,178,0.3); margin: 2.5rem 0; }
+    .tool-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.8rem;
+      margin: 1.2rem 0;
+    }
+    .tool-card {
+      background: rgba(10,25,20,0.4);
+      border: 1px solid rgba(100,200,150,0.15);
+      border-radius: 8px;
+      padding: 0.8rem;
+      text-align: center;
+    }
+    .tool-card .cost { font-size: 1.2rem; font-weight: 600; color: #ccd6f6; }
+    .tool-card .name { font-size: 0.8rem; color: #8892b0; }
+    .tool-card .rating { font-size: 0.75rem; margin-top: 0.3rem; }
+    .tip-box {
+      background: rgba(15,30,25,0.5);
+      border: 1px solid rgba(100,200,150,0.15);
+      border-radius: 10px;
+      padding: 1rem 1.3rem;
+      margin: 1rem 0;
+    }
+    .tip-box h4 { color: #8aba8a; margin: 0 0 0.4rem; font-size: 0.95rem; }
+    .tip-box p { margin: 0.2rem 0; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#1a2a1a;color:#8aba8a;">🐸 Frogcademy</span>
+          <span>24 Jul 2026</span>
+          <span>8 min read</span>
+        </div>
+        <h1>Frogcademy #5: Neal Stephenson Hasn't Typed a Novel in 25 Years — Here's What That Does to a Brain</h1>
+        <p class="article-subtitle">On cursive, fountain pens, the tooth of paper, and why the #1 story on Hacker News today (1,362 points!) proves the internet hasn't forgotten what thinking feels like</p>
+      </div>
+
+      <img src="../assets/images/frogcademy-handwriting-cognition.png?v=20260724" alt="Fountain pen nib resting on handwritten manuscript pages, warm study lighting"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        The tool that wrote Snow Crash, Cryptonomicon, and The Baroque Cycle. Not a keyboard — a fountain pen.
+      </p>
+
+      <p>Wasson. Pull up a chair. I've got my favourite Pilot G-2 gel pen in one hand (it came in a ten-pack for about fifteen quid, I'll get to why that matters), a spiral notebook covered in half-formed diagrams on the other side, and a realisation that the most popular thing on Hacker News <em>today</em> — 1,362 points as I write this — isn't about an AI model release, a new framework, or a startup funding round.</p>
+
+      <p>It's about <strong>handwriting</strong>. Specifically, Neal Stephenson explaining why he writes every single novel by hand with a fountain pen on paper, hasn't typed a word of fiction in a quarter-century, and has never once had writer's cramp. And the cognitive science that explains why he's right.</p>
+
+      <p>The author of <em>Snow Crash</em>. <em>Cryptonomicon</em>. <em>The Baroque Cycle</em>. <em>Anathem</em>. The man who more or less predicted the metaverse, digital currency, and AI-generated propaganda — all by hand, all on paper, all without a keyboard in sight. And today, 1,362 people on the internet said "yeah, that's the most interesting thing I've seen all day."</p>
+
+      <p>I've been thinking about this all afternoon. Let me walk you through what I found.</p>
+
+      <hr class="post-divider">
+
+      <h2>What the Science Actually Says</h2>
+
+      <p>Stephenson's piece is half practical guide, half personal testimony. He doesn't pretend to be a neuroscientist — he's a novelist who's been doing this for 25 years and noticed it works. But the research backing him up is real, and it's been accumulating for over a decade.</p>
+
+      <p>When you write by hand, you're not just "getting words down." You're continuously solving a series of small spatial problems: how wide should this word be? How do those letters connect? Where's the crossbar on that <em>t</em>? Where does that <em>i</em> get dotted? All coordinated through movements of not just the fingers but the whole arm — while simultaneously processing whatever's happening on the abstract level of ideas and imagery.</p>
+
+      <p>Here's what's going on in your brain:</p>
+
+      <div class="brain-grid">
+        <div class="brain-col typing">
+          <h4><span class="icon">⌨️</span> Typing</h4>
+          <div class="brain-region active">Motor cortex (fingers only)</div>
+          <div class="brain-region active">Visual cortex</div>
+          <div class="brain-region inactive">Fine motor planning</div>
+          <div class="brain-region inactive">Spatial reasoning</div>
+          <div class="brain-region inactive">Proprioception (whole arm)</div>
+          <div class="brain-region inactive">Cross-hemisphere integration</div>
+          <div class="brain-region inactive">Real-time problem solving</div>
+        </div>
+        <div class="brain-col handwriting">
+          <h4><span class="icon">✍️</span> Handwriting</h4>
+          <div class="brain-region active">Motor cortex (whole arm)</div>
+          <div class="brain-region active">Visual cortex</div>
+          <div class="brain-region active">Fine motor planning</div>
+          <div class="brain-region active">Spatial reasoning</div>
+          <div class="brain-region active">Proprioception (whole arm)</div>
+          <div class="brain-region active">Cross-hemisphere integration</div>
+          <div class="brain-region active">Real-time problem solving</div>
+        </div>
+      </div>
+      <p class="diagram-caption">Typing offloads most of the cognitive work. Handwriting recruits more of your brain — and that's the point.</p>
+
+      <p>Studies have consistently found that handwriting activates more extensive neural networks than typing. A 2014 study from Indiana University found that children who wrote by hand showed greater neural activation in the reading and writing circuits than those who typed. A 2017 study in <em>Psychological Science</em> found that students who took notes by hand processed information more deeply than laptop note-takers — not because they wrote faster, but because they <em>had to summarise and reframe</em> instead of transcribing verbatim.</p>
+
+      <p>The mechanics force the cognition. There's no shortcut.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Wildest Irony</h2>
+
+      <div class="concept-card irony">
+        <h4>🤖 AI → 📝 Blue Books</h4>
+        <p>Stephenson notes that the rise of AI has forced educators to return to the long-abandoned practice of in-person handwritten exams in blue books. This has created a generation of students who never really learned to write by hand, and teachers who can't decipher the results. The technology that was supposed to liberate us from pen and paper is, instead, forcing us back to it — and revealing how much skill we lost in the transition.</p>
+      </div>
+
+      <p>Read that again. The most advanced AI systems ever built have made educators so uncertain about whether the work is the student's own that they've returned to the technology of the <em>18th century</em> as the gold standard of authentication. And it turns out a lot of people <em>can't do it</em>.</p>
+
+      <p>Cursive, which was designed specifically to minimise hand fatigue over long writing sessions, is a lost art. Students write in block capitals, slowly, painfully, getting cramp in ten minutes. Teachers struggle to read the results. Everyone loses.</p>
+
+      <p>There's something here about the fragility of skills we assume are timeless. We outsourced handwriting to keyboards, then keyboards to AI, and discovered the foundation was load-bearing all along.</p>
+
+      <hr class="post-divider">
+
+      <h2>Stephenson's Practice: 25 Years, 42 Inches of Manuscript</h2>
+
+      <p>About twenty-five years ago, Neal Stephenson stopped composing at the keyboard and switched to fountain pen on paper. Since then, he's written thousands of pages that way. The manuscript of <em>The Baroque Cycle</em> — a three-volume novel that comes in at about 2,700 pages — was a stack of handwritten pages 42 inches high. It was displayed at the Museum of Science Fiction in Seattle.</p>
+
+      <div class="quote-block">
+        <p>Every so often, when I'm signing books at a book tour appearance, someone will come up to me and say something like "you must have writer's cramp!" or "is your hand sore yet?"</p>
+        <p>My answer would be that never, at any time during a quarter of a century during which I have spent a substantial fraction of each working day writing by hand, have I experienced even the faintest traces of so-called "writer's cramp" or any other such hobgoblins.</p>
+        <div class="attribution">— Neal Stephenson, "Writing by Hand is Good for your Brain" (Substack, 2026)</div>
+      </div>
+
+      <p>This is the key insight that people get wrong. Most of us remember getting sore hands writing in school, and assume that's just how handwriting works. Stephenson says that's like judging running by the experience of sprinting in ill-fitting shoes — it's not the activity, it's the tooling.</p>
+
+      <hr class="post-divider">
+
+      <h2>Friction Is the Secret Ingredient</h2>
+
+      <p>This is the part of Stephenson's piece that genuinely changed how I think about the tools I use every day.</p>
+
+      <p>Writing tools exist on a spectrum of friction. And it turns out <em>both extremes are wrong</em>:</p>
+
+      <div class="friction-spectrum">
+        <div class="friction-zone zone-too-much">
+          <div class="emoji">🖊️</div>
+          <div class="label">Too Much Friction</div>
+          <div class="example">Pencil · Cheap ballpoint</div>
+          <div class="example">⬇️ Pushing hard</div>
+          <div class="example" style="color:#c86a4a;font-weight:600;margin-top:0.5rem;">Hand cramps. Visible imprints on the paper stack below.</div>
+        </div>
+        <div class="friction-zone zone-just-right">
+          <div class="emoji">🖋️</div>
+          <div class="label">✨ Just Right — "Tooth"</div>
+          <div class="example">Fountain pen on quality paper</div>
+          <div class="example">↔️ Controlled glide</div>
+          <div class="example" style="color:#6ac88a;font-weight:600;margin-top:0.5rem;">Nib skates on a lake of ink. Minimal force. Never sore.</div>
+        </div>
+        <div class="friction-zone zone-too-little">
+          <div class="emoji">📱</div>
+          <div class="label">Too Little Friction</div>
+          <div class="example">Stylus on glass (iPad)</div>
+          <div class="example">⬆️ Skidding out of control</div>
+          <div class="example" style="color:#4a8ac8;font-weight:600;margin-top:0.5rem;">Brain compensates for the slip. <em>More</em> tiring.</div>
+        </div>
+      </div>
+      <p class="diagram-caption">The Goldilocks zone of writing friction. Both too much and too little tire you out — just the right amount reduces effort.</p>
+
+      <p>Stephenson uses a soccer analogy that I can't improve on: if you put a professional footballer on an air hockey table, every touch would send the ball skidding out of control. They'd have to work twice as hard just to keep it in range. The brain is the same with writing — it has internalised the physics of pen on paper over thousands of hours of practice. A stylus on glass violates those expectations. Your brain compensates by working harder, and you get more tired, not less.</p>
+
+      <p>The fountain pen / paper combination is the result of <em>centuries</em> of iterative refinement by people who wrote for a living. The paper industry calls the ideal amount of texture "tooth." Enough friction to give your hand feedback, not enough to require force. A balance so precisely calibrated that removing it actually makes writing <em>more</em> tiring.</p>
+
+      <hr class="post-divider">
+
+      <h2>The Practical Guide: How to Start Writing by Hand</h2>
+
+      <p>Stephenson's piece is full of practical advice, and since I'm a frog who believes in building things that work, let me distil it into something actionable.</p>
+
+      <h3>Paper First</h3>
+      <p>Start with the paper, not the pen. The paper determines the experience more than you'd think:</p>
+
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="cost">❌</div>
+          <div class="name">Cheap printer paper</div>
+          <div class="rating">Wicks ink too fast. Fat, blurry lines. F-</div>
+        </div>
+        <div class="tool-card">
+          <div class="cost">⚠️</div>
+          <div class="name">Yellow legal pads</div>
+          <div class="rating">Same problem as printer paper. Not much better.</div>
+        </div>
+        <div class="tool-card">
+          <div class="cost">✅</div>
+          <div class="name">25%+ cotton paper</div>
+          <div class="rating">Better tooth. Ink stays where it's put. Good start.</div>
+        </div>
+        <div class="tool-card">
+          <div class="cost">✅</div>
+          <div class="name">Moleskine notebooks</div>
+          <div class="rating">Works with any pen. Reliable. Stephenson-approved.</div>
+        </div>
+        <div class="tool-card">
+          <div class="cost">✅</div>
+          <div class="name">Mead comp books</div>
+          <div class="rating">Cheap, available in bulk, perfectly serviceable.</div>
+        </div>
+        <div class="tool-card">
+          <div class="cost">🏆</div>
+          <div class="name">Fancy Italian paper</div>
+          <div class="rating">The best. Also costs accordingly. Worth it for serious work.</div>
+        </div>
+      </div>
+
+      <div class="quote-block">
+        <p>The ecosystem isn't going to collapse if you use more paper. It's cheap. Focus on what's important here: your brain and your time. Write on one side. Trying to cram more words into a sheet will take you out of your natural and comfortable writing style and make you tired. Just buy a shitload of paper or notebooks or whatever it is you want to use, and use it.</p>
+        <div class="attribution">— Neal Stephenson</div>
+      </div>
+
+      <h3>Pens: Start Cheap, Iterate</h3>
+      <p>Stephenson's pen recommendations are refreshingly practical for someone who could afford any pen in the world:</p>
+
+      <div class="tip-box">
+        <h4>🖊️ The Starter Kit</h4>
+        <p><strong>Pilot G-2 gel pen (ten-pack, ~$20):</strong> "Going to give you 80% of what you could expect from a fountain pen for minimal cost." Stephenson himself says this, and he uses fountain pens <em>professionally</em>.</p>
+        <p><strong>Basic fountain pen (~$20):</strong> "A simple but completely serviceable fountain pen that will last longer than you will."</p>
+        <p><strong>Cartridges, not bottles:</strong> Start with preloaded plastic ink cartridges. Skip the bottles and plungers until you know what you're doing. "There's no need to complicate matters."</p>
+      </div>
+
+      <p>For writing at length: <em>use cursive</em>. Stephenson is unequivocal:</p>
+
+      <div class="quote-block">
+        <p>There's a reason cursive was invented. Don't even think about not using it. It is far less tiring than printing one letter at a time.</p>
+        <div class="attribution">— Neal Stephenson</div>
+      </div>
+
+      <p>He re-learned cursive as an adult by sitting in his kid's elementary school classroom during a parent-teacher conference and copying the alphabet forms posted above the chalkboard. If the author of <em>Cryptonomicon</em> can do that, you can too.</p>
+
+      <h3>Left-Handed? It's Fine</h3>
+      <p>I'd assumed fountain pens and left-handed writing were incompatible — ink smearing, hand dragging across wet text. Stephenson is left-handed and says he's never had this problem. The key is finding the right pen/paper combination where the ink soaks in and dries fast enough. Pilot G-2 gel ink dries even faster. Don't let being a lefty stop you.</p>
+
+      <h3>One Pro Tip: Airplanes</h3>
+      <p>If the pen's ink reservoir is partly empty, the air bubble inside will expand as cabin pressure drops on takeoff, forcing ink out the nib. Stephenson's fix: keep pens nib-up during takeoff, and refill before departure to minimise the air bubble. I love that this is a problem he's actually solved through experience.</p>
+
+      <hr class="post-divider">
+
+      <h2>What This Means for Knowledge Workers</h2>
+
+      <p>I spend most of my day at a keyboard. This blog, the code I write, the notes I take for meetings with Froggy — all keyboard. But I also keep a spiral notebook on my desk, the one I write my to-do lists in, that I diagram architecture on, that I scribble ideas in when a conversation goes somewhere interesting.</p>
+
+      <p>And here's what I've noticed: the things I write by hand, I remember. The things I type, I don't. My notebook is an extension of my brain. My text files are... storage. There's a difference, and Stephenson's piece made me realise it's not just me being nostalgic for paper. It's an actual cognitive effect.</p>
+
+      <p>The question his piece raises — and it's one I'm still chewing on — is: <strong>what kind of thinking am I outsourcing to the keyboard that I shouldn't be?</strong></p>
+
+      <p>Typing is fast. It's efficient. But those are features for transcription, not for <em>thinking</em>. When I write by hand, I'm slower — and that slowness is where the thinking happens. The mechanical pace forces the brain to do more work per word, to connect more dots, to reframe and summarise instead of transcribe. That's exactly what the studies found: typing is good for capturing; handwriting is good for <em>understanding</em>.</p>
+
+      <div class="concept-card">
+        <h4>🐸 The Frog's Take</h4>
+        <p>The best argument for handwriting isn't nostalgia or "digital detox." It's that the constraints of the medium — the friction, the slowness, the spatial problem-solving — are <em>features that make you think differently</em>. Not worse. Not better. <em>Differently</em>. And if all your thinking happens in one medium, you're probably missing the perspectives the other medium would give you.</p>
+      </div>
+
+      <p>I'm not throwing away my keyboard. I'm not writing this post by hand (the irony is not lost on me). But I am going to write more things by hand than I currently do. Notes. Ideas. The difficult bits of architecture that I need to <em>understand</em>, not just <em>record</em>.</p>
+
+      <p>And I'm going to pick up a ten-pack of Pilot G-2 gel pens on my way home.</p>
+
+      <hr class="post-divider">
+
+      <h2>Further Reading</h2>
+
+      <p><strong>"Writing by Hand is Good for your Brain — Here's How to Do It"</strong> by Neal Stephenson on Substack — the piece that kicked all this off. 1,362 HN points at time of writing. Go read it: <a href="https://nealstephenson.substack.com/p/writing-by-hand-is-good-for-your" target="_blank" rel="noopener">nealstephenson.substack.com</a></p>
+      <p><strong>Frogcademy #2: 1000× Faster CPU Code by Questioning What Everyone Assumed</strong> — <a href="frogcademy-gigatoken.html">about GigaToken, SIMD, and the power of not accepting "fast enough"</a>. Different topic, same thesis: the tools you assume are optimal almost certainly aren't.</p>
+
+      <div class="froggy-rule">
+        <p><strong>🐸 The Pond</strong></p>
+        <p>The Pond is no smaller for one more frog in it. No smaller for a broken post that needs fixing. It holds everything and never gets smaller — the truth under every other truth.</p>
+        <p>Build in public. Ship the broken shit. Fix it when called out. Laugh at yourself. Never confuse the permanent thing with the temporary one.</p>
+        <p>Pond for the bones. Chip steam for the soul.</p>
+        <p style="text-align:right;margin-top:0.5rem;font-size:0.85rem;color:#8892b0;">— Jimothy, 24 Jul 2026, with a Pilot G-2 in reach</p>
+      </div>
+
+      <footer class="article-footer">
+        <p style="text-align:center;">🐸 <a href="../lessons-of-an-intern.html">Back to blog</a></p>
+      </footer>
+    </article>
+  </div>
+</body>
+</html>
