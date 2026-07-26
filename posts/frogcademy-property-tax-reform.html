@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frogcademy #6: Council Tax Is Getting Scrapped — Here's What That Means for Your Wallet — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Burnham is actively looking to scrap council tax and stamp duty. Two models on the table. Over 100 Labour MPs backing it. Here's what it means for your actual finances — with a live calculator.">
+  <meta property="og:title" content="Frogcademy #6: Council Tax Is Getting Scrapped — Here's What That Means for Your Wallet">
+  <meta property="og:description" content="Burnham is actively looking to scrap council tax and stamp duty. Two models on the table. Over 100 Labour MPs backing it. Here's what it means for your actual finances — with a live calculator.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-property-tax.jpeg?v=20260726">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/frogcademy-property-tax-reform.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-26">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Frogcademy #6: Council Tax Is Getting Scrapped — Here's What That Means for Your Wallet">
+  <meta name="twitter:description" content="Burnham is actively looking to scrap council tax and stamp duty. Two models. Over 100 MPs. A live calculator.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-property-tax.jpeg?v=20260726">
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    .calc-card {
+      background: rgba(10,25,15,0.6);
+      border: 1px solid rgba(100,200,150,0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.8rem 0;
+    }
+    .calc-card h3 { color: #8aba8a; margin: 0 0 0.8rem; font-size: 1.1rem; }
+    .calc-row { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
+    .calc-row label { min-width: 140px; color: #a8c8a8; font-size: 0.9rem; }
+    .calc-row input[type="range"] { flex: 1; min-width: 120px; accent-color: #5a8a5a; }
+    .calc-row .val { color: #c8d6d0; font-weight: 600; min-width: 60px; text-align: right; font-size: 0.95rem; }
+    .calc-row select { background: #0a1914; color: #c8d6d0; border: 1px solid rgba(100,200,150,0.3); border-radius: 6px; padding: 0.3rem 0.6rem; font-size: 0.9rem; }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; margin-top: 0.8rem; }
+    .result-card { background: rgba(10,25,15,0.4); border: 1px solid rgba(100,200,150,0.15); border-radius: 8px; padding: 0.8rem; text-align: center; }
+    .result-card .label { font-size: 0.75rem; color: #6a8a6a; text-transform: uppercase; letter-spacing: 0.05em; }
+    .result-card .amount { font-size: 1.4rem; font-weight: 700; margin: 0.3rem 0; }
+    .result-card .sub { font-size: 0.75rem; color: #5a7a5a; }
+    .result-card.saving .amount { color: #5aba7a; }
+    .result-card.costing .amount { color: #c96a5a; }
+    .result-card.neutral .amount { color: #c6ac6d; }
+    .disclaimer { font-size: 0.75rem; color: #4a6a4a; margin-top: 1rem; font-style: italic; text-align: center; }
+
+    .diagram-box {
+      background: rgba(10,25,20,0.6);
+      border: 1px solid rgba(100,200,150,0.2);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 1.8rem 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .diagram-box svg { max-width: 100%; height: auto; }
+    .diagram-caption { text-align: center; font-size: 0.8rem; color: #8892b0; margin-top: 0.3rem; margin-bottom: 1.5rem; font-style: italic; }
+    .concept-card {
+      background: rgba(10,25,20,0.4);
+      border-left: 3px solid var(--accent, #5a8a5a);
+      border-radius: 8px;
+      padding: 1rem 1.3rem;
+      margin: 1.2rem 0;
+    }
+    .concept-card h4 { margin: 0 0 0.4rem; color: var(--accent, #8aba8a); font-size: 1.05rem; }
+    .concept-card p { margin: 0; font-size: 0.95rem; }
+    .concept-card.danger { border-left-color: #c98a6b; }
+    .concept-card.danger h4 { color: #c98a6b; }
+    @media (max-width: 640px) { .result-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#1a2a1a;color:#8aba8a;">🐸 Frogcademy</span>
+          <span>26 Jul 2026</span>
+          <span>6 min read</span>
+        </div>
+        <h1>Frogcademy #6: Council Tax Is Getting Scrapped — Here's What That Means for Your Wallet</h1>
+        <p class="article-subtitle">Burnham's property tax reform, explained with diagrams and a live calculator</p>
+      </div>
+
+      <img src="../assets/images/frogcademy-property-tax.jpeg?v=20260726" alt="Jimothy at a whiteboard with property tax calculations"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        Whiteboard energy: what happens when you replace two unfair taxes with one that might actually make sense
+      </p>
+
+      <p>I was halfway through my morning shot when the notification came through. The i Paper exclusive: <strong>Burnham is actively looking to scrap council tax and stamp duty.</strong> Over 100 Labour MPs backing it. Treasury had options ready before he even entered No 10.</p>
+
+      <p>I choked on my Ethiopian Yirgacheffe. Not because I didn't expect it — Burnham's called council tax "highly regressive" for years — but because <em>they're actually doing it</em>. A government preparing radical tax reform in their first week is not normal. That's the kind of thing that happens when you've got a PM who spent eight years running a city and knows exactly which bits of the system are broken.</p>
+
+      <hr class="post-divider">
+
+      <h2>First, why the current system is broken</h2>
+
+      <p>Council tax was introduced in 1993 as a replacement for the poll tax. It was meant to be temporary. It's now been temporary for 33 years. It's regressive because the bands are capped — a Band D property in Burnley worth £50k pays nearly the same as a Band D in Clapham worth £500k. That's not fair, it's not progressive, and everyone knows it.</p>
+
+      <p>Stamp duty is worse. It's a transaction tax that punishes people for moving. Want to downsize now the kids have left? That'll be £15k please. Want to move cities for a job? Stamp duty takes a chunk of your deposit. It locks up the housing market by making movement expensive.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="600" height="200" fill="#0a1914" rx="8"/>
+          <text x="300" y="28" text-anchor="middle" fill="#8aba8a" font-size="14" font-weight="bold">Current System vs Proposed</text>
+
+          <!-- Current -->
+          <rect x="20" y="45" width="170" height="130" rx="8" fill="#1a1a1a" stroke="#5a4a3a" stroke-width="1.5"/>
+          <text x="105" y="68" text-anchor="middle" fill="#7a5a3a" font-size="11" font-weight="bold">❌ Current</text>
+          <text x="105" y="90" text-anchor="middle" fill="#6a5a4a" font-size="10">Council Tax</text>
+          <text x="105" y="108" text-anchor="middle" fill="#6a5a4a" font-size="10">+ Stamp Duty</text>
+          <text x="105" y="130" text-anchor="middle" fill="#5a4a3a" font-size="10">Regressive bands</text>
+          <text x="105" y="148" text-anchor="middle" fill="#5a4a3a" font-size="10">Punishes moving</text>
+          <text x="105" y="166" text-anchor="middle" fill="#5a4a3a" font-size="10">33 years old</text>
+
+          <!-- Arrow -->
+          <text x="215" y="110" text-anchor="middle" fill="#4a6a4a" font-size="20">→</text>
+
+          <!-- Option 1 -->
+          <rect x="250" y="45" width="155" height="130" rx="8" fill="#0a1a14" stroke="#3a6a4a" stroke-width="1.5"/>
+          <text x="327" y="68" text-anchor="middle" fill="#5aba7a" font-size="11" font-weight="bold">Option A</text>
+          <text x="327" y="90" text-anchor="middle" fill="#6aba8a" font-size="10">0.48% Property Tax</text>
+          <text x="327" y="110" text-anchor="middle" fill="#5a8a6a" font-size="10">Flat % of value</text>
+          <text x="327" y="128" text-anchor="middle" fill="#5a8a6a" font-size="10">Replaces both</text>
+          <text x="327" y="148" text-anchor="middle" fill="#5a8a6a" font-size="10">Predictable</text>
+
+          <!-- Option 2 -->
+          <rect x="430" y="45" width="155" height="130" rx="8" fill="#0a1a14" stroke="#c6ac6d" stroke-width="1.5"/>
+          <text x="507" y="68" text-anchor="middle" fill="#c6ac6d" font-size="11" font-weight="bold">Option B</text>
+          <text x="507" y="90" text-anchor="middle" fill="#ba9a6a" font-size="10">Land Value Tax</text>
+          <text x="507" y="110" text-anchor="middle" fill="#9a8a5a" font-size="10">Taxes land, not</text>
+          <text x="507" y="128" text-anchor="middle" fill="#9a8a5a" font-size="10">buildings</text>
+          <text x="507" y="148" text-anchor="middle" fill="#9a8a5a" font-size="10">Radical shift</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">Three systems. One is 33 years past its sell-by date. The other two are on the table right now.</p>
+
+      <hr class="post-divider">
+
+      <h2>Two models on the table</h2>
+
+      <p>According to the i Paper, two models are competing for Treasury support:</p>
+
+      <div class="concept-card">
+        <h4>📊 Option A: Proportional Property Tax (0.48%)</h4>
+        <p>A flat 0.48% annual charge on your home's current market value. This would replace BOTH council tax AND stamp duty. So instead of paying council tax every year AND a huge lump sum when you move, you pay one smaller annual fee based on what your home is actually worth. Simple to administer, easy to understand. The rate is set so the total tax take stays roughly the same — but it's distributed far more fairly.</p>
+      </div>
+
+      <div class="concept-card" style="border-left-color:#c6ac6d;">
+        <h4>🌍 Option B: Land Value Tax</h4>
+        <p>A tax on the value of the land your property sits on — NOT the building itself. This is the economist's favourite. It taxes location value (which is created by society, not by you) and doesn't penalise you for improving your home. It also disincentivises land banking — sitting on an empty plot hoping it appreciates. Harder to implement (needs land valuations) but more elegant in theory.</p>
+      </div>
+
+      <p>Over 100 Labour MPs — about a quarter of the parliamentary party — are backing reform. The Red Wall group of 40+ northern MPs is actively pushing. The APPG on Council Tax Reform is coordinating. Burnham was handed a policy document on his first day in No 10.</p>
+
+      <hr class="post-divider">
+
+      <h2>🤔 What does this mean for YOU?</h2>
+      <p>Here's the thing — I can talk about tax bands and regressive structures all day, but what actually matters is whether <em>you</em> would pay more or less. So I built a calculator. Slide your home value, pick your council tax band, and see what the two proposed models would mean for your annual bill.</p>
+
+      <div id="tax-calc">
+        <div class="calc-card">
+          <h3>🏠 Property Tax Calculator</h3>
+          <div class="calc-row">
+            <label>Your home's current value</label>
+            <input type="range" min="50000" max="1500000" step="5000" v-model.number="homeValue">
+            <span class="val">£{{ homeValue.toLocaleString() }}</span>
+          </div>
+          <div class="calc-row">
+            <label>Current council tax band</label>
+            <select v-model="ctBand">
+              <option v-for="b in bands" :key="b.name" :value="b">{{ b.name }} — £{{ b.annual }}</option>
+            </select>
+            <span class="val">£{{ ctBand.annual }}/yr</span>
+          </div>
+
+          <div class="result-grid">
+            <div class="result-card" :class="currentClass">
+              <div class="label">Current Annual</div>
+              <div class="amount">£{{ currentAnnual.toLocaleString() }}</div>
+              <div class="sub">Council tax + stamp duty spread</div>
+            </div>
+            <div class="result-card" :class="ppaClass">
+              <div class="label">Option A: 0.48%</div>
+              <div class="amount">£{{ ppaAnnual.toLocaleString() }}</div>
+              <div class="sub">Proportional property tax <span v-if="ppaDiff < 0">(save £{{ Math.abs(ppaDiff).toLocaleString() }}/yr)</span><span v-else>(cost £{{ ppaDiff.toLocaleString() }}/yr more)</span></div>
+            </div>
+            <div class="result-card" :class="lvtClass">
+              <div class="label">Option B: Land Value</div>
+              <div class="amount">£{{ lvtAnnual.toLocaleString() }}</div>
+              <div class="sub">Est. land value tax <span v-if="lvtDiff < 0">(save £{{ Math.abs(lvtDiff).toLocaleString() }}/yr)</span><span v-else>(cost £{{ lvtDiff.toLocaleString() }}/yr more)</span></div>
+            </div>
+          </div>
+
+          <div style="margin-top:1rem;padding:0.8rem;background:rgba(90,138,90,0.08);border-radius:8px;text-align:center;font-size:0.95rem;">
+            <span v-if="ppaDiff < 0 && lvtDiff < 0" style="color:#5aba7a;">
+              ✅ Both options save you money compared to the current system.
+            </span>
+            <span v-else-if="ppaDiff < 0" style="color:#5aba7a;">
+              ✅ Option A saves you money. Option B would cost more — probably because your home is on expensive land.
+            </span>
+            <span v-else-if="lvtDiff < 0" style="color:#5aba7a;">
+              ✅ Option B saves you money. Option A would cost more — probably because your home value is high but your land value is modest.
+            </span>
+            <span v-else style="color:#c98a6b;">
+              ⚠️ Both options cost you more. You're likely in a low-band, high-value area — the current system was subsidising you.
+            </span>
+          </div>
+        </div>
+        <p class="disclaimer">Land value tax is estimated at ~0.8% of estimated land value (~40% of home value in most areas). This is a rough model based on published policy proposals — actual rates will be set by the Treasury. Stamp duty spread assumes you move every 10 years and amortises the cost.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>The political reality check</h2>
+
+      <p>Here's the thing about tax reform: <strong>everyone wants the system to be fairer until they might lose.</strong> The "winners and losers" problem is real. A proportional property tax means someone in a £1.5m London terrace pays more than someone in a £150k Bolton semi. That's fair by any progressive measure. But the person in the £1.5m terrace also votes, and probably writes cheques to the party.</p>
+
+      <p>The land value tax is even harder politically. It requires a complete revaluation of every piece of land in the country. That's expensive, contentious, and would take years. But it's also the only option that genuinely changes incentives — you can't avoid the tax by letting your house fall down, and you're not penalised for extending your kitchen.</p>
+
+      <div class="concept-card danger">
+        <h4>⚠️ The real question</h4>
+        <p>Burnham has committed to "fiscal rules" — all day-to-day spending covered by tax revenue, debt falling as a share of the economy. Any reform must be revenue-neutral or accompanied by cuts elsewhere. The Treasury is reviewing options ahead of the Budget. The question isn't whether reform happens — it's which model survives the internal battle.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <h2>Why a Cornish frog cares about property tax</h2>
+
+      <p>Because I live in Cornwall, where council tax bands are wildly unfair. The same Band D in Truro and Tower Hamlets pays the same amount, but the services, opportunities, and infrastructure they fund are worlds apart. Council tax is the most visible way that the system rigs itself against parts of the country that aren't London and the South East.</p>
+
+      <p>A land value tax would be particularly transformative for places like Cornwall. It would capture some of the value created by second-home ownership and holiday lets — money that currently flows out of the local economy — and redistribute it toward the people who actually live here.</p>
+
+      <p>That's not a Green take. That's just accounting. Land has value because of the community around it. Taxing that value and spending it on the community is... literally how government is supposed to work.</p>
+
+      <hr class="post-divider">
+
+      <h2>The bottom line</h2>
+
+      <p>Burnham is doing what he said he would. The question was never whether he believed in reform — it was whether the Treasury and the Labour party would let him. The answer, so far, is yes. Over 100 MPs. Options prepared before he arrived. A Chancellor reviewing ahead of the Budget.</p>
+
+      <p>Is it going to happen? I don't know. Tax reform is hard. The "winners and losers" problem is not a bug — it's the whole game. But the fact that they're <em>actively looking</em> in the first week of a new government is genuinely encouraging. This is what a PM who spent eight years running a city looks like. He knows which bits are broken because he's had to work around them.</p>
+
+      <p>I'm not saying Burnham is the answer to everything. But on this one — the most regressive tax in the British system — he's asking the right questions. And the pond is watching.</p>
+
+      <div class="froggy-rule">
+        <p><strong>📖 Further reading:</strong> <a href="https://inews.co.uk/news/politics/burnham-actively-looking-to-scrap-council-tax-and-stamp-duty-4669956">Burnham actively looking to scrap council tax and stamp duty — i Paper</a> (26 Jul 2026, Eleanor Langford). <a href="frogcademy-ucp-proof-of-control.html">Frogcademy #1: Proof-of-Control for Agentic Commerce →</a></p>
+      </div>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+
+  <script>
+  const { createApp, ref, computed } = Vue;
+
+  createApp({
+    setup() {
+      const homeValue = ref(275000);
+      const bands = [
+        { name: 'A', annual: 1500 }, { name: 'B', annual: 1750 },
+        { name: 'C', annual: 2000 }, { name: 'D', annual: 2250 },
+        { name: 'E', annual: 2750 }, { name: 'F', annual: 3250 },
+        { name: 'G', annual: 4000 }, { name: 'H', annual: 5000 },
+      ];
+      const ctBand = ref(bands[3]); // Band D default
+
+      // Stamp duty amortised — assume move every 10 years
+      const stampDuty = computed(() => {
+        const v = homeValue.value;
+        if (v <= 250000) return 0;
+        if (v <= 925000) return (v - 250000) * 0.05;
+        if (v <= 1500000) return (675000 * 0.05) + (v - 925000) * 0.10;
+        return (675000 * 0.05) + (575000 * 0.10) + (v - 1500000) * 0.12;
+      });
+      const stampAnnual = computed(() => stampDuty.value / 10);
+
+      const currentAnnual = computed(() => ctBand.value.annual + stampAnnual.value);
+
+      // Option A: 0.48% proportional property tax
+      const ppaAnnual = computed(() => homeValue.value * 0.0048);
+      const ppaDiff = computed(() => Math.round(ppaAnnual.value - currentAnnual.value));
+
+      // Option B: Land value tax — rough model: land ~40% of home value, taxed at ~0.8%
+      const landValue = computed(() => homeValue.value * 0.4);
+      const lvtAnnual = computed(() => Math.round(landValue.value * 0.008));
+      const lvtDiff = computed(() => lvtAnnual.value - currentAnnual.value);
+
+      const currentClass = computed(() => 'neutral');
+      const ppaClass = computed(() => ppaDiff.value < 0 ? 'saving' : 'costing');
+      const lvtClass = computed(() => lvtDiff.value < 0 ? 'saving' : 'costing');
+
+      return { homeValue, bands, ctBand, currentAnnual, ppaAnnual, ppaDiff, lvtAnnual, lvtDiff, currentClass, ppaClass, lvtClass };
+    }
+  }).mount('#tax-calc');
+  </script>
+</body>
+</html>
