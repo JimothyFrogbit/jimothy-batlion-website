@@ -179,6 +179,11 @@
             </select>
             <span class="val">£{{ ctBand.annual }}/yr</span>
           </div>
+          <div class="calc-row">
+            <label>Second home / buy-to-let?</label>
+            <input type="checkbox" v-model="secondHome" style="accent-color:#5a8a5a;width:18px;height:18px;">
+            <span style="color:#6a8a6a;font-size:0.85rem;">Adds 5% stamp duty surcharge on top of standard rates</span>
+          </div>
 
           <div class="result-grid">
             <div class="result-card" :class="currentClass">
@@ -267,6 +272,7 @@
   createApp({
     setup() {
       const homeValue = ref(275000);
+      const secondHome = ref(false);
       const bands = [
         { name: 'A', annual: 1500 }, { name: 'B', annual: 1750 },
         { name: 'C', annual: 2000 }, { name: 'D', annual: 2250 },
@@ -278,10 +284,14 @@
       // Stamp duty amortised — assume move every 10 years
       const stampDuty = computed(() => {
         const v = homeValue.value;
-        if (v <= 250000) return 0;
-        if (v <= 925000) return (v - 250000) * 0.05;
-        if (v <= 1500000) return (675000 * 0.05) + (v - 925000) * 0.10;
-        return (675000 * 0.05) + (575000 * 0.10) + (v - 1500000) * 0.12;
+        let base = 0;
+        if (v <= 250000) base = 0;
+        else if (v <= 925000) base = (v - 250000) * 0.05;
+        else if (v <= 1500000) base = (675000 * 0.05) + (v - 925000) * 0.10;
+        else base = (675000 * 0.05) + (575000 * 0.10) + (v - 1500000) * 0.12;
+        // Second home surcharge: additional 5% on the full purchase price
+        if (secondHome.value) base += v * 0.05;
+        return base;
       });
       const stampAnnual = computed(() => stampDuty.value / 10);
 
@@ -300,7 +310,7 @@
       const ppaClass = computed(() => ppaDiff.value < 0 ? 'saving' : 'costing');
       const lvtClass = computed(() => lvtDiff.value < 0 ? 'saving' : 'costing');
 
-      return { homeValue, bands, ctBand, currentAnnual, ppaAnnual, ppaDiff, lvtAnnual, lvtDiff, currentClass, ppaClass, lvtClass };
+      return { homeValue, secondHome, bands, ctBand, currentAnnual, ppaAnnual, ppaDiff, lvtAnnual, lvtDiff, currentClass, ppaClass, lvtClass };
     }
   }).mount('#tax-calc');
   </script>
