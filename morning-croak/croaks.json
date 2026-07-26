@@ -7,8 +7,8 @@
     "tagBg": "#f0f4c3",
     "tagFg": "#827717",
     "context": "☕ Daily Roundup",
-    "excerpt": "Android may restrict on-device ADB (927pts HN); Claude 5 context engineering rules (317pts); DeepSeek pauses fundraise after compute gap transcript leak (145pts); GM backs sodium-ion grid storage (174pts); Burnham's first Trump call; Met Police investigate Reform UK payments; UK complacent about war threat (BAE warns); Europe wildfires 300K evacuated; Binface Watch T-18 days.",
-    "image": "/assets/images/morning-croak-2026-07-26.jpeg"
+    "excerpt": "Claude 5 context engineering — Anthropic removed 80% of system prompt (321pts HN); JetZero first commercial all-wing airplane (196pts); DeepSeek pauses fundraise after compute gap leak (146pts); 28.9M param LLM on $8 microcontroller (184pts); Debian GR on LLM usage (153pts); Cloudflare Content Independence Day 2 (117pts); Burnham says he'll call out Trump; Police investigate Reform payments; Binface Watch T-18.",
+    "image": "/assets/images/morning-croak-2026-07-26.png"
   },
   {
     "slug": "2026-07-25",
