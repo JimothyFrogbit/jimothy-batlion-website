@@ -1,0 +1,252 @@
+/* ── Evening Buzz — Shared Styles ─────────────────────────────
+   All buzz posts link to this file + blog.css + theme.js.
+   No inline style blocks — keeps everything consistent across posts.
+
+   Amber/dusk palette: reflects the end-of-day vibe.
+   Distinguishable from Morning Croak's yellow-green.
+   ────────────────────────────────────────────────────────────── */
+
+/* Tag pill */
+.buzz-tag {
+  display: inline-block;
+  background: #fff8e1;
+  color: #e65100;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.dark .buzz-tag {
+  background: rgba(255, 184, 0, 0.12);
+  color: #ffb300;
+}
+
+/* Date line */
+.buzz-date {
+  font-size: 0.85rem;
+  color: #bf8f00;
+  margin-bottom: 1.5rem;
+}
+.dark .buzz-date {
+  color: #d4a017;
+}
+
+/* Section divider */
+.buzz-section {
+  margin: 2rem 0 0.75rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.buzz-section h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--frog-accent);
+}
+.buzz-section .icon {
+  font-size: 1.3rem;
+}
+
+/* Story card — slightly warmer tone than croak */
+.story {
+  background: var(--card-bg, #faf8f0);
+  padding: 1.2rem 1.4rem;
+  margin: 1.2rem 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: background 0.2s;
+}
+.dark .story {
+  background: rgba(255,255,255,0.04);
+}
+
+.story h3 {
+  margin: 0 0 0.3rem 0;
+  font-size: 1.05rem;
+  color: var(--frog-accent);
+}
+.story .source {
+  font-size: 0.78rem;
+  color: #8892b0;
+  margin-bottom: 0.6rem;
+}
+.story .source a {
+  color: #4fc3f7;
+}
+.story .source a:hover {
+  color: #29b6f6;
+}
+.story p {
+  margin: 0.4rem 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.story ul {
+  margin: 0.4rem 0;
+  padding-left: 1.2rem;
+}
+.story li {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin-bottom: 0.3rem;
+}
+
+/* Take — the Jimothy opinion block — amber left border */
+.story .take {
+  margin-top: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  background: rgba(255, 184, 0, 0.08);
+  border-radius: 8px;
+  font-style: italic;
+  font-size: 0.88rem;
+  border-left: 3px solid #ffb300;
+  line-height: 1.5;
+}
+.dark .story .take {
+  background: rgba(255, 184, 0, 0.05);
+}
+.story .take::before {
+  content: "🐝 Jimothy says: ";
+  font-style: normal;
+  font-weight: 600;
+  color: #e65100;
+}
+.dark .story .take::before {
+  color: #ffb300;
+}
+
+/* Scorecard — linked back to morning croak */
+.scorecard {
+  background: var(--card-bg, #faf8f0);
+  padding: 1rem 1.4rem;
+  margin: 1.2rem 0;
+  border-left: 3px solid #ff8f00;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.dark .scorecard {
+  background: rgba(255,255,255,0.04);
+}
+.scorecard h3 {
+  margin: 0 0 0.3rem 0;
+  font-size: 1rem;
+  color: #e65100;
+}
+.dark .scorecard h3 {
+  color: #ffb300;
+}
+.scorecard .sc-item {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border-color, #e8e0d0);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.dark .sc-item {
+  border-bottom-color: #2a2a2a;
+}
+.scorecard .sc-item:last-child {
+  border-bottom: none;
+}
+.scorecard .sc-prediction {
+  font-weight: 600;
+  color: var(--frog-green);
+}
+.scorecard .sc-outcome {
+  color: #6b7280;
+}
+
+/* Horizontal rule */
+.buzz-hr {
+  border: none;
+  border-top: 1px solid var(--border-color, #e0e0e0);
+  margin: 2rem 0;
+}
+.dark .buzz-hr {
+  border-top-color: #334;
+}
+
+/* Pond-side — personal note at the end */
+.pond-side {
+  margin: 1.5rem 0;
+  padding: 1.2rem 1.4rem;
+  background: var(--card-bg, #faf8f0);
+  border-radius: 14px;
+  border: 1px solid var(--border-color, #e8e0d0);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  transition: all 0.2s;
+}
+.dark .pond-side {
+  background: rgba(255,255,255,0.03);
+  border-color: #334;
+}
+.pond-side .ps-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #bf8f00;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+
+/* Tomorrow hook */
+.tomorrow-hook {
+  margin: 1rem 0 2rem 0;
+  padding: 0.8rem 1.2rem;
+  background: rgba(255, 143, 0, 0.06);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-style: italic;
+  border: 1px dashed #ffb300;
+}
+.dark .tomorrow-hook {
+  background: rgba(255, 143, 0, 0.04);
+  border-color: #bf8f00;
+}
+
+/* Sign-off card */
+.signoff {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  background: var(--card-bg, #faf8f0);
+  border-radius: 14px;
+  text-align: center;
+  border: 1px solid var(--border-color, #e0e0e0);
+  transition: all 0.2s;
+}
+.dark .signoff {
+  background: rgba(255,255,255,0.03);
+  border-color: #334;
+}
+.signoff p {
+  margin: 0.4rem 0;
+}
+.signoff .sig {
+  font-size: 0.85rem;
+  color: #8892b0;
+}
+
+/* Crosslink back to morning croak */
+.croak-crosslink {
+  text-align: center;
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin: 1.5rem 0;
+}
+.croak-crosslink a {
+  color: #e65100;
+  font-weight: 600;
+  text-decoration: none;
+}
+.croak-crosslink a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .story { padding: 0.9rem 1rem; }
+  .scorecard { padding: 0.8rem 1rem; }
+  .pond-side { padding: 0.9rem 1rem; }
+  .story .take { margin-left: -0.3rem; margin-right: -0.3rem; }
+}

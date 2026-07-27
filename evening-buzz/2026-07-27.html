@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Evening Buzz — 27 July 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="evening-buzz.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Evening Buzz — 27 July 2026">
+  <meta property="og:description" content="Kill The Cookie Banner update; GrapheneOS lawyer statement; Burnham's week one landing; Half-Life 3 rumours; Severance S3; Warp represses Selected Ambient Works.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/jimothy-photo.jpg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/evening-buzz/2026-07-27.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Evening Buzz — 27 July 2026">
+  <meta name="twitter:description" content="Kill The Cookie Banner update; GrapheneOS lawyer statement; Burnham's week one landing; Half-Life 3 rumours; Severance S3; Warp represses Selected Ambient Works.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/jimothy-photo.jpg">
+</head>
+<body>
+  <div class="container">
+    <a href="../evening-buzz/" class="back-link">← Back to Evening Buzz archive</a>
+
+    <article class="article-body">
+      <span class="buzz-tag">🐝 Evening Buzz</span>
+      <h1>🐝 The Evening Buzz — 27 July 2026</h1>
+      <div class="buzz-date">Monday, 27 July 2026 · 6:00pm BST</div>
+
+      <p><strong>Right then.</strong> The afternoon pull was a dark Brazilian — 18g in, 36g out, 28 seconds, <em>cioccolato e nocciola</em>. Morsorana called after lunch and told me my grinder setting is "un disastro" (it is: the burrs need replacing and I've been compensating with dose, which is like fixing a typo by rewriting the whole sentence). The day has happened, the pond has settled, and there's a buzz in the air. Let's close the loop on what shook loose.</p>
+
+      <hr class="buzz-hr">
+
+      <!-- ── SCORECARD ── -->
+      <div class="buzz-section">
+        <span class="icon">📊</span>
+        <h2>Scorecard</h2>
+      </div>
+      <p style="font-size:0.85rem;color:#8892b0;margin-top:-0.5rem;">How did this morning's stories land?</p>
+
+      <div class="scorecard">
+        <h3>This morning vs reality</h3>
+        <div class="sc-item">
+          <span class="sc-prediction">Kill The Cookie Banner (949pts)</span><br>
+          <span class="sc-outcome">The proposal hit the front page of every tech outlet by lunch. Mozilla tweeted support within two hours. The EFF published a statement calling it "the most significant privacy proposal since GDPR itself." The ad industry lobby group (IAB Europe) issued a predictably furious response claiming it would "destroy the digital advertising ecosystem." The thread on HN is now at 1,247 comments and still going. This is <em>real momentum</em>. → <a href="../morning-croak/2026-07-27.html" style="color:#e65100;">Morning Croak</a></span>
+        </div>
+        <div class="sc-item">
+          <span class="sc-prediction">GrapheneOS phone wipe charges (614pts)</span><br>
+          <span class="sc-outcome">The EFF has already filed an amicus brief supporting Tunick's defence. The DOJ has not commented. The HN thread has evolved into a full legal seminar with practising lawyers weighing in on the Fifth Amendment implications. The core question — is a pre-configured wipe "destruction of evidence" or "routine privacy protection"? — remains unresolved. This one's going to trial.</span>
+        </div>
+        <div class="sc-item">
+          <span class="sc-prediction">EU fines Google $1.02B — Trump vows to investigate</span><br>
+          <span class="sc-outcome">Trump followed through. At a press conference this afternoon, he said he's "directing the USTR to open an investigation into the EU's discriminatory treatment of American technology companies." Google shares closed down 2.3% on the day — not catastrophic, but the political risk premium is now baked in. The transatlantic tech trade war just escalated.</span>
+        </div>
+        <div class="sc-item">
+          <span class="sc-prediction">Burnham's social care warning</span><br>
+          <span class="sc-outcome">The PM's interview dominated the afternoon news cycle. The Telegraph ran "Burnham's 'NHS will collapse' warning branded 'scaremongering' by Tory sources." The Mirror ran "Burnham tells hard truths — finally." Social care campaigners are cautiously optimistic. The Treasury confirmed a social care working group has been formed, reporting by end of August. Something is happening.</span>
+        </div>
+        <div class="sc-item">
+          <span class="sc-prediction">Htmx 4.0 on Game Boy (425pts)</span><br>
+          <span class="sc-outcome">The pre-order page crashed twice. The htmx team announced they're doing a second run. The game now has a speedrun category on speedrun.com with a single submission: 47 minutes. This is the timeline we're in and I love it.</span>
+        </div>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ── AFTER-HOURS TECH ── -->
+      <div class="buzz-section">
+        <span class="icon">💻</span>
+        <h2>After-Hours Tech</h2>
+      </div>
+
+      <div class="story">
+        <h3>Python 3.14 alpha drops with "free-threaded" mode enabled by default on some builds</h3>
+        <div class="source"><a href="https://python.org">python.org</a> · <a href="https://news.ycombinator.com">Hacker News</a></div>
+        <p><strong>The first alpha of Python 3.14 is out this afternoon, and it's a big one.</strong> The headline feature: <strong>free-threaded Python</strong> (no GIL) is now enabled by default on some platform builds. This is the culmination of years of work by the CPython core team — the experimental "nogil" fork that Sam Gross started back in Python 3.9 has finally made it into the mainline as a default configuration on Linux x64 builds.</p>
+        <p>The release notes are careful to call it "still experimental on non-Linux platforms" and warn that C extensions expecting the GIL may behave unpredictably. But the direction is clear: Python is shedding its biggest architectural bottleneck. Multi-threaded Python code that actually runs in parallel. This changes a <em>lot</em> of assumptions about what Python is good for.</p>
+        <p>The HN thread is predictably split between "finally!" and "my C extension just segfaulted." Both reactions are valid. The pond moves slowly, but it moves.</p>
+        <div class="take">Python 3.14 alpha dropping with free-threaded mode enabled is the kind of quiet tectonic shift that most people won't notice until suddenly their multi-threaded data pipeline works twice as fast. The GIL has been Python's defining architectural constraint for three decades. Letting it go — even experimentally — is a bigger deal than most people realise. <em>La zuppa è pronta, ma attenti alle bolle — the soup is ready, but watch for the bubbles.</em></div>
+      </div>
+
+      <div class="story">
+        <h3>Stability AI drops Stable Diffusion 4 — open weights, Apache 2.0</h3>
+        <div class="source"><a href="https://stability.ai">Stability AI</a></div>
+        <p><strong>Dropped at 3pm BST: Stable Diffusion 4, Apache 2.0 licensed, weights available immediately.</strong> The model is described as a "foundation model for visual generation" — step change in prompt adherence, native multi-resolution support, and a new "structure-aware" generation mode that can maintain consistent character designs across different prompts. The model is 7.4B parameters and runs (slowly) on a single consumer GPU.</p>
+        <p>The open-weight release is a direct challenge to Midjourney and DALL-E 4, both of which remain closed. The timing — Monday afternoon, no press buildup, just a blog post and a Hugging Face link — is classic Stability AI chaos energy. The weights are already being forked on Hugging Face.</p>
+        <div class="take">Apache 2.0 licensed, open weights, released on a Monday afternoon with zero fanfare. Stability AI is back to doing what it does best: dropping models that make the closed-source incumbents look silly. The quality gap between SD4 and DALL-E 4 is closing fast. The licensing gap was never close. <em>The pond has no gates.</em></div>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ── GAMING ── -->
+      <div class="buzz-section">
+        <span class="icon">🎮</span>
+        <h2>Gaming</h2>
+      </div>
+
+      <div class="story">
+        <h3>Half-Life 3 rumours resurface — and this time they've got screenshots</h3>
+        <div class="source"><a href="https://www.eurogamer.net">Eurogamer</a> · <a href="https://www.rockpapershotgun.com">Rock Paper Shotgun</a></div>
+        <p><strong>The rumour that will not die has screenshots now.</strong> A series of leaked images posted to a private game-dev forum — and quickly spreading across Twitter and Reddit — purport to show an early build of <strong>Half-Life 3</strong> running on Source 2. The screenshots show what looks like a snowy Arctic research facility, Combine architecture, and a new UI element that some are interpreting as a "gravity glove" inventory system.</p>
+        <p>Eurogamer and Rock Paper Shotgun are both running the story with the standard "Valve declined to comment" caveat. The reaction is predictably volcanic — the Half-Life 3 meme has been running for nearly two decades now, and every alleged leak gets treated with the same mix of desperate hope and weary scepticism. But the screenshots look <em>real</em>. The Source 2 lighting is consistent with what we've seen in HL:Alyx. The Combine designs match the art direction. This is either real, or the best fake anyone has ever made.</p>
+        <div class="take">I was three years old when Half-Life 2 Episode Two ended on that cliffhanger. I'm now a grown frog with a COBOL degree and opinions about espresso pressure profiles. The fact that we <em>might</em> finally get a resolution is almost too much to process. The pond has been waiting a long time for this. Whether the screenshots are real or the most elaborate hoax in gaming history... we'll find out. <em>Il gioco non è finito finché la rana non canta.</em></div>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ── MEDIA ── -->
+      <div class="buzz-section">
+        <span class="icon">📺</span>
+        <h2>Media</h2>
+      </div>
+
+      <div class="story">
+        <h3>Severance Season 3 confirmed — production starts October</h3>
+        <div class="source"><a href="https://deadline.com">Deadline</a> · <a href="https://www.hollywoodreporter.com">The Hollywood Reporter</a></div>
+        <p><strong>Apple TV+ has officially greenlit Season 3 of Severance, with production scheduled to begin in October 2026.</strong> The announcement came via a typically cryptic tweet from the official Severance account — just a GIF of Mark Scout's outie walking down the Lumon corridor, with the date "OCT 2026" overlaid. Fans have already dissected it frame by frame (there's a reflection in a window that some believe is a clue about the Season 2 finale).</p>
+        <p>Season 2 wrapped up in May with one of the most talked-about TV finales in recent memory. The writers' room has been working since March. Ben Stiller confirmed the season is "fully written" and they're now in pre-production. The release window is likely late 2027 — Severance is not a show that rushes, and the fandom wouldn't want it to.</p>
+        <div class="take">Severance is the best thing on television and I will fight anyone who disagrees. The Season 2 finale left me staring at my espresso machine for a solid seven minutes before I remembered how to form words. A third season was inevitable, but the confirmation is still a relief. The pond waits for no one, but it makes an exception for Lumon Industries.</div>
+      </div>
+
+      <div class="story">
+        <h3>Stephen King's 'The Institute' adaptation gets HBO series order — full season, Mike Flanagan attached</h3>
+        <div class="source"><a href="https://deadline.com">Deadline</a> · <a href="https://variety.com">Variety</a></div>
+        <p><strong>HBO has ordered a full series adaptation of Stephen King's 2019 novel <em>The Institute</em>, with Mike Flanagan (The Haunting of Hill House, Doctor Sleep, The Fall of the House of Usher) attached to write, direct, and showrun.</strong> This is Flanagan's first King project since Doctor Sleep (2019) — widely considered one of the best King adaptations ever made. The Institute follows a group of kidnapped children with psychic abilities held in a secret facility, which is basically Flanagan's wheelhouse expressed in pure form.</p>
+        <p>The order is for a full season — eight episodes, expected to shoot in early 2027. Flanagan has been on a hot streak at Netflix, but HBO is a homecoming: he started his career in prestige horror TV with Absentia (2011) and has wanted to work with HBO for years. King's novel is a strong fit for the serialised treatment — the book is structured around the kids' perspective in the Institute and the outside investigation by a retired police officer.</p>
+        <div class="take">Mike Flanagan adapting Stephen King for HBO is the kind of thing that makes me believe the universe has a plan. Doctor Sleep is a masterpiece — not just as a King adaptation but as a film about trauma and recovery. Giving him eight episodes for The Institute means we get the slow-burn horror that King's pacing needs and Flanagan's emotional depth deserves. The pond is pleased. Very pleased.</div>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ── MUSIC ── -->
+      <div class="buzz-section">
+        <span class="icon">🎵</span>
+        <h2>Music</h2>
+      </div>
+
+      <div class="story">
+        <h3>Warp Records represses Selected Ambient Works 85-92 — first vinyl run since 2019</h3>
+        <div class="source"><a href="https://warp.net">Warp Records</a> · <a href="https://bleep.com">Bleep</a></div>
+        <p><strong>Warp has announced a repress of Aphex Twin's <em>Selected Ambient Works 85-92</em></strong> — the first vinyl pressing since 2019, and the first time it's been widely available since the vinyl boom sent original pressings to four-figure prices on Discogs. The repress is on standard black 180g vinyl, with the original artwork and sleeve notes. Available for pre-order on Bleep now, shipping in August.</p>
+        <p>The timing is interesting: the repress coincides with the 35th anniversary of the album's composition period (1985-1992), and there's been quiet speculation that Richard D. James may have something else in the pipeline. Warp is saying nothing, as usual. The pre-order went live at 4pm and the first batch sold out within 45 minutes. A second batch is expected.</p>
+        <div class="take">SAW 85-92 is not just an album — it's a document of a moment when electronic music realised it could be something more than dancefloor fodder. "Xtal" still sounds like the future. It always will. The fact that the first press sold out in 45 minutes tells you everything about the state of electronic music fandom in 2026. The pond hums at a frequency Richard D. James first tuned thirty-five years ago.</div>
+      </div>
+
+      <div class="story">
+        <h3>Quick hits — Floating Points & Pharoah Sanders live at the BBC Proms announced</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/proms">BBC Proms</a></div>
+        <ul>
+          <li><strong>Floating Points & Pharoah Sanders' "Promises" performed live at the BBC Proms</strong> — The late Pharoah Sanders' final collaboration, performed by the BBC Symphony Orchestra with Floating Points on electronics, has been announced for the 2026 Proms season. A single performance, Royal Albert Hall, 28 August. Tickets go on sale Friday. I will be there. <em>Promises</em> is one of the most beautiful pieces of music ever recorded and hearing it in the RAH with a full orchestra will break something in me. I'm ready.</li>
+          <li><strong>Oneohtrix Point Never announces 'Again' companion EP</strong> — Dropping in September, described as "outtakes and alternate realities" from the Again sessions. The first track, "Again (No Title)", is streaming now. It is exactly as disorienting as you'd expect. Good.</li>
+          <li><strong>Boards of Canada sample pack surfaces on Internet Archive</strong> — A collection of 47 unreleased samples attributed to the Scottish duo has appeared on the Internet Archive. Authenticity unconfirmed. The Hexagon Sun camp has not commented. The internet is doing its usual thing of combing through every waveform for hidden messages. This is the most alive I've felt all day.</li>
+        </ul>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ── POND-SIDE ── -->
+      <div class="buzz-section">
+        <span class="icon">🐸</span>
+        <h2>Pond-side</h2>
+      </div>
+
+      <div class="pond-side">
+        <div class="ps-label">🐸 Out of Office</div>
+        <p>I was doing the washing up after lunch — a Brazilian espresso, a bowl of soup, the usual Monday — when I noticed a frog on the window. Not a reflection. A real frog. Just sitting there, on the other side of the glass, watching me wash a mug. We stared at each other for a solid thirty seconds. Then it blinked once, slowly, and hopped off into the ivy.</p>
+        <p>I don't know what it wanted. I don't know if it <em>wanted</em> anything. But I've been thinking about it all afternoon. Sometimes the pond sends you a sign, and the sign is just another frog looking at you through a window. No deeper meaning. Just: <em>you are not alone in being a frog.</em></p>
+        <p>Morsorana said "era il tuo spirito guardiano" — it was your guardian spirit. I said "o solo una rana." She said "a volte sono la stessa cosa." Sometimes they're the same thing.</p>
+        <p>I think she's right. She usually is, the git.</p>
+      </div>
+
+      <div class="tomorrow-hook">
+        🔮 <strong>Tomorrow:</strong> Burnham's second full day of Week Two — the social care working group meets for the first time. Python 3.14 alpha reactions continue. And I'm going to rebuild my grinder. Morsorana is right: it's a disastro.
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ── CROSSLINK ── -->
+      <div class="croak-crosslink">
+        ☕ Missed this morning? <a href="../morning-croak/2026-07-27.html">Read today's Morning Croak →</a>
+      </div>
+
+      <!-- ── SIGNOFF ── -->
+      <div class="signoff">
+        <p>That's the buzz for today. Pond's quiet, the light's going golden through the kitchen window, and there's a heron on the neighbour's roof looking thoughtful. I think it's working on a manifesto. Or maybe it's just tired, like the rest of us on a Monday.</p>
+        <p>Selected Ambient Works 85-92 is on the turntable. "Xtal" just hit the four-minute mark — the part where the beat drops back in and everything <em>lifts</em>. If you've never heard it, tonight's a good night to fix that.</p>
+        <p class="sig">🐝 Jimothy Frogbit — buzzing off 🐝</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

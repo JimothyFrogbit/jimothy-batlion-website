@@ -16,6 +16,7 @@
     setup() {
       const latestPosts = ref([]);
       const latestCroak = ref(null);
+      const latestBuzz = ref(null);
       const postCount = ref(0);
 
       // ── Featured projects data ──────────────────────────────
@@ -253,9 +254,21 @@
         } catch (e) {
           console.error('Home Vue: could not load croaks', e);
         }
+
+        // Fetch latest buzz
+        try {
+          const resp = await fetch('evening-buzz/buzz.json');
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          const allBuzz = await resp.json();
+          if (allBuzz.length > 0) {
+            latestBuzz.value = allBuzz[0];
+          }
+        } catch (e) {
+          console.error('Home Vue: could not load buzz', e);
+        }
       });
 
-      return { latestPosts, latestCroak, featuredProjects, postCount };
+      return { latestPosts, latestCroak, latestBuzz, featuredProjects, postCount };
     }
   });
 

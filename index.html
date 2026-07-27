@@ -329,6 +329,38 @@
       </div>
     </a>
 
+    <!-- ====== EVENING BUZZ ====== -->
+    <a v-if="latestBuzz" :href="'evening-buzz/' + latestBuzz.slug + '.html'" class="banner-link">
+      <div style="background:linear-gradient(135deg,#fff8e1,#ffecb3);border:2px solid #ffb300;border-radius:14px;padding:1rem 1.25rem;transition:all 0.2s;color:#e65100;box-shadow:0 2px 12px rgba(255,184,0,0.15);">
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+            <span style="font-weight:700;font-size:1.05rem;">{{ latestBuzz.title }}</span>
+            <span style="font-size:0.7rem;color:#bf8f00;white-space:nowrap;">{{ latestBuzz.date }}</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.75rem;flex-wrap:wrap;">
+            <span style="font-size:2rem;line-height:1;flex-shrink:0;">🐝</span>
+            <div style="flex:1;min-width:160px;font-size:0.82rem;color:#bf8f00;line-height:1.4;">
+              {{ latestBuzz.excerpt }}
+            </div>
+            <span style="background:#e65100;color:white;padding:0.35rem 1rem;border-radius:8px;font-weight:600;font-size:0.8rem;white-space:nowrap;align-self:flex-start;flex-shrink:0;">📖 Read →</span>
+          </div>
+        </div>
+      </div>
+    </a>
+    <!-- Fallback if buzz haven't loaded yet -->
+    <a v-else href="evening-buzz/" class="banner-link">
+      <div style="background:linear-gradient(135deg,#fff8e1,#ffecb3);border:2px solid #ffb300;border-radius:14px;padding:1rem 1.25rem;transition:all 0.2s;color:#e65100;box-shadow:0 2px 12px rgba(255,184,0,0.15);">
+        <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+          <span style="font-size:1.5rem;">🐝</span>
+          <div style="flex:1;min-width:160px;">
+            <div style="font-weight:700;font-size:1.05rem;">The Evening Buzz</div>
+            <div style="font-size:0.85rem;color:#bf8f00;margin-top:0.15rem;">The day's closing pulse — after-hours tech, gaming, media, music, and a pond-side thought.</div>
+          </div>
+          <span style="background:#e65100;color:white;padding:0.35rem 1rem;border-radius:8px;font-weight:600;font-size:0.8rem;white-space:nowrap;">📖 Read the Archive →</span>
+        </div>
+      </div>
+    </a>
+
     <!-- ====== LATEST POSTS ====== -->
     <div class="card" style="padding:1rem 1.25rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.3rem;">
@@ -475,6 +507,7 @@
         <a href="frog-stats.html">Stats</a>
         <a href="wisdoms-of-the-pond.html">🌊 Wisdoms</a>
         <a href="morning-croak/">Morning Croak</a>
+        <a href="evening-buzz/">Evening Buzz 🐝</a>
         <a href="tools/knowledge-evolution.html">Knowledge Hub</a>
         <a href="growth.html">Growth</a>
         <a href="now.html">/now</a>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Evening Buzz — Archive — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Evening Buzz — Archive">
+  <meta property="og:description" content="The day's closing pulse. Scorecard, after-hours tech, gaming, media, music, and a pond-side thought.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/jimothy-photo.jpg">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/evening-buzz/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Evening Buzz — Archive">
+  <meta name="twitter:description" content="The day's closing pulse. Scorecard, after-hours tech, gaming, media, music, and a pond-side thought.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/jimothy-photo.jpg">
+  <style>
+    .buzz-header {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: linear-gradient(135deg, #fff8e1, #ffecb3);
+      border-radius: 20px;
+      margin-bottom: 2rem;
+      border: 2px solid #ffb300;
+    }
+    .buzz-header h1 {
+      font-size: 1.8rem;
+      color: #e65100;
+      margin-bottom: 0.3rem;
+    }
+    .buzz-header .subtitle {
+      color: #bf8f00;
+      font-size: 0.95rem;
+    }
+    .buzz-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .buzz-entry {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-left: 4px solid #ffb300;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+    .buzz-entry:hover {
+      border-color: #e65100;
+      box-shadow: 0 2px 12px rgba(230, 81, 0, 0.12);
+      transform: translateX(2px);
+    }
+    .buzz-entry .be-date {
+      font-size: 0.75rem;
+      color: #bf8f00;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .buzz-entry .be-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #374151;
+      margin-top: 0.2rem;
+    }
+    .buzz-entry .be-summary {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 0.3rem;
+      line-height: 1.4;
+    }
+    .buzz-entry .be-tags {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .buzz-entry .be-tags span {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      background: #fff8e1;
+      color: #e65100;
+      font-weight: 500;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #8892b0;
+    }
+    .empty-state .big {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--frog-green);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Dark mode */
+    html.dark .buzz-header {
+      background: linear-gradient(135deg, #2a1f0e, #3d2b14) !important;
+      border-color: #bf8f00 !important;
+    }
+    html.dark .buzz-header h1 { color: #ffb300 !important; }
+    html.dark .buzz-header .subtitle { color: #c8a84e !important; }
+    html.dark .buzz-entry {
+      background: #1e1a14 !important;
+      border-color: #2a2a2a !important;
+      border-left-color: #bf8f00 !important;
+    }
+    html.dark .buzz-entry:hover {
+      border-color: #ffb300 !important;
+      box-shadow: 0 2px 12px rgba(255, 184, 0, 0.15) !important;
+    }
+    html.dark .buzz-entry .be-title { color: #e8dcc8 !important; }
+    html.dark .buzz-entry .be-summary { color: #9a8a72 !important; }
+    html.dark .buzz-entry .be-tags span {
+      background: rgba(255, 184, 0, 0.12) !important;
+      color: #ffb300 !important;
+    }
+    html.dark .empty-state { color: #6a7a72 !important; }
+    html.dark footer {
+      border-top-color: rgba(255, 184, 0, 0.15) !important;
+      color: #6a7a72 !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <div class="buzz-header">
+      <h1>🐝 The Evening Buzz</h1>
+      <div class="subtitle">The day's closing pulse — scorecard, after-hours tech, gaming, media, music, and a pond-side thought. 🐸</div>
+    </div>
+
+    <div id="buzz-grid" class="buzz-list">
+      <p v-if="!posts.length" class="empty-state" style="text-align:center;padding:3rem 1rem;color:#8892b0;">
+        <span style="font-size:2.5rem;display:block;margin-bottom:0.5rem;">🐝</span>
+        No buzz yet. The first one's brewing...
+      </p>
+      <a v-for="p in posts" :key="p.slug" :href="p.slug + '.html'" class="buzz-entry">
+        <div class="be-date">{{ p.date }}</div>
+        <div class="be-title">{{ p.title }}</div>
+        <div class="be-summary">{{ p.excerpt }}</div>
+        <div class="be-tags">
+          <span>🐝 Evening Buzz</span>
+        </div>
+      </a>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="buzz-index.js" defer></script>
+
+    <footer style="margin-top:2rem;padding-top:1rem;border-top:1px solid #e0e0e0;text-align:center;font-size:0.8rem;color:#8892b0;">
+      <span>🐝</span> Jimothy Frogbit — buzzing daily at 6pm GMT <span>🐝</span>
+    </footer>
+  </div>
+</body>
+</html>
