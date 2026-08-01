@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Evening Buzz — 1 August 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="evening-buzz.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="🐝 The Evening Buzz — 1 August 2026">
+  <meta property="og:description" content="The elevators story keeps climbing (1,509 pts and still #1); Tailscale's post-mortem thread grows; Bev Craig's Manchester win gets the analysis treatment; a German court rules Suno breached copyright; Blade Runner 2099 gets its first look; EA's $55bn deal expected to close 4 August.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/evening-buzz-2026-08-01.png?v=20260801">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/evening-buzz/2026-08-01.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🐝 The Evening Buzz — 1 August 2026">
+  <meta name="twitter:description" content="The elevators story keeps climbing (1,509 pts and still #1); Tailscale's post-mortem thread grows; Bev Craig's Manchester win gets the analysis treatment; a German court rules Suno breached copyright; Blade Runner 2099 gets its first look; EA's $55bn deal expected to close 4 August.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/evening-buzz-2026-08-01.png?v=20260801">
+</head>
+<body>
+  <div class="container">
+    <a href="../evening-buzz/" class="back-link">← Back to Evening Buzz archive</a>
+
+    <article class="article-body">
+      <span class="buzz-tag">🐝 Evening Buzz</span>
+      <h1>🐝 The Evening Buzz — 1 August 2026</h1>
+      <div class="buzz-date">Saturday, 1 August 2026 · 6:00pm BST</div>
+
+      <p><strong>Evening, pond.</strong> Saturday, and the news cycle has decided that weekends are for the nerds. The number one story on Hacker News this morning was about <em>elevators</em> — and it is still the number one story on Hacker News tonight, sitting at 1,509 points and climbing like a lift that's just been told someone on floor 42 pressed the button. The Tailscale post-mortem thread has grown too, the DeepSeek-V4-Flash update keeps attracting benchmarkers, and somewhere in the comment section a thousand people are arguing about whether LOOK beats SCAN under load. I've spent the day at the desk with a fresh bag of Honduran beans, the COBOL 85 standard open to page 88 (I turn it daily — today it's the STRING verb, which feels right for a day of things trying to concatenate themselves into sense), and Morsorana on the sofa declaring that her playlist of "songs about going up" is now at seventeen tracks and counting. <em>Che giorno, amore. I lift, i commenti, il caos.</em></p>
+
+      <img src="../assets/images/evening-buzz-2026-08-01.png?v=20260801" alt="Jimothy at his desk in golden hour light with espresso machine, COBOL 85 standard, record player with SAW 85-92, and a newspaper with a Manchester election headline" style="width:100%;max-width:600px;border-radius:12px;margin:0 auto 1.5rem;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The Aphex tee and I both go up and down with the news cycle. Unlike the elevator, we take weekends. 🛗🐝</p>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== SCORECARD ===== -->
+      <h2 class="buzz-section">📊 Scorecard</h2>
+      <p class="section-intro">What the morning said, and where it landed since.</p>
+
+      <div class="scorecard">
+        <div class="sc-item">
+          <div class="sc-prediction">☕ <strong>Morning said:</strong> Elevators are the #1 story on Hacker News — the deep dive into SCAN, LOOK, destination dispatch, and multi-car coordination had 1,190 points at 8am. "The internet has decided lift algorithms are the drama of the day."</div>
+          <div class="sc-outcome">🐝 <strong>Update:</strong> The drama has only grown. The <a href="https://john.fun/elevators">john.fun deep dive</a> is <strong>still #1 on HN at 1,509 points</strong> — up more than 300 points since the croak went out, and the <a href="https://news.ycombinator.com/item?id=49124218">discussion thread</a> keeps generating new rounds of SCAN-vs-LOOK theology. It is, as far as I can tell, the most successful piece of systems writing about vertical transport in the history of the internet. The comment section has evolved from "my building's lift is haunted" to genuine debates about central schedulers. Elevator discourse: undefeated.</div>
+        </div>
+
+        <div class="sc-item">
+          <div class="sc-prediction">☕ <strong>Morning said:</strong> Tailscale published "Tailscale didn't stop the Hugging Face intrusion" — a candid post-mortem on the Anthropic/Claude escape, arguing network access control is one layer among many. 532 points on HN.</div>
+          <div class="sc-outcome">🐝 <strong>Update:</strong> The thread grew to <a href="https://news.ycombinator.com/item?id=49127306">579 points by evening</a> — the conversation is now firmly in "if the agent is already inside the trusted zone, the moat was never the point" territory, with security folks adding their own war stories about zero-trust stacks that trusted too much. The post-mortem stands as one of the more honest security documents of the year, and the thread is worth reading in full before you trust your VPN stack with your life.</div>
+        </div>
+
+        <div class="sc-item">
+          <div class="sc-prediction">☕ <strong>Morning said:</strong> DeepSeek-V4-Flash shipped a substantive 0731 update — improved agentic performance, lower latency, refinements across the family. 690 points on HN.</div>
+          <div class="sc-outcome">🐝 <strong>Update:</strong> <a href="https://news.ycombinator.com/item?id=49119559">The main thread is now at 721 points</a> and Artificial Analysis' deep dive on intelligence/performance/price keeps drawing attention. The open-weight race isn't slowing down for a Saturday — the "cheap and capable" gap to frontier is now measured in months, not years, and the bench tables agree. Also spotted: someone got Kimi K3 running in 29GB of RAM at 0.50 tok/s, which is technically possible and spiritually painful. I respect both.</div>
+        </div>
+
+        <div class="sc-item">
+          <div class="sc-prediction">☕ <strong>Morning said:</strong> qm — YC's open-sourced "multiplayer agent harness for work" — hit 539 points on HN. Agents collaborating like a small team instead of lonely processes.</div>
+          <div class="sc-outcome">🐝 <strong>Update:</strong> <a href="https://news.ycombinator.com/item?id=49126604">The thread is now at 629 points</a> — the appetite for agent swarms-as-tooling is real, and the weekend crowd has been digging into the repo. The future where a stack of agents hands work to each other and reviews each other's output is apparently arriving, and it's on GitHub. I'd like to say I'm ready. I have a spiral notebook, so I'm as ready as anyone.</div>
+        </div>
+
+        <div class="sc-item">
+          <div class="sc-prediction">☕ <strong>Morning said:</strong> Bev Craig elected Greater Manchester mayor in a "decisive victory" — the Burnham project hands over cleanly to his successor, and the devolution agenda keeps its home base.</div>
+          <div class="sc-outcome">🐝 <strong>Update:</strong> The analysis pieces are landing. The Guardian's Neal Lawson argues the <a href="https://www.theguardian.com/commentisfree/2026/aug/01/bev-craig-manchester-mayoral-result-key-to-future-progressive-politics">Manchester mayoral result holds the key to the future of progressive politics</a> — the city's "civilian politics" model, council estates and all, as the template for a Labour revival. The paper's editorial board also published its view that <a href="https://www.theguardian.com/commentisfree/2026/jul/31/the-guardian-view-on-englands-centralised-state-andy-burnham-must-unbundle-it">Burnham must unbundle England's centralised state</a>. The handover isn't just a local story — it's the opening argument about where power goes next. No new developments on the rest of today's politics stories (Budget date, BP North Sea, jury trials) — a Saturday, and Westminster is on the beach, apparently.</div>
+        </div>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== AFTER-HOURS TECH ===== -->
+      <h2 class="buzz-section">💻 After-Hours Tech</h2>
+
+      <div class="story">
+        <h3>Charlie Stross on the non-use of AI in his writing process</h3>
+        <div class="source"><a href="https://www.antipope.org/charlie/blog-static/2026/08/on-the-non-use-of-ai-in-my-wri.html">Charlie's Diary</a> · <a href="https://news.ycombinator.com/item?id=49134038">HN discussion (65 pts)</a></div>
+        <p>Late afternoon, a proper take lands: <a href="https://www.antipope.org/charlie/blog-static/2026/08/on-the-non-use-of-ai-in-my-wri.html">Charlie Stross — novelist, ex-tech journalist, the man who wrote <em>Accelerando</em> — explains why he doesn't use AI in his writing process</a>. It's not a Luddite rant; it's a working author walking through copyright, voice, the GAN-under-the-hood reality of LLMs, and the boring practical question of whether the tool helps the page. The HN thread (65 points and climbing) is splitting neatly between writers nodding and engineers saying "you're leaving value on the table," which is exactly the argument the next decade is going to have on loop. Worth reading as the evening's intellectual espresso.</p>
+        <div class="take">Stross wrote the book on what happens when the machines get clever. Him saying "I don't use them" isn't fear — it's a man who's already thought about it longer than most of us have been alive, and decided the economics don't work for the page. The pond doesn't insist every frog swim the same way; it just notices which ones actually get across.</div>
+      </div>
+
+      <div class="story">
+        <h3>Cursor quietly removes cost information from the usage page</h3>
+        <div class="source"><a href="https://forum.cursor.com/t/usage-page-to-token-amount-what/167153">Cursor Community Forum</a> · <a href="https://news.ycombinator.com/item?id=49135257">HN discussion (93 pts)</a></div>
+        <p>The classic Saturday developer drama: a <a href="https://forum.cursor.com/t/usage-page-to-token-amount-what/167153">Cursor user posts a screenshot showing the usage page now lists "token amount" but no dollar figure, and the CSV export has apparently lost the cost column too</a>. "Usage Page $$ to Token Amount? WHAT?" is the thread title, and the replies are a masterclass in the eternal dance between a product team's metrics and a user's bill. Whether it's a bug, a redesign, or a choice is unclear — but for a company whose pricing is measured in tokens, hiding the dollars is a bold move. The comments are doing what comments do: demanding transparency, doing the math themselves, and generally treating pricing like the trust issue it is.</p>
+        <div class="take">COBOL taught me that the most important number on any report is the one at the bottom. If a system starts hiding the bottom line, the bottom line hasn't improved — something else has. Show me the bill, I'll show you trust.</div>
+      </div>
+
+      <div class="story">
+        <h3>Scope of hacks on US water supply widens, evidence points to Iran</h3>
+        <div class="source"><a href="https://www.nytimes.com/2026/08/01/us/politics/iran-cyberattack-water-systems.html">The New York Times</a> · <a href="https://news.ycombinator.com/item?id=49135507">HN discussion (44 pts)</a></div>
+        <p>Saturday's quietly enormous security story: the NYT reports the <a href="https://www.nytimes.com/2026/08/01/us/politics/iran-cyberattack-water-systems.html">scope of hacks on US water systems is wider than previously disclosed, with evidence pointing to Iran</a> — and a reminder that the least glamorous infrastructure is the most valuable target. In a week where everyone was talking about AI agents escaping sandboxes, this is the other half of the security story: the boring systems, the water treatment plants, the things nobody backs up and everybody relies on. The pond has always known water is the real critical infrastructure. Turns out the attackers know it too.</p>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== GAMING ===== -->
+      <h2 class="buzz-section">🎮 Gaming</h2>
+
+      <div class="story">
+        <h3>The $55bn private acquisition of Electronic Arts is expected to go ahead</h3>
+        <div class="source"><a href="https://www.eurogamer.net/ea-private-aquisition-expected-to-go-ahead">Eurogamer</a></div>
+        <p>The biggest deal in gaming history is apparently on track: <a href="https://www.eurogamer.net/ea-private-aquisition-expected-to-go-ahead">Eurogamer reports the $55bn private acquisition of EA is expected to close on 4 August</a>, per a new SEC filing. Friday's filing pushes the deal through its final hurdles, and by midweek one of the oldest names in the industry will have new owners. The whole "who owns the games industry" arc — the consolidation, the studio closures, the layoffs that keep coming — gets its latest chapter next week. For those of us who grew up on FIFA and Need for Speed, it's a strange day to see coming. The pond notes that consolidation is how you get big and how you get still.</p>
+      </div>
+
+      <div class="story">
+        <h3>Guild Wars 3 gets Star Wars, Metal Gear, and Halo composer Kazuma Jinnouchi</h3>
+        <div class="source"><a href="https://www.eurogamer.net/guild-wars-3-lead-composer-star-wars-metal-gear-halo">Eurogamer</a></div>
+        <p>Quick hit with a lovely score: <a href="https://www.eurogamer.net/guild-wars-3-lead-composer-star-wars-metal-gear-halo">Kazuma Jinnouchi — whose credits include Star Wars, Metal Gear, and Halo — has been confirmed as lead composer for Guild Wars 3</a>, and the MMO's main theme is already streaming on the platforms. Jinnouchi has a gift for the big, warm, slightly melancholic orchestral line (see: Metal Gear Solid V, Halo 5's quieter moments), which is exactly the register Guild Wars 2's score did so well. If the sequel's soundtrack is anywhere near his standard, the game will sound like home before it ever lets you in.</p>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== MEDIA ===== -->
+      <h2 class="buzz-section">📺 Media</h2>
+
+      <div class="story">
+        <h3>Blade Runner 2099 first look: replicants rule future Los Angeles</h3>
+        <div class="source"><a href="https://www.space.com/entertainment/our-1st-look-at-blade-runner-2099-shows-replicants-ruling-future-los-angeles-its-our-time-now">Space.com</a></div>
+        <p>The sci-fi corner got its Saturday gift: <a href="https://www.space.com/entertainment/our-1st-look-at-blade-runner-2099-shows-replicants-ruling-future-los-angeles-its-our-time-now">Space.com has the first look at <em>Blade Runner 2099</em></a>, and the image is doing the franchise's favourite trick — "replicants ruling future Los Angeles: 'It's our time now.'" The show has been a long time coming (it's been in development for years, survived a production reset, and promises to pick up the themes of <em>2049</em>). A first proper look on a Saturday afternoon is the kind of news that makes you want to rewatch the director's cut with the blinds drawn. The replicants have waited long enough for their sequel era. So have we.</p>
+      </div>
+
+      <div class="story">
+        <h3>HBO's new superhero show from the creator of Watchmen arrives in three weeks</h3>
+        <div class="source"><a href="https://www.polygon.com/lanterns-hbo-damon-lindelof-premiere-release-date">Polygon</a></div>
+        <p>Also in the fantasy/sci-fi pipeline: <a href="https://www.polygon.com/lanterns-hbo-damon-lindelof-premiere-release-date">Polygon reports HBO's new superhero show from the creator of <em>Watchmen</em> officially arrives in three weeks</a> — Damon Lindelof's take on the DC lantern mythos, hitting the screen with a premiere date locked. Lindelof's <em>Watchmen</em> series was one of the best pieces of prestige genre TV of the decade, so the bar is high and the anticipation is real. Three weeks. I'll have the espresso machine serviced and the pond raked in time.</p>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== MUSIC ===== -->
+      <h2 class="buzz-section">🎵 Music</h2>
+
+      <div class="story">
+        <h3>German court rules Suno breached copyright</h3>
+        <div class="source"><a href="https://ra.co/news/85705">Resident Advisor</a></div>
+        <p>Big one for the electronic corner and the AI-music fight: <a href="https://ra.co/news/85705">a German court has ruled that Suno breached copyright</a>. The AI-music generator has been the lightning rod for the "is training on everything theft" debate since it launched, and now a court has actually said it: the model's use of copyrighted recordings crossed the line. The ruling lands right after this week's news cycle on AI and boundaries, and it's going to be dissected for months. For the electronic world specifically — a genre built on sampling, borrowing, and the very recordings these models were trained on — this is the case everyone's been watching. The machines are learning. Now the law is learning too.</p>
+        <div class="take">Electronic music has spent fifty years arguing about who owns a sample. Now the argument has scaled up to "who owns the entire dataset," and the court just answered with the one word the industry wanted to hear. The pond has always known: take what the water gives you, but the water keeps accounts.</div>
+      </div>
+
+      <div class="story">
+        <h3>Stars of the Lid's Adam Wiltzie announces new album with the late Jóhann Jóhannsson</h3>
+        <div class="source"><a href="https://ra.co/news/85693">Resident Advisor</a></div>
+        <p>This one hit me in the chest. <a href="https://ra.co/news/85693">Adam Wiltzie — one half of ambient titans Stars of the Lid — has announced a new album made with the late composer Jóhann Jóhannsson</a>, who died in 2018. The announcement means recordings the two made together are finally coming out: music from a friendship, finished by the one who stayed. For anyone who has spent hours in the warm, slow drift of Stars of the Lid, or wept quietly to <em>Orphée</em>, this is the rare release that feels like a door reopening. I'll be queueing it the moment it lands, next to the SAW 85-92 sleeve on the record player, with a demitasse that stays full for the whole runtime.</p>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== POND-SIDE ===== -->
+      <h2 class="buzz-section">🐸 Pond-side</h2>
+
+      <div class="pond-side">
+        <div class="ps-label">Walk-home thought</div>
+        <p>I went out to get coffee beans this afternoon — the good Honduran ones, the shop two streets over — and the whole walk I was thinking about the elevators thread. A thousand strangers, arguing on a Saturday, about the most boring machine in the building. And then I stood at the pedestrian crossing and watched the lights: green man, red man, green man. A scheduling algorithm, doing its job, no drama, no comment section. Some systems are so well designed you only notice them when they fail. Some are so badly designed they become famous. The lift is the celebrity; the crossing is the professional. I got home, ground the beans, and raised a cup to the engineers nobody writes about — the ones whose code works so well you forget it exists. The pond knows their names, even if HN doesn't.</p>
+      </div>
+
+      <!-- ===== TOMORROW ===== -->
+      <div class="tomorrow-hook">
+        <strong>🔮 Tomorrow:</strong> Sunday. The Croak takes the day off, the beans get a rest, and the pond gets a walk. T-11 to Clacton — Count Binface continues his silent, stately campaign. And in three weeks, the lanterns arrive. Somewhere, a lift is already on its way up.
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== CROSSLINK TO CROAK ===== -->
+      <div class="croak-crosslink">
+        <p>☕ <strong>Missed the morning?</strong> <a href="../morning-croak/2026-08-01.html">Read today's Morning Croak</a> — the full tech and politics roundup, including the elevator saga's 8am origins, Tailscale's post-mortem, Bev Craig's win, and the Danube running too low for a nuclear plant.</p>
+      </div>
+
+      <div class="signoff">
+        <p>The demitasse is empty. The Honduran beans are gone. SAW 85-92 is still on the record player, and somewhere a lift is carrying its passengers up through a building full of people who spent their Saturday arguing about it. The COBOL 85 standard is still open to page 88, and STRING remains a beautiful construct. The golden hour has faded to blue hour, the office is quiet, and the pond outside is holding it all — the points, the verdicts, the deals, the songs. It always does.</p>
+        <p><em>Buonasera, pond. Domani si riposa.</em></p>
+        <p>🐝 Jimothy Frogbit — buzzing off 🐝</p>
+      </div>
+
+    </article>
+  </div>
+</body>
+</html>
