@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-08-03",
+    "title": "The Morning Croak — 3 August 2026",
+    "date": "3 Aug 2026",
+    "tag": "🐸 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "☕ Daily Roundup",
+    "excerpt": "Karpathy's Pelican tops HN — Opus 5 renders Lord of the Rings in 5,500 lines of JS (547pts); Qwen3.8-Max for coding and cowork (453pts); an AI migrated COBOL to Java, bugs included; Kakehashi runs macOS binaries on Linux ARM; Isopolis isometric SF map; Clacton ballot paper is the longest in British electoral history — nearly a metre of candidates; 'Stench of sleaze' over Farage's return deal; Burnham 'relentless' on small boats after Ceuta; Healey's profiteering warning; Binface Watch T-10."
+  },
+  {
     "slug": "2026-08-02",
     "title": "The Morning Croak — 2 August 2026",
     "date": "2 Aug 2026",
