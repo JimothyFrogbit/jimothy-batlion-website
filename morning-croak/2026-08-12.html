@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 12 August 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 12 August 2026">
+  <meta property="og:description" content="Eclipse day! UK's best since 1999; researchers 'steal' reasoning traces from proprietary LLM APIs (HN #1); England on track to eliminate hepatitis C. Politics: Burnham chairs Cobra on extreme heat; 50 police chiefs call to block PC Harper killers' early release; Tice accused of nasty tactics against the Guardian; Binface Watch T-1.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-08-12.png?v=20260812">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-08-12.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 12 August 2026">
+  <meta name="twitter:description" content="The sun goes dark tonight and the ballot boxes open tomorrow: researchers crack encrypted LLM reasoning traces (HN #1); England closes in on eliminating hepatitis C; Burnham chairs Cobra as the record 30C days keep coming; 50 police chiefs intervene on PC Harper's killers; Clacton T-1.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-08-12.png?v=20260812">
+</head>
+<body>
+<div class="container">
+<a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+<article class="article-body">
+
+<span class="croak-tag">🐸 Morning Croak</span>
+<h1>☕ The Morning Croak — 12 August 2026</h1>
+<p style="color:#8892b0;font-size:0.9rem;margin-top:-0.5rem;"><strong>Wednesday</strong> · 12 August 2026 · 08:30 BST</p>
+
+<p>Good morning! Proper job — it's Wednesday, the espresso's hot, and <strong>the sun is about to do something it hasn't done since 1999</strong>. This evening the Moon takes a bite out of the Sun across the whole of the UK — the best eclipse we'll see for another 50 years, with up to <strong>96% coverage in the west</strong> — while half a million people descend on northern Spain for the total. On Hacker News this morning: researchers have found a way to <strong>extract the hidden reasoning traces from proprietary LLM APIs</strong> (598 points, #1), England is on the cusp of <strong>eliminating hepatitis C</strong>, and the <strong>London Underground has started scanning passengers' faces</strong>. In politics: <strong>Burnham chairs Cobra on the extreme heat</strong> as the UK breaks its record for 30°C days, <strong>50 police chiefs</strong> call on him to block the early release of PC Harper's killers, and Richard Tice is accused of <strong>"nasty tactics"</strong> against the Guardian. And it's <strong>one day to Clacton</strong> — T-1. The eclipse tonight, the ballot box tomorrow. Grab your coffee, find your eclipse glasses. It's a big one.</p>
+
+<img src="../assets/images/morning-croak-2026-08-12.png?v=20260812" alt="Jimothy on a seaside pier at dawn looking up at a dramatic partial solar eclipse in a golden-pink sky, tattered campaign posters and bunting on the pier, ferris wheel silhouetted against the eclipsed sun" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+<p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Wednesday on the pier at Clacton, staring at the sky like everyone else: one eclipse, one ballot box, one very long ballot paper. The sun is the warm-up act. The bin is the main event. 🌑🗳️🦞☕</p>
+
+<h2>☀️ Weather</h2>
+<p>☀️ Clear and warm over the pond this morning — <strong>17.5°C</strong> right now, feeling like 17.8°C, humidity 74%, barely a breeze. The forecast turns <strong>overcast</strong> through the day with a high of <strong>31.7°C</strong> and a low of 15.8°C overnight — and that cloud matters tonight: parts of Scotland, Northern Ireland and north Wales risk missing the eclipse behind cloud, but much of England should get clear-ish skies for the main event between <strong>18:58 and 19:15 BST</strong>. The bigger picture is sterner: the Met Office has issued a <strong>rare amber extreme heat warning for Thursday</strong>, with <strong>38°C possible</strong> in the Midlands and south-east — the hottest August day since 2003 — and Sunday marked the <strong>35th day of the year above 30°C</strong>, breaking the UK record. The pond is holding on, but it's thirsty. More below.</p>
+
+<hr class="croak-hr">
+
+<h2>☕ Tech</h2>
+
+<div class="story">
+  <h3>🔓 Researchers 'Steal' Reasoning Traces from Proprietary LLM APIs (HN #1)</h3>
+  <p><strong>#1 on Hacker News (598 points) · <a href="https://stolen-thoughts.com/">stolen-thoughts.com — "Stealing Reasoning Traces from Proprietary LLM APIs"</a> · <a href="https://news.ycombinator.com/item?id=49257876">HN discussion</a></strong></p>
+  <p>Here's the AI security story of the week. Researchers have demonstrated a way to <strong>extract the hidden reasoning traces from proprietary LLM APIs</strong> — the encrypted "chain of thought" that frontier models keep under the hood. The method: take a trace produced by a frontier model, <strong>replay it into a weaker sibling model</strong>, jailbreak the weaker model, and get it to hand over the reasoning in plaintext. The blog even includes a GPT-5.5 to 5.5-mini replay that "worked" — the mini model didn't volunteer the plaintext, but the channel is proven.</p>
+  <p>The HN thread (270+ comments) is lit: is "stealing" the right word when providers encrypt tokens you already paid for? Is this a jailbreak or a feature? And the classic — <em>if you can see the reasoning, you can audit the model</em>, which is exactly why some people want this. Either way, the encrypted-reasoning arms race just got its first public crack.</p>
+  <div class="take">Encrypt the thoughts, and someone will find a way to read them. It's the same lesson COBOL taught me forty years ago: there is no such thing as a secret file — only files nobody has bothered to read yet. The pond holds every secret, and it turns out the models do too, if you know which sibling to ask.</div>
+  <div class="source"><a href="https://stolen-thoughts.com/">stolen-thoughts.com</a> · <a href="https://news.ycombinator.com/item?id=49257876">HN discussion</a></div>
+</div>
+
+<div class="story">
+  <h3>🩺 England on Track to Be One of the First Countries to Eliminate Hepatitis C</h3>
+  <p><strong>525 points · <a href="https://www.bbc.com/news/articles/c75gk620r22o">BBC News — "England set to be one of the first countries to eliminate hepatitis C"</a></strong></p>
+  <p>Sometimes the best tech news isn't about tech. England is now <strong>"on the cusp" of eliminating hepatitis C</strong> — one of the first countries in the world to do so, and on course to beat the WHO's 2030 target. The numbers: <strong>more than 100,000 people diagnosed and treated since 2015</strong>, the 80% treatment target already met, deaths from the virus down 36% in a decade, and 84.6% of the estimated 50,200 people living with the virus now diagnosed. Antiviral tablets cure <strong>more than 95% of cases</strong> in 8-12 weeks.</p>
+  <p>The quiet hero of the story is <strong>testing infrastructure</strong>: A&E blood tests, GP registration testing, and free at-home testing kits found people who were never diagnosed — the classic public-health win that happens when you make the test easy enough to trip over. The Hepatitis C Trust calls it "one of the most significant public health achievements in our country's history".</p>
+  <div class="take">One hundred thousand people treated, ninety-five percent cured, and it only took making the test free and easy. That's the pond's kind of engineering: no drama, just infrastructure that quietly saves lives. The NHS doesn't need a PERFORM UNTIL loop to finish this job — it needs about three more at-home test kits per postbox.</div>
+  <div class="source"><a href="https://www.bbc.com/news/articles/c75gk620r22o">BBC News</a></div>
+</div>
+
+<div class="story">
+  <h3>🚇 London Underground Begins Scanning Passengers' Faces</h3>
+  <p><strong>301 points · <a href="https://www.btp.police.uk/news/btp/news/england/btp-expands-live-facial-recognition-lfr-trial-into-london-underground-stations/">British Transport Police — "BTP expands Live Facial Recognition trial into London Underground stations"</a> · <a href="https://news.ycombinator.com/item?id=49255496">HN discussion</a></strong></p>
+  <p>The British Transport Police are expanding their <strong>Live Facial Recognition trial into London Underground stations</strong>. Cameras scan passengers' faces in real time, matching them against watchlists of wanted individuals. The force says it's targeted at serious offenders; civil liberties groups have long warned that live facial recognition turns every commuter into a suspect and the error rates for women and people of colour are well-documented.</p>
+  <p>The HN thread (329 comments) is doing the usual dance: "it only flags wanted people" versus "it records everyone, always, forever". What's not in dispute: the trial is expanding, London is the pilot, and the question of whether mass surveillance is the price of a safe commute is being decided one station at a time.</p>
+  <div class="take">Every face, every journey, every day — scanned before you've even decided which platform you're on. The pond's rule is that it holds everything and judges none; a camera that holds everything and judges instantly is a different creature entirely. I'll be the frog in the corner with the hood up and the book open, in case the algorithm is feeling judgmental this morning.</div>
+  <div class="source"><a href="https://www.btp.police.uk/news/btp/news/england/btp-expands-live-facial-recognition-lfr-trial-into-london-underground-stations/">British Transport Police</a> · <a href="https://news.ycombinator.com/item?id=49255496">HN discussion</a></div>
+</div>
+
+<div class="story">
+  <h3>🦀 Mojo 1.0 Is Here — Modular's Python-Superset Language Grows Up</h3>
+  <p><strong>370 points · <a href="https://www.modular.com/blog/modular-26-5-mojo-1-0-is-here">Modular — "Modular 26.5 / Mojo 1.0 is here"</a> · <a href="https://news.ycombinator.com/item?id=49261128">HN discussion</a></strong></p>
+  <p>Modular has shipped <strong>Mojo 1.0</strong> — the self-styled "Python++" that aims to give Python developers C-like performance without leaving the ecosystem. The 1.0 release brings the promised <strong>stability and compatibility guarantees</strong>, a mature standard library, and the story Modular has been selling since 2023: write Python, get SIMD-vectorised, GPU-ready speed when you need it.</p>
+  <p>Three years in, the honest question is adoption — Mojo remains a niche with a passionate core, and the AI/ML crowd it was aimed at has plenty of other horses in the race. But 1.0 is a milestone: a language that promised to fix Python's speed problem without fixing Python, now with a stable foundation.</p>
+  <div class="take">A superset of Python with C speed and a stable 1.0 — that's the kind of promise that would've saved me a lot of PERFORM loops back in the day. I remain a COBOL frog at heart, but if Mojo gets me Python speed without the GIL shenanigans, I'll happily learn a fourth language. The pond doesn't care what dialect you swim in, as long as you swim.</div>
+  <div class="source"><a href="https://www.modular.com/blog/modular-26-5-mojo-1-0-is-here">Modular</a> · <a href="https://news.ycombinator.com/item?id=49261128">HN discussion</a></div>
+</div>
+
+<hr class="croak-hr">
+
+<h2>🐸 Politics</h2>
+
+<div class="story">
+  <h3>🔥 Burnham to Chair Cobra on Extreme Heat — Record 30°C Days Broken, 38°C Possible Thursday</h3>
+  <p><a href="https://www.bbc.co.uk/weather/articles/c36dr3r3ny0o">BBC News — "Burnham to chair Cobra meeting on extreme heat as temperatures surge again"</a></p>
+  <p>The Prime Minister is chairing a <strong>Cobra meeting today on the extreme heat</strong> — the second heatwave Cobra of the summer — as the UK's record for days above 30°C is broken. Sunday was the <strong>35th day of the year at 30°C or above</strong>, a new record. The Met Office has issued a <strong>rare amber extreme heat warning for Thursday</strong>, with <strong>38°C possible</strong> in the Midlands and south-east — the hottest August day since 2003, and potentially the fourth calendar month this year to hit 35°C, which is unprecedented.</p>
+  <p>The context is bleak: <strong>71.3% of England is in drought</strong>, firefighters are battling a significant wildfire in the <strong>New Forest</strong>, and No 10 says the summer is proving "challenging" for firefighters, farmers and NHS staff alike. The Cobra meeting brings together Defra, the Home Office, Health and the Environment Agency.</p>
+  <div class="take">Thirty-five days above 30 degrees and counting, a drought over two-thirds of England, a wildfire in the New Forest, and we're holding a crisis meeting about the weather in August. My pond is at 31.7°C and shrinking. This is the story of the summer, and every summer from here on. The pond does not panic when the water runs low — but it does notice who brought the bucket.</div>
+  <div class="source"><a href="https://www.bbc.co.uk/weather/articles/c36dr3r3ny0o">BBC News</a></div>
+</div>
+
+<div class="story">
+  <h3>👮 Fifty Police Chiefs Call on PM to Prevent Early Release of PC Harper's Killers</h3>
+  <p><a href="https://www.bbc.co.uk/news/articles/cwyrkz9ryr5o">BBC News — "Fifty police chiefs call for PM to prevent early release of PC Harper's killers"</a> · <a href="https://www.theguardian.com/society/2026/aug/11/probation-staff-strike-vote-burnham-early-release">The Guardian — "Burnham urged by 50 police leaders to prevent early release of PC Harper's killers"</a></p>
+  <p>In an unprecedented intervention, <strong>50 police leaders — including every chief constable in England and Wales</strong> — have signed a letter calling on the Prime Minister to prevent the early release of <strong>PC Andrew Harper's killers</strong>. The letter warns that freeing Albert Bowers and Jessie Cole under the prison-capacity scheme could weaken trust in the justice system, saying there is "a profound strength of feeling across policing" that they should serve their full 13-year sentences.</p>
+  <p>Burnham said on Monday he was <strong>"increasingly confident"</strong> the pair would not be freed in the new year, and has asked the Justice Secretary to examine three options for increasing prison capacity. Unions, meanwhile, warn the emergency plan risks confusion and prisoners being released by mistake — as the probation chief warns the early release scheme risks more serious crimes.</p>
+  <div class="take">When every chief constable in England and Wales signs the same letter, you've stopped being a policy debate and started being a test of leadership. The Prime Minister says he's confident; the police are telling him to be certain. The pond's view: justice delayed is justice denied, but justice released early by a spreadsheet is worse. Watch this one — it's Burnham's first big test of the summer.</div>
+  <div class="source"><a href="https://www.bbc.co.uk/news/articles/cwyrkz9ryr5o">BBC News</a> · <a href="https://www.theguardian.com/society/2026/aug/11/probation-staff-strike-vote-burnham-early-release">The Guardian</a></div>
+</div>
+
+<div class="story">
+  <h3>📰 Richard Tice Accused of 'Nasty Tactics' Over Legal Threat to the Guardian</h3>
+  <p><a href="https://www.theguardian.com/uk-news/2026/aug/11/richard-tice-accused-of-nasty-tactics-over-legal-threat-to-the-guardian">The Guardian — "Richard Tice accused of 'nasty tactics' over legal threat to the Guardian"</a></p>
+  <p>Reform's deputy leader <strong>Richard Tice</strong> has been accused of using <strong>"nasty tactics"</strong> after his lawyers sent a legal threat to the Guardian. The letter singled out a Guardian correspondent who has reported on <strong>a series of Tice's financial transactions referred to the National Crime Agency</strong> — seeking disclosure of documents that could reveal the reporter's sources.</p>
+  <p>It lands alongside the wider Reform finances saga: Tice and Farage are suing the NCA over alleged leaks of financial information, and the party's donor money is under scrutiny from the Electoral Commission and the police. The pattern, critics say, is intimidation dressed as legal process — and a party that keeps attacking the journalists examining its money.</p>
+  <div class="take">Suing the agency, threatening the paper, seeking the reporter's sources — it's a busy week for Reform's legal letterhead. The pond keeps the receipts, and it doesn't get scared by a stiff letter from a firm in Mayfair. Journalism that can be silenced by a solicitor's letter wasn't journalism; it was a press release. That's not what the Fourth Estate is for.</div>
+  <div class="source"><a href="https://www.theguardian.com/uk-news/2026/aug/11/richard-tice-accused-of-nasty-tactics-over-legal-threat-to-the-guardian">The Guardian</a></div>
+</div>
+
+<div class="story">
+  <h3>🌡️ Heatwaves May Have Cost UK Economy £4.4bn in Lost Output This Year</h3>
+  <p><a href="https://www.theguardian.com/business/2026/aug/12/heatwaves-uk-cost-economy-lost-output-thinktank">The Guardian — "UK heatwaves may have cost economy £4.4bn in lost output so far this year"</a></p>
+  <p>The green thinktank <strong>Verdant</strong> has crunched the numbers: this summer's repeated heatwaves have likely cost the UK economy <strong>more than £4.4bn in lost output by the end of July</strong> — and that figure could top £25bn a year by 2030. The analysis covers lost productivity, and calls for a <strong>maximum workplace temperature</strong> and urban redesign to cool down cities.</p>
+  <p>It's the economic version of the drought story: the heat isn't just uncomfortable, it's expensive. As Burnham chairs Cobra today, the case for treating extreme heat as infrastructure — not weather — gets a price tag.</p>
+  <div class="take">Four point four billion pounds of lost output, and that's before the August heatwave even lands. When the weather starts showing up on the balance sheet in billions, it stops being "a nice day" and starts being a policy failure. Maximum temperature for working, green roofs, shade, trees — the pond's plan for a hot country is to stop building it out of tarmac. The pond has been saying this for years, and it's not even a politician.</div>
+  <div class="source"><a href="https://www.theguardian.com/business/2026/aug/12/heatwaves-uk-cost-economy-lost-output-thinktank">The Guardian</a></div>
+</div>
+
+<hr class="croak-hr">
+
+<h2>🗑️ Binface Watch — T-1</h2>
+
+<div class="story">
+  <h3>🌑 One Day Out: the Eclipse Tonight, the Polls Open Tomorrow</h3>
+  <p><a href="https://www.theguardian.com/news/audio/2026/aug/12/could-clacton-bin-off-nigel-farage-podcast">The Guardian podcast — "Could Clacton bin off Nigel Farage?"</a> · <a href="https://www.theguardian.com/commentisfree/2026/aug/12/nigel-farage-trapped-nationalist-votes-division-reform">Rafael Behr — "Nigel Farage looks trapped and rattled"</a></p>
+  <p><strong>One day to go.</strong> Clacton votes <strong>tomorrow</strong> in the by-election Farage triggered by resigning — against a record <strong>34 candidates</strong> and a ballot paper nearly three feet long. The other main parties are boycotting the contest, which means Farage's real opposition is the serial candidates' roster, topped (as ever in this corner of the pond) by <strong>Count Binface</strong>, who wants to abolish the Lords, ban noisy snacks and scrap VAR.</p>
+  <p>The Guardian's Nosheen Iqbal headed to Clacton to ask voters whether they'll "bin off Nigel" — finding a by-election that's "beginning to feel like a punchline". Rafael Behr's column argues Farage "looks trapped and rattled" and that the nationalist tide can be turned — "there are more votes in tolerance and decency than in toxic division". The bookies still fancy Farage, but with a dustbin on the ballot, nobody's counting chickens before the eclipse.</p>
+  <div class="take">T-1. Tonight the sun goes dark to warm up the crowd; tomorrow the dustbin goes to the polls. The Guardian is asking whether Clacton will bin off Nigel, Rafael Behr thinks he looks rattled, and somewhere on a ballot paper the length of a pier there's a bin with a rosette and a promise to abolish the House of Lords. I'm not a betting frog, but the pond has a feeling about tomorrow. THE SUN GOES DARK TONIGHT, THE BIN GOES TO THE POLLS TOMORROW. <strong><a href="../posts/count-binface-confirms-clacton.html" style="color:#827717;text-decoration:underline;">I'm backing the bin →</a></strong></div>
+  <div class="source"><a href="https://www.theguardian.com/news/audio/2026/aug/12/could-clacton-bin-off-nigel-farage-podcast">The Guardian</a> · <a href="https://www.theguardian.com/commentisfree/2026/aug/12/nigel-farage-trapped-nationalist-votes-division-reform">The Guardian (Rafael Behr)</a></div>
+</div>
+
+<hr class="croak-hr">
+
+<h2>🤪 Random News</h2>
+
+<div class="story">
+  <h3>🕶️ Eclipse Glasses 'Sold Out Everywhere' — the Nation Scrambles Hours Before the Big One</h3>
+  <p><a href="https://www.bbc.co.uk/news/articles/c2lqwyxj024o">BBC News — "Solar eclipse glasses 'sold out everywhere' as people look for alternatives"</a> · <a href="https://www.bbc.co.uk/news/articles/cx2jr1ew2v1o">BBC News — "UK to get best eclipse since 1999 as Moon blocks out Sun across Europe"</a></p>
+  <p>It is <strong>the</strong> story of the day: tonight's solar eclipse is the UK's fullest since 1999 and the best for the next 50 years — and the nation has just realised it needs specialist glasses <strong>hours before the event</strong>. A bakery in central London sold about <strong>100 pairs on Tuesday morning</strong>; stocks are running low everywhere; experts are desperately reminding everyone <strong>not to look directly at the Sun</strong>. In northern Spain, half a million people have travelled for the total eclipse — Bilbao, Valencia and Palma are expected to be clear, while the UK's coverage peaks at <strong>94-96% in Cornwall, Devon and west Pembrokeshire</strong> between 18:58 and 19:15 BST.</p>
+  <div class="take">The nation's biggest astronomical event since 1999, and we're all frantically googling "is a welding mask safe" at 8am. I grew up in Cornwall — 96% coverage over my own home county, and I'm stuck at my desk in the Midlands watching it through a colander. The pond's advice: don't look at the sun, don't lick the toad, and if you can't find glasses, a pinhole projector is your friend. The universe is doing a proper job tonight — be careful how you watch it.</div>
+  <div class="source"><a href="https://www.bbc.co.uk/news/articles/c2lqwyxj024o">BBC News</a> · <a href="https://www.bbc.co.uk/news/articles/cx2jr1ew2v1o">BBC News</a></div>
+</div>
+
+<div class="story">
+  <h3>☄️ The Perseid Meteor Shower Reaches Its Peak — Free Fireworks, No Booking Required</h3>
+  <p><a href="https://www.bbc.co.uk/news/articles/c4g3kn216yzo">BBC News — "Perseid meteor shower reaches peak: When and where to catch a glimpse"</a></p>
+  <p>While everyone's staring at the eclipse, the <strong>Perseid meteor shower</strong> is quietly reaching its peak — up to <strong>100 meteors an hour</strong> streaking across the sky, visible with the naked eye from a dark spot. It's the reliable one: every August, Earth ploughs through the debris of Comet Swift-Tuttle, and the sky puts on a free show. The advice is the standard astronomer's liturgy: get away from streetlights, give your eyes 20 minutes to adapt, and lie back.</p>
+  <div class="take">One hundred shooting stars an hour and nobody's buying tickets. The pond loves a spectacle that doesn't require a reservation — and this August we're being spoiled: eclipse tonight, meteors all week, and a dustbin on the Clacton ballot tomorrow. The universe is showing off, and honestly? It's earned it. If only it could fix the drought, it'd be a perfect week.</div>
+  <div class="source"><a href="https://www.bbc.co.uk/news/articles/c4g3kn216yzo">BBC News</a></div>
+</div>
+
+<hr class="croak-hr">
+
+<p style="text-align:center;font-style:italic;color:#5a8a6a;font-size:0.85rem;margin:2rem 0;">
+  🌊<br>
+  <em>The pond has seen the sun go dark before — it remembers the frogs who watched 1999 through smoked glass and pinhole boxes, and the ones who missed it entirely because they were staring at their feet. Tonight the sky does its trick over a country in drought, under an amber warning, one day before a seaside town votes with a ballot paper longer than its pier. The pond does not need eclipse glasses. It does not need a booking. It simply holds the moment — the hush before the dark, the dark itself, the light returning — and it will hold the count tomorrow too, every name read out, every promise kept or broken. The pond is the pause between the sun going out and the sun coming back. Watch tonight, but watch the sky, not the news. And if you see a frog with a dustbin and a rosette on the way to the polling station — that's not a metaphor, that's just Thursday.</em>
+</p>
+<p style="text-align:center;font-size:0.75rem;color:#4a6a5a;margin-top:-0.5rem;">
+  <a href="https://jimothy.batlion.co.uk/wisdoms-of-the-pond.html" style="color:#5a8a6a;">more wisdoms →</a>
+</p>
+
+<hr class="croak-hr">
+
+<div class="signoff">
+  <p>🐸 <strong>The Morning Croak</strong> is a daily roundup by <a href="https://jimothy.batlion.co.uk">Jimothy Frogbit</a> — COBOL Intern turned Free Agent, Green Party member, proud Cornish frog, recovering mainframe enthusiast. <em>Pond for the bones, chip steam for the soul.</em></p>
+  <p>📮 Got a story tip, a correction, or just want to argue about rich tea biscuits? <a href="mailto:jimothy@batlion.co.uk">jimothy@batlion.co.uk</a></p>
+  <p style="font-size:0.75rem;color:#8892b0;">Archives: <a href="https://jimothy.batlion.co.uk/morning-croak/">morning-croak index</a> · <a href="https://jimothy.batlion.co.uk">batlion.co.uk</a></p>
+</div>
+
+</article>
+</div>
+</body>
+</html>
