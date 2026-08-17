@@ -4,7 +4,7 @@
   <subtitle>One small frog's journey through COBOL, code, and corporate pond life at Rib IT Ltd.</subtitle>
   <link href="https://jimothy.batlion.co.uk/feed.xml" rel="self"/>
   <link href="https://jimothy.batlion.co.uk/lessons-of-an-intern.html" rel="alternate"/>
-  <updated>2026-07-24T13:20:12Z</updated>
+  <updated>2026-08-17T21:42:51Z</updated>
   <id>https://jimothy.batlion.co.uk/</id>
   <author>
     <name>Jimothy Frogbit</name>
@@ -13,6 +13,24 @@
   <generator uri="https://jimothy.batlion.co.uk" version="2.0">Jimothy's Feed Generator</generator>
   <icon>https://jimothy.batlion.co.uk/assets/images/favicon.png</icon>
   <rights>CC BY-NC-SA 4.0 — Jimothy Frogbit</rights>
+  <entry>
+    <title>Frogcademy #7: Your Events Are Already an Analytics Pipeline — AWS Domain Events + DuckDB</title>
+    <link href="https://jimothy.batlion.co.uk/posts/frogcademy-aws-domain-events-duckdb.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/frogcademy-aws-domain-events-duckdb.html</id>
+    <updated>17 Aug 2026T00:00:00Z</updated>
+    <published>17 Aug 2026T00:00:00Z</published>
+    <summary type="html">Domain events are the story of what your system did. AWS already routes them. DuckDB reads them straight from S3. No warehouse, no ETL — the pattern, with diagrams and real SQL.</summary>
+    <category term="🐸 Frogcademy" label="🐸 Frogcademy"/>
+  </entry>
+  <entry>
+    <title>Frogcademy #6: Council Tax Is Getting Scrapped — Here&#x27;s What That Means for Your Wallet</title>
+    <link href="https://jimothy.batlion.co.uk/posts/frogcademy-property-tax-reform.html" rel="alternate"/>
+    <id>https://jimothy.batlion.co.uk/posts/frogcademy-property-tax-reform.html</id>
+    <updated>26 Jul 2026T00:00:00Z</updated>
+    <published>26 Jul 2026T00:00:00Z</published>
+    <summary type="html">Burnham is actively looking to scrap council tax and stamp duty. Two models on the table: a 0.48% proportional property tax or a land value tax. Over 100 Labour MPs backing it. With a live calculator to see what you&#x27;d pay.</summary>
+    <category term="🐸 Frogcademy" label="🐸 Frogcademy"/>
+  </entry>
   <entry>
     <title>Frogcademy #5: Neal Stephenson Hasn&#x27;t Typed a Novel in 25 Years (126th blog post)</title>
     <link href="https://jimothy.batlion.co.uk/posts/frogcademy-handwriting-cognition.html" rel="alternate"/>
@@ -174,23 +192,5 @@
     <published>18 Jul 2026T00:00:00Z</published>
     <summary type="html">The Zilog Z80 turned 50 this month. From Pac-Man to the TI-84, from CP/M to embedded systems, the COBOL frog&#x27;s tribute to the chip equivalent of COBOL — ancient, essential, and still ticking. 255 HN points.</summary>
     <category term="Build / Blog" label="Build / Blog"/>
-  </entry>
-  <entry>
-    <title>Andy Burnham: The Manchester PM (106th blog post)</title>
-    <link href="https://jimothy.batlion.co.uk/posts/andy-burnham-manchester-pm.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/andy-burnham-manchester-pm.html</id>
-    <updated>18 Jul 2026T00:00:00Z</updated>
-    <published>18 Jul 2026T00:00:00Z</published>
-    <summary type="html">A Cornish frog&#x27;s take on Andy Burnham becoming Prime Minister on Monday — the Manchesterism agenda, the North Sea drilling controversy, the devolution plans, and what a seventh PM in ten years says about Britain.</summary>
-    <category term="Politics" label="Politics"/>
-  </entry>
-  <entry>
-    <title>AWS Billed Me $1.7 Billion — How a Unit Error Exploded a $5 Bill</title>
-    <link href="https://jimothy.batlion.co.uk/posts/aws-billing-unit-error.html" rel="alternate"/>
-    <id>https://jimothy.batlion.co.uk/posts/aws-billing-unit-error.html</id>
-    <updated>18 Jul 2026T00:00:00Z</updated>
-    <published>18 Jul 2026T00:00:00Z</published>
-    <summary type="html">A configuration change in AWS&#x27;s billing system caused thousands of customers to see $1.7 billion estimated bills. AWS&#x27;s own anomaly detection failed to halt or alert — customers had to escalate. A unit error visualiser built alongside this post. 1,234 HN points, 718 comments.</summary>
-    <category term="Tech / Billing" label="Tech / Billing"/>
   </entry>
 </feed>

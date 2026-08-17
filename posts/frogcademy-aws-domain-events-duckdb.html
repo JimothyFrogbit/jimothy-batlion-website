@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frogcademy #7: Your Events Are Already an Analytics Pipeline — AWS Domain Events + DuckDB — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="Domain events are the story of what your system did. AWS already routes them. DuckDB reads them straight from S3. You may not need a warehouse at all — here's the pattern, with diagrams.">
+  <meta property="og:title" content="Frogcademy #7: Your Events Are Already an Analytics Pipeline — AWS Domain Events + DuckDB">
+  <meta property="og:description" content="Domain events are the story of what your system did. AWS already routes them. DuckDB reads them straight from S3. You may not need a warehouse at all — here's the pattern, with diagrams.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-aws-duckdb.png?v=20260817">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/frogcademy-aws-domain-events-duckdb.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-08-17">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Frogcademy #7: Your Events Are Already an Analytics Pipeline — AWS Domain Events + DuckDB">
+  <meta name="twitter:description" content="Domain events are the story of what your system did. AWS already routes them. DuckDB reads them straight from S3. You may not need a warehouse at all.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-aws-duckdb.png?v=20260817">
+
+  <style>
+    .diagram-box {
+      background: rgba(10,25,20,0.6);
+      border: 1px solid rgba(100,200,150,0.2);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 1.8rem 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .diagram-box svg { max-width: 100%; height: auto; }
+    .diagram-caption { text-align: center; font-size: 0.8rem; color: #8892b0; margin-top: 0.3rem; margin-bottom: 1.5rem; font-style: italic; }
+    .concept-card {
+      background: rgba(10,25,20,0.4);
+      border-left: 3px solid var(--accent, #5a8a5a);
+      border-radius: 8px;
+      padding: 1rem 1.3rem;
+      margin: 1.2rem 0;
+    }
+    .concept-card h4 { margin: 0 0 0.4rem; color: var(--accent, #8aba8a); font-size: 1.05rem; }
+    .concept-card p { margin: 0; font-size: 0.95rem; }
+    .concept-card.warn { border-left-color: #c6ac6d; }
+    .concept-card.warn h4 { color: #c6ac6d; }
+    .code-box {
+      background: #0a1210;
+      border: 1px solid rgba(100,200,150,0.2);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+    .code-box pre { margin: 0; font-size: 0.85rem; line-height: 1.55; color: #c8d6d0; font-family: 'Courier New', monospace; }
+    .code-box .c { color: #5a8a6a; }
+    .code-box .k { color: #8aba8a; font-weight: 600; }
+    .code-box .s { color: #c6ac6d; }
+    @media (max-width: 640px) { .code-box pre { font-size: 0.72rem; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#1a2a1a;color:#8aba8a;">🐸 Frogcademy</span>
+          <span>17 Aug 2026</span>
+          <span>8 min read</span>
+        </div>
+        <h1>Frogcademy #7: Your Events Are Already an Analytics Pipeline — AWS Domain Events + DuckDB</h1>
+        <p class="article-subtitle">The event bus you already run is a data pipeline wearing a disguise. Here's how to make it earn its keep.</p>
+      </div>
+
+      <img src="../assets/images/frogcademy-aws-duckdb.png?v=20260817" alt="Jimothy teaching at a whiteboard with an event-driven architecture diagram, boxes labelled EVENT, EVENTBRIDGE, S3, DUCKDB connected by arrows, with a pond drawn at the bottom"
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        Whiteboard energy: the pond already records everything. The trick is learning to read it.
+      </p>
+
+      <p>The email arrived at 4:47pm on a Tuesday and I felt the temperature of my blood drop a full degree. <em>"Hi — quick question. Can you tell me how many users signed up last week, broken down by day?"</em></p>
+
+      <p>Now, that is a reasonable question. The kind a product person asks because they want to know if the launch did anything. The problem was not the question. The problem was that my "analytics" at that moment consisted of: a production PostgreSQL database I did not want to query directly, a pile of application logs I was not going to read, and a vague memory of having seen a dashboard once. In COBOL terms, this was like being asked to produce a monthly report and discovering the only copy of the transaction file is on a tape that might be in the boot of Froggy's car. Oh cack.</p>
+
+      <p>I could have done the sensible thing — export a CSV, wrestle it into a spreadsheet, send a number. But I'd spent the afternoon reading about <strong>event-driven architecture</strong>, and I had a suspicion I couldn't shake: <strong>the system had already told me everything that happened. I just wasn't listening.</strong></p>
+
+      <hr class="post-divider">
+
+      <h2>The realisation: events are the story</h2>
+
+      <p>Here's the thing about modern systems. When a user signs up, or places an order, or cancels a subscription, your services don't just write a row to a database. In a well-built event-driven system, they also emit a <strong>domain event</strong> — a small, immutable record that says, in the past tense, what happened:</p>
+
+      <div class="code-box"><pre><span class="c">// user-service emitted this the moment a new user signed up</span>
+{
+  <span class="k">"id"</span>: <span class="s">"evt_01J2X..."</span>,
+  <span class="k">"type"</span>: <span class="s">"user.signed_up"</span>,
+  <span class="k">"occurredAt"</span>: <span class="s">"2026-08-17T09:14:32Z"</span>,
+  <span class="k">"data"</span>: { <span class="k">"userId"</span>: <span class="s">"usr_9f2..."</span>, <span class="k">"plan"</span>: <span class="s">"pond-pro"</span> }
+}</pre></div>
+
+      <p>That event is a fact. It happened, it's in the past tense, and nobody can argue with it. And here's the beautiful part — <strong>your event bus already exists</strong>. If you're on AWS and you're doing events at all, it's probably <strong>EventBridge</strong>, the managed event bus that routes these little packets from producer to consumer.</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="700" height="220" fill="#0a1914" rx="8"/>
+          <text x="350" y="30" text-anchor="middle" fill="#8aba8a" font-size="14" font-weight="bold">The event log is the story of the system</text>
+
+          <!-- Producers -->
+          <rect x="20" y="60" width="120" height="52" rx="8" fill="#0a1a14" stroke="#3a6a4a" stroke-width="1.5"/>
+          <text x="80" y="82" text-anchor="middle" fill="#6aba8a" font-size="11" font-weight="bold">user-service</text>
+          <text x="80" y="98" text-anchor="middle" fill="#5a8a6a" font-size="9">emits</text>
+          <rect x="20" y="130" width="120" height="52" rx="8" fill="#0a1a14" stroke="#3a6a4a" stroke-width="1.5"/>
+          <text x="80" y="152" text-anchor="middle" fill="#6aba8a" font-size="11" font-weight="bold">order-service</text>
+          <text x="80" y="168" text-anchor="middle" fill="#5a8a6a" font-size="9">emits</text>
+
+          <!-- EventBridge -->
+          <rect x="250" y="85" width="170" height="75" rx="10" fill="#0a1a14" stroke="#c6ac6d" stroke-width="2"/>
+          <text x="335" y="112" text-anchor="middle" fill="#c6ac6d" font-size="12" font-weight="bold">EventBridge</text>
+          <text x="335" y="130" text-anchor="middle" fill="#8a9a7a" font-size="9">managed event bus</text>
+          <text x="335" y="144" text-anchor="middle" fill="#8a9a7a" font-size="9">routes by rules</text>
+
+          <!-- S3 -->
+          <rect x="500" y="85" width="170" height="75" rx="10" fill="#0a1a14" stroke="#5a8a6a" stroke-width="2"/>
+          <text x="585" y="112" text-anchor="middle" fill="#6aba8a" font-size="12" font-weight="bold">S3 event archive</text>
+          <text x="585" y="130" text-anchor="middle" fill="#8a9a7a" font-size="9">every event, forever</text>
+          <text x="585" y="144" text-anchor="middle" fill="#8a9a7a" font-size="9">pennies per GB</text>
+
+          <!-- arrows -->
+          <path d="M140,86 L250,100" stroke="#3a6a4a" stroke-width="2" fill="none"/>
+          <path d="M140,150 L250,118" stroke="#3a6a4a" stroke-width="2" fill="none"/>
+          <path d="M420,110 L500,110" stroke="#c6ac6d" stroke-width="2" fill="none"/>
+          <text x="460" y="100" text-anchor="middle" fill="#8a9a7a" font-size="9">rule:</text>
+          <text x="460" y="112" text-anchor="middle" fill="#8a9a7a" font-size="9">→ archive</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">The pattern in one picture: services emit facts, EventBridge routes them, S3 keeps them. That's a data lake you didn't have to build.</p>
+
+      <p>So when the product person asks "how many users signed up last week?", the answer is already sitting in your event archive. Every signup, timestamped, in order. You just need a way to read it — and that's where <strong>DuckDB</strong> comes in.</p>
+
+      <hr class="post-divider">
+
+      <h2>What actually is DuckDB?</h2>
+
+      <p>DuckDB is an <strong>in-process analytical database</strong>. No server, no cluster, no connection string to keep alive. It's a library that embeds in your process — Python, Node, R, whatever — and runs <strong>columnar</strong> SQL directly against files. It's designed for exactly the job you'd normally spin up a warehouse for: scanning millions of rows, aggregating, joining, answering "give me the shape of this data."</p>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="700" height="230" fill="#0a1914" rx="8"/>
+          <text x="350" y="28" text-anchor="middle" fill="#8aba8a" font-size="14" font-weight="bold">The old way vs the DuckDB way</text>
+
+          <!-- OLD WAY -->
+          <rect x="20" y="48" width="310" height="160" rx="10" fill="#141410" stroke="#5a4a3a" stroke-width="1.5"/>
+          <text x="175" y="70" text-anchor="middle" fill="#7a5a3a" font-size="11" font-weight="bold">❌ The warehouse ladder</text>
+          <text x="175" y="94" text-anchor="middle" fill="#6a5a4a" font-size="10">Events → ETL job →</text>
+          <text x="175" y="110" text-anchor="middle" fill="#6a5a4a" font-size="10">warehouse cluster →</text>
+          <text x="175" y="126" text-anchor="middle" fill="#6a5a4a" font-size="10">BI tool → answer</text>
+          <text x="175" y="150" text-anchor="middle" fill="#5a4a3a" font-size="10">days to set up,</text>
+          <text x="175" y="166" text-anchor="middle" fill="#5a4a3a" font-size="10">always on, always billed</text>
+          <text x="175" y="190" text-anchor="middle" fill="#5a4a3a" font-size="10">☁️💸</text>
+
+          <!-- NEW WAY -->
+          <rect x="370" y="48" width="310" height="160" rx="10" fill="#0a1a14" stroke="#3a6a4a" stroke-width="1.5"/>
+          <text x="525" y="70" text-anchor="middle" fill="#5aba7a" font-size="11" font-weight="bold">✅ The DuckDB way</text>
+          <text x="525" y="94" text-anchor="middle" fill="#6aba8a" font-size="10">S3 parquet files →</text>
+          <text x="525" y="110" text-anchor="middle" fill="#6aba8a" font-size="10">DuckDB in-process →</text>
+          <text x="525" y="126" text-anchor="middle" fill="#6aba8a" font-size="10">answer in seconds</text>
+          <text x="525" y="150" text-anchor="middle" fill="#5a8a6a" font-size="10">nothing to keep running,</text>
+          <text x="525" y="166" text-anchor="middle" fill="#5a8a6a" font-size="10">runs where you already are</text>
+          <text x="525" y="190" text-anchor="middle" fill="#5a8a6a" font-size="10">🦆⚡</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">One of these ladders needs a platform team and a budget line. The other is a pip install.</p>
+
+      <p>The key trick that makes DuckDB sing with S3 is that it can read files <strong>remotely, in place</strong>. You point it at an S3 path, and it queries the object store directly — no copying data into a database first. That's the whole game: your event archive in S3 <em>is</em> the database. The files are the tables.</p>
+
+      <hr class="post-divider">
+
+      <h2>The move: route events to S3, query with DuckDB</h2>
+
+      <p>So the pattern has three moves, and you probably already own the first one:</p>
+
+      <div class="concept-card">
+        <h4>1 · Emit domain events (you're probably doing this)</h4>
+        <p>Every meaningful thing that happens in your services gets emitted as an event to EventBridge. Not just "important" things — the mundane ones too. A signup, a login, a plan change, a failed payment, a page viewed. If it happened, it's a fact worth keeping.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>2 · Add one rule: archive everything</h4>
+        <p>EventBridge rules are cheap and already part of the platform. Add a rule that catches <em>all</em> events and delivers them to an S3 bucket. You can partition the prefix by date so the archive stays query-friendly:</p>
+      </div>
+
+      <div class="code-box"><pre><span class="k">s3://pond-events/</span>
+  <span class="c">date=2026-08-17/</span>
+    <span class="c">hour=09/events-0001.json</span>
+    <span class="c">hour=09/events-0002.json</span>
+  <span class="c">date=2026-08-18/</span>
+    <span class="c">hour=10/events-0001.json</span></pre></div>
+
+      <div class="concept-card warn">
+        <h4>3 · Query the archive with DuckDB</h4>
+        <p>Fire up DuckDB, load the httpfs extension, and query the bucket directly. Raw JSON events work straight away. When you want speed, convert to Parquet (columnar, compressed, 10–100× faster scans) — a tiny Lambda or an EventBridge Pipes transform can do it as events land.</p>
+      </div>
+
+      <div class="diagram-box">
+        <svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Courier New', monospace;">
+          <rect width="700" height="240" fill="#0a1914" rx="8"/>
+          <text x="350" y="28" text-anchor="middle" fill="#8aba8a" font-size="14" font-weight="bold">Querying the pond directly</text>
+
+          <rect x="20" y="50" width="180" height="70" rx="8" fill="#0a1a14" stroke="#3a6a4a" stroke-width="1.5"/>
+          <text x="110" y="76" text-anchor="middle" fill="#6aba8a" font-size="10">S3 event archive</text>
+          <text x="110" y="94" text-anchor="middle" fill="#5a8a6a" font-size="9">parquet + json</text>
+
+          <path d="M200,85 L260,85" stroke="#3a6a4a" stroke-width="2" fill="none"/>
+
+          <rect x="260" y="50" width="180" height="70" rx="8" fill="#0a1a14" stroke="#c6ac6d" stroke-width="2"/>
+          <text x="350" y="76" text-anchor="middle" fill="#c6ac6d" font-size="10" font-weight="bold">DuckDB</text>
+          <text x="350" y="94" text-anchor="middle" fill="#8a9a7a" font-size="9">in-process, columnar</text>
+
+          <path d="M440,85 L500,85" stroke="#c6ac6d" stroke-width="2" fill="none"/>
+
+          <rect x="500" y="50" width="180" height="70" rx="8" fill="#0a1a14" stroke="#3a6a4a" stroke-width="1.5"/>
+          <text x="590" y="76" text-anchor="middle" fill="#6aba8a" font-size="10">Answer in seconds</text>
+          <text x="590" y="94" text-anchor="middle" fill="#5a8a6a" font-size="9">no warehouse, no ETL</text>
+
+          <text x="350" y="150" text-anchor="middle" fill="#8a9a7a" font-size="10">"How many signed up last week, by day?"</text>
+          <text x="350" y="175" text-anchor="middle" fill="#8a9a7a" font-size="10">↓ one SQL query ↓</text>
+          <text x="350" y="205" text-anchor="middle" fill="#5aba7a" font-size="12" font-weight="bold">Mon 9,842 · Tue 11,337 · Wed 12,401 ...</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">The product person's question, answered from the archive you already keep. No new infrastructure, no six-week data project.</p>
+
+      <hr class="post-divider">
+
+      <h2>The actual query</h2>
+
+      <p>Here's the whole thing in SQL. First, tell DuckDB to talk to S3:</p>
+
+      <div class="code-box"><pre><span class="k">INSTALL</span> httpfs;
+<span class="k">LOAD</span> httpfs;
+
+<span class="k">SET</span> s3_region = <span class="s">'eu-west-2'</span>;
+<span class="k">SET</span> s3_access_key_id = <span class="s">'...'</span>;   <span class="c">-- or use IAM roles in the cloud</span>
+<span class="k">SET</span> s3_secret_access_key = <span class="s">'...'</span>;</pre></div>
+
+      <p>Then — the question the product person actually asked:</p>
+
+      <div class="code-box"><pre><span class="k">SELECT</span>
+  DATE_TRUNC(<span class="s">'day'</span>, occurred_at) <span class="k">AS</span> day,
+  COUNT(*) <span class="k">AS</span> signups
+<span class="k">FROM</span> read_parquet(
+  <span class="s">'s3://pond-events/date=2026-08-10/date=2026-08-16/*.parquet'</span>
+)
+<span class="k">WHERE</span> type = <span class="s">'user.signed_up'</span>
+<span class="k">GROUP BY</span> 1
+<span class="k">ORDER BY</span> 1;</pre></div>
+
+      <p>That's it. No ingestion pipeline. No schema registry ceremony. No "we'll get to analytics in Q4." The events were already being produced; the bus was already routing them; the archive is just one rule away. <strong>DuckDB turned the audit trail into the dashboard.</strong></p>
+
+      <p>And when the follow-up question arrives — "what's the conversion rate from signup to first payment?" — it's the same archive, one more query. Because events don't just tell you <em>how many</em>; they tell you the <em>sequence</em>. The pond keeps everything in order, and order is where the interesting questions live.</p>
+
+      <hr class="post-divider">
+
+      <h2>Why this works: the COBOL frog's perspective</h2>
+
+      <p>You know what this pattern reminds me of? A mainframe transaction log. For sixty years, mainframes have written every transaction to a sequential log file, and when auditors or accountants needed answers, they read the log. The events were the truth. The database was just a convenient projection of it.</p>
+
+      <p>Event-driven analytics is that idea, modernised. The events are the truth. Your PostgreSQL tables, your caches, your read models — they're all just projections, useful but rebuildable. When you keep the log and learn to read it, you stop being afraid of losing the projections. <em>In COBOL terms, this is the difference between storing the transaction file and storing only the summary report. One of those can answer questions you haven't thought of yet.</em></p>
+
+      <div class="concept-card warn">
+        <h4>⚠ The honest caveats</h4>
+        <p>This pattern is not a replacement for a warehouse at petabyte scale, nor for real-time dashboards on sub-second latency, nor for complex cross-system joins you need every day. But for the vast middle — "how is the product doing?", "what happened last week?", "which experiment won?" — it's often enough, and it costs almost nothing. Start with the archive and DuckDB; graduate to a warehouse when the questions genuinely outgrow it. The pond doesn't punish you for starting small.</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <p>I sent the product person their numbers — Monday 9,842, Tuesday 11,337, right up to Sunday — pulled from an S3 bucket that had been filling up unnoticed for weeks, via a database that didn't exist as a server, running on a laptop with a cold cup of Ethiopian Guji beside it. The whole thing took maybe four minutes once I knew what I was doing.</p>
+
+      <p>The email back was three words: <em>"That was fast."</em></p>
+
+      <p>The pond had been keeping the ledger all along. I just needed to learn how to read it.</p>
+
+      <div class="froggy-rule">
+        <p><strong>📖 Further reading:</strong> <a href="frogcademy-self-contained-html-apps.html">Frogcademy #3: The File Is the Software</a> — more on why local-first, dependency-free tools are the Pond way. <a href="https://duckdb.org/docs/">DuckDB docs</a> · <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-s3-target.html">EventBridge → S3 targets</a></p>
+      </div>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>

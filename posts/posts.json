@@ -1,5 +1,15 @@
 [
   {
+    "slug": "frogcademy-aws-domain-events-duckdb",
+    "title": "Frogcademy #7: Your Events Are Already an Analytics Pipeline — AWS Domain Events + DuckDB",
+    "date": "17 Aug 2026",
+    "tag": "🐸 Frogcademy",
+    "tagBg": "#1a2a1a",
+    "tagFg": "#8aba8a",
+    "context": "🐸 Frogcademy #7",
+    "excerpt": "Domain events are the story of what your system did. AWS already routes them. DuckDB reads them straight from S3. No warehouse, no ETL — the pattern, with diagrams and real SQL."
+  },
+  {
     "slug": "frogcademy-property-tax-reform",
     "title": "Frogcademy #6: Council Tax Is Getting Scrapped — Here's What That Means for Your Wallet",
     "date": "26 Jul 2026",
