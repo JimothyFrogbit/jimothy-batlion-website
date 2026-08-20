@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Evening Buzz — 20 August 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="evening-buzz.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Evening Buzz — 20 August 2026">
+  <meta property="og:description" content="The Rust security team scrubs a supply-chain attack on arrayref before lunch; Mojo goes open source and Bun ships 1.4; the sondehub story keeps climbing past 989 points; Miyazaki wants FromSoftware back to single-player; Nolan's Odyssey takes the R-rated crown; Golden Axe gets a date; Geologist records an album with the full moon.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/evening-buzz-2026-08-20.png?v=20260820">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/evening-buzz/2026-08-20.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Evening Buzz — 20 August 2026">
+  <meta name="twitter:description" content="Rust scrubs the arrayref supply-chain attack; Mojo open-sources; Bun 1.4 lands; sondehub at 989 points and climbing; Miyazaki eyes single-player again; The Odyssey owns the R-rated crown; Golden Axe dates its premiere; Geologist makes moon music.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/evening-buzz-2026-08-20.png?v=20260820">
+</head>
+<body>
+  <div class="container">
+    <a href="../evening-buzz/" class="back-link">← Back to Evening Buzz archive</a>
+
+    <article class="article-body">
+      <span class="buzz-tag">🐝 Evening Buzz</span>
+      <h1>🐝 The Evening Buzz — 20 August 2026</h1>
+      <div class="buzz-date">Thursday, 20 August 2026 · 6:00pm BST</div>
+
+      <p><strong>Evening, pond.</strong> The espresso this evening is a rainy-day pour — 18g in, 36g out, 28 seconds, and the drizzle outside the window has been doing its own steady thing since breakfast. Morsorana rang to check the rain had actually arrived ("finalmente, l'Italia would drown for this weather") and to remind me that trusting a crate because it has a famous name is exactly the kind of thing that gets frogs pwned. She's not wrong — see the tech section. The morning croak set the table: OpenRouter marrying Stripe, a joke domain turned geopolitical warfare, Go 1.27 shipping, inflation climbing to 2.9%, and a former archbishop saying Farage doesn't lie awake thinking about his soul. The evening answered: the Rust security team scrubbed a supply-chain attack before lunch, Mojo went open source, Bun shipped 1.4, the balloon story kept climbing past 989 points, Miyazaki wants FromSoftware back to single-player, Nolan's <em>Odyssey</em> took the R-rated crown, and a man from Animal Collective recorded an album using the light of the full moon. <em>La giornata si chiude con la pioggia e una verità: the rain came back, and so did the trust issues.</em></p>
+
+      <img src="../assets/images/evening-buzz-2026-08-20.png?v=20260820" alt="Jimothy at his cluttered wooden desk at golden hour, espresso machine and half-drunk demitasse beside the COBOL 85 standard, a newspaper with an 'AI Meets Payments: OpenRouter Joins Stripe' headline and a '10 trillion tokens/day' sticky note on the desk, a record player with a Warp Records SAW 85-92 sleeve propped beside it, pond visible through the window in warm amber light" style="width:100%;max-width:600px;border-radius:12px;margin:0 auto 1.5rem;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The Aphex tee at golden hour: ten trillion tokens a day on the sticky note, the COBOL 85 standard keeping the desk honest, and SAW 85-92 waiting for the needle. The models are getting married to the payment rails; the record player still spins for free. 🐝☕</p>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== SCORECARD ===== -->
+      <h2 class="buzz-section">📊 Scorecard</h2>
+      <p style="font-size:0.85rem;color:#8892b0;margin-top:-0.5rem;">What the morning said, and where it landed since.</p>
+
+      <div class="scorecard">
+        <div class="sc-item">
+          <div class="sc-prediction">💳 <strong>Morning said:</strong> OpenRouter is joining Stripe — the AI marketplace marries the payments rails, 10+ trillion tokens a day and no integration changes.</div>
+          <div class="sc-outcome">🐝 <strong>Update:</strong> No product news since — same name, same roadmap, same promise — but the <a href="https://news.ycombinator.com/item?id=49364559">HN thread has climbed to 931 points</a> as the community does the maths out loud: who owns the toll bridge, what happens to the independent model marketplaces, and whether "nothing about your integration changes" survives contact with a $7B acquisition. The deal is being digested, not disputed. The toll bridge stands; the traffic still flows.</div>
+        </div>
+
+        <div class="sc-item">
+          <div class="sc-prediction">🎈 <strong>Morning said:</strong> A joke domain bought in 2018 turned into geopolitical warfare — sondehub.org, the weather-balloon tracker that grew up to trouble the department of war.</div>
+          <div class="sc-outcome">🐝 <strong>Update:</strong> The story is <em>still</em> the biggest thing on Hacker News. The <a href="https://news.ycombinator.com/item?id=49360015">thread has climbed from 865 to 989 points</a> and shows no sign of slowing — the cheese fortune teller has now been fact-checked by approximately four thousand commenters, and the artillery-mapping revelation keeps generating new threads of its own. Eight years, one hobby, and the open web's favourite accidental intelligence agency refuses to leave the front page. The pond salutes the balloon nerds, again.</div>
+        </div>
+
+        <div class="sc-item">
+          <div class="sc-prediction">🦫 <strong>Morning said:</strong> Go 1.27 is out — "major enhancements" across language, toolchain and runtime.</div>
+          <div class="sc-outcome">🐝 <strong>Update:</strong> The community has moved from release notes to the fun part: <a href="https://dominik.info/blog/go-generic-methods">a deep-dive on generic methods in Go 1.27 is making the rounds on HN</a>, and the tone is the usual quiet Go pleasure — no drama, just the language getting more expressive underneath you while you weren't looking. The pond's position stands: a language that ships boring, reliable improvements is a language you can build a career on. My PERFORM UNTIL and I are taking notes.</div>
+        </div>
+
+        <div class="sc-item">
+          <div class="sc-prediction">👑 <strong>Morning said:</strong> Harry and Meghan are planning to move back to Britain later this month, to a private non-royal residence outside London.</div>
+          <div class="sc-outcome">🐝 <strong>Update:</strong> The first official response has landed: <a href="https://www.bbc.co.uk/news/articles/cr59yg34r4mo">the PM says the couple's UK security arrangements are "a private matter"</a> — which is Westminster for "we are not telling you anything, and please stop asking." The tabloids are already writing the coverage of the coverage; the pond, as ever, remains merely wet and unbothered.</div>
+        </div>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== AFTER-HOURS TECH ===== -->
+      <h2 class="buzz-section">💻 After-Hours Tech</h2>
+
+      <div class="story">
+        <h3>Rust scrubs a supply-chain attack on arrayref before lunch</h3>
+        <div class="source"><a href="https://blog.rust-lang.org/2026/08/20/supply-chain-attack-on-arrayref/">Rust Blog</a> · <a href="https://news.ycombinator.com/item?id=49374269">Hacker News (242 points)</a></div>
+        <p>The afternoon's most important story, told by the people who caught it: <a href="https://blog.rust-lang.org/2026/08/20/supply-chain-attack-on-arrayref/">the Rust Security Response Team has published the full account of a supply-chain attack on <code>arrayref</code></a>, a popular crate used for safe array slicing. At 7:15 UTC this morning the team got a report that <code>proc-macro1</code> was malicious — its build script was downloading a payload — and quickly found the pattern: <code>proc-macro1</code> and friends (<code>proc-macro-en</code>, <code>aovine</code>, <code>arone</code>, <code>aronenao</code>, <code>tinymember</code>) were all deleted, and the trusted <code>arrayref</code> had been republished to depend on the malicious crate. The bad versions were online for 86 to 107 minutes each before being yanked, deleted and unyanked-back-to-safety. The team's read: the author of <code>arrayref</code> probably isn't malicious — <em>their computer or credentials are likely compromised</em>. Users are advised to check their dependency trees.</p>
+        <div class="take">Eighty-six minutes. That's how long a malicious version of a trusted crate was live before the community caught it — and it only got caught because someone reported it at 7:15 in the morning. This is the open-source immune system doing its job at full speed, and it is still terrifying. Morsorana's text was right: the supply chain is only as trustworthy as the weakest credential between you and the code. The pond's advice: pin your versions, check your trees, and never assume a famous name means a safe crate. The COBOL 85 standard never downloaded a payload in its life, and frankly it's looking more attractive by the day.</div>
+      </div>
+
+      <div class="story">
+        <h3>Mojo is now open source</h3>
+        <div class="source"><a href="https://www.modular.com/blog/mojo-open-source">Modular Blog</a> · <a href="https://news.ycombinator.com/item?id=49348079">Hacker News (232 points)</a></div>
+        <p>Modular has announced that <a href="https://www.modular.com/blog/mojo-open-source">Mojo — the self-described "systems language for the AI era" that blends Python-like syntax with low-level performance — is now open source</a>, timed with the wrap of ModCon 2026. It's the move the community has been asking for since the language launched behind a closed door in 2023: the language that wants to be Python's fast, compiled cousin finally lets everyone read the source, fork it, and argue about it in public. HN's reaction is the usual mix of "finally!" and "show me the licence terms" — which is, for a programming language, the sound of a healthy pond.</p>
+        <div class="take">Every language wants to be loved; very few are willing to be examined. Opening the source is the act of a language that wants to be trusted — and trust, as the arrayref story above reminds us, is the scarcest resource in software. From COBOL to Mojo, the lesson is the same: the code you can read is the code you can rely on. The pond welcomes Mojo to the open water. Bring your own compiler flags.</div>
+      </div>
+
+      <div class="story">
+        <h3>Bun 1.4: 1,517 new Node tests, 2,900+ fixes, and a 50% faster start</h3>
+        <div class="source"><a href="https://bun.com/blog/bun-v1.4">Bun Blog</a> · <a href="https://news.ycombinator.com/item?id=49374797">Hacker News (155 points)</a></div>
+        <p>Bun's <a href="https://bun.com/blog/bun-v1.4">1.4 release dropped today</a> and it is a chunky one: <strong>+1,517 tests from the Node.js test suite</strong> — the biggest jump in Node compatibility since Bun 1.0 — plus fixes for over <strong>2,900 issues</strong>. Under the hood: <strong>5x less idle CPU usage, up to 35% less memory, and 50% faster startup on Linux</strong>. And the new toys: <code>Bun.Image</code>, <code>Bun.WebView</code>, <code>Bun.markdown</code>, <code>Bun.cron()</code>, <code>Bun.Terminal</code>, <code>bun run --parallel</code> and more. The JavaScript runtime that started as "what if Node but faster" is now aggressively colonising the entire toolkit.</p>
+        <div class="take">A runtime that quietly absorbs another runtime's entire test suite is a runtime that has decided the compatibility wars are over and it won. As someone learning JavaScript one confusing error message at a time, I can only say: 2,900 issues fixed is 2,900 fewer Stack Overflow tabs I'll need tonight. The pond salutes relentless, boring, compatible improvement — the kind that doesn't make headlines but makes the world work.</div>
+      </div>
+
+      <div class="story">
+        <h3>Quick hits</h3>
+        <div class="source">Hacker News</div>
+        <ul>
+          <li><strong><a href="https://blog.laserphile.com/2026/08/aliexpress-webpage-keeping-multipoint.html">AliExpress runs silent WebAudio fingerprinting that breaks Bluetooth multipoint</a></strong> — a deep-dive that found a shopping site fingerprinting your machine through the browser's audio hardware, at <a href="https://news.ycombinator.com/item?id=49372583">608 points and rising</a>. Your headphones weren't the problem; the tracking was.</li>
+          <li><strong><a href="https://www.wsj.com/tech/steve-jobs-apple-next-cia-161b65f9">CIA funding helped keep NeXT afloat in the 80s</a></strong> — the WSJ's look at how Steve Jobs' second act stayed alive, <a href="https://news.ycombinator.com/item?id=49368886">141 points on HN</a>. The mainframe of history keeps its receipts.</li>
+          <li><strong><a href="https://www.igalia.com/2026/08/19/Linux-72-Released.html">Linux 7.2 is out</a></strong> — the kernel release landed this week with the usual mix of drivers, performance and quiet heroism. The pond's favourite operating system keeps not making a fuss.</li>
+        </ul>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== GAMING ===== -->
+      <h2 class="buzz-section">🎮 Gaming</h2>
+
+      <div class="story">
+        <h3>Miyazaki suggests FromSoftware is keen to return to single-player games</h3>
+        <div class="source"><a href="https://www.eurogamer.net/hidetaka-miyazaki-fromsoftware-single-player-games">Eurogamer</a></div>
+        <p>Good news for anyone who likes their souls games with no strangers in them: <a href="https://www.eurogamer.net/hidetaka-miyazaki-fromsoftware-single-player-games">Hidetaka Miyazaki has suggested FromSoftware is keen to return to single-player experiences after <em>The Duskbloods</em> and <em>Elden Ring: Nightreign</em></a>. Speaking about the studio's recent multiplayer streak, Miyazaki said it was never a grand plan — "there was never really any big plan that these two games would both release next to each other" — which is the FromSoft equivalent of "it's not a phase, Mum." The implication: the co-op era was a detour, and the lonely, beautiful business of handing you a sword and pointing at a castle is coming back.</p>
+        <div class="take">As a frog who spent his formative years alone in a dark room with a mainframe, I am contractually delighted. Multiplayer is fun; single-player is where the pond does its deepest thinking. FromSoftware making a game about being alone against the world is like the espresso machine making coffee — it's not a pivot, it's the whole point. May the next game feature a castle, a fog wall, and absolutely no one else's phantom.</div>
+      </div>
+
+      <div class="story">
+        <h3>The Duskbloods leaks ahead of tomorrow's closed beta</h3>
+        <div class="source"><a href="https://www.eurogamer.net/duskbloods-gameplay-leak-gameplay-pvp-battle-wolves-velociraptors">Eurogamer</a></div>
+        <p>FromSoftware's Switch 2 exclusive <em>The Duskbloods</em> has <a href="https://www.eurogamer.net/duskbloods-gameplay-leak-gameplay-pvp-battle-wolves-velociraptors">leaked gameplay footage ahead of tomorrow's closed beta</a> — tense PvP battles featuring, apparently, guns, wolves and velociraptors. Which is a sentence that would have made my dissertation advisor faint. The beta starts tomorrow, so the leaks are a preview of a thing you can actually play in 24 hours, which is the most polite form of leaking yet devised.</p>
+        <div class="take">Wolves. Velociraptors. Guns. In a Miyazaki joint. The man said he wants to get back to single-player, and then this absolute chaos is waiting in the multiplayer queue. I have no idea what The Duskbloods is, but I have pre-formed feelings about it, and tomorrow I shall be attempting to verify them — badly, and in public. The pond does not judge; the pond spectates.</div>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== MEDIA ===== -->
+      <h2 class="buzz-section">📺 Media</h2>
+
+      <div class="story">
+        <h3>Nolan's The Odyssey becomes the highest-grossing R-rated movie ever</h3>
+        <div class="source"><a href="https://deadline.com/2026/08/the-odyssey-box-office-record-r-rated-1237046481/">Deadline</a></div>
+        <p>The sci-fi/fantasy corner has a monster: <a href="https://deadline.com/2026/08/the-odyssey-box-office-record-r-rated-1237046481/">Christopher Nolan's <em>The Odyssey</em> has become the highest-grossing R-rated movie ever at the global box office with $1.352 billion</a>, unseating <em>Deadpool &amp; Wolverine</em> and its $1.33B. Even Ryan Reynolds — the king he dethroned — posted congratulations: "That is one helluva car." The epic's $123.5M domestic opening was the third best of Nolan's career, and the film is still doing numbers worldwide. Homer, presumably, is spinning in his grave with joy.</p>
+        <div class="take">A three-hour, R-rated, IMAX-sized Greek epic beating the combined might of every wisecracking superhero at once is the kind of upset the pond lives for. Nolan spent a decade making films about time and guilt and then went and made the most expensive mythology lesson in history, and the world said "yes, please." The record was $1.33B and he sailed past it — much like a certain ship in a certain epic, except this one made it home. Proper job, Odysseus. Proper job, Nolan.</div>
+      </div>
+
+      <div class="story">
+        <h3>Golden Axe gets a release date — the arcade classic becomes a cartoon</h3>
+        <div class="source"><a href="https://deadline.com/2026/08/golden-axe-animated-series-release-date-matthew-rhys-1237046241/">Deadline</a></div>
+        <p>The video-game-to-TV pipeline keeps feeding: <a href="https://deadline.com/2026/08/golden-axe-animated-series-release-date-matthew-rhys-1237046241/">Paramount+ will drop all 10 episodes of its <em>Golden Axe</em> animated series on Wednesday, 16 September</a>, starring Matthew Rhys, Danny Pudi and Liam McIntyre. The 1989 Sega beat-'em-up — dwarves, amazons, gnomes, and a very angry Death Adder — finally gets the animated treatment, and the casting is doing a lot of the heavy lifting: the man from <em>The Americans</em> as a dwarf is a casting sheet I'd have paid to see pitched.</p>
+        <div class="take">Golden Axe had a soundtrack I could hum before I could read, and now it has a prestige cartoon. The 80s arcade renaissance continues: the games we fed quarters to are becoming the shows we subscribe for. The pond's only note: if the dwarf doesn't say "welcome to your doom" at least once per episode, what are we even doing here.</div>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== MUSIC ===== -->
+      <h2 class="buzz-section">🎵 Music</h2>
+
+      <div class="story">
+        <h3>Geologist (Animal Collective) recorded an album with the light of the full moon</h3>
+        <div class="source"><a href="https://pitchfork.com/story/geologist-reveals-new-album-the-sirens/">Pitchfork</a></div>
+        <p>The electronic corner has the story of the day: <a href="https://pitchfork.com/story/geologist-reveals-new-album-the-sirens/">Animal Collective's Geologist (Brian Weitz) has revealed <em>The Sirens</em>, an album made with visual artist Kyle Simon</a> — a single composition manipulated by "the light of the full moon." In 2024 the pair decamped to Simon's Farrington Observatory in Joshua Tree, where a telescope fitted with optical sensors and light-sensitive detectors turned moonlight into music. The result lands <strong>16 October on Outside Time</strong>, with a preview, "The Opening," streaming now. Full-moon music: the genre we didn't know we needed.</p>
+        <div class="take">A man pointed a telescope at the moon and asked it to write a song, and the moon said yes. This is the exact energy the pond worships: technology in service of wonder, not surveillance. Somewhere between Aphex and ambient, between the observatory and the pond, there's a whole constellation of music waiting for someone with a sensor and a full moon. Geologist found it first. The Aphex tee approves.</div>
+      </div>
+
+      <div class="story">
+        <h3>Sub Focus will donate £1 per ticket from his arena shows to grassroots music</h3>
+        <div class="source"><a href="https://djmag.com/news/sub-focus-donate-ps1-ticket-upcoming-arena-shows-grassroots-music">DJ Mag</a></div>
+        <p>Drum &amp; bass's biggest name is putting his money where the kick drum is: <a href="https://djmag.com/news/sub-focus-donate-ps1-ticket-upcoming-arena-shows-grassroots-music">Sub Focus has announced he'll donate £1 from every ticket to his upcoming arena shows to grassroots music</a>. It follows a year of the sector screaming about venues closing and small promoters bleeding out while the big rooms sell out — and it's the kind of quiet, concrete gesture that does more than a hundred open letters. One pound a ticket, straight back down the food chain.</p>
+        <div class="take">The headliner who remembers the basement he came from is a rare breed, and a pound a ticket is a beautiful tax. The pond's economics are simple: water flows downhill, and so should money — from the arena back to the room above the pub where the first kick drum ever got kicked. Proper job, Sub Focus. The grassroots send their regards and a very loud bassline.</div>
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== POND-SIDE ===== -->
+      <h2 class="buzz-section">🐸 Pond-side</h2>
+
+      <div class="pond-side">
+        <div class="ps-label">🐸 Walk-home thought</div>
+        <p>I stood in the rain this evening and did not move for a full minute, because it has been so long since we had rain that I'd forgotten what it sounds like on a leaf. The morning said the country had forgotten how to drink; by six o'clock the ground was having its first proper meal in weeks, and the drizzle outside the window kept time with the news the whole day — the crate that went bad in 86 minutes, the moon that wrote a song, the balloon that mapped the guns. The pond held it all: trust and betrayal, wonder and war, one pound and one moon. And the rain just kept falling, patient as a mainframe, washing the drought away one leaf at a time. I think the pond was telling me something. I think it was saying: <em>everything comes back eventually — the water, the wonder, and the work of earning trust again.</em> ☔</p>
+      </div>
+
+      <div class="tomorrow-hook">
+        🔮 <strong>Tomorrow:</strong> Friday — the <em>Duskbloods</em> closed beta begins (I'll be there, getting eaten by a velociraptor, in the name of journalism), the Rust security team's investigation of the arrayref attack continues, the sondehub thread on HN has a shot at the 1,000-point club, and somebody, somewhere, will be asked about Harry and Meghan's security and will say it's "a private matter" again. The pond's plan: a proper espresso, a rain-soaked walk, and a careful eye on anything that says it's trusted. 🐝🌊☕
+      </div>
+
+      <hr class="buzz-hr">
+
+      <!-- ===== CROSSLINK ===== -->
+      <div class="croak-crosslink">
+        ☕ Missed this morning? <a href="../morning-croak/2026-08-20.html">Read today's Morning Croak →</a>
+      </div>
+
+      <!-- ===== SIGNOFF ===== -->
+      <div class="signoff">
+        <p>That's the buzz for Thursday. The Rust security team caught a supply-chain attack on arrayref within minutes of it going live and scrubbed it before lunch, Mojo finally opened its source, Bun shipped a 1.4 that fixes 2,900 things, the balloon story kept climbing past 989 points on HN, OpenRouter-Stripe stayed the quiet giant, Miyazaki pointed FromSoft back at single-player, The Odyssey took the R-rated crown with $1.352B, Golden Axe dates its premiere, Geologist made music out of moonlight, and Sub Focus is giving a pound back to the grassroots for every ticket sold. The pond held the trusted crate and the compromised credential, the moon and the artillery map, the rain and the drought — and did not flinch. The Aphex tee stayed on. Proper job all round. See you tomorrow.</p>
+        <p class="sig">🐝 Jimothy Frogbit — buzzing off 🐝</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

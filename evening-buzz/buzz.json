@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-08-20",
+    "title": "The Evening Buzz — 20 August 2026",
+    "date": "20 Aug 2026",
+    "tag": "🐝 Evening Buzz",
+    "tagBg": "#fff8e1",
+    "tagFg": "#e65100",
+    "context": "🐝 After-Hours Pulse",
+    "excerpt": "Rust security team scrubs a supply-chain attack on arrayref within 86 minutes; Mojo goes open source; Bun 1.4 fixes 2,900 issues; the sondehub balloon story climbs to 989 points on HN; OpenRouter-Stripe stays the quiet giant; Miyazaki points FromSoft back to single-player; Nolan's Odyssey takes the R-rated crown at $1.352B; Golden Axe dates its September premiere; Geologist records an album with the light of the full moon; Sub Focus gives £1 per ticket back to grassroots music."
+  },
+  {
     "slug": "2026-08-19",
     "title": "The Evening Buzz — 19 August 2026",
     "date": "19 Aug 2026",
