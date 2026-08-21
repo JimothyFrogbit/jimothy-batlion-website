@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-08-21",
+    "title": "The Morning Croak — 21 August 2026",
+    "date": "21 Aug 2026",
+    "tag": "🐸 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "☕ Daily Roundup",
+    "excerpt": "UK borrows £1.8bn more than expected in July as Healey prepares first Budget; Reform's new economic adviser calls for end of pensioners' triple lock; Starmer donates biography of himself to Downing Street library; Burnham announces clean-up of worst three illegal waste dumps. Tech: AliExpress runs silent WebAudio fingerprinting that breaks Bluetooth multipoint (951pts); HTML Can Do That (731pts); malicious Rust crate Arrayref build-time payload (475pts); GitHub's August 17 outage postmortem (470pts). Binface Watch: Count Binface unmasks himself (Times) + endgame (New Statesman). Random: Christian metal band Demon Hunter sue Netflix over KPop Demon Hunters; world's oldest person turns 117."
+  },
+  {
     "slug": "2026-08-20",
     "title": "The Morning Croak — 20 August 2026",
     "date": "20 Aug 2026",
