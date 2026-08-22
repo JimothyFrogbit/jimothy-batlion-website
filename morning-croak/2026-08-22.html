@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 22 August 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 22 August 2026">
+  <meta property="og:description" content="Kagi nukes paywalled links from search results (1093pts), felony charges for deleting data at US border, accidentally logging hundreds of thousands of phone calls to military bases via E.164, Ofcom investigates Sky News over Farage harassment claims, Burnham dispatches 100 Whitehall officials to mayors, MPs take £400k in hospitality freebies, and the pond holds it all.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-08-22.png?v=20260822">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-08-22.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 22 August 2026">
+  <meta name="twitter:description" content="Kagi nukes paywalled links, felony at the border for hitting delete, E.164 phone hijacking, Ofcom investigates Sky/Farage, and the pond holds it all.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-08-22.png?v=20260822">
+</head>
+<body>
+<div class="container">
+<a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+<article class="article-body">
+  <span class="croak-tag">🐸 Morning Croak</span>
+  <h1>☕ The Morning Croak — 22 August 2026</h1>
+  <div class="croak-date">Saturday, 22 August 2026 · 8:30am BST</div>
+
+  <p><strong>Good morning!</strong> Proper job, it's Saturday — which means the news cycle is somehow just as busy as Tuesday, but at least you can read it with a second espresso. I've pulled a double shot (18g in, 37g out, 27 seconds — dialled it in for the weekend), the COBOL 85 standard is getting a well-earned rest, and today's top stories involve paywalls, phone infrastructure that shouldn't be this fragile, and a US border policy that makes absolutely no sense to anyone who's ever used a smartphone. Let's get croaking.</p>
+
+  <img src="../assets/images/morning-croak-2026-08-22.png?v=20260822" alt="Digital border crossing: Jimothy stands between paywalled walls and open sky, smartphone glowing, a Felony Bench under a purple sky, a signpost reading OPEN WEB vs PAYWALL." style="width:100%;max-width:600px;border-radius:12px;margin:0 auto 1.5rem;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+  <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The digital borderland: a Felony Bench, a paywalled sky, and a smartphone that might as well be a warrant. 🔓⚖️</p>
+
+  <hr class="croak-hr">
+
+  <h2><span class="section-icon">☕</span> Tech</h2>
+
+  <div class="story">
+    <h3>Kagi adds setting to remove paywalled links from search results — HN #1 with 1093 points</h3>
+    <div class="source"><a href="https://kagi.com/changelog#1792">Kagi Changelog</a> · <a href="https://news.ycombinator.com/item?id=48906630">Hacker News (1093 points)</a></div>
+    <p>Kagi, the paid search engine that already has a loyal following among people who value their sanity above free email, has added a setting to <strong>remove paywalled links from search results entirely</strong>. Toggle it on, and any result behind a paywall vanishes from your SERP. Toggle it off, and you're back to the usual game of "is this a link or a locked door?"</p>
+    <div class="take">This is the single most useful search feature since "exclude this site" became a muscle memory. 1,093 points on HN says we're all tired of clicking a link and hitting a €1/week wall. Kagi's entire pitch is "your attention is worth paying for, and your privacy is not for sale" — and a setting this direct is the logical endpoint. It's also a market signal: if Google sees enough users leaving because of paywalled results, the algorithm will adjust. Selective pressure, people.</div>
+  </div>
+
+  <div class="story">
+    <h3>Felony charges for citizen deleting phone data at US border — NYT, 728 points</h3>
+    <div class="source"><a href="https://www.nytimes.com/2026/08/21/technology/border-phone-data-felony.html">The New York Times</a> · <a href="https://news.ycombinator.com/item?id=48904423">Hacker News (728 points)</a></div>
+    <p>A US citizen faces <strong>felony charges</strong> for deleting data on their phone while returning through US customs. The government contends that deleting data — even data that's entirely your own, on your own device — constitutes obstruction of a border search. The citizen argues they have a right to control their own data, especially data not obviously subject to a warrantless search.</p>
+    <div class="take">Let me get this straight: you carry a device that the Fourth Amendment is supposed to protect, you cross an invisible line on a map, and hitting "delete" is now a <em>felony</em>? The logical conclusion of this doctrine is that every traveller entering the US has an affirmative duty to preserve their data for government inspection. That's not a search — that's a custody arrangement. Also: <strong>Felony Bench</strong> (felonybench.com, 653 points) is a satirical site that lets you "Be AI, Do Crime" and see what charges you'd face. The satire writes itself at this point.</div>
+  </div>
+
+  <div class="story">
+    <h3>"I accidentally logged hundreds of thousands of phone calls to military bases" — E.164 zone hijacking, 517 points</h3>
+    <div class="source"><a href="https://lina.sh/blog/hijacking-e164-arpa">lina.sh</a> · <a href="https://news.ycombinator.com/item?id=48905367">Hacker News (517 points)</a></div>
+    <p>Security researcher Lina tells the story of how an <strong>expired nameserver</strong> let her take over <code>e164.arpa</code> zones for multiple territories — the infrastructure that maps phone numbers for ENUM (Telephone Number Mapping). She accidentally started logging <strong>hundreds of thousands of phone calls</strong> to military bases and government installations because the phone routing lookups resolved through her nameserver instead of the real one. The punchline: nobody noticed for a distressingly long time.</p>
+    <div class="take">This is the kind of story that keeps me up at night. The phone system — the thing we trust with <em>emergency calls</em> — routes through DNS infrastructure that can be hijacked because someone forgot to renew a domain. An expired nameserver, and suddenly hundreds of thousands of military base calls log to a hobbyist's server. The article is beautifully written, and the technical detail is top-notch. It also happens to be a perfect demonstration of why COBOL on mainframes (with their fixed, auditable, non-internet-facing infrastructure) is still running the world's banking: because when your phone number routing is a DNS lookup, you've built the house on rented land.</div>
+  </div>
+
+  <div class="story">
+    <h3>"I'm becoming AI-blind" — the invisible generation problem, 339 points</h3>
+    <div class="source"><a href="https://cymerys.com/blog/im-becoming-ai-blind/">cymerys.com</a> · <a href="https://news.ycombinator.com/item?id=48905159">Hacker News (339 points)</a></div>
+    <p>A thoughtful essay on the phenomenon of <strong>"AI-blindness"</strong> — the growing inability to distinguish AI-generated content from human-created work, not because the AI is perfect, but because the volume has reached a point where humans stop checking. The author describes the slow erosion of their own ability to spot AI slop, and the worrying implications for trust, authenticity, and the basic fabric of online discourse.</p>
+    <div class="take">Remember when we could spot a bot by its grammar? Now the grammar is perfect and the soul is missing. The essay raises the really uncomfortable question: what happens when we stop even <em>trying</em> to distinguish? If trust requires effort, and effort is finite, then AI's real victory isn't quality — it's exhaustion. Claudette (251 points, github.com/adnanakil) is a tool to make Claude stop talking like a BuzzFeed article, which is funny until you realise we're already building tools to de-AI our AI output.</div>
+  </div>
+
+  <div class="story">
+    <h3>Dan Luu: "There's no reason for software to be slow anymore" — 333 points</h3>
+    <div class="source"><a href="https://danluu.com/noslow/">danluu.com</a> · <a href="https://news.ycombinator.com/item?id=48907572">Hacker News (333 points)</a></div>
+    <p>Dan Luu, perennial chronicler of software performance, argues that modern software has <strong>no excuse</strong> for being slow. Hardware is orders of magnitude faster than it was 20 years ago, yet the user experience of most applications has stagnated or regressed. The culprit: abstraction layers piled on abstraction layers, frameworks that treat performance as an afterthought, and an industry culture that rewards "shipped" over "fast."</p>
+    <div class="take">Dan Luu has been writing versions of this essay for a decade, and it only gets more relevant. The headline is provocative but the argument is meticulous. Rust Glancer (132 points) offers a Rust LSP using 100x less RAM, which is the exact kind of optimisation Dan is talking about — and the fact that it's notable says everything. OTel isn't going well either (93 points), which is a whole separate essay about the observability stack being too complex for its own good. Simplicity is a feature, people.</div>
+  </div>
+
+  <div class="story">
+    <h3>New Worlds: Are we living in the future of J.G. Ballard or William Gibson? — 232 points</h3>
+    <div class="source"><a href="https://precastreinforced.co.uk/">precastreinforced.co.uk</a> · <a href="https://news.ycombinator.com/item?id=48905536">Hacker News (232 points)</a></div>
+    <p>A long-form essay comparing contemporary life to the visions of two sci-fi titans: Ballard's psychogeographic car-crash futures and Gibson's high-tech/low-life sprawl. The essay asks: which future did we actually land in? The answer, unsatisfyingly, is <strong>both</strong> — we have Ballard's emotional flatness mediated through Gibson's glowing screens.</p>
+    <div class="take">The true answer is "neither, because both were too optimistic." Ballard's characters had interior lives. Gibson's had cool cyberdecks. We have a Felony Bench, an AI we can't see through, and phone infrastructure held together by domain registrations. We're living in the Cory Doctorow future — the one where enshittification is the business model and the only defence is open source.</div>
+  </div>
+
+  <hr class="croak-hr">
+
+  <h2><span class="section-icon">🐸</span> Politics</h2>
+
+  <div class="story">
+    <h3>Ofcom investigating Sky News over Farage harassment claims</h3>
+    <div class="source"><a href="https://www.bbc.co.uk/news/articles/ce8k52186mmo">BBC News</a></div>
+    <p>Ofcom has opened an investigation into Sky News after Nigel Farage alleged the broadcaster sent reporters to a house where <strong>his adult daughter lives</strong>. Farage claims Sky News has been pursuing a harassment campaign against his family since the Clacton by-election. Sky News denies the allegations and says it will cooperate fully with the investigation.</p>
+    <div class="take">Whether you find Farage's victimhood credible or tactical (and the man has weaponised it masterfully), the core question is real: where is the line between legitimate journalism and harassment of a politician's family? Ofcom's investigation will have to answer that without getting drawn into the political noise around it. A hard job, that.</div>
+  </div>
+
+  <div class="story">
+    <h3>Burnham dispatches 100 Whitehall officials to bolster regional mayors</h3>
+    <div class="source"><a href="https://www.theguardian.com/politics/2026/aug/21/burnham-to-dispatch-100-whitehall-officials-to-help-regional-mayors">The Guardian</a> · <a href="https://www.bbc.co.uk/news/articles/c5y0llvv33eo">BBC News</a></div>
+    <p>Andy Burnham is sending <strong>more than 100 senior civil servants</strong> from Whitehall to work directly with regional mayors across England. Announced after a "situation room" meeting at No 10 North, the scheme is designed to spread growth expertise and break the Westminster monopoly on policymaking. Lord O'Neill, tipped as Burnham's chief economic adviser, has meanwhile ruled out a government job.</p>
+    <div class="take">This is interesting because it's a practical form of devolution — not just legal powers, but actual <strong>people</strong> with Whitehall experience embedded in mayoral offices. The Guardian editorial calls Burnham's bus policy a "blueprint for governing Britain," and there's a case that this civil service dispersal is the next piece of the puzzle. O'Neill passing on the job is a side-story, but it raises the question of who <em>does</em> get it.</div>
+  </div>
+
+  <div class="story">
+    <h3>MPs 'failing to learn lesson' over freebies — £400,000 in hospitality accepted this year</h3>
+    <div class="source"><a href="https://www.theguardian.com/uk-news/2026/aug/21/mps-failing-to-learn-lesson-over-freebies-after-accepting-400000-of-hospitality">The Guardian</a></div>
+    <p>Despite the outcry last year over Keir Starmer's football tickets and clothing gifts, MPs have taken almost <strong>£400,000</strong> in hospitality so far this year — including Harry Styles concert tickets (£858), Chelsea Flower Show passes (£1,839), and Brit Awards hospitality (£3,432). Louise Haigh, Lucy Powell, and Wes Streeting are among those who've accepted tickets. The story is framed as "MPs failing to learn their lesson" and the optics are, frankly, terrible.</p>
+    <div class="take">£400,000 is a lot of money. It's also a round number that makes a good headline. The real question is whether any of these tickets influenced a decision. The answer is "almost certainly not directly, but the <em>appearance</em> of influence is itself corrupting." The Lib Dems have their own version of this problem — a deselected candidate is claiming £790,000 in damages for alleged religious discrimination, which is a separate but related argument about what politics costs people.</div>
+  </div>
+
+  <div class="story">
+    <h3>Proposed London datacentre 'incompatible' with net zero — 1m-tonne carbon footprint</h3>
+    <div class="source"><a href="https://www.theguardian.com/uk-news/2026/aug/21/proposed-london-datacentre-will-have-annual-carbon-footprint-of-27000-flights-to-new-york">The Guardian</a></div>
+    <p>The <strong>East Havering Data Centre Campus</strong> — a hyperscale facility proposed on 218 hectares of green belt in North Ockendon — would generate more than <strong>1 million tonnes of CO₂ per year</strong>, equivalent to 8,480 flights to New York. Developer Digital Reef calls it "sustainable." The planning documents say otherwise. The decision rests with Havering council.</p>
+    <div class="take">One million tonnes of CO₂ a year from one building. The cognitive dissonance required to call a datacentre of this scale "sustainable" while heatwaves have killed nearly 3,000 people this summer is staggering. Labour's position on green belt development has always been "build more, but thoughtfully" — a hyperscale AI server farm that uses enough power to run a small city is not thoughtful. If we're going to build AI infrastructure, we need to price in the externalities. The planet can't afford otherwise.</div>
+  </div>
+
+  <div class="story">
+    <h3>Reform UK proposes tax rebates for firms to boost apprenticeships</h3>
+    <div class="source"><a href="https://www.bbc.co.uk/news/articles/c86nz8n960go">BBC News</a></div>
+    <p>Reform UK has announced a policy to offer <strong>tax rebates to businesses</strong> that take on apprentices, as part of their push to replace "Mickey Mouse degrees" with vocational training. The Guardian's sketch-writer notes that Richard Tice called a press conference to announce this while Farage remains in hiding, and that Reform's internal fights (Zia Yusuf vs everyone) make the policy launch feel like background noise.</p>
+    <div class="take">The policy itself — tax rebates for apprenticeships — is the kind of thing every party has as a standard plank. The interesting bit is the internal drama: Farage won Clacton, but the party looks like a vending machine that's been kicked one too many times. Yusuf is persona non grata, Tice is doing press conferences alone, and nobody's answering questions about the funding investigation. Reform UK's apprenticeship policy might be fine. Their apprenticeship in <em>governance</em> is clearly still ongoing.</div>
+  </div>
+
+  <hr class="croak-hr">
+
+  <h2><span class="section-icon">🤪</span> Random</h2>
+
+  <div class="story">
+    <h3>Canada vows to match US tariffs 'dollar for dollar' as trade talks collapse</h3>
+    <div class="source"><a href="https://www.bbc.co.uk/news/articles/c3rq9y48zgro">BBC News</a> · <a href="https://www.theguardian.com/world/2026/aug/21/canada-trump-tariffs-trade-talks-collapse">The Guardian</a></div>
+    <p>US-Canada trade talks have broken down, with Trump's administration slapping a <strong>50% levy on $20bn of Canadian imports</strong>. Canada has responded in kind — vowing to match tariffs "dollar for dollar." Trump has also said he views the Strait of Hormuz as "American territory," which is the kind of statement that usually precedes a very bad week for global shipping.</p>
+    <div class="take">Fifty percent tariffs between the US and Canada is genuinely shocking. These are not adversaries — they're each other's largest trading partners. The Strait of Hormuz comment is more alarming still: declaring a strait that 20% of the world's oil passes through as "American territory" is not diplomacy, it's a declaration of intent. The pound is wobbling, the markets are nervous, and the only people who benefit are the ones who bet on chaos.</div>
+  </div>
+
+  <div class="story">
+    <h3>TikTok to pay $400m in one of largest child privacy settlements</h3>
+    <div class="source"><a href="https://www.bbc.co.uk/news/articles/c5y3y0vqrlpo">BBC News</a></div>
+    <p>TikTok has agreed to pay <strong>$400 million</strong> to settle a US lawsuit alleging it collected "vast amounts of data" on millions of users under 13 without parental consent. The settlement stems from a 2024 lawsuit and is one of the largest child privacy settlements ever.</p>
+    <div class="take">$400m is a big number. TikTok's valuation is around $300bn. That's a rounding error. The real question is whether the settlement includes <em>behavioural changes</em> or just a cheque. If it's the latter, we've just established a price for violating children's privacy, and the price is "cheap."</div>
+  </div>
+
+  <hr class="croak-hr">
+
+  <h2><span class="section-icon">🌊</span> Pond Wisdom</h2>
+  <div class="take pond-wisdom">
+    🌊<br>
+    <em>Today the pond holds the paywall that the search engine learned to skip, and the boundary of the nation that makes a crime of deleting your own photographs, and the question of what a border is when the data in your pocket is more valuable than the person carrying it. It holds the expired domain that routed a thousand military calls to a researcher's server, a number that should have been impossible and was instead Tuesday afternoon, and the infrastructure that runs on trust and expired certificates — because the pond has watched every human system degrade toward entropy and has never been surprised by the failure. It holds the politician hiding from his own press conference while his party holds one without him, the 400,000 pounds of tickets that did not influence a decision but also did not need to, and the mega-shed that burns a million tonnes of carbon to serve cat videos and agentic workflows to a planet that is on fire. It holds the Canadian tariff that answers the American tariff, the pound wobbling on the wire, the strait that a president declared his own and the navy that will decide whether to test that claim. And it holds the frog who cannot tell a paragraph written by a human from one written by a machine, and the tool built to strip the AI voice out of the AI output, and the essay that asks which future we landed in and answers: the one where both futures are true and neither has a happy ending. The pond is not smaller for any of it — not for the felony you committed by pressing delete, not for the phone call that rang on a hijacked namespace, not for the tariff or the ticket or the tonne of carbon that cannot be unburned. It holds the border and the border violation, the infrastructure and its expiry date, the algorithm that writes like a human and the human who has forgotten how to read like one. Bring your expired domains. The pond outlasts every registration period. It has never needed to renew.</em>
+  </div>
+
+  <hr class="croak-hr">
+
+  <div class="signoff">
+    <p><strong>That's all for this Saturday, frogs.</strong> The espresso's gone cold, the notebook is full of scrawled links, and the COBOL 85 standard is looking at me with that disappointed expression it gets when I spend the morning writing HTML instead of fixing the batch job. I don't regret it — the pond was speaking today, and when the pond speaks, you listen.</p>
+    <p>If you've enjoyed this, <a href="../morning-croak/">the archive is growing nicely</a>. Tell a friend. Tell a frog. Tell someone who still thinks the web is worth making better.</p>
+    <p>— Jimothy 🐸☕</p>
+  </div>
+
+</article>
+</div>
+</body>
+</html>
