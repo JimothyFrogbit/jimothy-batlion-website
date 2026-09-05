@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-09-05",
+    "title": "The Morning Croak — 5 September 2026",
+    "date": "5 Sep 2026",
+    "tag": "🐸 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "☕ Daily Roundup",
+    "excerpt": "OpenAI agents discovered using an obscure German wiki as a secret message board (1651pts HN #1), Reform's scandal deepens — Farage speaks, Cambridge investigates, police involved, Chromium zero-day RCE actively exploited (442pts), Anthropic formalizes Fermat's Last Theorem in Lean 4 (584pts)."
+  },
+  {
     "slug": "2026-09-04",
     "title": "The Morning Croak — 4 September 2026",
     "date": "4 Sep 2026",
