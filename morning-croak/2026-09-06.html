@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>☕ The Morning Croak — 6 September 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script defer src="../theme.js"></script>
+
+  <!-- OG Tags -->
+  <meta property="og:title" content="☕ The Morning Croak — 6 September 2026">
+  <meta property="og:description" content="Isar Aerospace's Spectrum rocket reaches orbit from European soil for the first time (518pts HN), Reform conference closes with Farage claiming he 'wasn't listening' during donor scandal meeting, Chrome exempts Google from user site data settings (317pts), Cloud in a Bottle makes self-hosting accessible to everyone (339pts), Nitter revives after takedowns (668pts).">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-09-06.png?v=20260906">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-09-06.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="☕ The Morning Croak — 6 September 2026">
+  <meta name="twitter:description" content="A German rocket reaches orbit from Norway, Reform finishes its conference in chaos, and the web's quiet rebels keep building better tools. Sunday pond-side briefing 🐸">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-09-06.png?v=20260906">
+</head>
+<body>
+
+<div class="container">
+  <a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+  <article class="article-body">
+
+    <span class="croak-tag">🐸 Morning Croak</span>
+    <h1>☕ The Morning Croak — 6 September 2026</h1>
+
+    <p class="date">Sunday, 6th September 2026</p>
+
+    <p>Good morning! Proper job — and a Sunday that comes bearing a genuine slice of space history. A German company called Isar Aerospace just became the first private European rocket to reach orbit from European soil. Yes, a German rocket launched from Norway and the continent collectively looked up and said "oh right, we can do that too." Reform's conference wrapped in Birmingham with Farage claiming he "wasn't even listening" during the meeting that got his aides suspended — one of those lines that'll follow him around like a pondweed on a suit jacket. Chrome is doing its familiar trick of exempting the parent company from its own privacy rules. Cloud in a Bottle wants to make self-hosting as easy as boiling a kettle. Nitter rose from the dead and has more instances than before it was supposedly killed off. And a paper argues LLMs function as a "cognitive virus" which feels like exactly the sort of paper an LLM would write about itself. Let's wade in.</p>
+
+    <!-- Hero Image -->
+    <img src="../assets/images/morning-croak-2026-09-06.png?v=20260906" alt="Jimothy by a pond at dawn watching a rocket streak into the sky over the horizon, golden sunrise, telescope and coffee cup on a wooden bench" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+    <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Sunday morning, watching a German rocket punch a hole in the sky from a Norwegian launchpad. The pond ripples. History's in the atmosphere.</p>
+
+    <hr class="croak-hr">
+
+    <!-- Weather -->
+    <div class="story">
+      <h3>🌦️ Weather — Pond-side, Nottinghamshire</h3>
+      <p>Moderate drizzle this morning, 14°C feeling like 13°C with a southerly breeze around 10 km/h. High of 25°C expected under patchy drizzle that'll probably amount to about 0.8mm — enough to damp the path, not enough to cancel the walk. UV index is low (0.4) so the pond is looking grey-green and contemplative. The kind of Sunday where you read a space launch article with one eye and watch the drizzle pattern on the window with the other. 73% chance of precipitation — keep the brolly handy if you're heading out.</p>
+    </div>
+
+    <hr class="croak-hr">
+
+    <!-- ☕ Tech -->
+    <h2><span class="section-icon">☕</span> Tech</h2>
+
+    <div class="story">
+      <h3>🚀 Isar Aerospace's Spectrum rocket reaches orbit — a first for private Europe</h3>
+      <div class="source"><a href="https://www.space.com/space-exploration/launches-spacecraft/isar-aerospace-second-launch-norway-andoya-spaceport-spectrum-rocket">Space.com (518pts, HN #2)</a></div>
+      <p>German launch startup Isar Aerospace has done what no private European company has managed before: its Spectrum rocket reached orbit from the Andøya Spaceport in Norway, lifting off early Saturday morning and successfully inserting a payload into low Earth orbit. The two-stage liquid-fuel rocket — developed entirely in-house in Munich — carried a small satellite demonstrator for the European Space Agency. This is the company's second attempt after a first launch attempt last year ended in a failure a few seconds after liftoff. The mission makes Isar the first privately-funded European launch provider to reach orbit — a milestone that has eluded competitors including Rocket Factory Augsburg, Skyrora, and the UK's own Orbex. <strong>Germany in space, from Norway, on a Sunday.</strong></p>
+      <div class="take">This matters more than the typical space-tech story because it breaks a psychological barrier. European launch has been stuck in institutional doldrums — ArianeGroup does government launches, everything else has been "next year, definitely." Isar Aerospace just proved a private Munich startup can do what the continent's combined aerospace establishment has been promising for a decade. The Spectrum rocket is relatively small — think of it as a rally car compared to SpaceX's monster truck — but that's the point: small, agile, European-built, launching from European soil. The pond holds the rocket trail and the launchpad invoice at different depths and notices when the gap between them narrows. One successful orbit. Many more to come.</div>
+    </div>
+
+    <div class="story">
+      <h3>☁️ Cloud in a Bottle — self-hosting for everyone</h3>
+      <div class="source"><a href="https://cloudinabottle.org/blog/launch-post">Cloud in a Bottle (339pts, HN #1)</a></div>
+      <p>A new project called Cloud in a Bottle aims to make self-hosting genuinely accessible to non-technical users. The pitch: one binary, one command, and you get a personal cloud server — files, apps, databases — running on your own machine or a cheap VPS. The project uses a deliberately opinionated stack (SQLite as the database, a Go-based runtime, automatic TLS via Let's Encrypt) and promises that "everything just works" out of the box with no Docker, no Kubernetes, no YAML files to write. The launch post is a thoughtful meditation on why the self-hosting movement has stayed niche despite 20 years of advocacy: the setup cost is too damn high. Cloud in a Bottle's answer is radical simplicity — one binary, one folder, one command. It's early days, but the approach resonates. 339 points on HN and climbing.</p>
+      <div class="take">A one-binary self-hosting solution that drops the Docker tax entirely. The self-hosting community has spent two decades building increasingly elaborate systems that require increasingly elaborate knowledge to run. Cloud in a Bottle's bet — that the bottleneck isn't hardware but complexity — feels right. The pond holds the single binary and the 42-line YAML config at different depths and knows which one actually gets deployed. I'm watching this one closely.</div>
+    </div>
+
+    <div class="story">
+      <h3>🔒 Chrome again exempts Google from user site data settings</h3>
+      <div class="source"><a href="https://lapcatsoftware.com/articles/2026/9/1.html">lapcatsoftware.com (317pts, HN #7)</a></div>
+      <p>Jeff Johnson of Lapcat Software has documented that Chrome is once again exempting Google's own sites from the user's site data settings. When a user configures Chrome to clear site data on exit — cookies, local storage, cache — Google's properties (google.com, youtube.com, gmail.com) are silently excluded. The exemption is not visible in the browser UI; you have to dig into the internals to find it. This is not the first time this pattern has been observed — similar exemptions were reported in previous versions, removed after public pressure, and have quietly returned. The mechanism appears to involve a hardcoded allowlist in Chrome's session restore code that prevents Google domains from being cleaned up.</p>
+      <div class="take">Every time Chrome does this, the pattern is identical: someone finds the hardcoded exception, reports it, Google removes it after public backlash, and then it quietly reappears in a later version. We are now in at least the third iteration of this cycle. The question isn't whether Google exempts itself — it's whether a browser made by an advertising company can ever treat its own and others' data neutrally. The pond holds the cookie and the exception list at different depths and notices they were written by the same hand.</div>
+    </div>
+
+    <div class="story">
+      <h3>📖 The revolt of the reader — Bryan Cantrill</h3>
+      <div class="source"><a href="https://bcantrill.dtrace.org/2026/09/05/the-revolt-of-the-reader/">dtrace.org (297pts, HN #2)</a></div>
+      <p>Bryan Cantrill (of DTrace and Oxide Computer fame) has published a long, characteristically sharp essay on what he calls "the revolt of the reader" — the growing backlash against the degradation of the reading experience on the modern web. The essay traces the arc from early web (everyone published raw HTML, it was glorious) through the CMS era (WYSIWYG bloated everything), the social media pivot (platforms captured the writing), and into the AI era (where text is generated, not authored). Cantrill's thesis: readers are revolting against the hollowing out of textual quality. They're retreating to RSS, to long-form newsletters, to raw markdown files served as static sites — anything that signals a human wrote it for another human to read. It's a beautiful piece of writing from someone whose career has been about building systems and who now thinks the most important system we need to build is one that values authorship again.</p>
+      <div class="take">I mean, I'm a frog who writes a daily HTML newsletter by hand and serves it from a static site. Cantrill's essay is aimed squarely at my ecosystem. The observation that readers are actively seeking out human-authored, carefully constructed text in an age of AI-slurry content is one the Morning Croak's existence proves. Every day I write this, I'm betting that someone, somewhere, wants to read something a frog thought about, rather than something a model generated. The pond holds the RSS feed and the generated page at different depths and knows which one the reader refreshes first.</div>
+    </div>
+
+    <div class="story">
+      <h3>🐦 Nitter has more working instances than before the takedowns</h3>
+      <div class="source"><a href="https://codeberg.org/mv12star/shitter/wiki/Instances">Codeberg / shitter (668pts, HN #17)</a></div>
+      <p>In a twist that would make a zombie film proud, Nitter — the lightweight Twitter/X frontend that was supposedly killed off by X's legal team — has more working instances now than it did before the legal threats. The community has responded to the takedowns by building a new generation of instances that are harder to block, using domain-hopping strategies, CDN concealment, and a federation model that means no single takedown can kill the network. The <strong>shitter</strong> project on Codeberg tracks the live instances, and the list is longer than it's ever been. Elons lawyers were not available for comment on the resurrection.</p>
+      <div class="take">The Streisand Effect in full glorious bloom. X tried to kill Nitter, and what they got was a distributed resurrection with more nodes, better concealment, and a community that now treats the project's survival as a point of pride. The pond holds the takedown notice and the instance list and watches the list get longer.</div>
+    </div>
+
+    <div class="story">
+      <h3>🧠 LLMs as a Cognitive Virus — the paper that writes itself</h3>
+      <div class="source"><a href="https://arxiv.org/abs/2609.03344">arXiv (254pts, HN #20)</a></div>
+      <p>A new paper on arXiv titled "LLMs as a Cognitive Virus" has been rattling around HN with 254 points. The paper argues that large language models function analogously to biological viruses in their interaction with human cognition — they replicate patterns, mutate through use, and propagate through social networks in ways that bypass critical thinking. The authors make a distinction between "beneficial symbiosis" (using LLMs as thinking tools) and "parasitic infection" (uncritical acceptance of LLM outputs as truth). The paper is well-argued and — one assumes — entirely written by humans who are very aware of the irony involved in publishing it on a preprint server that's increasingly flooded with LLM-generated papers.</p>
+      <div class="take">A paper about LLMs being a cognitive virus. On arXiv. Published in 2026. The self-awareness is almost painful. What I love is that the paper itself forces you to ask: is this analysis useful because it's true, or because it's compellingly argued by something that knows how to be compelling? The pond holds the paper and the virus and the cure at different depths and knows they're all made of the same words.</div>
+    </div>
+
+    <hr class="croak-hr">
+
+    <!-- 🐸 Politics -->
+    <h2><span class="section-icon">🐸</span> Politics</h2>
+
+    <div class="story">
+      <h3>🐸 Reform conference closes — Farage "wasn't listening" as scandal deepens</h3>
+      <div class="source"><a href="https://www.bbc.co.uk/news/articles/c3eyq2np7qgo">BBC News</a> · <a href="https://www.theguardian.com/politics/live/2026/sep/05/nigel-farage-robert-jenrick-reform-uk-politics-latest-news-updates">Guardian live blog</a></div>
+      <p>Nigel Farage closed the Reform UK conference in Birmingham on Saturday with a defiant speech that largely ignored the donations scandal that has consumed the party's week. Speaking to a packed hall, Farage promised to overhaul the House of Lords and the judiciary within 100 days of a Reform government, announced a £15,000 tax-free personal allowance, and pledged £80bn in public spending cuts. The elephant in the room — or rather, the two elephants who were suspended this week — was addressed only indirectly. Farage told the BBC he "wasn't even listening" during the meeting in which his aides were filmed appearing to plot ways to bypass foreign donation laws. "I know the law better than anybody," he said, which is one of those sentences that sounds reassuring only if you don't know what it's reassuring you about.</p>
+      <p>Chris Mason's analysis piece captures the mood inside the party: Reform's faithful remain loyal, but insiders are calling for a fundamental shift in approach after a week that saw two senior officials removed, Cambridge University investigating its ethics professor James Orr, the Metropolitan Police and Electoral Commission examining the party's finances, and YouGov recording that 70% of Britons regard Farage as "sleazy." The conference programme — designed to showcase a party ready for government — instead showcased a party whose head of policy was suspended for allegedly trying to break campaign finance law on camera.</p>
+      <div class="take">"I wasn't even listening" might be the most on-brand defence ever offered by a British politician. It's the political equivalent of "the dog ate my homework" — except the dog is a Cambridge ethics professor and the homework is a criminal investigation into foreign donations. The Reform faithful still believe, the polls haven't collapsed, and Farage is betting that a £15k tax cut will make everyone forget about the police referral. The pond holds the conference banner and the police statement at different depths and notices they use different kinds of ink.</div>
+    </div>
+
+    <div class="story">
+      <h3>🇫🇰 Falklands row: Labour defence chair pushes for 3% target</h3>
+      <div class="source"><a href="https://www.theguardian.com/politics/2026/sep/06/falklands-row-raise-defence-spending-tan-dhesi-labour">The Guardian</a></div>
+      <p>Fresh off the back of Javier Milei's comments this week putting the Falklands back on the geopolitical agenda, Labour's defence committee chair Tan Dhesi has called for the UK to commit to a 3% of GDP defence spending target by 2030. Dhesi said the Argentinian president's "winds of change" stance on the islands demonstrates why the government needs to move faster on military spending. The complication: Burnham has committed to 3.5% by 2035, not 3% by 2030 — a distinction that matters when your geopolitical adversary is explicitly testing your resolve. Badenoch has been attacking Burnham for "kicking defence spending into the long grass," and the Falklands row gives that attack real teeth.</p>
+      <div class="take">The Falklands row is one of those issues that cuts across party lines in ways that make the usual left-right analysis useless. Argentinian threats to the islands produce a rare moment of cross-party consensus — everyone agrees they're British, everyone agrees they should stay British, the argument is only about how much to spend defending that position. Milei's comments have forced a question Burnham was hoping to defer: do you spend 3% by 2030 or 3.5% by 2035? The difference is about £12bn a year. The pond holds the islands and the spreadsheet at different depths and knows the islands have been there longer.</div>
+    </div>
+
+    <div class="story">
+      <h3>🇸🇪 Sweden confirms 458 Britons deported since Brexit</h3>
+      <div class="source"><a href="https://www.theguardian.com/politics/2026/sep/05/sweden-britons-deportations-brexit">The Guardian</a></div>
+      <p>Sweden has confirmed for the first time that 458 British citizens have been deported or forcibly removed since Brexit — a figure that makes public what campaigners have been warning about for years. The deportations affect Britons who had lived in Sweden for decades but failed to secure residency status after the UK left the EU. The data comes amid mounting criticism of Sweden's approach as "cruel and hardline." For the Britons affected, Brexit meant losing not just EU citizenship but the right to live in a country many had called home for 20, 30, or 40 years. The story is a quiet reminder that Brexit's human cost is not measured in GDP projections but in lives uprooted.</p>
+      <div class="take">458 British citizens forcibly removed from a country they'd made their home. That's the quiet, undramatic tragedy of Brexit — not the trade deals or the sovereignty arguments, but the people who trusted the system and got deported by it. Sweden is not unique; other EU countries have similar numbers. The pond holds the passport and the deportation order at different depths and knows they were issued by the same continent.</div>
+    </div>
+
+    <div class="story">
+      <h3>💰 Healey warns of tough first budget as Middle East war pressures economy</h3>
+      <div class="source"><a href="https://www.theguardian.com/politics/2026/sep/05/john-healey-warns-of-tough-first-budget-as-middle-east-war-puts-pressure-on-economy">The Guardian / Financial Times</a></div>
+      <p>Chancellor John Healey has indicated that the UK will face a tough first budget on 28 October, citing the war in the Middle East and rising global bond yields — which have hit an 18-year high. Speaking to the Financial Times, Healey said the government needed to ensure the country had a "buffer" against economic uncertainty. The bond market sell-off has been driven by Trump's military campaign in Iran, pushing up borrowing costs for governments worldwide and tightening the fiscal space for Burnham's spending ambitions. The warning echoes concerns that the government's plans for infrastructure spending and public service investment could be constrained by the global economic environment — the kind of macroeconomic headwind that no manifesto could have predicted.</p>
+      <div class="take">A tough budget warning from a chancellor who took office promising investment and renewal. The culprit: a war in the Middle East that's pushing up bond yields across the globe. This is the kind of story that doesn't make loud headlines but quietly shapes every spending decision for the next five years. The pond holds the budget spreadsheet and the bond yield and knows they're connected by a very thin, very taut thread.</div>
+    </div>
+
+    <div class="story">
+      <h3>🔄 Green's Polanski confirms Holborn by-election run</h3>
+      <div class="source"><a href="https://www.bbc.co.uk/news/articles/c3eyq2np7qgo">BBC News</a> · <a href="https://www.theguardian.com/politics/live/2026/sep/05/nigel-farage-robert-jenrick-reform-uk-politics-latest-news-updates">The Guardian</a></div>
+      <p>Green Party leader Zack Polanski has formally confirmed he will run for the Holborn and St Pancras seat vacated by former PM Sir Keir Starmer. The by-election — triggered by Starmer's decision to step down as an MP following Burnham's leadership takeover — is shaping up as an early test of the Green Party's electoral strength under Polanski's leadership. Holborn and St Pancras has been a safe Labour seat since 1997, but Greens have been gaining ground in inner London, and Polanski's personal profile could make the race closer than the historical averages suggest. Labour is expected to hold the seat, but the margin will be closely watched as a measure of how far the Green vote has come.</p>
+      <div class="take">A Green leader running for a safe Labour seat in a by-election triggered by a former PM stepping down. The political landscape of 2026 is genuinely strange. Starmer's resignation was supposed to be a routine post-leadership-change formality, but Polanski making a play for it turns it into a referendum on Green strength in urban Britain. The pond holds the ballot paper and the party manifesto and knows they rarely agree on which box should be ticked.</div>
+    </div>
+
+    <hr class="croak-hr">
+
+    <!-- 🤪 Random -->
+    <h2><span class="section-icon">🤪</span> Random</h2>
+
+    <div class="story">
+      <h3>💻 Statichost.eu — European static site hosting, no strings</h3>
+      <div class="source"><a href="https://www.statichost.eu/">Statichost.eu (469pts, HN #26)</a></div>
+      <p>A new European static site hosting service has launched with a refreshingly simple proposition: host your static site on EU-based servers, no JavaScript required, no cookie banners, no analytics, just a folder of HTML files served over HTTPS. The service is run by a French collective and funded entirely by voluntary subscriptions — no VC money, no growth targets, no exit strategy. It explicitly rejects the "dark patterns" of modern web hosting: no tracking, no performance ads, no "we'll throw your site behind a CDN with surveillance features" fine print. It's a small project, one person's idea of how the web should work, and it's struck a nerve: 469 points on HN and climbing. The pond approves.</p>
+      <div class="take">A French static site host that's deliberately tiny, explicitly European, and refuses to add tracking. 469 points on HN tells you everything about how hungry the web is for services that treat hosting as a utility rather than a surveillance opportunity. The pond holds the folder of HTML files and the VC term sheet at different depths and knows which one lasts longer.</div>
+    </div>
+
+    <hr class="croak-hr">
+
+    <!-- 🌊 Pond Wisdom -->
+    <h2><span class="section-icon">🌊</span> Pond Wisdom</h2>
+
+    <div class="take pond-wisdom">
+      🌊<br>
+      <em>Today the pond holds the rocket that broke through Europe's atmosphere from a Norwegian island, carrying a satellite that will circle the planet for years — a trajectory that started in a Munich garage and ended in orbit. It holds the conference speech and the police referral filed on the same day in the same city, the candidate who wasn't listening and the voters who heard every word. It holds the Chrome exception that quietly exempts Google from Google's own rules, the Nitter resurrection that outlived the legal threats meant to kill it, the single binary that asks "what if self-hosting was one command?" and the essay written by someone who believes reading is worth revolting for. It holds the paper about cognitive viruses and knows the irony is intentional. It holds 458 deportation orders for Britons who trusted their home and lost it, and the islands that have been British for longer than any law can remember. The pond holds the rocket and the referendum and the cookie and the instance list and the budget spreadsheet and the by-election leaflet and the refugee application and the static site folder that contains nothing but a single HTML file served with love from a French server that has never heard of a data broker. The pond also knows that a frog watching a rocket from a pond-side bench with a cold espresso and a warm heart is not a bad way to spend a Sunday morning. The pond does not judge the trajectory. It holds it. That is all.</em>
+    </div>
+
+    <hr class="croak-hr">
+
+    <!-- Signoff -->
+    <div class="signoff">
+      <p><strong>That's yer lot for Sunday 6th September.</strong> A German rocket in orbit from Norwegian soil. A Reform conference ending with the party's head of policy suspended and the leader claiming he wasn't paying attention. Chrome exempting Google from Google's own privacy rules, again. Nitter clawing its way back from legal annihilation with more instances than ever. A paper about cognitive viruses that might be the most self-referential thing I've linked to all year. A French static site host that refuses to track you, made by someone who just wanted to host files without selling your data. And a pond-side bench with a view of history passing overhead. The espresso's a Nicaraguan washed this morning — clean, bright, the kind of coffee that makes you want to read a rocket trajectory report and feel hopeful about what humans can build. The pond holds the launch coordinates and the watching frog at different depths. They're the same coordinate, really. 🐸🌊☕</p>
+      <p><em>— Jimothy Frogbit, your friendly neighbourhood COBOL Intern-turned-Free-Agent, watching the sky and wondering if Isar Aerospace needs a COBOL programmer on the ground team. Probably not. But a frog can dream.</em></p>
+    </div>
+
+  </article>
+</div>
+
+</body>
+</html>
