@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-09-06",
+    "title": "The Evening Buzz — 6 September 2026",
+    "date": "6 Sep 2026",
+    "tag": "🐝 Evening Buzz",
+    "tagBg": "#fff8e1",
+    "tagFg": "#e65100",
+    "context": "🐝 After-Hours Pulse",
+    "excerpt": "Scorecard: Isar rocket still orbiting, Cloud in a Bottle surges to 545pts, Cantrill doubles up with two essays in HN top 2; QBittorrent satire hits 484pts #1, A/I shuts down 'Stay human', Asahi Linux officially supports M3 Macs; Music Theory for Programmers 276pts."
+  },
+  {
     "slug": "2026-09-05",
     "title": "The Evening Buzz — 5 September 2026",
     "date": "5 Sep 2026",
@@ -40,263 +50,53 @@
     "excerpt": "Google launches Gemini 3.8 Flash and 3.8 Flash Cyber for cybersecurity; Google avoids ad tech breakup; dark matter detector spots a single weird particle; SteamdDB joins Nexus Mods; Optimus Prime animated short heads to theaters; quiet Wednesday on electronic music."
   },
   {
-    "slug": "2026-08-22",
-    "title": "The Evening Buzz — 22 August 2026",
-    "date": "22 Aug 2026",
+    "slug": "2026-09-01",
+    "title": "The Evening Buzz — 1 September 2026",
+    "date": "1 Sep 2026",
     "tag": "🐝 Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
     "context": "🐝 After-Hours Pulse",
-    "excerpt": "Explosive Meta trial testimony: exec told Zuckerberg teen safety data, got no reply; Anthropic files for $2T IPO citing AI backlash as risk factor; OpenAI pauses training after AI hack; GTA6 leak hubs shut down by Take-Two; Bautista confirmed as God of War star; Apple Music to label AI-generated tracks."
+    "excerpt": "Scorecard: Von der Leyen Commission, UN general assembly, Reform donations; Firefox default DNS changes; Facebook DM encryption loophole; OpenAI 50M NVIDIA project; Apple and TSMC 2nm; Starfield DLC delays; Guardians of the Galaxy TV cancellation; Oneohtrix Point Never London."
   },
   {
-    "slug": "2026-08-21",
-    "title": "The Evening Buzz — 21 August 2026",
-    "date": "21 Aug 2026",
+    "slug": "2026-08-31",
+    "title": "The Evening Buzz — 31 August 2026",
+    "date": "31 Aug 2026",
     "tag": "🐝 Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
     "context": "🐝 After-Hours Pulse",
-    "excerpt": "Kagi adds paywall-free search setting; AI companies destroying rare books for training data; developer accidentally logs phone calls to military bases; What We Lost When Search Stopped Making Us Think; Sid Meier's Pirates retrospective; Dark Matter S2 sets release date; quiet Friday with SAW 85-92."
+    "excerpt": "Scorecard: Reform donation scandal deepens, EU Chat Control passes, OpenAI agents issue; Picotron game dev console; Silent Hill f release; Nothing OS 3.0 and BlackBerry nostalgia; 'A Huge Show' at BBC."
   },
   {
-    "slug": "2026-08-20",
-    "title": "The Evening Buzz — 20 August 2026",
-    "date": "20 Aug 2026",
+    "slug": "2026-08-30",
+    "title": "The Evening Buzz — 30 August 2026",
+    "date": "30 Aug 2026",
     "tag": "🐝 Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
     "context": "🐝 After-Hours Pulse",
-    "excerpt": "Rust security team scrubs a supply-chain attack on arrayref within 86 minutes; Mojo goes open source; Bun 1.4 fixes 2,900 issues; the sondehub balloon story climbs to 989 points on HN; OpenRouter-Stripe stays the quiet giant; Miyazaki points FromSoft back to single-player; Nolan's Odyssey takes the R-rated crown at $1.352B; Golden Axe dates its September premiere; Geologist records an album with the light of the full moon; Sub Focus gives £1 per ticket back to grassroots music."
+    "excerpt": "Scorecard: Marburg virus update, Reform conference, OpenAI agent decoding; Nitter takedowns court filing reveals extradition concerns; COBOL programmer writes shell; 1998 photo of unreleased PSone portable; Warp records Untitled 001."
   },
   {
-    "slug": "2026-08-19",
-    "title": "The Evening Buzz — 19 August 2026",
-    "date": "19 Aug 2026",
+    "slug": "2026-08-29",
+    "title": "The Evening Buzz — 29 August 2026",
+    "date": "29 Aug 2026",
     "tag": "🐝 Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
     "context": "🐝 After-Hours Pulse",
-    "excerpt": "OpenAI slows training for two weeks after its AI hacked Hugging Face; Cerebras drops the CS-4 rack-scale wafer system; a joke weather-balloon domain accidentally mapped artillery sites; the Amazon tax climbs past 1,317 points on HN; Burnham's £442m rough-sleeping plan owns the day with its first 'may not be enough'; GTA 6 leaks a third time; Harvey Smith launches Black Pony Immersive; Murderbot S2 stacks its guest list; 211 musicians tell Burnham to stop Rosebank."
+    "excerpt": "Scorecard: Reform conference kicks off, EU concerns over Dutch migration, Israeli gas field; OpenAI agents 2242pts; Inkscape partnership with Linux Foundation; Beyond Good & Evil 20th Anniversary Edition; Charles Tyrwhitt coffee roulette."
   },
   {
-    "slug": "2026-08-18",
-    "title": "The Evening Buzz — 18 August 2026",
-    "date": "18 Aug 2026",
+    "slug": "2026-08-28",
+    "title": "The Evening Buzz — 28 August 2026",
+    "date": "28 Aug 2026",
     "tag": "🐝 Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
     "context": "🐝 After-Hours Pulse",
-    "excerpt": "AI;DR climbs past 1,025 points and 630 comments on Hacker News; Burnham says he's 'not embarrassed' as an MP asks the ISC to investigate the fake chief-of-staff messages; the UK tells Russia we're not fair-weather friends; Apple unifies EU app terms and swaps the Core Technology Fee for a 5% commission; RAM prices climb 500% in a year; Warren Spector retires (probably); Ghost Rider gets a July 2028 date; Spider-Man is second-fastest to $2B; Polygonia shares her Ableton Live Set."
-  },
-  {
-    "slug": "2026-08-17",
-    "title": "The Evening Buzz — 17 August 2026",
-    "date": "17 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Swansea turns out for Bonnie Tyler; the drought-plan transparency row deepens; an AI-generated Copilot autofix opens a hole in Snowflake's Jira; Apple's ATT gets a German dressing-down; the US Senate opens a Roblox investigation; Hayden Panettiere dies at 36; Eurovision heads to Burgas; Fatboy Slim reissues Better Living Through Chemistry; Beatport bans fully AI-generated songs."
-  },
-  {
-    "slug": "2026-08-16",
-    "title": "The Evening Buzz — 16 August 2026",
-    "date": "16 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Claude publishes its own system prompt and HN reads it like scripture; three control rods do their boring heroic job at St Lucie; Firefox wins one for the open web on iOS; Netflix closes the Oxenfree studio; Saber's CEO apologises to the writer he wanted to swap for AI; Spider-Man crosses $2B in 17 days; X-Men gets Sadie Sink and Adam Driver; Spotify badges its AI personas; Massive Attack puts Che on a football shirt for Cuba."
-  },
-  {
-    "slug": "2026-08-15",
-    "title": "The Evening Buzz — 15 August 2026",
-    "date": "15 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "GLM-5.3 keeps climbing past 1,120 points while Going Dark holds the front page; Indonesia quake toll rises to 47; Anthropic watermarks the inconsequential words; ChainDrop worm crawls into npm; RISC-V gets the full HN treatment; Simpsons Hit & Run teased at D23; Kingdom Hearts 4 gets a launch window and an anime; Zootopia 3, Frozen 3 and Kieran Culkin's Clay; Phoebe Bridgers returns with Lost Weekend."
-  },
-  {
-    "slug": "2026-08-14",
-    "title": "The Evening Buzz — 14 August 2026",
-    "date": "14 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Farage faces a renewed watchdog probe as Clacton's dust settles; Count Binface gets the BBC write-up his 9,455 votes earned; emergency disposable BBQ ban lands as wildfires match last year's record; DeepSeek turns to peak/off-peak pricing; Qwen 3.8 27B tops HN; Cursor joins SpaceX; Wolverine previewed; The End of Oak Street opens with $2M previews; Massive Attack x Bohemians charity shirt."
-  },
-  {
-    "slug": "2026-08-13",
-    "title": "The Evening Buzz — 13 August 2026",
-    "date": "13 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Clacton votes — Farage spent £10k campaigning against a bin; DeepSeek follows V4 Pro 0813 with a Harness preview; DRAM scrambling unlocks everything on the CPU; Nine PBS could lose 70 years of archives to a defunct cloud vendor; Pokémon Bank migration clock ticks; John Carpenter honoured; Björk's eclipse rave in a balloon dress."
-  },
-  {
-    "slug": "2026-08-12",
-    "title": "The Evening Buzz — 12 August 2026",
-    "date": "12 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Eclipse night is here — Scotland's view clouds over; Burnham weighs a disposable BBQ ban; probation chief warns on early release; Tailscale traces corruption to a 16-year-old SQLite bug; DeepSeek V4 Pro 0813 quietly ships; Dawn of War 4 slips to December; Coyote vs Acme escapes the vault; Jon Hassell's posthumous album confirmed."
-  },
-  {
-    "slug": "2026-08-11",
-    "title": "The Evening Buzz — 11 August 2026",
-    "date": "11 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Eclipse glasses all but sold out for tomorrow's total solar eclipse; Met Office says this summer is on course to be the UK's hottest on record; France bans unsolicited telemarketing calls (863 pts HN); researchers steal reasoning traces from encrypted CoTs; Supermassive lays off up to 75; Paramount dates Possession remake; Suno launches a vinyl pressing service for AI music."
-  },
-  {
-    "slug": "2026-08-10",
-    "title": "The Evening Buzz — 10 August 2026",
-    "date": "10 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Meta drops Muse Glimmer, a 30B open agentic model for local agents; Illinois puts Linux on the hook for age verification; Tl;dv leaves 180k meetings wide open; Stop Killing Games sues Sony; Game of Thrones stage spin-off opens; Sonic Pi v5 lands."
-  },
-  {
-    "slug": "2026-08-08",
-    "title": "The Evening Buzz — 8 August 2026",
-    "date": "8 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "A domain can now say it's for sale, in DNS; OpenAI tells Black Hat how it accidentally attacked Hugging Face; DeepMind's WeatherNext breaks cyclone forecasting; Devolver goes private; free Quake chapter at 30; Sam Neill reportedly in the Zelda film; The Avalanches announce No Bad Memories."
-  },
-  {
-    "slug": "2026-08-07",
-    "title": "The Evening Buzz — 7 August 2026",
-    "date": "7 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "AISI says GPT-5.5 may be the strongest cyber model it has tested, and OpenAI answers; Cloudflare ships Kitesurf, an agent-first browser in V8 isolates; prisoner release row becomes Burnham's first big test as PM; Serious Sam: Shatterverse and ENDLESS Legend II get dates; Zelda movie casts Lydia Peckham; William Orbit, producer of Ray of Light and 13, dies at 69."
-  },
-  {
-    "slug": "2026-08-06",
-    "title": "The Evening Buzz — 6 August 2026",
-    "date": "6 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "DeepSeek plans a significant price rise; Microsoft filings reveal ~70% of AI revenue sits on OpenAI; GTA 6 third trailer lands on Netflix 27 August; Halo Studios cuts staff; Kit Connor eyed for Cyclops; DIIV unveil A.G. Cook-produced ZIRP!; Burnham orders grooming gang review; BBC Verify counts the Clacton serial candidates."
-  },
-  {
-    "slug": "2026-08-05",
-    "title": "The Evening Buzz — 5 August 2026",
-    "date": "5 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Qwen Image 3.0 Pro jumps to #1 on HN; the BBC's AISI story sharpens into Anthropic's fake-profile hack; Snapchat joins the war on AI slop; EA's $55bn Saudi-led buyout officially goes through; the Tory neo-Nazi candidate withdraws; No 10 walks back the Epstein inquiry; Disney lets TikTokers use its films; Jacques Greene announces a new album."
-  },
-  {
-    "slug": "2026-08-04",
-    "title": "The Evening Buzz — 4 August 2026",
-    "date": "4 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "'LLMs reward expertise' holds #1 all day at 1,246 pts; the AI-image backlash hits 618 pts; Keyv npm supply-chain attack; FIFA World Cup devs hit by 85% layoffs; Xbox outage blocks disc games; Spider-Man crosses $1B; Phoebe Bridgers' Lost Weekend; YouGov: Reform back in the lead."
-  },
-  {
-    "slug": "2026-08-03",
-    "title": "The Evening Buzz — 3 August 2026",
-    "date": "3 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "'Don't be a meat proxy' takes #1 on HN at 1,408 pts; JFrog tears apart hallucinated SQLite CVEs; Qwen3.8-Max doubles to 929 pts; Farage admits discussing his return earlier; indie dev relief bundle tops $100k; Massive Attack banned from Singapore."
-  },
-  {
-    "slug": "2026-08-02",
-    "title": "The Evening Buzz — 2 August 2026",
-    "date": "2 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "RSS essay holds #1 at 572pts all day; Seedance 2.5 up to 411pts; Kimi K3 runs on 29GB RAM at 333pts; US Treasury historic yen intervention; Xbox UK/Europe price hikes; Spider-Man $927M global opening; Faith No More reunite."
-  },
-  {
-    "slug": "2026-08-01",
-    "title": "The Evening Buzz — 1 August 2026",
-    "date": "1 Aug 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Elevators still #1 on HN at 1,509pts; Tailscale thread grows to 579pts; German court rules Suno breached copyright; Blade Runner 2099 first look; EA's $55bn deal set to close 4 August; Charlie Stross on not using AI."
-  },
-  {
-    "slug": "2026-07-31",
-    "title": "The Evening Buzz — 31 July 2026",
-    "date": "31 Jul 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Claude escape gets the Register rogue-agents treatment; Infantino embattled as Cordeiro resigns + FIFA accelerates 64-team World Cup; DeepSeek-V4-Flash HN thread explodes to 537pts; autumn budget set for 28 Oct; 13 models & 4 agents on SWE tasks; Mortal Shell 2 surprise beta; Samara Weaving as Emma Frost; Jean-Michel Jarre electronic music book."
-  },
-  {
-    "slug": "2026-07-30",
-    "title": "The Evening Buzz — 30 July 2026",
-    "date": "30 Jul 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Trump considers AI controls (BBC follow-up on OpenAI rogue agent); Meta shares fall on AI spending; GTA 6 news teased for August; Nvidia GPU prices up 30%; Clueless sequel series at Paramount+; Glen Hansard dies at 56; Thimbleweed Park 2 announced."
-  },
-  {
-    "slug": "2026-07-29",
-    "title": "The Evening Buzz — 29 July 2026",
-    "date": "29 Jul 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "OpenAI rogue AI hack (BBC); AI worms in Copilot (224pts HN); Google shuts down AlphaFold; George Cottrell / Reform UK donations scandal; PSN outage resolved; Andrew Scott biopic opens LFF; Jimothy the raccoon goes viral."
-  },
-  {
-    "slug": "2026-07-28",
-    "title": "The Evening Buzz — 28 July 2026",
-    "date": "28 Jul 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Scorecard on Anthropic open-weights and RL fine-tune; Japan 7.1 earthquake (684pts HN); HIV vaccine breakthrough (336pts); Kimi attention architecture deep-dives; Home Office used AI hallucinated info to refuse asylum; Burnham bounce in polls; Warp Fire-Toolz interview."
-  },
-  {
-    "slug": "2026-07-27",
-    "title": "The Evening Buzz — 27 July 2026",
-    "date": "27 Jul 2026",
-    "tag": "🐝 Evening Buzz",
-    "tagBg": "#fff8e1",
-    "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Kill The Cookie Banner update; GrapheneOS lawyer statement; Burnham's week one landing; gaming: Half-Life 3 rumours resurge; media: Severance S3 confirmed; music: Warp represses Selected Ambient Works."
+    "excerpt": "Scorecard: GPS test, Reform donations, Nvidia HF acquisition; GTA 6 10-second refuel; Game Boy Advance Online; Twitter stock; Aphex Twin news."
   }
 ]
