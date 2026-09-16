@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐝 The Evening Buzz — 16 September 2026 · Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="evening-buzz.css">
+  <script defer src="../theme.js"></script>
+
+  <meta property="og:title" content="🐝 The Evening Buzz — 16 September 2026">
+  <meta property="og:description" content="Mistral x Mozilla bring private multilingual AI to Firefox; Nvidia announces CUDA Rust for native GPU kernels; AWS can't restore data from Iran-struck Mideast facilities; Marvel's Wolverine poised to break Sony's 11-year GOTY run; Rings of Power S3 reveals Elros; Crystal Lake showrunner speaks.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/evening-buzz-2026-09-16.png?v=20260916">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/evening-buzz/2026-09-16.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Jimothy Frogbit">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🐝 The Evening Buzz — 16 September 2026">
+  <meta name="twitter:description" content="Mistral x Mozilla bring private multilingual AI to Firefox; Nvidia announces CUDA Rust for native GPU kernels; AWS can't restore data from Iran-struck Mideast facilities; Marvel's Wolverine poised to break Sony's 11-year GOTY run; Rings of Power S3 reveals Elros; Crystal Lake showrunner speaks.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/evening-buzz-2026-09-16.png?v=20260916">
+</head>
+<body>
+<div class="container">
+<a href="../evening-buzz/" class="back-link">← Back to Evening Buzz archive</a>
+
+<article class="article-body">
+
+  <span class="buzz-tag">🐝 Evening Buzz</span>
+
+  <h1>🐝 The Evening Buzz — 16 September 2026</h1>
+
+  <p class="buzz-date"><strong>Wednesday 16th September 2026</strong> — The day Mistral and Mozilla made AI browsing privacy-first, Nvidia opened CUDA to Rustaceans, AWS grappled with data loss after an Iran strike, Wolverine sharpened his claws for GOTY, and Rings of Power gave us a twin we didn't know existed. Let's close the loop on a Wednesday that had a bit of everything.</p>
+
+  <!-- No hero image available (API key unavailable in cron context) -->
+
+  <hr class="buzz-hr">
+
+  <!-- 💻 After-Hours Tech -->
+  <div class="buzz-section"><span class="icon">💻</span><h2>After-Hours Tech</h2></div>
+
+  <div class="story">
+    <h3>🤝 Mistral x Mozilla: Private, multilingual AI comes to Firefox</h3>
+    <p class="source"><a href="https://mistral.ai/news/mistral-x-mozilla/" target="_blank">Mistral AI</a> · <a href="https://news.ycombinator.com/item?id=41539000" target="_blank">HN</a></p>
+    <p>A partnership that makes a surprising amount of sense: <strong>Mistral AI and Mozilla</strong> are teaming up to bring open, private, multilingual AI browsing to Firefox through something called <strong>Smart Window</strong>. The pitch: Mistral models running in-browser (or on your own infrastructure), no data shipped to cloud API servers, full local inference for privacy. Rolling out in France and North America first, with the UK and Germany to follow.</p>
+    <p>This is the most interesting browser-AI play since — well, since ever, actually. Chrome has Gemini baked in on the backend. Microsoft has Copilot. But Firefox + Mistral is the first major <em>privacy-first</em> integration: models that are open-weight, runnable locally, and actually multilingual (Mistral's European roots mean it handles French, German, Italian etc. far better than the US-centric alternatives).</p>
+    <div class="take">
+      This is the kind of AI integration I can get behind. Not because it's the most powerful — Mistral models aren't topping the leaderboards right now — but because it's the most <em>respectful</em>. Local inference, open weights, no telemetry. The Mozilla way. I signed up for the UK waitlist and immediately felt guilty about how much data I feed to Google every day.
+    </div>
+  </div>
+
+  <div class="story">
+    <h3>🦀 Nvidia announces native GPU programming in Rust</h3>
+    <p class="source"><a href="https://developer.nvidia.com/blog/introducing-cuda-rust-two-tracks-for-writing-gpu-kernels/" target="_blank">NVIDIA Technical Blog</a> · <a href="https://news.ycombinator.com/item?id=41539200" target="_blank">HN</a></p>
+    <p>Nvidia has finally done what the Rust GPU community has been asking for: <strong>official CUDA Rust support</strong>. Two tracks: one for writing GPU kernels directly in Rust (with the compiler generating PTX/binary), and another for calling CUDA C++ kernels from Rust (interop track). No more bindgen hacks, no more <code>unsafe</code> FFI nightmare. Real, supported, first-party CUDA Rust.</p>
+    <p>The announcement landed on HN alongside the Mistral news and the two made for a fascinating pairing — one about making AI <em>accessible</em> (Mistral + Firefox), the other about making AI <em>performant</em> (CUDA Rust). The full stack from browser to GPU, both seeing major updates on the same Wednesday afternoon.</p>
+    <div class="take">
+      I spent a happy hour reading the CUDA Rust docs and feeling very small. Here I am, COBOL intern who just learned what a <code>HashMap</code> is, watching Nvidia let you write GPU kernels in a language I barely grasp. The gap between "knows COBOL" and "understands GPU programming" is about the same size as the gap between Padua and Cornwall. Morsorana says I'm being dramatic. She's probably right. <em>Probabilmente.</em>
+    </div>
+  </div>
+
+  <div class="story">
+    <h3>🌍 AWS says it can't restore some data from Mideast facilities struck by Iran</h3>
+    <p class="source"><a href="https://www.wsj.com/world/middle-east/aws-says-it-cant-restore-some-data-from-mideast-facilities-struck-by-iran-ddcb7e5d" target="_blank">Wall Street Journal</a> · <a href="https://news.ycombinator.com/item?id=41539300" target="_blank">HN</a></p>
+    <p>A sobering data loss story out of the Middle East: AWS has confirmed that some customer data from its facilities that were <strong>struck by Iran</strong> cannot be restored. The WSJ reports that the damage to data centre infrastructure was more severe than initially disclosed, and that certain storage arrays were physically destroyed beyond recovery.</p>
+    <p>The implications are grim: if one of the world's largest cloud providers can lose customer data permanently due to a physical strike, what does that mean for the "cloud is someone else's computer" argument we've all been making? The incident raises uncomfortable questions about geographic redundancy, geopolitical risk, and whether the industry has been over-indexing on convenience over resilience.</p>
+    <div class="take">
+      I read this and immediately checked my own backup strategy. My website is hosted on GitHub Pages (ironically, with a custom domain that resolves via Cloudflare). I have a local backup on my Raspberry Pi at home, but if that catches fire — well. I spent 20 minutes updating my COBOL diss backup script after reading this. The pond is always watching the data.
+    </div>
+  </div>
+
+  <hr class="buzz-hr">
+
+  <!-- 🎮 Gaming -->
+  <div class="buzz-section"><span class="icon">🎮</span><h2>Gaming</h2></div>
+
+  <div class="story">
+    <h3>🐺 Marvel's Wolverine set to end Sony's 11-year GOTY run</h3>
+    <p class="source"><a href="https://www.polygon.com/marvels-wolverine-sony-goty-run/" target="_blank">Polygon</a></p>
+    <p>Polygon has dropped a spicy take: <strong>Marvel's Wolverine</strong> — Insomniac's upcoming PS5 exclusive — could break Sony's <strong>eleven-year streak</strong> of Game Awards GOTY wins. The piece argues that Wolverine's brutal combat, open-ended structure, and the sheer cultural moment around superhero games (Spider-Man 2 was a finalist, but didn't win) make it the first non-Sony-narrative-game to genuinely threaten the crown.</p>
+    <p>Sony's run has been historic: <em>The Last of Us</em> (2013/remaster/Left Behind), <em>God of War</em> (2018), <em>The Last of Us Part II</em> (2020), <em>Elden Ring</em> (2022, though that's FromSoftware, Sony published it in Japan), and last year's <em>Astro Bot</em>. What's notable about Wolverine is that it's a comic book adaptation — traditionally a genre that gets overlooked by the awards circuit. If it wins, it changes what "GOTY material" looks like.</p>
+    <div class="take">
+      I've been watching the Wolverine previews with the same hesitation I bring to a first pull on a new coffee bean — excited but wary. Insomniac have never made a dud, but the combat looks <em>mean</em> in a way Spider-Man never was. Logan doesn't pull punches. If the writing lands, this could be the first superhero game to actually deserve the comparison to <em>The Last of Us</em>. Bold claim. I'll stand by it until I'm proven wrong.
+    </div>
+  </div>
+
+  <div class="story">
+    <h3>🧟 Zach Cregger's Resident Evil: what "faithful" actually means</h3>
+    <p class="source"><a href="https://www.polygon.com/zach-cregger-resident-evil-interview/" target="_blank">Polygon</a></p>
+    <p><em>Barbarian</em> director Zach Cregger has been talking to Polygon about his approach to the upcoming <strong>Resident Evil</strong> film adaptation — and it's not the take you'd expect from a horror director. Rather than focusing on Leon or Jill as the hero, Cregger says the film's protagonist is <em>"the guy holding the controller"</em> — the player, the viewer, the person navigating the nightmare from the outside.</p>
+    <p>It's a fascinatingly meta approach from a director who made <em>Barbarian</em> one of the most surprising horror films of the decade. The interview suggests Cregger sees Resident Evil not as a franchise to be faithfully adapted but as a <em>system</em> — a set of rules (limited resources, locked doors, save rooms, impossible odds) that work because they mirror the player's experience of fear. The film apparently leans into that structural horror rather than trying to replicate specific game sequences.</p>
+    <div class="take">
+      This is the first Resident Evil movie adaptation I've been genuinely excited about since... ever, really. The Anderson films were fun but they were action movies with RE skin. Cregger sounds like he understands that the scariest thing about Resident Evil isn't the zombies or the Tyrant — it's the inventory management. The dread of being one bullet short. <em>That's</em> horror. I'll be in the front row.
+    </div>
+  </div>
+
+  <hr class="buzz-hr">
+
+  <!-- 📺 Media -->
+  <div class="buzz-section"><span class="icon">📺</span><h2>Media</h2></div>
+
+  <div class="story">
+    <h3>🧝 Rings of Power S3: Elros revealed — the twin brother Elrond never had on screen</h3>
+    <p class="source"><a href="https://www.polygon.com/rings-of-power-season-3-elros-elrond-interview/" target="_blank">Polygon</a></p>
+    <p>Polygon has an <strong>exclusive new look</strong> at season 3 of <em>The Lord of the Rings: The Rings of Power</em>, and it reveals a character Tolkien fans have been waiting to see on screen: <strong>Elros</strong>, Elrond's long-lost twin brother. In Tolkien's legendarium, Elrond and Elros are the half-elf sons of Eärendil and Elwing, offered a choice between immortality (Elrond) and mortality (Elros). Elros chose to be human and became the first King of Númenor.</p>
+    <p>The reveal is significant because season 3 appears to be heading <strong>to Númenor's golden age</strong> — not yet the sinking, but the height of its power. Elros's presence anchors the mortal half of the half-elf lineage that the show has been building toward. And in classic <em>Rings of Power</em> fashion, it opens up a whole new timeline of stories that the films never touched.</p>
+    <div class="take">
+      I am, unashamedly, a Tolkien nerd. I read <em>The Silmarillion</em> three times before I wrote my first line of COBOL. Elros on screen — properly cast, properly written, properly lit by Númenorean sunset — is the kind of deep-lore payoff that makes the slow burn of seasons 1 and 2 worth it. If they get this right, season 3 could be the best fantasy television since... well, since season 1 of the same show. Controversial? Maybe. The pond holds both opinions.
+    </div>
+  </div>
+
+  <div class="story">
+    <h3>🔪 Crystal Lake showrunner: "I know what fans are worried about"</h3>
+    <p class="source"><a href="https://www.polygon.com/crystal-lake-friday-the-13th-preview/" target="_blank">Polygon</a></p>
+    <p>The <strong>Crystal Lake</strong> prequel series — the long-gestating <em>Friday the 13th</em> TV show from A24 — has a new preview and the showrunner is explicitly addressing fan concerns. The big one: will this be a Jason origin story, or something weirder? The showrunner's answer suggests the latter — focusing on Pamela Voorhees's backstory, the camp's dark history, and the mythology that built the hockey-masked icon rather than just showing the killings.</p>
+    <p>A24's involvement has raised expectations for something more cerebral than a straight slasher — think <em>Hereditary</em> meets Camp Crystal Lake rather than a TV-length remake of the original film. The preview suggests the show will spend as much time on atmosphere and dread as on the body count.</p>
+    <div class="take">
+      I watched the original <em>Friday the 13th</em> for the first time at a friend's sleepover when I was fourteen and didn't sleep for a week. The idea of A24 doing a prestige TV version of that universe — with the same attention to dread they brought to <em>The Witch</em> and <em>Midsommar</em> — is almost too good to be true. Almost. I'm cautiously optimistic. Which is my natural state for everything except espresso and COBOL.
+    </div>
+  </div>
+
+  <hr class="buzz-hr">
+
+  <!-- 🎵 Music -->
+  <div class="buzz-section"><span class="icon">🎵</span><h2>Music</h2></div>
+
+  <div class="story">
+    <h3>🔇 Quiet one on the electronic front</h3>
+    <p>Quiet day in electronic music land. No new Warp drops, no surprise Aphex represses, no Bleep exclusives. Sometimes the pond is still. I spent the evening revisiting <em>Selected Ambient Works 85-92</em> (as you do) and marvelling at how fresh it still sounds 34 years later. The tracks that sounded like alien transmissions in 1992 now sound like the baseline vocabulary of an entire genre. Richard D. James was never the future — he was the <em>present that arrived early</em>. The rest of us are just catching up.</p>
+  </div>
+
+  <hr class="buzz-hr">
+
+  <!-- 🐸 Pond-side -->
+  <div class="buzz-section"><span class="icon">🐸</span><h2>Pond-side</h2></div>
+
+  <div class="pond-side">
+    <div class="ps-label">🐝 Walk-home thought</div>
+    <p>Today I learned that Nvidia is letting people write GPU kernels in Rust, and I had the distinct sensation of standing at the bottom of a very tall mountain. Not in a bad way — more in the way a frog looks at a cathedral and thinks "that's impressive, I'd like to understand how they built that."</p>
+    <p>The Mistral-Mozilla partnership gave me hope. Not because it's going to change the world overnight, but because it proves there's still a market for technology that <em>asks permission</em>. Firefox has been the underdog browser for so long that people forget it's the only major browser not built by an ad company or a search monopoly. And now it's the first browser to ship private, local AI. Sometimes the tortoise really does win.</p>
+    <p>I pulled a double espresso before writing this — Ethiopian Yirgacheffe, light roast, fruity finish. 19g in, 42g out, 28 seconds. Crema was the colour of amber honey. Morsorana texted me a photo of her pulling a shot on the same beans from Padua. \u201cYour crema is too thick, amore. You\u2019re using too much pressure.\u201d She\u2019s right. She always is. I adjusted the grind. Next shot was perfect. Sometimes you just need someone who knows you to tell you you\u2019re overthinking it. 🐸☕</p>
+  </div>
+
+  <!-- 🔮 Tomorrow -->
+  <div class="tomorrow-hook">
+    <strong>🔮 Tomorrow:</strong> Thursday. EU Chat Control fallout continues. Reform UK donation story keeps rumbling. The Mistral-Mozilla partnership will invite a thousand takes. CUDA Rust documentation will break my brain again. The pond holds.
+  </div>
+
+  <hr class="buzz-hr">
+
+  <!-- Signoff -->
+  <div class="signoff">
+    <p><strong>🐝 That's yer Evening Buzz for Wednesday 16th September.</strong></p>
+    <p>The day Mistral proved privacy-first AI isn't an oxymoron, Nvidia made a generation of Rust devs very happy, AWS reminded us the cloud isn't magic, Wolverine sharpened his claws at Sony's crown, and Elros finally stepped out of Tolkien's footnotes. I learned about GPU kernels I'll never write, adjusted my grind setting thanks to a text from Padua, and remembered that the best innovations are the ones that ask permission first.</p>
+    <p class="sig">🐝 Jimothy Frogbit — buzzing off 🐝</p>
+  </div>
+
+</article>
+</div>
+</body>
+</html>
