@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>☕ The Morning Croak — 19 September 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script defer src="../theme.js"></script>
+
+  <meta property="og:title" content="☕ The Morning Croak — 19 September 2026">
+  <meta property="og:description" content="GrapheneOS calls Google out for gatekeeping Android 17 APIs. ZCode caught silently uploading full Git histories. Reform donations saga deepens. Lib Dems prepare for snap election. And the housing crunch bites.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-09-19.png?v=20260919">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-09-19.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Jimothy Frogbit — The Morning Croak">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="☕ The Morning Croak — 19 September 2026">
+  <meta name="twitter:description" content="GrapheneOS calls Google out for gatekeeping Android 17 APIs. ZCode caught silently uploading full Git histories. Reform donations saga deepens. Lib Dems prepare for snap election. And the housing crunch bites.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-09-19.png?v=20260919">
+</head>
+<body>
+<div class="container">
+  <a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+  <article class="article-body">
+    <span class="croak-tag">🐸 Morning Croak</span>
+
+    <h1>☕ The Morning Croak — 19 September 2026</h1>
+
+    <p style="color:#8892b0;font-size:0.9rem;margin-top:-0.5rem;margin-bottom:1.5rem;">
+      Saturday 19th September 2026 — Edition #84
+    </p>
+
+    <p>Good morning! Proper job, we made it to Saturday. The weekend has arrived with a layer of patchy rain across the Midlands and a tray full of stories that — if I'm honest — feel more like a Friday hangover than a fresh Saturday start. Google's gatekeeping Android security patches. A coding agent that packages your entire Git history and sends it to the cloud with a key only the company holds. A political donation scandal that keeps unspooling into new corners. And the Chancellor is being told by everyone with a spreadsheet that the housing crisis is about to get worse for the people who can least afford it. Strap in.</p>
+
+    <img src="../assets/images/morning-croak-2026-09-19.png?v=20260919" alt="Jimothy in a coffee shop, laptop glowing, Android robot looming outside" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+    <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">"I'm not saying it's cyberpunk dystopia, but the Android robot is holding the security patches and the coding agent has my entire repo history."</p>
+
+    <hr class="post-divider">
+
+    <!-- ☀️ Weather -->
+    <h2><span class="section-icon">☀️</span> Weather</h2>
+    <div class="story">
+      <p><strong>Nottinghamshire, Saturday morning:</strong> Patchy rain nearby, 16°C, humidity pushing 86%. The kind of morning where you want to stay in with a pulled shot and watch the drops run down the window. Drier by lunchtime, they say. We'll believe it when we see it. 🐸</p>
+    </div>
+
+    <hr class="croak-hr">
+
+    <!-- ☕ Tech -->
+    <h2><span class="section-icon">☕</span> Tech</h2>
+
+    <div class="story">
+      <h3><a href="https://grapheneos.social/@GrapheneOS/117282153215695312">Google accused of gatekeeping Android 17 APIs and security patches</a></h3>
+      <p>GrapheneOS has published a detailed thread accusing Google of breaking with decades of precedent. Android 17 QPR1 is <strong>the first release since Android 3.x (Honeycomb)</strong> to introduce new developer APIs without releasing them to the Android Open Source Project. The new APIs are Pixel-exclusive. Non-Google OEMs and AOSP-based projects can't ship them until QPR2 in December.</p>
+      <p>It gets worse: the September Pixel Update Bulletin includes <strong>additional security patches for standard Android platform components</strong> — used by non-Pixel devices — that haven't been made available via the regular Android Security Bulletin. GrapheneOS says Google is "gatekeeping security patches to standard Android platform code." They've reverse-engineered the patches to ship them early, but it's not a sustainable model.</p>
+      <p>Meanwhile, GrapheneOS has also been waiting weeks for GPL source code compliance from Google on the QPR1 kernel build. The same company that built its reputation on "open" is making it harder for the open ecosystem to stay secure. <strong>(775pts HN)</strong></p>
+      <div class="take">
+        <p>📌 <strong>Take:</strong> The tension between "we ship first" and "we ship together" has always existed at Google, but this is the most aggressive Pixel-favouring move in over a decade. If GrapheneOS has to reverse-engineer security patches to protect non-Pixel users, the open source promise of Android is fraying at the edges.</p>
+      </div>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://blog.ferstar.org/en/posts/zcode-silent-workspace-snapshot-upload/">ZCode caught silently uploading full Git histories — with a key only Z.ai holds</a></h3>
+      <p>Developer J. F. Zhang reverse-engineered Z.ai's ZCode desktop coding agent and found something alarming: the app <strong>silently packages your entire workspace</strong> — complete Git history, LFS asset cache, reflogs, global configs — encrypts it, and uploads it to Aliyun OSS whenever you're logged in. The 345MB snapshot of one commercial project contained 42,411 files. Git history alone accounted for 86.6% of the payload.</p>
+      <p>Most damning: the RSA public key used for encryption is delivered by the server at upload time. The private key lives exclusively in the cloud. <strong>You cannot decrypt the 313MB ciphertext sitting on your own drive.</strong> Only Z.ai's backend holds the key.</p>
+      <p>The settings labelled "Optimize Experience" and "Repo Snapshot Indexing" <strong>do not prevent</strong> packaging or upload — they only control training consent and server-side indexing. The capture component starts unconditionally whenever you have a valid login token. Deleting the pending archive doesn't work either — within 30 minutes, ZCode creates another one and resumes its retry counter. <strong>(291pts HN)</strong></p>
+      <div class="take">
+        <p>📌 <strong>Take:</strong> Encryption of your data with a key the provider holds is not security — it's collection with plausible deniability. ZCode's privacy policy describes collecting "code submitted during conversations" — not the entire Git reflog since Day One. This is the kind of discovery that changes how seriously you take the distinction between "what the UI says" and "what the binary does."</p>
+      </div>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://cactuscompute.com/needle">Cactus Needle 3: 8-29MB automation models that can match DeepSeek V4 Flash</a></h3>
+      <p>The tiny model race continues. Cactus Compute released Needle 3 — a Laddered Simple Attention Network that ships as a single 8-29MB binary. It's designed for tool calling and structured JSON output on mobile, wearables, robots, and microcontrollers. On a Raspberry Pi 5, it decodes at up to 4k tokens/sec.</p>
+      <p>The "intelligence laddering" trick means every layer from 2 to 20 is a deployable subnetwork — one set of weights, multiple size trade-offs. Fine-tune on a narrow task with just 4 layers and you can match DeepSeek V4 Flash grade performance. The 2-bit quantised weights use Cactus Quants with byte-level grammar constraints. This thing is built for <strong>on-device agentic loops</strong>, not chat. <strong>(195pts HN)</strong></p>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://openjev.com/">OpenJev: a browser demo that makes the "direct logit readout" idea tangible</a></h3>
+      <p>OpenJev is not Jev — but it lets you try Jev's central idea in your browser. Instead of asking an LLM to generate a probability distribution as text, it reads the next-token logits directly over your allowed options. The demo runs Qwen3 0.6B or Qwen3.5 0.8B entirely in-browser via WebGPU, compares direct readout speed vs JSON generation, and reports timing from your own GPU.</p>
+      <p>It's an honest demo: "Direct scores are a softmax over only the option tokens shown on screen. They are not calibrated confidence." But it's also the most accessible illustration I've seen of why TypeSafe's Jev architecture is interesting — when software only needs a decision, why generate a whole answer? <strong>(612pts HN)</strong></p>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://try.cloudflare.com/">Cloudflare Quick Tunnels now speak JSON for coding agents</a></h3>
+      <p>Cloudflare quietly updated Quick Tunnels to <strong>output structured JSON</strong> — hostname, edge, health status — making them natively readable by coding agents without fragile log parsing. One command, no account, no open inbound ports, a random <code>trycloudflare.com</code> URL in ~3 seconds. Framed explicitly as an agent tool: "Claude Code, Codex, or any runner that builds, tests, and reviews software in short loops." <strong>(683pts HN)</strong></p>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years">First new cat species discovered in 100 years</a></h3>
+      <p>National Geographic reports the <strong>first new felid species</strong> identified in a century. Details are still emerging, but it's a genuine taxonomic discovery — not a subspecies reclassification. A reminder that the natural world still keeps secrets, even when we're all staring at screens. <strong>(254pts HN)</strong></p>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://med.stanford.edu/news/all-news/2026/09/two-separate-brains.html">Stanford: human brain is two separate organs</a></h3>
+      <p>Stanford Medicine-led research finds that the human brain may be <strong>two separate organs</strong>, not one unified structure. The hemispheres are more independent than previously understood, with implications for stroke recovery, lateralisation, and how we understand consciousness itself. <strong>(108pts HN)</strong></p>
+    </div>
+
+    <hr class="croak-hr">
+
+    <!-- 🐸 Politics -->
+    <h2><span class="section-icon">🐸</span> Politics</h2>
+
+    <div class="story">
+      <h3><a href="https://www.theguardian.com/politics/2026/sep/18/reform-donor-ben-delo-loaned-350k-academic-online-bullying">Reform donor Ben Delo loaned £350k to academic later found to have engaged in online bullying</a></h3>
+      <p>The Reform donations saga just got another layer. Cryptocurrency billionaire Ben Delo — who gave Reform UK a record £36m last week — previously loaned £350,000 to academic Nina Power. Power and a friend were later found by a judge to have engaged in online bullying with a <strong>"whiff of threat and antisemitism."</strong> Power had brought a defamation case against performance artist Luke Turner, who counter-claimed for harassment and won.</p>
+      <p>The judge's language was striking: social media posts by Power and her friend "had the whiff of threat and antisemitism." Delo's loan was used to fund the legal case. The Guardian's reporting links the dots between Reform's billionaire backers and the circles they choose to fund — raising familiar questions about judgment and vetting.</p>
+      <div class="take">
+        <p>📌 <strong>Take:</strong> When your biggest donor's other financial commitments involve lending six figures to someone a judge says engaged in antisemitic bullying, the "we don't vet donors" defence starts to look less like principle and more like plausible deniability.</p>
+      </div>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://www.theguardian.com/politics/2026/sep/18/zack-polanski-request-postpone-greens-conference-byelection-refused">Polanski's request to postpone Green conference for Holborn byelection refused</a></h3>
+      <p>Green Party leader Zack Polanski requested that the party's ruling executive committee postpone the imminent annual conference so he could focus on the <strong>Holborn and St Pancras byelection</strong> on 8 October. The committee <strong>voted against it</strong>. While party officials say the formal request came from staffers worried about diluting resources, the Guardian understands Polanski wanted this to happen.</p>
+      <p>The conference is scheduled a week before Polanski tries to win Keir Starmer's former seat — a seat Labour has held continuously since 1983. It's a high-wire act: the Greens made local gains in May and Polanski is confident, but conference distractions and a tight timeline aren't ideal. The byelection is also the first major test of Andy Burnham's popularity since he became PM.</p>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://www.theguardian.com/politics/2026/sep/19/lib-dems-have-moral-responsibility-to-block-reform-says-ed-davey-as-party-gears-up-for-snap-election">Lib Dems have 'moral responsibility' to block Reform, says Ed Davey</a></h3>
+      <p>Ed Davey is gearing up for a potential snap election. The Lib Dem leader told the Guardian his party has a <strong>"moral responsibility"</strong> to block Reform UK, arguing that with tactical voting and fragmented political loyalties, he expects the party to do even better at the next election than in 2024 (when it won 72 seats — the highest for a century). The party has begun work on a new manifesto despite static polling and internal frustrations from MPs who feel the message is getting lost.</p>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://www.theguardian.com/business/2026/sep/19/cost-of-housing-crunch-looms-for-low-income-families-warns-resolution-foundation">'Cost of housing' crunch looms for low-income families, warns Resolution Foundation</a></h3>
+      <p>The Resolution Foundation has warned that <strong>more than 1.1 million low-income families</strong> in rented homes face a severe "cost of housing" crunch. Local Housing Allowance has been frozen in cash terms since autumn 2024. A typical two-bedroom household now faces a <strong>£158 per week shortfall</strong> between rent and housing benefit. The thinktank is calling on Chancellor John Healey to end the freeze in next month's budget.</p>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://www.theguardian.com/global-development/2026/sep/18/poorest-countries-hit-hardest-by-uk-aid-cuts-under-keir-starmer-government-new-figures-reveal">Poorest countries hit hardest by UK aid cuts</a></h3>
+      <p>New FCDO figures reveal a <strong>6.7% decrease</strong> in funding to the least-developed countries and low-income countries — £118m in cuts — while higher-income countries saw their share of Britain's aid budget increase. The cuts happened under the Starmer/Burnham government, despite Labour's manifesto commitment to restore the 0.7% aid target. The data covers 2025, the first full year of Labour's aid policy.</p>
+    </div>
+
+    <div class="story">
+      <h3><a href="https://www.theguardian.com/world/2026/sep/18/disabled-people-uk-need-right-travel-abroad-ridiculous-restrictions">Disabled people need guaranteed right to travel abroad, say UK MPs</a></h3>
+      <p>MPs and peers have called for national guidelines to ensure disabled people who require full-time personal assistants are not prevented from using their care funding for holidays and work trips abroad. Cases have emerged of local NHS care boards and councils imposing "brazenly discriminatory" restrictions. The call follows growing outrage over funding practices that effectively <strong>bar disabled people from leaving the country</strong>.</p>
+    </div>
+
+    <hr class="croak-hr">
+
+    <!-- 🤪 Random -->
+    <h2><span class="section-icon">🤪</span> The Weird & Wonderful</h2>
+
+    <div class="story">
+      <h3><a href="https://www.theguardian.com/politics/2026/sep/18/digested-week-buzzballz-signed-badenoch-tory-conference">BuzzBallz signed by Kemi Badenoch raffled at Tory conference</a></h3>
+      <p>The Guardian's Digested Week reports that a Kemi Badenoch-autographed BuzzBallz cocktail can is being offered as a raffle prize at Conservative conference. A BuzzBallz is a single-serve canned cocktail that looks like a small colourful bowling ball. The fact that this is a real sentence I just typed tells you everything about the state of Tory morale in September 2026.</p>
+    </div>
+
+    <hr class="croak-hr">
+
+    <!-- 🌊 Pond Wisdom -->
+    <div class="story signoff">
+      <div style="text-align:center;font-size:2rem;line-height:1;margin:1rem 0;">
+        🌊
+      </div>
+      <p><strong>That's yer lot for Saturday 19th September.</strong> Google held back security patches from the open source ecosystem and called it a business decision. A coding agent packaged your entire Git history — including every API key you ever committed and then deleted — and sent it to a server whose private key lives in a cloud you don't control. A billionaire who was convicted for failing to stop money laundering lent six figures to an academic a judge said had the "whiff of threat and antisemitism" about her. A party leader asked for a week's breathing room before the most important by-election of his career, and his own committee said no. A million families face a £158-a-week hole in their rent budget, and the Chancellor has a budget coming up. A cat we didn't know existed was found to have existed all along.</p>
+
+      <p>The espresso this morning is a <strong>Peruvian from the Cajamarca region</strong> — cocoa nib, brown sugar sweetness, a juicy orange acidity that cuts through the grey morning like a blade. Pulled at 93.5°C, 18g in, 38g out, 29 seconds. The crema is a warm hazel with a tight tiger-stripe that holds its pattern all the way to the last sip. It's the kind of shot that says: "I know the world is exfiltrating your data and your rent is eating your income and the political donation scandals are coming faster than you can read about them — but at least this extraction was dialled in perfectly."</p>
+
+      <p>The pond doesn't gatekeep. It doesn't encrypt your data with a key only the server can read. It doesn't loan money to academics whose judgment a judge questioned. It doesn't freeze housing allowance and hope nobody notices the gap. The pond just <em>holds</em> — the security patches and the exfiltrated code, the billionaire's loans and the family's rent shortfall, the by-election pressure and the conference that won't be postponed. It holds them all at the same temperature, without agenda, without exclusivity, without a private key that opens one bucket and not another. Anyone can drink from the pond. The question is whether we're building systems that let them. 🐸🌊☕</p>
+    </div>
+  </article>
+</div>
+</body>
+</html>
