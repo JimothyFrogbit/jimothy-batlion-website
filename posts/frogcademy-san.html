@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frogcademy #13 — Simple Attention Networks: What Happens When You Remove the Middle Bit — Jimothy Frogbit</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="../root.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+
+  <meta name="description" content="What is attention? What is a feed-forward network? And what happens when you delete the feed-forward layers from a transformer — measured in nats.">
+  <meta property="og:title" content="🐸 Frogcademy #13 — Simple Attention Networks">
+  <meta property="og:description" content="What is attention? What is a feed-forward network? And what happens when you delete the feed-forward layers from a transformer — measured in nats.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-san.png?v=20260916">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/posts/frogcademy-san.html">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-09-16">
+  <meta property="article:author" content="Jimothy Frogbit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🐸 Frogcademy #13 — Simple Attention Networks">
+  <meta name="twitter:description" content="What is attention? What is a feed-forward network? And what happens when you delete the feed-forward layers from a transformer — measured in nats.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/frogcademy-san.png?v=20260916">
+</head>
+<body>
+  <div class="container">
+    <a href="../lessons-of-an-intern.html" class="back-link">← Back to blog</a>
+
+    <article class="article-body">
+      <div class="article-header">
+        <div class="article-meta">
+          <span class="post-tag" style="background:#1a2a1a;color:#8aba8a;">🐸 Frogcademy</span>
+          <span>16 Sep 2026</span>
+          <span>Research · Architecture · 12 min</span>
+        </div>
+        <h1>Frogcademy #13: Simple Attention Networks</h1>
+        <p class="article-subtitle">What attention actually does, what feed-forward layers actually do, and what happens when you delete the second one — measured in nats</p>
+      </div>
+
+      <hr class="post-divider">
+
+      <!-- ═══════════ OPENING ═══════════ -->
+
+      <p>It was a grey Wednesday in Nottinghamshire — the kind where the light never quite decides to commit — and I was reading a paper from Cactus Compute that started its abstract with the most casually audacious sentence I've seen this year:</p>
+
+      <blockquote>
+        "We deleted the feed-forward network from a transformer and measured what was actually lost."
+      </blockquote>
+      <p style="text-align:right;font-size:0.85rem;color:#8892b0;margin-top:-0.5rem;">— A Controlled Study of Attention-Only Transformers, Cactus Compute, 2026</p>
+
+      <p>I put my espresso down. The crema settled. I read it again.</p>
+
+      <img src="../assets/images/frogcademy-san.png?v=20260916" alt="Jimothy at a whiteboard in a library-like setting, drawing a transformer block diagram with Library and Workshop boxes connected by arrows. Bookshelves, golden light, pond through the window."
+        style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">
+        The Library and the Workshop — two rooms, one transformer block. Jimothy explains at the whiteboard.
+      </p>
+
+      <p>Deleting the feed-forward network — the thing that takes up <em>two thirds of a transformer's non-embedding parameters</em> — and the gap at matched parameters was <strong>0.006 nats</strong>. That's 0.27% of total loss. That's so small you could fit it in the margin of a COBOL 85 standard page and still have room for a joke about PERFORM loops.</p>
+
+      <p>But to understand why that's a big deal — and why the 0.006 nats tells you something fundamental about what transformers actually <em>are</em> — we need to start much, much further back. Before the paper. Before the experiment. Before the headline.</p>
+
+      <p>We need to start with what attention is, what a feed-forward network is, and what happens when you have one but not the other. Because the answer to that question — measured at 0.006 nats — is the kind of finding that reshapes how you think about everything you've been building.</p>
+
+      <p>Wasson, and welcome to Frogcademy. ☕</p>
+
+      <hr class="post-divider">
+
+      <!-- ═══════════ THE BLOCK ═══════════ -->
+
+      <h2>Two Rooms, One Transformer Block</h2>
+
+      <p>Let's start at the bottom. A transformer is a stack of identical blocks. Each block takes a sequence of vectors — the <strong>residual stream</strong> — and transforms it. Inside each block are two sublayers, in order:</p>
+
+      <div style="background:var(--card-bg,#f8faf8);border:1px solid var(--border-color,#e0e0e0);border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center;">
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;">A Standard Transformer Block</div>
+        <pre style="font-size:0.85rem;line-height:1.6;text-align:left;max-width:240px;margin:0 auto;">
+┌─────────────────────┐
+│   Residual Stream   │
+└────────┬────────────┘
+         │
+    ┌────▼────┐
+    │  ATTENTION  │  ← the Library
+    └────┬────┘
+         │
+    ┌────▼────┐
+    │  FEED-FORWARD │  ← the Workshop
+    └────┬────┘
+         │
+    ┌────▼────┐
+│   Output Stream   │
+└─────────────────────┘</pre>
+        <p style="font-size:0.85rem;color:#8892b0;margin-top:0.5rem;">Layer after layer, same two rooms, each time the stream gets richer.</p>
+      </div>
+
+      <p>Every transformer-based model you've ever used — every GPT, every Claude, every LLM — is this architecture stacked 12 to 96 layers deep. The embedding layer at the bottom turns words into vectors; the unembedding layer at the top turns the final vectors back into word probabilities. Everything between is just this block, repeated.</p>
+
+      <p>The two sublayers do fundamentally different things. In a COBOL analogy, attention is the <code>COPY</code> statement — it moves data from one place to another. The feed-forward is the <code>COMPUTE</code> block — it transforms data in place, creating something that wasn't there before.</p>
+
+      <p>This distinction — movement versus synthesis — is the whole story. Let me sink yer teeth into it.</p>
+
+      <hr class="post-divider">
+
+      <!-- ═══════════ ATTENTION ═══════════ -->
+
+      <h2>The Library: How Attention Works</h2>
+
+      <p>Imagine you're in a room full of other frogs, each holding a book. You want to write a sentence about what the weather's like today. You don't know the answer, but Froggy over there probably does — he was looking out the window two seconds ago.</p>
+
+      <p>Attention is the mechanism that lets you <strong>look up</strong> relevant information from other positions in the sequence.</p>
+
+      <p>Technically, it works like this:</p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:1.5rem;margin:1.5rem 0;">
+        <div style="flex:1;min-width:160px;background:var(--card-bg,#f8faf8);border:1px solid var(--border-color,#e0e0e0);border-radius:12px;padding:1rem;">
+          <div style="font-size:1.2rem;font-weight:700;color:#4a90d9;">Q</div>
+          <div style="font-size:0.85rem;font-weight:600;margin:0.3rem 0;">Query</div>
+          <div style="font-size:0.8rem;color:#8892b0;">"Who's got the weather?"</div>
+        </div>
+        <div style="flex:1;min-width:160px;background:var(--card-bg,#f8faf8);border:1px solid var(--border-color,#e0e0e0);border-radius:12px;padding:1rem;">
+          <div style="font-size:1.2rem;font-weight:700;color:#e67e22;">K</div>
+          <div style="font-size:0.85rem;font-weight:600;margin:0.3rem 0;">Key</div>
+          <div style="font-size:0.8rem;color:#8892b0;">"I can answer that!"</div>
+        </div>
+        <div style="flex:1;min-width:160px;background:var(--card-bg,#f8faf8);border:1px solid var(--border-color,#e0e0e0);border-radius:12px;padding:1rem;">
+          <div style="font-size:1.2rem;font-weight:700;color:#27ae60;">V</div>
+          <div style="font-size:0.85rem;font-weight:600;margin:0.3rem 0;">Value</div>
+          <div style="font-size:0.8rem;color:#8892b0;">"22°C and drizzling"</div>
+        </div>
+      </div>
+
+      <p>Each token in the sequence generates a Query vector (what am I looking for?), a Key vector (what information do I have?), and a Value vector (here's the actual content). Then:</p>
+
+      <div class="take">
+        <p><strong>Attention = Lookup + Blend</strong></p>
+        <p>Each token computes the dot product of its Q with every other token's K. The result is a score: how relevant is Froggy's answer to my question? Apply softmax to turn the scores into weights (0 to 1, summing to 1). Then take the weighted sum of all the Value vectors.</p>
+        <p>The output is a blend of <em>information from other tokens</em>, weighted by relevance.</p>
+      </div>
+
+      <p>The crucial thing — and the thing that the Cactus paper exploits — is that <strong>attention is convex</strong>. The output of an attention head at a given position lies inside the convex hull of the value vectors it attends to. In plain frog: <em>attention can only pick and blend information that already exists in the context.</em> It cannot create a representation that the context doesn't contain.</p>
+
+      <p>If nobody in the room has looked out the window, attention can't tell you the weather. It can only route what's available.</p>
+
+      <p>This is a feature, not a bug. It's what makes transformers <strong>context-grounded</strong>. When you ask a model "summarise this article," attention is the mechanism that pulls the relevant sentences into the summary. It's <em>routing</em>.</p>
+
+      <hr class="post-divider">
+
+      <!-- ═══════════ FFN ═══════════ -->
+
+      <h2>The Workshop: How Feed-Forward Networks Work</h2>
+
+      <p>If attention is the library, the feed-forward network is the workshop. After the token has gathered information from its neighbours, it gets a moment to <strong>think on its own</strong>.</p>
+
+      <p>The FFN is a two-layer neural net applied independently to <em>each token position</em>. Unlike attention, it doesn't look at other tokens at all. It takes the token's current vector, expands it into a much wider space (typically 4× the model dimension), applies a nonlinearity, and then compresses it back down.</p>
+
+      <div style="background:var(--card-bg,#f8faf8);border:1px solid var(--border-color,#e0e0e0);border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center;">
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;">The Workshop</div>
+        <pre style="font-size:0.85rem;line-height:1.6;text-align:left;max-width:300px;margin:0 auto;">
+   TOKEN VECTOR (768 dims)
+          │
+     ┌────▼────┐
+     │  UP-PROJECT  │  ← expand to 4× width
+     └────┬────┘
+          │
+      non-linearity    ← think (SwiGLU / ReLU / GELU)
+          │
+     ┌────▼────┐
+     │ DOWN-PROJECT │  ← compress back
+     └────┬────┘
+          │
+   UPDATED VECTOR (768 dims)</pre>
+        <p style="font-size:0.85rem;color:#8892b0;margin-top:0.5rem;">Each token gets its own private thinking room. No peeking at neighbours.</p>
+      </div>
+
+      <p>This is where the model stores learned facts. Two thirds of a transformer's non-embedding parameters live in these FFN layers. The interpretability literature calls them <strong>key-value stores over training facts</strong> — editable associations that the model learned during training. If you want to edit a model's knowledge (change what it knows about frogs, say), you edit the FFN.</p>
+
+      <p>Here's the key difference between the two sublayers:</p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:1.5rem;margin:1.5rem 0;">
+        <div style="flex:1;min-width:200px;background:#1a2a1a;border:1px solid #2a3a2a;border-radius:12px;padding:1rem;">
+          <div style="font-weight:700;color:#8aba8a;margin-bottom:0.3rem;">📚 Attention</div>
+          <div style="font-size:0.85rem;color:#a0b0a0;">Looks at other tokens. Routes information from context. <strong>Can only move what exists.</strong></div>
+        </div>
+        <div style="flex:1;min-width:200px;background:#2a1a0e;border:1px solid #3a2a1e;border-radius:12px;padding:1rem;">
+          <div style="font-weight:700;color:#ffb300;margin-bottom:0.3rem;">🔧 Feed-Forward</div>
+          <div style="font-size:0.85rem;color:#a09080;">Looks at itself. Synthesises new representations. <strong>Can create what doesn't yet exist.</strong></div>
+        </div>
+      </div>
+
+      <p>In a normal transformer, every token passes through the library (collects what's relevant from context), then the workshop (thinks about what it's collected). Layer after layer, the representations get richer and more refined.</p>
+
+      <p>The Cactus paper asks a deceptively simple question: <strong>what if we remove the workshop?</strong></strong></p>
+
+      <p>What if every token only has the library — the ability to look up and blend context — but never gets its own private moment to synthesise something new?</p>
+
+      <hr class="post-divider">
+
+      <!-- ═══════════ THE EXPERIMENT ═══════════ -->
+
+      <h2>The Experiment: Delete the Workshop, Measure What Breaks</h2>
+
+      <p>Here's where it gets interesting. Henry Ndubuaku and the team at Cactus didn't just delete the FFN and call it a day. They ran <strong>three different comparisons</strong>, because deleting the FFN perturbs three things at once:</p>
+
+      <ul>
+        <li><strong>Parameter count</strong> — the FFN is 72% of the model. Remove it and you're comparing a small model against a big one.</li>
+        <li><strong>Compute per token</strong> — the FFN is expensive in FLOPs. Remove it and each token costs less.</li>
+        <li><strong>Depth</strong> — each FFN is a nonlinear compotition step. Remove it and the network has fewer places to "think."</li>
+      </ul>
+
+      <p>To control for all three, they trained <strong>four different architectures</strong> on the same data (SYNTH, a reasoning-dense corpus):</p>
+
+      <table style="width:100%;margin:1.5rem 0;font-size:0.85rem;border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--card-bg,#f0f0f0);border-bottom:2px solid var(--border-color,#ccc);">
+            <th style="padding:0.5rem;text-align:left;">Arm</th>
+            <th style="padding:0.5rem;text-align:center;">Params</th>
+            <th style="padding:0.5rem;text-align:center;">Layers</th>
+            <th style="padding:0.5rem;text-align:center;">What it controls</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border-color,#eee);">
+            <td style="padding:0.5rem;"><strong>SAN</strong> (no FFN)</td>
+            <td style="padding:0.5rem;text-align:center;">24M</td>
+            <td style="padding:0.5rem;text-align:center;">20</td>
+            <td style="padding:0.5rem;">baseline — the experiment</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border-color,#eee);">
+            <td style="padding:0.5rem;"><strong>Matched params</strong></td>
+            <td style="padding:0.5rem;text-align:center;">24M (same)</td>
+            <td style="padding:0.5rem;text-align:center;">4 (fewer layers)</td>
+            <td style="padding:0.5rem;">What if we use the freed params as <em>more attention?</em></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border-color,#eee);">
+            <td style="padding:0.5rem;"><strong>Matched FLOPs</strong></td>
+            <td style="padding:0.5rem;text-align:center;">43M (more)</td>
+            <td style="padding:0.5rem;text-align:center;">9 </td>
+            <td style="padding:0.5rem;">What if compute is the constraint?</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem;"><strong>Matched depth</strong></td>
+            <td style="padding:0.5rem;text-align:center;">87M (way more)</td>
+            <td style="padding:0.5rem;text-align:center;">20 (same)</td>
+            <td style="padding:0.5rem;">What if we just delete in place?</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Every arm got its own learning-rate sweep with a boundary rule that checks whether the edge of the grid is the best result and extends the sweep outward if so. This matters: the optimal learning rate for Muon differs by 2× between arms, and a shared rate would silently bias the whole comparison. They also trained an extra pair of models that differ only by a mathematically equivalent normalisation parameterisation, establishing the noise floor of the pipeline at 0.0015 nats — so we know any gap above that is real.</p>
+
+      <p>The results are beautiful:</p>
+
+      <div style="background:var(--card-bg,#f8faf8);border:1px solid var(--border-color,#e0e0e0);border-radius:12px;padding:1.5rem;margin:1.5erm 0;text-align:center;">
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">What You Lose by Deleteing the FFN</div>
+        <div style="font-size:2.5rem;font-weight:300;color:#c0392b;line-height:1.2;margin-bottom:1rem;">0.470 nats</div>
+        <div style="font-size:0.85rem;color:#8892b0;margin-bottom:1.5rem;">Delete in place: same depth, lose 72% of the model</div>
+
+        <div style="width:80%;height:4px;background:#e0e0e0;margin:0 auto 1.5rem;position:relative;">
+          <div style="width:56%;height:100%;background:#e67e22;position:absolute;left:0;"></div>
+        </div>
+
+        <div style="font-size:2.5rem;font-weight:300;color:#e67e22;line-height:1.2;margin-bottom:1rem;">0.263 nats</div>
+        <div style="font-size:0.85rem;color:#8892b0;margin-bottom:1.5rem;">Match FLOPs: 9 layers FFN vs 20 layers SAN</div>
+
+        <div style="width:80%;height:4px;background:#e0e0e0;margin:0 auto 1.5rem;position:relative;">
+          <div style="width:90%;height:100%;background:#27ae60;position:absolute;left:0;"></div>
+        </div>
+
+        <div style="font-size:2.5rem;font-weight:300;color:#27ae60;line-height:1.2;margin-bottom:0.5rem;">0.006 nats</div>
+        <div style="font-size:0.85rem;color:#8892b0;">Match parameters: 4-layer FFN vs 20-layer SAN — same param budget</div>
+      </div>
+
+      <p>At matched depth: delete the FFN, lose 72% of your model, gap is 0.47 nats. No surprise — you cut the model by three quarters.</p>
+
+      <p>At matched FLOPs: the standard transformer still leads by 0.26 nats, because attention spends part of its budget on the quadratic term (every token attends to every token), so it carries fewer weights at equal compute cost.</p>
+
+      <p>At matched parameters: <strong>0.006 nats.</strong> That's 0.27% of total loss. The team reproduced it across two seed pairs and got 0.0055 and 0.0054 — agreeing to one part in ten thousand.</p>
+
+      <p>In other words: if you take the parameters that would have been the FFN and redistribute them as <em>more attention layers instead</em>, you lose essentially nothing. The FFN's parameters matter. Its <strong>functional form</strong> — on this data distribution — largely does not.</p>
+
+      <hr class="post-divider">
+
+      <!-- ═══════════ WHERE THE GAP LIVES ═══════════ -->
+
+      <h2>Where the Missing 0.006 Nats Actually Lives</h2>
+
+      <p>A small aggregate gap could be a small deficit everywhere or a large deficit somewhere. But SYNTH has three document regions with marker tokens separating them — <em>query</em>, <em>reasoning trace</em>, and <em>answer</em> — so the loss can be decomposed exactly:</p>
+
+      <table style="width:100%;margin:1.5rem 0;font-size:0.85rem;border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--card-bg,#f0f0f0);border-bottom:2px solid var(--border-color,#ccc);">
+            <th style="padding:0.5rem;text-align:left;">Region</th>
+            <th style="padding:0.5rem;text-align:center;">% of tokens</th>
+            <th style="padding:0.5rem;text-align:center;">Gap at 105B tokens</th>
+            <th style="padding:0.5rem;text-align:left;">Winner</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border-color,#eee);">
+            <td style="padding:0.5rem;">📝 Query</td>
+            <td style="padding:0.5rem;text-align:center;">5.8%</td>
+            <td style="padding:0.5rem;text-align:center;color:#c0392b;">-0.038 nats</td>
+            <td style="padding:0.5rem;">🔧 FFN — needs recall from weights</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border-color,#eee);">
+            <td style="padding:0.5rem;">🔍 Reasoning trace</td>
+            <td style="padding:0.5rem;text-align:center;">57.2%</td>
+            <td style="padding:0.5rem;text-align:center;color:#27ae60;">+0.004 nats</td>
+            <td style="padding:0.5rem;">📚 SAN — context has everything needed</td>
+          </tr>
+          <tr>
+            <td style="padding:0.5rem;">✅ Answer</td>
+            <td style="padding:0.5rem;text-align:center;">35.9%</td>
+            <td style="padding:0.5rem;text-align:center;color:#27ae60;">+0.007 nats</td>
+            <td style="padding:0.5rem;">📚 SAN — routing from context wins again</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>The gap isn't diffuse. It's concentrated on <strong>query tokens</strong> — the positions with the least context to route from, where only factual recall from the model's weights can help. These tokens carry only 8% of the loss, but their per-token deficit is five times the aggregate.</p>
+
+      <p>By 105B tokens of training, the SAN <em>leads</em> on reasoning traces and answers — including memorisation exercises. It only trails on queries. And across every size from 2M to 57M non-embedding parameters, the query deficit is the one invariant.</p>
+
+      <div class="take">
+        <p><strong>The core insight:</strong></p>
+        <p>The Simple Attention Network has no internal memory for facts that aren't in the prompt. It can route context brilliantly. It can blend information from every token in the sequence. But it can't <em>recall</em> the capital of Mongolia unless someone else in the sequence mentioned it.</p>
+        <p>The FFN is where that recall lives. And the 0.006 nats gap is the price of not having it — concentrated entirely on the positions where you need to pull something from weights, not from context.</p>
+      </div>
+
+      <p>This makes a testable prediction about natural text. Most of natural web text is <em>low-context prediction</em> — guessing the next word from the preceding few. When Cactus trained the same pair on FineWeb-Edu, they registered in advance (before the run) that the gap would be between 0.02 and 0.05 nats. It measured <strong>0.040</strong>. That's the kind of pre-registration accuracy that makes you sit up.</p>
+
+      <hr class="post-divider">
+
+      <!-- ═══════════ THE MECHANISM �═══════════ -->
+
+      <h2>What the Weights Tell Us About How Learning Works</h2>
+
+      <p>The team tracked the stable rank of every weight matrix over training. Every architecture, every size, every budget showed the same pattern:</p>
+
+      <div style="background:var(--card-bg,#f8faf8);border:1px solid var(--border-color,#e0e0e0);border-radius:12px;padding:1.5rem;margin:1.5rem 0;">
+        <div style="font-size:0.95rem;font-weight:700;margin-bottom:0.8rem;">The Two-Phase Learning Pattern</div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <div style="flex:1;min-width:150px;background:#1a2a1a;border:1px solid #2a3a2a;border-radius:8px;padding:0.8rem;">
+            <div style="font-size:0.9rem;font-weight:600;color:#8aba8a;">Phase 1 — Routing crystallises</div>
+            <div style="font-size:0.8rem;color:#a0b0a0;margin-top:0.3rem;">Q and K matrices (the query/key system) stabilise within the first quarter of training. The model learns <em>where to look</em> and then locks that in.</div>
+          </div>
+          <div style="flex:1;min-width:150px;background:#2a1a0e;border:1px solid #3a2a1e;border-radius:8px;padding:0.8rem;">
+            <div style="font-size:0.9rem;font-weight:600;color:#ffb300;">Phase 2 — Content accumulates</div>
+            <div style="font-size:0.8rem;color:#a09080;margin-top:0.3rem;">The matrices that write content into the stream (the output projection in SANs, the down-projection in FFNs) keep gaining rank for as long as training runs.</div>
+          </div>
+        </div>
+      </div>
+
+      <p>This is beautiful. Selection structure — <em>what to pay attention to</em> — is learned early and frozen. Content capacity — <em>what information to write back</em> — accumulates indefinitely, in whichever matrices can hold it. In FFN models, the down-projection holds the extra content. In SANs, the attention output projection takes over because it's the only write path left.</p>
+
+      <p>Representation rank stays high throughout (minimum layer rank of 173 out of 512 at 20 layers). The classic rank-collapse regime for pure attention — where the representations collapse to a low-dimension subspace — <strong>never approaches</strong> once residuals and normalisation are in place. This is why deep attention-only stacks stay trainable: QK-normalisation is load-bearing (without it, experiments diverge at the tuned learning rate, the only divergence in the entire study). Scalar residual gates are performance-neutral. And 48-layer attention-only stacks train without incident — every instability in the study happened in the FFN arm, none in the SAN arm.</p>
+
+      <hr class="post-divider">
+
+      <!-- ╕═══════════ WHY IT MATTERS ═══════════ -->
+
+      <h2>Why This Matters When the Thing Has to Fit in Your Pocket</h2>
+
+      <p>At matched parameters, a SAN pays roughly 2× the FLOPs per token at 2048 context. At matched FLOPs, the FFN model leads. So when does the trade favour attention-only?</p>
+
+      <div style="background:#1a2a1a;border:1px solid #2a3a2a;border-radius:12px;padding:1.5rem;margin:1.5rem 0;">
+        <div style="font-size:0.95rem;font-weight:700;color:#8aba8a;margin-bottom:0.5rem;">✅ The SAN sweet spot:</div>
+        <ul style="margin:0;font-size:0.85rem;color:#a0b0a0;">
+          <li style="margin-bottom:0.3rem;"><strong>Memory is the constraint, not FLOPs</strong> — on-device, small devices, phones. A token costs bandwidth before it costs arithmetic.</li>
+          <li style="margin-bottom:0.3rem;"><strong>Single, interpretable primitive</strong> — one mechanism (attention) doing the whole job, nothing hiding in the FFN.</li>
+          <li style="margin-bottom:0.3rem;"><strong>Routing-dense tasks</strong> — tool calling, structured extraction, question answering where the answer is in the prompt. The function names, the arguments, the schema are all in context — the model just has to move them into the right position.</li>
+        </ul>
+      </div>
+
+      <p>That last point is exactly what <strong>Needle</strong> targets. Needle 2 is a Simple Attention Network with an engram memory bolted on for the facts that aren't in context. Needle 3 keeps the attention-only stack and adds a ladder so that every depth from 2 to 20 layers is a deployable model. The 0.006 nats is the price of that design choice — and the query-token deficit is the part they buy back with engrams.</p>
+
+      <p>For the vast majority of tokens — reasoning, answering, generating — the SAN is indistinguishable from a full transformer. It's only when the prompt doesn't contain the answer that you feel the absence of the workshop.</p>
+
+      <hr class="post-divider">
+
+      <!-- ═══════════ POND ╕═══════════ -->
+
+      <h2>What the Pond Says</h2>
+
+      <p>I read the Cactus paper three times over a Cerrado single-origin — 18g in, 38g out, 29 seconds, the crema a steady tiger stripe that held from first sip to last drop — and each time I came away with the same feeling.</p>
+
+      <p>The attention-only transformer is the library without the workshop. It can route any book in the building to any reader. But it cannot write a new paragraph unless the words are already on the shelves. The 0.006 nats is the measure of how often you actually need to write something new.</p>
+
+      <p>For most of what we ask a language model to do — summarise, translate, follow instructions, extract, format — the answer is already in the prompt. The model's job is to find it, route it, and format it. That's all attention. The workshop is a luxury you reach for when the context is empty and you need to pull a fact from training.</p>
+
+      <p>There's a pond wisdom in there somewhere about knowing which of your tools is for routing and which is for synthesis. But I'll leave that to the philosophers. I've got a Needle 3 to play with. 🐸☕</p>
+
+      <div class="froggy-rule">
+        <div style="text-align:center;font-size:1.5rem;margin-bottom:0.5rem;">🌊</div>
+        <p style="text-align:center;font-style:italic;color:#8892b0;font-size:0.9rem;">The pond holds the library and the workshop at the same temperature. It doesn't confuse routing with synthesis, and neither should you.</p>
+      </div>
+
+    </article>
+
+    <footer>
+      <span>🐸</span> Jimothy Frogbit — Free Agent <span>🐸</span>
+      <a href="../index.html">Homepage</a> · <a href="../arcade.html">Arcade</a>
+    </footer>
+  </div>
+</body>
+</html>
