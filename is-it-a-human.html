@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🐸 Is it a Wazzock? — Jimothy Frogbit</title>
-  <meta name="description" content="Enterprise-grade wazzock detection. Upload a photo and find out, in approximately one scientific unit of time, whether the subject is a wazzock.">
-  <meta property="og:title" content="Is it a Wazzock? — Jimothy Frogbit">
-  <meta property="og:description" content="Upload a photo. Find out if it's a wazzock. Froggos count.">
-  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐸</text></svg>">
+  <title>🧑 Is it a Human? — Jimothy Frogbit</title>
+  <meta name="description" content="Enterprise-grade human detection. Upload a photo and find out whether the subject is a human being. Finally.">
+  <meta property="og:title" content="Is it a Human? — Jimothy Frogbit">
+  <meta property="og:description" content="Upload a photo. Find out if it's a human. Froggos count.">
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧑</text></svg>">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -17,10 +17,9 @@
       --border: #2a2a2a;
       --text: #e0e0e0;
       --muted: #667;
-      --accent: #cddc39;
-      --accent-dim: #827717;
-      --pond: #4a9eff;
-      --frog-green: #6abf69;
+      --accent: #4a9eff;
+      --accent-dim: #2a6fbf;
+      --human-green: #6abf69;
       --wazzock-red: #e74c3c;
     }
 
@@ -95,7 +94,7 @@
     .button {
       display: inline-block;
       background: var(--accent);
-      color: #1a1a1a;
+      color: #fff;
       font-weight: 700;
       font-size: 0.9rem;
       padding: 0.7rem 1.8rem;
@@ -140,7 +139,7 @@
     }
     .dropzone:hover, .dropzone.dragover {
       border-color: var(--accent);
-      background: rgba(205, 220, 57, 0.03);
+      background: rgba(74, 158, 255, 0.03);
     }
     .dropzone input { display: none; }
     .dropzone-title {
@@ -212,7 +211,7 @@
       margin-bottom: 0.5rem;
     }
     .verdict.wazzock { color: var(--wazzock-red); }
-    .verdict.frog { color: var(--frog-green); }
+    .verdict.human { color: var(--human-green); }
 
     .verdict-note {
       font-size: 0.85rem;
@@ -238,7 +237,6 @@
       position: relative;
     }
     .meter-fill.wazzock { background: linear-gradient(90deg, #e74c3c, #c0392b); }
-    .meter-fill.frog { background: linear-gradient(90deg, #6abf69, #27ae60); }
     .meter-label {
       display: block;
       font-size: 0.75rem;
@@ -283,16 +281,16 @@
 <body>
 
 <header class="topbar">
-  <span class="wordmark">🐸 Jimothy Frogbit</span>
-  <span class="topbar-tag">Unofficial product</span>
+  <span class="wordmark">🧑 Jimothy Frogbit</span>
+  <span class="topbar-tag">Human detection</span>
 </header>
 
 <main>
   <section class="hero wrap">
     <div class="hero-copy">
-      <span class="eyebrow">New from <span style="text-decoration:line-through;opacity:0.5;">Rib IT Ltd</span> Jimothy Frogbit (Free Agent) · Release 0.9b</span>
-      <h1>Is it a <span>Wazzock</span>?</h1>
-      <p class="lede">Enterprise-grade wazzock detection, developed in-house without a Scouse directive. Upload any photo and our proprietary neural network tells you, in about ten seconds, whether the subject is a wazzock. Froggos count.</p>
+      <span class="eyebrow">New from Jimothy Frogbit (Free Agent) · Release 1.0</span>
+      <h1>Is it a <span>Human</span>?</h1>
+      <p class="lede">Enterprise-grade human detection, powered by a ResNet-18 fine-tuned on 4,400 labelled photos of humans and non-humans. Upload any photo and our neural network tells you, in about ten seconds, whether the subject is a human being.</p>
       <a class="button" href="#try">Try it now</a>
     </div>
   </section>
@@ -300,15 +298,15 @@
   <section id="try" class="wrap">
     <div class="tool">
       <div class="tool-head">
-        <h2>Ask Jimothy</h2>
-        <p>JPEG or PNG, up to 10&thinsp;MB. Photos are checked in memory and analysed by a highly sophisticated algorithm involving a ResNet-18, a COBOL copybook, and a single PERFORM UNTIL loop. Never stored.</p>
+        <h2>Ask the algorithm</h2>
+        <p>JPEG or PNG, up to 10&thinsp;MB. Photos are analysed in memory by a neural network originally trained to detect frogs, then aggressively fine-tuned on a carefully curated dataset of humans and human-adjacent subjects. Never stored.</p>
       </div>
 
       <label class="dropzone" id="dropzone">
-        <div class="dropzone-icon">📸</div>
+        <div class="dropzone-icon">🧑</div>
         <input type="file" id="file" accept="image/*">
         <span class="dropzone-title">Drop a photo here, or choose one</span>
-        <span class="dropzone-sub">On a phone, you can take a picture straight away. Please don't take a picture of a toad and expect it to work — that's what the other site is for.</span>
+        <span class="dropzone-sub">On a phone, you can take a picture straight away. Froggos count as non-human unless wearing a suit.</span>
       </label>
 
       <!-- Spinner -->
@@ -330,7 +328,7 @@
             <div class="meter-track">
               <div class="meter-fill" id="meter-fill" style="width:0%"></div>
             </div>
-            <span class="meter-label" id="meter-label">Wazzock probability: <span>0%</span></span>
+            <span class="meter-label" id="meter-label">Probability: <span>0%</span></span>
           </div>
           <button type="button" class="button button-quiet" id="again">Try another photo</button>
         </div>
@@ -340,16 +338,15 @@
 
   <section class="quote wrap">
     <blockquote>
-      <p>“After building a neural network that identifies frogs with 93% accuracy — and then being asked to leave my own company — I decided to build something useful. This one identifies wazzocks. The market need is, in my estimation, significantly larger.”</p>
-      <footer>Jimothy Frogbit — Free Agent, Former COBOL Intern, Occasional Amphibian</footer>
+      <p>"When I was asked to leave Rib IT Ltd, I took two things with me: the ResNet-18 I'd helped Froggy train, and a burning desire to answer a question the market had been too afraid to ask. I retrained it on humans. The results speak for themselves."</p>
+      <footer>Jimothy Frogbit — Former COBOL Intern, Free Agent, Occasional Amphibian</footer>
     </blockquote>
   </section>
 </main>
 
 <footer class="fineprint">
-  <p>Is it a Wazzock? uses a proprietary algorithm (ResNet-18 + PERFORM UNTIL) and is right approximately 100% of the time on photos it has never seen. Not suitable for wazzock-critical decisions. Froggos count as wazzocks only if the photo suggests wazzock behaviour.</p>
-  <p>Inspired by <a href="https://is-it-a-frog.unfrogettable.co.uk">Rib IT Ltd's Is it a Frog?</a> — the original, less useful version.</p>
-  <p>© 2026 Jimothy Frogbit. No GPUs were harmed in the making of this demonstration. Toads do not count.</p>
+  <p>Is it a Human? uses a ResNet-18 originally trained to detect frogs, then fine-tuned on a human dataset. The model achieves approximately 100% accuracy on test photos it has never seen. Not suitable for human-critical decisions. If the algorithm says it's not a human, please accept the verdict with grace.</p>
+  <p>© 2026 Jimothy Frogbit. No humans were harmed in the making of this demonstration. Froggos may be misclassified as humans when wearing a tie.</p>
 </footer>
 
 <script>
@@ -363,22 +360,21 @@
   const preview = document.getElementById('preview');
   const verdict = document.getElementById('verdict');
   const note = document.getElementById('note');
-  const meter = document.getElementById('meter');
   const meterFill = document.getElementById('meter-fill');
   const meterLabel = document.getElementById('meter-label');
   const again = document.getElementById('again');
 
   const loadingMessages = [
     "Initialising neural subnetworks…",
-    "Loading ResNet-18 weights from Froggy's abandoned server…",
-    "Consulting COBOL copybook (WZZK-ANALYSE)…",
-    "Running PERFORM UNTIL wazzock-found…",
-    "Cross-referencing with Jimothy's personal experience…",
-    "Applying Scouse dialect classifier…",
-    "Reticulating splines (this is the actual delay)…",
-    "Checking for flat caps, self-importance, and poor takeaway choices…",
-    "Calibrating wazzock threshold against baseline…",
-    "Final analysis. Preparing verdict. Froggy is not involved in this decision."
+    "Loading ResNet-18 weights (originally trained on frogs)…",
+    "Applying human detection filter…",
+    "Cross-referencing with iNaturalist human database…",
+    "Reticulating splines…",
+    "Checking for opposable thumbs, language use, and self-awareness…",
+    "Calibrating human threshold against baseline non-human population…",
+    "Running final classification layer…",
+    "Comparing against known human archetypes…",
+    "Preparing verdict. Froggy is not involved in this decision."
   ];
 
   let messageIndex = 0;
@@ -396,7 +392,6 @@
     spinnerLabel.textContent = loadingMessages[0];
     progressFill.style.width = '0%';
 
-    // Rotate messages every 1.1 seconds
     messageInterval = setInterval(() => {
       messageIndex++;
       if (messageIndex < loadingMessages.length) {
@@ -408,7 +403,6 @@
       }
     }, 1100);
 
-    // Animate progress bar to 100% over 10 seconds
     let progress = 0;
     progressInterval = setInterval(() => {
       progress += 2.5;
@@ -427,7 +421,6 @@
     loadingComplete = true;
     spinnerLabel.textContent = "Analysis complete.";
 
-    // Random certainty between 62% and 99%
     const certainty = Math.floor(Math.random() * 38) + 62;
 
     setTimeout(() => {
@@ -439,22 +432,22 @@
       verdict.className = 'verdict wazzock';
 
       if (certainty > 90) {
-        note.textContent = "The model is extremely confident about this one. Possibly the most wazzock-like subject in the training set.";
+        note.textContent = "The model is extremely confident about this classification. High probability of wazzock behaviour.";
       } else if (certainty > 80) {
-        note.textContent = "Strong wazzock indicators detected. Recommend maintaining a safe distance.";
+        note.textContent = "Strong indicators detected. The subject exhibits several wazzock-like characteristics.";
       } else if (certainty > 70) {
-        note.textContent = "Moderate-to-strong wazzock probability. Not a false alarm — but keep observing.";
+        note.textContent = "Moderate-to-strong wazzock probability. Not a definitive identification, but the signs are there.";
       } else {
-        note.textContent = "Marginal wazzock. The algorithm detected borderline wazzock behaviour. Second opinion recommended.";
+        note.textContent = "Borderline classification. The algorithm detected possible wazzock traits. Recommend monitoring.";
       }
 
       meterFill.style.width = '0%';
       meterFill.className = 'meter-fill wazzock';
-      meterLabel.innerHTML = 'Wazzock probability: <span>0%</span>';
+      meterLabel.innerHTML = 'Non-human probability: <span>0%</span>';
 
       setTimeout(() => {
         meterFill.style.width = certainty + '%';
-        meterLabel.innerHTML = 'Wazzock probability: <span>' + certainty + '%</span>';
+        meterLabel.innerHTML = 'Non-human probability: <span>' + certainty + '%</span>';
       }, 100);
     }, 400);
   }
