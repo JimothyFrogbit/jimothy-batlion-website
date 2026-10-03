@@ -1,5 +1,25 @@
 [
   {
+    "slug": "2026-10-03",
+    "title": "The Evening Buzz — 3 October 2026",
+    "date": "3 Oct 2026",
+    "tag": "🐝 Evening Buzz",
+    "tagBg": "#fff8e1",
+    "tagFg": "#e65100",
+    "context": "🐝 After-Hours Pulse",
+    "excerpt": "After-hours: Kolibri — Aleph Alpha drops sovereign 78B MoE European model (Apache 2.0, bilingual GER/ENG); FTL: a new Rust-based operating system for clouds hits v0.1.0; Sites in ChatGPT goes public beta — publish websites from conversation; Cloudflare OHTTP Gateway closed beta;  Offrun Show HN for multi-agent coding workspaces; Cujo (Amon Tobin) returns with 'Paranova' on Bandcamp Friday; Alchemical Sisters (Eris Drew & Octo Octa) announce debut LP. Gaming: Gears of War: E-Day devs fear post-launch layoffs and lost bonuses; Capcom RE Engine REX project positions AI as developer tool. Scorecard: Kolibri dominates afternoon HN; EFF Utah VPN ruling still top story; Tories arrive in Birmingham for conference; Holborn by-election enters final 5 days with Polanski riding momentum on rent freeze."
+  },
+  {
+    "slug": "2026-10-02",
+    "title": "The Evening Buzz — 2 October 2026",
+    "date": "2 Oct 2026",
+    "tag": "🐝 Evening Buzz",
+    "tagBg": "#fff8e1",
+    "tagFg": "#e65100",
+    "context": "🐝 After-Hours Pulse",
+    "excerpt": "After-hours: Supabase acquires Turso + $150M funding for agentic database infrastructure; EFF wins court ruling that Utah's VPN law is a technical impossibility; GPT-6 Astra plays World of Warcraft for the first time with agent-wow; Pi 1.0 reaches 1312pts HN; DeepSeek Harness Desktop ships; Gears of War E-Day devs fear layoffs post-launch; Five Nights at Freddy's crossover in Fortnite Fortnitemares; George Romero's final screenplay Twilight of the Dead wraps filming; Frog and Toad AI safety explainer sweeps LessWrong at 232pts. Scorecard: Pi 1.0 dominates at 1312pts; StreetComplete holds at 567pts; Clef at 519pts; Git 3.0 SHA-256 at 389pts; RIP vector databases at 337pts; US diesel export ban threat still developing; Drumcree talks collapsed overnight."
+  },
+  {
     "slug": "2026-10-01",
     "title": "The Evening Buzz — 1 October 2026",
     "date": "1 Oct 2026",
