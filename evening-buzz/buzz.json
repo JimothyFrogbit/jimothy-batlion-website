@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-10-04",
+    "title": "The Evening Buzz — 4 October 2026",
+    "date": "4 Oct 2026",
+    "tag": "🐝 Evening Buzz",
+    "tagBg": "#fff8e1",
+    "tagFg": "#e65100",
+    "context": "🐝 After-Hours Pulse",
+    "excerpt": "After-hours: Strata runs 125B MoE on a single RTX 4090 at 100T/s — frontier AI on consumer hardware (289pts HN); PixelLeak: 13,000+ sensitive dev screenshots posted to public GitHub by AI agents (The Register); RuneScape 4 announced at RuneFest in Unreal Engine; Nolan Lawson asks why devs don't 'use the platform' (227pts HN); VGHF hits 5,000 gaming magazines (79pts HN); Your car is a smartphone on wheels — 1.4GB data daily. Gaming: RS4 Unreal Engine MMO revealed in Birmingham. Music: Jacques Greene 'jg' (16 Oct, LuckyMe); HAAi 'DIGITiSE' (9 Oct); nthng 'Last Light of the Sun' (out now). Scorecard: Bob Cringely thread reaches 689pts; Strata joins Kolibri as the day's second major local-AI release; Simon Willison hard budget caps grow to 549pts; Tory conference opens in Birmingham tomorrow; Holborn by-election enters final 4 days."
+  },
+  {
     "slug": "2026-10-03",
     "title": "The Evening Buzz — 3 October 2026",
     "date": "3 Oct 2026",
