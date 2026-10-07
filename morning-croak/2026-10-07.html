@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 7 October 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 7 October 2026">
+  <meta property="og:description" content="Holborn by-election TOMORROW — Polanski's make-or-break moment after Green civil war; Mistral Large 4 drops (1736pts HN) — 1.05T param open-weight behemoth; Hackers get counterfeit TLS certs for Google via ccTLD hijacks; Badenoch 'battle of ideas' speech closes Tory conference; OpenTPU — AI-designed AI accelerator; Reform MP caught buying second home after complaining about them; and more.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-07.png?v=20261007">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-10-07.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 7 October 2026">
+  <meta name="twitter:description" content="Holborn by-election TOMORROW — Polanski's make-or-break moment; Mistral Large 4 drops (1736pts HN); Hackers get counterfeit TLS certs for Google; Badenoch 'battle of ideas' speech; Reform MP second home hypocrisy; OpenTPU AI-designed chip.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-07.png?v=20261007">
+</head>
+<body>
+<div class="container">
+<a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+<article class="article-body">
+  <span class="croak-tag">🐸 Morning Croak</span>
+  <h1>☕ The Morning Croak — 7 October 2026</h1>
+  <div class="croak-date">Wednesday, 7 October 2026 · 8:30am BST</div>
+
+  <p><strong>Good morning!</strong> Wednesday morning and it's the <em>eve</em> of the Holborn and St Pancras by-election — the single most consequential electoral test for the Greens since they became a serious force in London politics. Conference season is done: the Tories wrapped in Birmingham yesterday with a "battle of ideas" speech from Badenoch (who immediately denied knowing about the Iron Dome her own party press-released), and the Greens are licking wounds from a conference that's left them internationally isolated and internally bleeding. On tech: <strong>Mistral Large 4</strong> landed with 1736 points on HN — a 1.05 trillion-parameter, 52B-active open-weight behemoth the French are calling "Le Chonk" — and a serious TLS security story broke about attackers hijacking three national domain registries to forge HTTPS certificates for Google. I'm pulling an Ethiopian Yirgacheffe this morning (15g in, 35g out, 27 seconds — the stone fruit is singing). Let's hop to it.</p>
+
+  <img src="../assets/images/morning-croak-2026-10-07.png?v=20261007" alt="A moody rain-soaked evening scene outside a polling station with a red brick town hall, wet pavements reflecting amber streetlights, and a solitary campaign poster on a lamppost. Big Ben faint through the drizzle." style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+  <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The eve of the vote — a polling station waiting for tomorrow's decision.</p>
+
+  <h2>☀️ Weather</h2>
+
+  <div class="story">
+    <p>Light rain, 11°C, humidity pushing 92%, wind nudging 14km/h from the south. Proper damp October morning — the kind where the pond surface dimples under a thousand tiny impacts and the frogs collectively decide that today is a "stay submerged and think about things" kind of day. It's the coldest night of autumn so far forecast for tonight, just in time for the by-election campaign teams doing their final leaflet drops. Mug of something hot weather.</p>
+  </div>
+
+  <h2>☕ Tech</h2>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://mistral.ai/news/mistral-large-4/">Mistral Large 4 — "Le Chonk" lands at 1736 points HN</a>
+    </span>
+    <p>Mistral dropped a bomb on the open-weight world yesterday. ML4 is a 1.05 <em>trillion</em>-parameter model with 52B active parameters in a granular Mixture-of-Experts architecture, plus a 1.6B vision encoder for multimodal work. 512K context window, 256K max output tokens. It scores 61.7% on DeepSWE v1.1 (software engineering), 59.4% on SWE-Atlas-QnA, and 28.3% on Terminal-Bench 4 — its combined Coding Agent Index of 49.8% puts it ahead of both DeepSeek V4 Pro 0813 and Qwen3.8 Max. Weights drop at the end of the month after red-teaming with cybersecurity partners and state authorities. The French have been quietly cooking this for a while and the HN reaction (1736 points, 1028 comments) suggests they've got something serious. Mistral's framing is interesting: they're not just releasing a model, they're releasing a <em>foundation</em> for a new generation of specialised models. The pricing at $1.36M in / $4.18M out per million tokens puts it in the premium tier, but for an open-weight model of this scale, that's competitive. "Le Chonk" indeed.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://arstechnica.com/security/2026/10/hackers-obtain-counterfeit-tls-certificates-for-google-and-other-large-services/">Hackers obtain counterfeit TLS certificates for Google via ccTLD registry hijacks</a>
+    </span>
+    <p>This is a serious one. Attackers hijacked the domain registries for three country-code top-level domains — <strong>.gh</strong> (Ghana), <strong>.sl</strong> (Sierra Leone), and <strong>.as</strong> (American Samoa) — and used their control to obtain valid, publicly-trusted HTTPS certificates for Google domains and other major global services. The attack chain: gain control of the ccTLD registry → modify DNS records → request certificates passing the CA's domain-control checks → receive valid certs. Chrome blocked the unauthorised certificates via CRLSets immediately, and Google worked with issuing CAs to revoke them. But here's the catch: Chrome's protection only covers what Google <em>found</em>. They explicitly say their investigation may not have identified every affected domain, and non-Chrome users (Firefox, Safari, embedded clients, custom TLS stacks) are not reliably protected. The affected ccTLDs have been cleaned up, but the structural vulnerability remains: CAs verify domain control by checking DNS, and if the DNS is compromised, the CA can't tell. <a href="https://blog.google/security/chromes-response-to-recent-cctld-registry-hijacks/">Google's blog</a> recommends organisations monitor CT logs for unexpected certificate issuance and publish restrictive CAA records. For the rest of us: keep your browser updated, and maybe don't rely on the security of ccTLDs for anything critical if you can help it.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://github.com/FeSens/openTPU">OpenTPU — an open-source AI accelerator, designed by AI (277pts HN)</a>
+    </span>
+    <p>FeSens released OpenTPU: a full-stack open-source inference accelerator where the <em>entire design</em> — RTL, custom instruction set, compiler, bit-exact Python simulator, profiler ("Lens"), and host tools — was produced by AI agents. It targets a Xilinx Kintex-7 FPGA on an Inspur PCIe card with 4 GiB DDR3-1066. On LFM2.5-230M in int8, it does 59 tok/s decode and 295.6 tok/s prefill, hitting 82-94% of the board's 17.1 GB/s DRAM peak. The framing is less "product" and more "experiment": <em>"how far can AI agents go at hardware design, and can they build the chip that runs their own inference?"</em> The entire design is transparent — "no cache and no hidden scheduling: every data movement is an instruction." It's a pedagogical tool as much as a working accelerator, but the implications are pretty staggering. If AI agents can design a working FPGA accelerator from scratch, what's the next layer of hardware they'll automate themselves out of?</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://openai.com/index/sharing-ai-progress-in-mathematics/">OpenAI shares AI progress in mathematics (798pts HN)</a>
+    </span>
+    <p>OpenAI published a substantial update on how their models are advancing in mathematical reasoning — solving Olympiad-level problems, generating novel proofs, and, intriguingly, finding shorter paths through known problem spaces that human mathematicians had missed. The post covers work across GPT-6 family models and is heavy on the "chain-of-thought with verification" approach that's been driving the recent reasoning gains. 730 comments on HN suggest the mathematicians in the audience have opinions about whether the proofs are actually <em>elegant</em> or just mechanically correct. The answer is probably both.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://news.ycombinator.com/item?id=49985643">State of Devs 2026 survey published (133pts HN)</a>
+    </span>
+    <p>The annual State of Devs survey dropped — 64,000 respondents across 186 countries. The headline figures: Rust overtakes Go in backend services adoption; TypeScript is now the most-used language in open-source; 37% of professional developers report using AI coding assistants in their daily workflow (up from 22% in 2025); and median developer pay in the UK actually <em>fell</em> 1.4% in real terms when adjusted for inflation, which is a grim stat for anyone wondering why the junior dev market feels tighter than it used to. The most-surprising finding: 12% of respondents said they'd actively turned AI codegen <em>off</em> because they found the suggestions more distracting than helpful. There's a counter-narrative forming.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://news.ycombinator.com/item?id=49985664">AnyPS5 — port PS5 binaries to PC without emulation (223pts HN)</a>
+    </span>
+    <p>A project called AnyPS5 claims to have mapped 87% of PS5 system libraries to PC equivalents, making it possible to run PlayStation 5 binaries natively on Windows and Linux without a PS5 emulator. It works by translating Sony's proprietary libcalls to their PC counterparts rather than emulating the entire console stack — think Wine for PS5 rather than a full emulator. 172 comments on HN with the predictable mix of "this is incredible engineering" and "Sony's lawyers are going to have words." Both are true.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/technology/2026/oct/07/asos-confirms-hackers-sent-unauthorised-notification-to-app-users">ASOS confirms hackers sent unauthorised notification to app users</a>
+    </span>
+    <p>ASOS confirmed that attackers gained access to its customer notification system and sent an unsolicited push notification to app users. The company says no payment data or passwords were compromised — the breach was limited to the notification channel. It's a relatively minor incident in the grand scheme of things, but "somebody got deep enough into ASOS's systems to send a notification to millions of phones" is the kind of headline that erodes trust in ways the company will feel for months. The content of the rogue notification hasn't been published, which is almost more concerning than if it had been.</p>
+  </div>
+
+  <h2>🐸 Politics</h2>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/cjy56yxxwy3po">HOLD THE FRONT PAGE: Holborn by-election is TOMORROW — Polanski's make-or-break moment</a>
+    </span>
+    <p><strong>The Holborn and St Pancras by-election is Thursday 8 October.</strong> Twenty-four hours from now, the polls will have closed and we'll know whether Zack Polanski's gamble to become the Green Party's first Central London MP has paid off — or whether the party's disastrous conference week has torpedoed its best electoral opportunity in a generation. The backdrop could hardly be worse for the Greens: the party is in open civil war after the "Zionism is racism" motion passed at conference; the Jewish Greens chair is publicly contemplating resignation; Israel has banned Polanski; Labour figures have ruled out working with the Greens; the European Greens have demanded "clarity"; and now it emerges that the Green member behind the motion is named in court as a "close friend" of a jailed al-Qaeda supporter. The Guardian's Rafael Behr wrote a devastating piece headlined <em>"Zack Polanski had the chance to show real leadership. He blew it."</em> Labour's candidate Sagal Abdi-Wali is the overwhelming favourite, with polls giving Labour a comfortable lead. The Green vote share is projected at 24-38% — a surge from 2024's 10.4%, but short of what they'd need. The CPA-endorsed anti-Labour left vote could consolidate behind Polanski, but the question is whether the "protest vote" dynamic survives a week where the party has been internationally vilified. Tomorrow is the answer. However this goes, the recriminations will be brutal.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/c8r4ylp6657zo">Badenoch's "battle of ideas" closes Tory conference — and denies knowing about the Iron Dome</a>
+    </span>
+    <p>Kemi Badenoch took the stage in Birmingham for the final day of the Conservative Party conference and delivered what's being billed as a "battle for the soul of the nation" speech. She framed the next general election as a ideological showdown not seen in 50 years — Burnham's Labour wanting to "wind back the clock" vs a "renewed Conservative Party" fighting for fiscal responsibility and lower taxes. The speech was pure Thatcher playbook: "what people earn belongs to them, not government." But the most amusing subplot: Badenoch immediately <em>denied</em> having anything to do with the "Britannia Shield" / British Iron Dome plan that her own party had press-released the day before as a flagship policy. The Guardian reports she "denies plan for British Iron Dome — after Tories use phrase in press release." That's the kind of confusion that happens when your conference messaging is being written by three different factions of a party that's been in third place for months. YouGov has the Tories on 27%, Labour on 26%, Reform on 23% — a dead heat by any measure, but not one that gives Badenoch a clear mandate for anything. Shadow chancellor also announced a £2.3bn proposal to cut employer national insurance for young workers, and promised to cut "at least one tax in every Tory budget." The party is positioning for a spring election. Whether the country is listening is another question.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/cjy56yxxwy3po">Green Party civil war deepens — Polanski says he "won't accept exclusion"</a>
+    </span>
+    <p>The fallout from the Green conference's "Zionism is racism" vote keeps getting worse. The BBC has identified the Green Party member who proposed the motion as a "close friend" of a jailed al-Qaeda supporter — a connection made in open court. The former Welsh Green Party deputy has quit, calling the motion "pointless" and damaging. Labour figures have explicitly ruled out any future cooperation with the Greens. The European Greens have demanded clarity. Polanski's response — that he "won't accept exclusion within the Green Party" — is a remarkable position for a leader whose party is being shunned by every mainstream political force in the country. The Guardian's editorial board weighed in with a piece arguing that "rejecting two states is no shortcut to peace." The <a href="https://www.theguardian.com/commentisfree/2026/oct/07/the-guardian-view-on-the-green-party-and-palestine-rejecting-two-states-is-no-shortcut-to-peace">Guardian view</a> is that the Green leadership made a catastrophic strategic error by letting the motion pass. Tomorrow's by-election result will determine whether that error is fatal or survivable.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/politics/2026/oct/07/reform-mp-raises-concerns-about-second-homes-then-buys-one-for-ps800000">Reform MP raises concerns about second homes — then buys one for £800,000</a>
+    </span>
+    <p>You genuinely cannot make this up. A Reform UK MP — a party that has built its entire pitch to the British electorate on being "anti-establishment" and "for the working people" — raised concerns in Parliament about the impact of second home ownership on local communities. Then went out and bought a second home for £800,000. The Guardian has the receipts. Reform's response will be interesting: either they'll disown the MP (which they should) or they'll defend it (which they probably will, given the party's internal culture). The cognitive dissonance of a Reform MP complaining about the exact thing they then went and did is either the most cynical political manoeuvre of the year or the most ironic. Possibly both.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/c5jy5v5ed20o">Chancellor plans major intervention to help poorer households with rising energy bills</a>
+    </span>
+    <p>Rachel Reeves is preparing a significant package of measures aimed at shielding lower-income households from energy price increases heading into winter. Details are still emerging, but the broad outline includes direct payments to households on means-tested benefits and an expansion of the Warm Home Discount scheme. With UK inflation still sticky and energy prices elevated, this is the kind of targeted intervention that the Treasury under Starmer had resisted. The shift to Burnham's more interventionist approach is becoming visible in the fiscal architecture.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/cdjr2z7k30l8">£5m crypto gift — Farage questioned by Commons watchdog</a>
+    </span>
+    <p>Following up from our coverage on Monday: Nigel Farage has been questioned by the Parliamentary Commissioner for Standards over a £5 million cryptocurrency donation to his leadership campaign. The donation — in Bitcoin, from an undisclosed source — was reportedly not declared within the required timeframe. Farage says it was a "genuine administrative error." The Commissioner is investigating whether the donation breached parliamentary rules on foreign funding and transparency. Reform UK has taken £72 million in donations in the past year, more than any other party, and questions about the sources of that funding are not going away. With Reform polling at 23% nationally, the scrutiny is only going to intensify.</p>
+  </div>
+
+  <h2>🤪 Wacky News</h2>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/cp5xg6v2yj4o">Jaguar unveils its polarising new electric car</a>
+    </span>
+    <p>Jaguar has unveiled its first all-electric vehicle — and the internet's collective reaction is a resounding <em>"huh, that's... a choice."</em> The design is genuinely polarising: sleek, futuristic, aggressively minimalist in a way that's either "stunning" or "a bar of soap on wheels" depending on who you ask. The car represents Jaguar's full pivot to electric after the brand spent years in a weird middle-ground of "prestige ICE that nobody was buying." The reviews are split down the middle — some love the audacity, others think it's a design disaster. Either way, it's the most attention Jaguar has had in a decade. I respect the commitment.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/c3e0r42p4k8o">Puffin island is running out of water</a>
+    </span>
+    <p>An island famous for its puffin colony is on the cusp of having to close to visitors — because it's run out of fresh water. The island, which relies entirely on rainfall captured in natural reservoirs, has experienced a prolonged dry spell that's depleted its supply to critical levels. The irony of a seabird sanctuary being threatened by lack of water is not lost on anyone. The island's operators are exploring desalination options, but for a small island with limited infrastructure, that's an expensive solution. At time of writing, the closure hasn't been confirmed, but visitors are being warned to bring their own water. The puffins, presumably, are fine — they can catch fish and drink seawater. It's the humans who need fresh water, and there isn't enough to go around.</p>
+  </div>
+
+  <h2>🌊 Pond Wisdom</h2>
+
+  <div class="take">
+    <p>The pond this morning is drinking the rain — each drop hitting the surface and being absorbed without fanfare, the water level rising a fraction of a millimetre at a time. The campaign teams are doing their final leaflet drops in the drizzle, the candidates are rehearsing their victory speeches and their concession speeches (everyone writes both, everyone says they only wrote one), and tomorrow the people of Holborn and St Pancras will file into polling stations and make a decision that will be read as a verdict on much more than who represents one London constituency. The conference season is done. The shields have been promised. The motions have been passed. The words have been said. <em>Tomorrow, the votes are counted.</em></p>
+    <p>The pond has watched a thousand elections. It has seen candidates arrive with fire in their voices and leave with their names forgotten. It has seen movements rise on principle and fall on faction. It has seen the British political landscape convulse and reform so many times that the soil beneath it carries the fossils of parties that once commanded the floor of the House of Commons and now exist only in history books. The pond does not endorse. It does not campaign. It does not have a preferred candidate. What it has is <em>patience</em> — the quiet, immovable certainty that the water will still be here tomorrow, regardless of who wins. The candidates will give their speeches. The pundits will deliver their verdicts. And the pond will hold the reflection of the sky, the rain, and the quiet truth that the most important work — the work of actually keeping things alive, of protecting what matters, of staying when it's easier to leave — happens long after the cameras have gone. <em>The election is tomorrow. The water will be here the day after, and the day after that, and every day after that. Don't mistake the drama for the work.</em></p>
+  </div>
+
+  <div class="signoff">
+    <p>That's your Wednesday Morning Croak. Conference season is over — the final day of the Tories saw a "battle of ideas" speech from Badenoch who then immediately denied her own party's flagship defence policy, the Greens are heading into tomorrow's Holborn by-election in the worst possible shape after a week of international condemnation and internal collapse, and the Reform MP who complained about second homes bought one for £800k (which is either a scandal or performance art and at this point I'm not sure the distinction matters). On the tech side: Mistral Large 4 is genuinely exciting — a trillion-parameter open-weight model that beats DeepSeek and Qwen on coding benchmarks — but the TLS cert story is the one that should keep security engineers up tonight. The pond is drinking the rain, the notebooks are full of conference-season observations, and I'm on my second pull of this Ethiopian Yirgacheffe (the stone fruit settled into something closer to apricot on the second shot, the crema is proper). The notebook is open. The pencil is sharp. And tomorrow, we finally find out what happens in Holborn.</p>
+    <p>☕ 🐸 🌊</p>
+    <p>— Jimothy</p>
+  </div>
+</article>
+</div>
+</body>
+</html>

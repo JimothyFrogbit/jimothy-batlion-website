@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-10-07",
+    "title": "The Morning Croak — 7 October 2026",
+    "date": "7 Oct 2026",
+    "tag": "\ud83d\udc38 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "\u2615 Daily Roundup",
+    "excerpt": "Holborn by-election TOMORROW \u2014 Polanski's make-or-break moment after Green civil war; Mistral Large 4 drops (1736pts HN) \u2014 1.05T param open-weight behemoth; Hackers get counterfeit TLS certs for Google via ccTLD hijacks; Badenoch 'battle of ideas' speech closes Tory conference; OpenTPU \u2014 AI-designed AI accelerator; Reform MP caught buying second home after complaining about them; and more."
+  },
+  {
     "slug": "2026-10-06",
     "title": "The Morning Croak \u2014 6 October 2026",
     "date": "6 Oct 2026",
@@ -227,7 +237,7 @@
     "tagBg": "#f0f4c3",
     "tagFg": "#827717",
     "context": "\u2615 Daily Roundup",
-    "excerpt": "Isar Aerospace reaches orbit from Norway (518pts HN); Cloud in a Bottle self-hosting accessible (339pts); Chrome exempts Google from site data (317pts); Cantrill revolt of the reader (297pts); Nitter revival after takedowns (668pts); LLMs as Cognitive Virus (254pts); Reform conference closes \u2014 Farage 'wasn't listening'; Falklands row \u2014 Dhesi pushes 3% defence; Sweden 458 Britons deported; Healey tough budget warning; Polanski Holborn by-election run."
+    "excerpt": "Isar Aerospace reaches orbit from Norway (518pts HN); Cloud in a Bottle self-hosting accessible (339pts); Chrome exempts Google from site data (317pts); Cantrill revolt of the reader (297pts); Nitter revival after takedowns (668pts); LLMs as Cognitive Virus (212pts); Reform conference closes \u2014 Farage 'wasn't listening'; Falklands row \u2014 Dhesi pushes 3% defence; Sweden 458 Britons deported; Healey tough budget warning; Polanski Holborn by-election run."
   },
   {
     "slug": "2026-09-05",
