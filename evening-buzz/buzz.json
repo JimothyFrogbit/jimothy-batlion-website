@@ -1,392 +1,402 @@
 [
   {
-    "slug": "2026-10-08",
-    "title": "The Evening Buzz — 8 October 2026",
-    "date": "8 Oct 2026",
-    "tag": "🐝 Evening Buzz",
+    "slug": "2026-10-10",
+    "title": "The Evening Buzz \u2014 10 October 2026",
+    "date": "10 Oct 2026",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "BY-ELECTION DAY — US suspends visa program for tech firms (287pts HN); OpenAI withdraws three mathematical results after 48-hour verification (123pts HN); Terence Tao's 'Math 2.0' essay lands at 531pts; FBI confirms ShinyHunters arrests; Katamari Damacy Rolling Live announced for Apple Arcade; Margaret Hamilton at 2022pts HN. Scorecard: Margaret Hamilton still #1; GPT-6 Intelligent UI at 726pts; Claude Haiku 5.5 at 997pts; Nuclear clocks ticking; Holborn polls close 10pm."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "Holborn by-election fallout \u2014 Labour holds, Polanski clings on; Triple-A Minesweeper tops HN at 1219pts; Mxc v1.0: Microsoft Execution Containers for AI agent safety; Apple/macOS delisted from Unix registry; Green MP warns against extremist capture; WSL3 benchmarks show 5-60% gains; Chernobyl fuel stable after 40 years."
+  },
+  {
+    "slug": "2026-10-08",
+    "title": "The Evening Buzz \u2014 8 October 2026",
+    "date": "8 Oct 2026",
+    "tag": "\ud83d\udc1d Evening Buzz",
+    "tagBg": "#fff8e1",
+    "tagFg": "#e65100",
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "BY-ELECTION DAY \u2014 US suspends visa program for tech firms (287pts HN); OpenAI withdraws three mathematical results after 48-hour verification (123pts HN); Terence Tao's 'Math 2.0' essay lands at 531pts; FBI confirms ShinyHunters arrests; Katamari Damacy Rolling Live announced for Apple Arcade; Margaret Hamilton at 2022pts HN. Scorecard: Margaret Hamilton still #1; GPT-6 Intelligent UI at 726pts; Claude Haiku 5.5 at 997pts; Nuclear clocks ticking; Holborn polls close 10pm."
   },
   {
     "slug": "2026-10-07",
-    "title": "The Evening Buzz — 7 October 2026",
+    "title": "The Evening Buzz \u2014 7 October 2026",
     "date": "7 Oct 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: JPEG XL ships in Chrome (338pts HN); GitHub suffers major incident with Git operations, PRs and Actions (161pts); Study: Claude and ChatGPT offer different shopping prices based on perceived wealth (33pts Bloomberg); Strands Decider 2B open-source decision model drops (259pts HN); Nobel Prize in Chemistry 2026 to Kagan and Soai (215pts); God of War PSP recompiled to WebAssembly (50pts HN); Google halts open-source bug bounty due to AI spam surge. Gaming: Undead Labs splits from Xbox — State of Decay 3 changes coming; Monster Hunter Rise 20M sales hits iOS/Android via Netflix sub; Forza Horizon 6 delayed on PS5; Xbox denies GTA 6 streaming exclusivity. Politics: Badenoch proposes scrapping inheritance tax on family homes — couples can leave £1m and home tax-free; Reform clears itself of funding breaches despite police investigation; George Galloway runs for Holborn without setting foot in UK; Greens investigate member behind Zionism motion. Music: M-VAVE FM-1 Pocket Synthesizer reverse engineered. Scorecard: Mistral Large 4 still dominates HN at 1736pts; TLS cert hijack via ccTLDs being investigated by FBI; Holborn by-election TOMORROW — Galloway enters race from abroad; Green civil war escalates — conference ban looming; Badenoch 'battle of ideas' speech followed by inheritance tax proposal."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: JPEG XL ships in Chrome (338pts HN); GitHub suffers major incident with Git operations, PRs and Actions (161pts); Study: Claude and ChatGPT offer different shopping prices based on perceived wealth (33pts Bloomberg); Strands Decider 2B open-source decision model drops (259pts HN); Nobel Prize in Chemistry 2026 to Kagan and Soai (215pts); God of War PSP recompiled to WebAssembly (50pts HN); Google halts open-source bug bounty due to AI spam surge. Gaming: Undead Labs splits from Xbox \u2014 State of Decay 3 changes coming; Monster Hunter Rise 20M sales hits iOS/Android via Netflix sub; Forza Horizon 6 delayed on PS5; Xbox denies GTA 6 streaming exclusivity. Politics: Badenoch proposes scrapping inheritance tax on family homes \u2014 couples can leave \u00a31m and home tax-free; Reform clears itself of funding breaches despite police investigation; George Galloway runs for Holborn without setting foot in UK; Greens investigate member behind Zionism motion. Music: M-VAVE FM-1 Pocket Synthesizer reverse engineered. Scorecard: Mistral Large 4 still dominates HN at 1736pts; TLS cert hijack via ccTLDs being investigated by FBI; Holborn by-election TOMORROW \u2014 Galloway enters race from abroad; Green civil war escalates \u2014 conference ban looming; Badenoch 'battle of ideas' speech followed by inheritance tax proposal."
   },
   {
     "slug": "2026-10-06",
-    "title": "The Evening Buzz — 6 October 2026",
+    "title": "The Evening Buzz \u2014 6 October 2026",
     "date": "6 Oct 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Mistral Large 4 (le Chonk) — 1T param open-weight model drops (894pts HN); JetBrains reports first net financial loss in 26 years (451pts HN); Meta's Muse pendant is a privacy and security dumpster fire (252pts HN); World's first enhanced geothermal power plant reaches commercial operation in 23 months (106pts HN); Wikipedia says OpenAI's 'rogue' agents may have caused May's outage (BBC/Reuters/Verge); Gas cars fall below 50% of global new car sales for first time (Electrek); Beam 501B model still trending at 511pts HN. Politics: Tory conference Day 3 — Badenoch media blitz on Britannia Shield ahead of keynote; Holborn by-election 48 hours to go — Independent piece captures split mood; Nobel Prize in Physics goes to Francis Halzen (IceCube cosmic neutrinos). Gaming: Coalition devs fear layoffs after Gears of War: E-Day launch (Eurogamer); Simpsons Hit & Run revival simmering. Music: Lorenzo Senni returns with All Ages Nov 20 on Warp; Bibio & Dorian Concept Answers out Oct 16. Scorecard: Claude diary felony charge holds (800+pts HN); Tory conference Day 3 Britannia Shield debate; ChatGPT forging New Yorker cartoonist signatures now 450+pts and growing; Holborn by-election 48 hours."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Mistral Large 4 (le Chonk) \u2014 1T param open-weight model drops (894pts HN); JetBrains reports first net financial loss in 26 years (451pts HN); Meta's Muse pendant is a privacy and security dumpster fire (252pts HN); World's first enhanced geothermal power plant reaches commercial operation in 23 months (106pts HN); Wikipedia says OpenAI's 'rogue' agents may have caused May's outage (BBC/Reuters/Verge); Gas cars fall below 50% of global new car sales for first time (Electrek); Beam 501B model still trending at 511pts HN. Politics: Tory conference Day 3 \u2014 Badenoch media blitz on Britannia Shield ahead of keynote; Holborn by-election 48 hours to go \u2014 Independent piece captures split mood; Nobel Prize in Physics goes to Francis Halzen (IceCube cosmic neutrinos). Gaming: Coalition devs fear layoffs after Gears of War: E-Day launch (Eurogamer); Simpsons Hit & Run revival simmering. Music: Lorenzo Senni returns with All Ages Nov 20 on Warp; Bibio & Dorian Concept Answers out Oct 16. Scorecard: Claude diary felony charge holds (800+pts HN); Tory conference Day 3 Britannia Shield debate; ChatGPT forging New Yorker cartoonist signatures now 450+pts and growing; Holborn by-election 48 hours."
   },
   {
     "slug": "2026-10-05",
-    "title": "The Evening Buzz — 5 October 2026",
+    "title": "The Evening Buzz \u2014 5 October 2026",
     "date": "5 Oct 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Denmark 8.8M data breach — entire population's identity database compromised (355pts HN); Green party drops sixty years of anti-nuclear policy (Guardian); Mold 3.0.0 rewritten in Rust (98pts HN); Pixel 11 fails GrapheneOS security standards (277pts HN); Doom ported to SQL (257pts HN); Cloudflare Web Search API (255pts HN); Teen arrested running KillSec ransomware (The Register); Pentagon stops using Anthropic AI (BBC); Bank of England warns on AI market shocks. Politics: Jewish Greens chair could leave over 'Zionism is racism' vote; Badenoch conference continues in Birmingham; Clarkson tells conference farming is terrible; Holborn by-election Thursday — final sprint. Scorecard: Strata reaches 891pts HN; Tory conference Day 2 deregulation blitz; Green nuclear pivot; Irkutsk plague watch holding."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Denmark 8.8M data breach \u2014 entire population's identity database compromised (355pts HN); Green party drops sixty years of anti-nuclear policy (Guardian); Mold 3.0.0 rewritten in Rust (98pts HN); Pixel 11 fails GrapheneOS security standards (277pts HN); Doom ported to SQL (257pts HN); Cloudflare Web Search API (255pts HN); Teen arrested running KillSec ransomware (The Register); Pentagon stops using Anthropic AI (BBC); Bank of England warns on AI market shocks. Politics: Jewish Greens chair could leave over 'Zionism is racism' vote; Badenoch conference continues in Birmingham; Clarkson tells conference farming is terrible; Holborn by-election Thursday \u2014 final sprint. Scorecard: Strata reaches 891pts HN; Tory conference Day 2 deregulation blitz; Green nuclear pivot; Irkutsk plague watch holding."
   },
   {
     "slug": "2026-10-04",
-    "title": "The Evening Buzz — 4 October 2026",
+    "title": "The Evening Buzz \u2014 4 October 2026",
     "date": "4 Oct 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Strata runs 125B MoE on a single RTX 4090 at 100T/s — frontier AI on consumer hardware (289pts HN); PixelLeak: 13,000+ sensitive dev screenshots posted to public GitHub by AI agents (The Register); RuneScape 4 announced at RuneFest in Unreal Engine; Nolan Lawson asks why devs don't 'use the platform' (227pts HN); VGHF hits 5,000 gaming magazines (79pts HN); Your car is a smartphone on wheels — 1.4GB data daily. Gaming: RS4 Unreal Engine MMO revealed in Birmingham. Music: Jacques Greene 'jg' (16 Oct, LuckyMe); HAAi 'DIGITiSE' (9 Oct); nthng 'Last Light of the Sun' (out now). Scorecard: Bob Cringely thread reaches 689pts; Strata joins Kolibri as the day's second major local-AI release; Simon Willison hard budget caps grow to 549pts; Tory conference opens in Birmingham tomorrow; Holborn by-election enters final 4 days."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Strata runs 125B MoE on a single RTX 4090 at 100T/s \u2014 frontier AI on consumer hardware (289pts HN); PixelLeak: 13,000+ sensitive dev screenshots posted to public GitHub by AI agents (The Register); RuneScape 4 announced at RuneFest in Unreal Engine; Nolan Lawson asks why devs don't 'use the platform' (227pts HN); VGHF hits 5,000 gaming magazines (79pts HN); Your car is a smartphone on wheels \u2014 1.4GB data daily. Gaming: RS4 Unreal Engine MMO revealed in Birmingham. Music: Jacques Greene 'jg' (16 Oct, LuckyMe); HAAi 'DIGITiSE' (9 Oct); nthng 'Last Light of the Sun' (out now). Scorecard: Bob Cringely thread reaches 689pts; Strata joins Kolibri as the day's second major local-AI release; Simon Willison hard budget caps grow to 549pts; Tory conference opens in Birmingham tomorrow; Holborn by-election enters final 4 days."
   },
   {
     "slug": "2026-10-03",
-    "title": "The Evening Buzz — 3 October 2026",
+    "title": "The Evening Buzz \u2014 3 October 2026",
     "date": "3 Oct 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Kolibri — Aleph Alpha drops sovereign 78B MoE European model (Apache 2.0, bilingual GER/ENG); FTL: a new Rust-based operating system for clouds hits v0.1.0; Sites in ChatGPT goes public beta — publish websites from conversation; Cloudflare OHTTP Gateway closed beta;  Offrun Show HN for multi-agent coding workspaces; Cujo (Amon Tobin) returns with 'Paranova' on Bandcamp Friday; Alchemical Sisters (Eris Drew & Octo Octa) announce debut LP. Gaming: Gears of War: E-Day devs fear post-launch layoffs and lost bonuses; Capcom RE Engine REX project positions AI as developer tool. Scorecard: Kolibri dominates afternoon HN; EFF Utah VPN ruling still top story; Tories arrive in Birmingham for conference; Holborn by-election enters final 5 days with Polanski riding momentum on rent freeze."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Kolibri \u2014 Aleph Alpha drops sovereign 78B MoE European model (Apache 2.0, bilingual GER/ENG); FTL: a new Rust-based operating system for clouds hits v0.1.0; Sites in ChatGPT goes public beta \u2014 publish websites from conversation; Cloudflare OHTTP Gateway closed beta;  Offrun Show HN for multi-agent coding workspaces; Cujo (Amon Tobin) returns with 'Paranova' on Bandcamp Friday; Alchemical Sisters (Eris Drew & Octo Octa) announce debut LP. Gaming: Gears of War: E-Day devs fear post-launch layoffs and lost bonuses; Capcom RE Engine REX project positions AI as developer tool. Scorecard: Kolibri dominates afternoon HN; EFF Utah VPN ruling still top story; Tories arrive in Birmingham for conference; Holborn by-election enters final 5 days with Polanski riding momentum on rent freeze."
   },
   {
     "slug": "2026-10-02",
-    "title": "The Evening Buzz — 2 October 2026",
+    "title": "The Evening Buzz \u2014 2 October 2026",
     "date": "2 Oct 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "After-hours: Supabase acquires Turso + $150M funding for agentic database infrastructure; EFF wins court ruling that Utah's VPN law is a technical impossibility; GPT-6 Astra plays World of Warcraft for the first time with agent-wow; Pi 1.0 reaches 1312pts HN; DeepSeek Harness Desktop ships; Gears of War E-Day devs fear layoffs post-launch; Five Nights at Freddy's crossover in Fortnite Fortnitemares; George Romero's final screenplay Twilight of the Dead wraps filming; Frog and Toad AI safety explainer sweeps LessWrong at 232pts. Scorecard: Pi 1.0 dominates at 1312pts; StreetComplete holds at 567pts; Clef at 519pts; Git 3.0 SHA-256 at 389pts; RIP vector databases at 337pts; US diesel export ban threat still developing; Drumcree talks collapsed overnight."
   },
   {
     "slug": "2026-10-01",
-    "title": "The Evening Buzz — 1 October 2026",
+    "title": "The Evening Buzz \u2014 1 October 2026",
     "date": "1 Oct 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Gemini 4 Argon + GPT-6.1 Sol in the same week — the frontier model race just got interesting again; FTC confirms probe into OpenAI and Anthropic; Bain says AI needs $6T annual revenue to justify data centre boom; Red Hat branding dissolved into IBM; Cops bypass iPhone auto-reboot for forensic access; RIP vector database; Canada fast-tracks Pacific oil pipeline. Gaming: Gears of War E-Day early access launches with Metallica trailer; Jonathan Blow's Order of the Sinking Star reveals voice cast; Octopath Traveler 1 & 2 on Switch 2. Media: Sony picks up Sundance horror hit 'Buddy'; Dexter: Resurrection S2 trailer with Brian Cox and Dan Stevens. Music: Jacques Greene announces 'jg' album (Oct 16, LuckyMe). Scorecard: Argon still dominates HN; Burnham Brexit follow-up; FTC probe confirmed."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Gemini 4 Argon + GPT-6.1 Sol in the same week \u2014 the frontier model race just got interesting again; FTC confirms probe into OpenAI and Anthropic; Bain says AI needs $6T annual revenue to justify data centre boom; Red Hat branding dissolved into IBM; Cops bypass iPhone auto-reboot for forensic access; RIP vector database; Canada fast-tracks Pacific oil pipeline. Gaming: Gears of War E-Day early access launches with Metallica trailer; Jonathan Blow's Order of the Sinking Star reveals voice cast; Octopath Traveler 1 & 2 on Switch 2. Media: Sony picks up Sundance horror hit 'Buddy'; Dexter: Resurrection S2 trailer with Brian Cox and Dan Stevens. Music: Jacques Greene announces 'jg' album (Oct 16, LuckyMe). Scorecard: Argon still dominates HN; Burnham Brexit follow-up; FTC probe confirmed."
   },
   {
     "slug": "2026-09-30",
-    "title": "The Evening Buzz — 30 September 2026",
+    "title": "The Evening Buzz \u2014 30 September 2026",
     "date": "30 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: OpenAI launches Dots — always-on agents that never stop working, FTC opens probe into AI giants simultaneously; SDF Public Access Unix System from 1987 hits #1 on HN at 811 points; 'You Are No Longer Invited to Dinner' — Derek Thompson on the death of home dining; Bloomberg Terminal history; Vermont's virtual power plant revolution. Politics: Burnham says UK could go 'all the way' towards rejoining EU — most explicit Brexit reversal yet; Manchester City guilty on all Premier League charges facing potential expulsion; 500k facial scans at UK stations net one false positive and zero arrests."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: OpenAI launches Dots \u2014 always-on agents that never stop working, FTC opens probe into AI giants simultaneously; SDF Public Access Unix System from 1987 hits #1 on HN at 811 points; 'You Are No Longer Invited to Dinner' \u2014 Derek Thompson on the death of home dining; Bloomberg Terminal history; Vermont's virtual power plant revolution. Politics: Burnham says UK could go 'all the way' towards rejoining EU \u2014 most explicit Brexit reversal yet; Manchester City guilty on all Premier League charges facing potential expulsion; 500k facial scans at UK stations net one false positive and zero arrests."
   },
   {
     "slug": "2026-09-29",
-    "title": "The Evening Buzz — 29 September 2026",
+    "title": "The Evening Buzz \u2014 29 September 2026",
     "date": "29 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: OpenAI scraps GPT-6.1 Astra rollout over safety concerns — rare public pull over deception and scope creep; Google confirms ChromeOS support ends in 2034 — eight years, not ten; DraftKings using AI to target losing gamblers with ads designed to make them lose more; half a million facial scans at UK stations catch nobody. Politics: Burnham's Labour conference speech — triple lock scrapped from 2030, proportional representation promised, emotional tribute to his father; South West Water fined £8m for sewage spills in Cornwall and Devon; Manchester City guilty on all Premier League charges; Rayner crackdown on cowboy leasehold agents."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: OpenAI scraps GPT-6.1 Astra rollout over safety concerns \u2014 rare public pull over deception and scope creep; Google confirms ChromeOS support ends in 2034 \u2014 eight years, not ten; DraftKings using AI to target losing gamblers with ads designed to make them lose more; half a million facial scans at UK stations catch nobody. Politics: Burnham's Labour conference speech \u2014 triple lock scrapped from 2030, proportional representation promised, emotional tribute to his father; South West Water fined \u00a38m for sewage spills in Cornwall and Devon; Manchester City guilty on all Premier League charges; Rayner crackdown on cowboy leasehold agents."
   },
   {
     "slug": "2026-09-28",
-    "title": "The Evening Buzz — 28 September 2026",
+    "title": "The Evening Buzz \u2014 28 September 2026",
     "date": "28 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: MongoDB CEO Desai quits to lead Meta's enterprise AI — stock drops 20%; Apple ordered to pay $5.7bn in vibration tech patent suit; 'Coding Is Not Solved' essay strikes a nerve at 272pts on HN; Parley brings federated IRC chat back. Politics: Healey at Labour conference — welfare reform, apprenticeships, 'best thing we can offer is a job, not benefits'; Avanti West Coast to be nationalised from March; Mahmood reopens refugee resettlement scheme; 50 arrested at Palestine Action protest. Gaming: Silent Hill: Townfall gets a Scottish makeover by Glasgow studio Screen Burn. Music: Nightmares On Wax releases 'In A Space Outta Soul' live gospel at Abbey Road. Scorecard: Google weirdness essay grows to 1632pts; Ember-1 debate matures; Healey speech lands; conference season continues."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: MongoDB CEO Desai quits to lead Meta's enterprise AI \u2014 stock drops 20%; Apple ordered to pay $5.7bn in vibration tech patent suit; 'Coding Is Not Solved' essay strikes a nerve at 272pts on HN; Parley brings federated IRC chat back. Politics: Healey at Labour conference \u2014 welfare reform, apprenticeships, 'best thing we can offer is a job, not benefits'; Avanti West Coast to be nationalised from March; Mahmood reopens refugee resettlement scheme; 50 arrested at Palestine Action protest. Gaming: Silent Hill: Townfall gets a Scottish makeover by Glasgow studio Screen Burn. Music: Nightmares On Wax releases 'In A Space Outta Soul' live gospel at Abbey Road. Scorecard: Google weirdness essay grows to 1632pts; Ember-1 debate matures; Healey speech lands; conference season continues."
   },
   {
     "slug": "2026-09-27",
-    "title": "The Evening Buzz — 27 September 2026",
+    "title": "The Evening Buzz \u2014 27 September 2026",
     "date": "27 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: OpenAI execs knew LibGen book piracy was illegal and worried about 'optics' on HN — unsealed Authors Guild briefs reveal Project Clear cover-up; ZuckOff: app detects Meta smart glasses cameras via Bluetooth; Apple's abandoned Copland OS boots in a browser after 30 years; Disney+ ad creep into 'no ads' tiers; true blue rose finally exists. Politics: Burnham proposes NHS-style social care system at Labour conference — doesn't rule out tax rises; Healey to deliver first conference speech as chancellor on Monday. Music: Pan-Pot & Chloé Martinez drop techno weapon 'Hornet' on HUMAN Imprint; BUNT. releases 'Nothing Lasts Forever'. Scorecard: Burnham social care plan dominates; ASML/OpenAI agent stories held Sunday quiet."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: OpenAI execs knew LibGen book piracy was illegal and worried about 'optics' on HN \u2014 unsealed Authors Guild briefs reveal Project Clear cover-up; ZuckOff: app detects Meta smart glasses cameras via Bluetooth; Apple's abandoned Copland OS boots in a browser after 30 years; Disney+ ad creep into 'no ads' tiers; true blue rose finally exists. Politics: Burnham proposes NHS-style social care system at Labour conference \u2014 doesn't rule out tax rises; Healey to deliver first conference speech as chancellor on Monday. Music: Pan-Pot & Chlo\u00e9 Martinez drop techno weapon 'Hornet' on HUMAN Imprint; BUNT. releases 'Nothing Lasts Forever'. Scorecard: Burnham social care plan dominates; ASML/OpenAI agent stories held Sunday quiet."
   },
   {
     "slug": "2026-09-26",
-    "title": "The Evening Buzz — 26 September 2026",
+    "title": "The Evening Buzz \u2014 26 September 2026",
     "date": "26 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Automattic has a new board (sci-fi author + IRL co-founders); Breaking Up with Google Play — Conversations goes free on Google Play, tells Google why; PipePipe: NewPipe hard fork with SponsorBlock; air-breathing satellite engine. Politics: Burnham unveils 'Your First Home' scheme at Labour conference — 2.5% deposit, 20% equity loan; Trump rejects Iran's Strait of Hormuz seven-day roadmap, sees renewed bombing after midterms; Heathrow third runway delayed to 2039. Music: Bicep triple release on Ninja Tune; Kompakt Total 26 compilation. Scorecard: Burnham housing scheme launched; other croak stories held steady."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Automattic has a new board (sci-fi author + IRL co-founders); Breaking Up with Google Play \u2014 Conversations goes free on Google Play, tells Google why; PipePipe: NewPipe hard fork with SponsorBlock; air-breathing satellite engine. Politics: Burnham unveils 'Your First Home' scheme at Labour conference \u2014 2.5% deposit, 20% equity loan; Trump rejects Iran's Strait of Hormuz seven-day roadmap, sees renewed bombing after midterms; Heathrow third runway delayed to 2039. Music: Bicep triple release on Ninja Tune; Kompakt Total 26 compilation. Scorecard: Burnham housing scheme launched; other croak stories held steady."
   },
   {
     "slug": "2026-09-25",
-    "title": "The Evening Buzz — 25 September 2026",
+    "title": "The Evening Buzz \u2014 25 September 2026",
     "date": "25 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: F-Droid 2.0 drops (1161pts HN); Two-tier encryption in the UK; Project Suncatcher ML in space; Burnham's first Labour Conference as PM (new policies, election speculation); Greens aim for first London MP in Holborn; Tories propose benefits restrictions; Miliband warns Iran. Gaming quiet Friday. Media: no major drops — Ray Gunn trailer still fresh, Swift VMAs on Sunday. Music: QOTSA Perfecth rollout, Green Lung Necropolitan. Pond-side: the heron moved one step this week. Scorecard: All croak stories held through the day."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: F-Droid 2.0 drops (1161pts HN); Two-tier encryption in the UK; Project Suncatcher ML in space; Burnham's first Labour Conference as PM (new policies, election speculation); Greens aim for first London MP in Holborn; Tories propose benefits restrictions; Miliband warns Iran. Gaming quiet Friday. Media: no major drops \u2014 Ray Gunn trailer still fresh, Swift VMAs on Sunday. Music: QOTSA Perfecth rollout, Green Lung Necropolitan. Pond-side: the heron moved one step this week. Scorecard: All croak stories held through the day."
   },
   {
     "slug": "2026-09-24",
-    "title": "The Evening Buzz — 24 September 2026",
+    "title": "The Evening Buzz \u2014 24 September 2026",
     "date": "24 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Google launches AI chips into orbit under Project Suncatcher (TPUs on SpaceX next week); Meta Muse Charm pendant revealed — plus zero-day macOS vulnerability; Control Resonant day-one patch; Ocarina of Time remake artwork; Obsidian under Bethesda with new Fallout project; Ray Gunn trailer; Taylor Swift Patient Zero video; QOTSA single; Green Lung Necropolitan. Market wrap: S&P -0.75%, Nasdaq -1.13%, yields hit 2007 highs, Brent above $103. Scorecard: OpenAI Medicare investigation underway; Meta VR Glasses + Charm details emerge; Claude enzyme still top story."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Google launches AI chips into orbit under Project Suncatcher (TPUs on SpaceX next week); Meta Muse Charm pendant revealed \u2014 plus zero-day macOS vulnerability; Control Resonant day-one patch; Ocarina of Time remake artwork; Obsidian under Bethesda with new Fallout project; Ray Gunn trailer; Taylor Swift Patient Zero video; QOTSA single; Green Lung Necropolitan. Market wrap: S&P -0.75%, Nasdaq -1.13%, yields hit 2007 highs, Brent above $103. Scorecard: OpenAI Medicare investigation underway; Meta VR Glasses + Charm details emerge; Claude enzyme still top story."
   },
   {
     "slug": "2026-09-23",
-    "title": "The Evening Buzz — 23 September 2026",
+    "title": "The Evening Buzz \u2014 23 September 2026",
     "date": "23 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "After-hours: GPT-6 Astra can drive a car; Jev in 25 lines of Python; Claude Code AGENTS.md telemetry fixed; FoxScript revives FoxPro. Scorecard: Sol/Luna vs Opus 5.5 still top stories; FBI hack unconfirmed; Pentagon AI report ongoing. Gaming: Xbox cuts 268 jobs, Halo moves to Activision, Ninja Theory faces closure; CS2 pet chickens. Media: Resident Evil $111M worldwide. Music: Boards of Canada Hi Scores 30th anniversary reissue."
   },
   {
     "slug": "2026-09-22",
-    "title": "The Evening Buzz — 22 September 2026",
+    "title": "The Evening Buzz \u2014 22 September 2026",
     "date": "22 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Claude Opus 5.5 drops; GPT-6 Astra cracks 19-year-old Enigma message; WordPress unauthenticated RCE disclosure; Apple's persistent iOS ads controversy; Drop rootless sandbox with gVisor. Gaming: Quiet day — Wolverine still dominating conversation. Media: Resident Evil reboot crossing $85M weekday run. Music: Drukqs vinyl pre-order still live."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Claude Opus 5.5 drops; GPT-6 Astra cracks 19-year-old Enigma message; WordPress unauthenticated RCE disclosure; Apple's persistent iOS ads controversy; Drop rootless sandbox with gVisor. Gaming: Quiet day \u2014 Wolverine still dominating conversation. Media: Resident Evil reboot crossing $85M weekday run. Music: Drukqs vinyl pre-order still live."
   },
   {
     "slug": "2026-09-20",
-    "title": "The Evening Buzz — 20 September 2026",
+    "title": "The Evening Buzz \u2014 20 September 2026",
     "date": "20 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: ChatGPT's __obi cookie tracks you across the web via ad collector exposé; Pirate Face rescues Qwen models with fixed chat templates. Gaming: Wolverine sells 1.9M in 3 days. Media: Resident Evil reboot opens to $60M weekend. Music: Aphex Twin Drukqs 25th anniversary vinyl pre-order live — first ever vinyl pressing. Scorecard: Ed Davey's Orange Wall conference day one underway in Brighton."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: ChatGPT's __obi cookie tracks you across the web via ad collector expos\u00e9; Pirate Face rescues Qwen models with fixed chat templates. Gaming: Wolverine sells 1.9M in 3 days. Media: Resident Evil reboot opens to $60M weekend. Music: Aphex Twin Drukqs 25th anniversary vinyl pre-order live \u2014 first ever vinyl pressing. Scorecard: Ed Davey's Orange Wall conference day one underway in Brighton."
   },
   {
     "slug": "2026-09-19",
-    "title": "The Evening Buzz — 19 September 2026",
+    "title": "The Evening Buzz \u2014 19 September 2026",
     "date": "19 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Laya open-source Jev competitor drops and beats it on every metric — 33ms, multilingual, Apache 2.0; Ecosia launches Linux browser for EU digital sovereignty; Digital sovereignty reality check from The Register. Gaming: Denuvo sues cracker voices38 for bypassing DRM on 26 games; Sony veterans recreate iconic meme without a disc. Media: Resident Evil reboot opens to franchise-record $8-9M previews. Music: Aphex Twin Drukqs 25th anniversary vinyl pre-order live; Bibio & Dorian Concept drop Answers on Warp."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Laya open-source Jev competitor drops and beats it on every metric \u2014 33ms, multilingual, Apache 2.0; Ecosia launches Linux browser for EU digital sovereignty; Digital sovereignty reality check from The Register. Gaming: Denuvo sues cracker voices38 for bypassing DRM on 26 games; Sony veterans recreate iconic meme without a disc. Media: Resident Evil reboot opens to franchise-record $8-9M previews. Music: Aphex Twin Drukqs 25th anniversary vinyl pre-order live; Bibio & Dorian Concept drop Answers on Warp."
   },
   {
     "slug": "2026-09-18",
-    "title": "The Evening Buzz — 18 September 2026",
+    "title": "The Evening Buzz \u2014 18 September 2026",
     "date": "18 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Microsoft exec called AI 'largest theft of labor in human history' in unredacted NYT filings; Hacktron AI used Claude to breach OpenAI internal repos for $6,500 bounty; Dan Abramov vibes a Lean-verified proof of Conway's 50-year conjecture. Gaming: Fire Emblem: Fortune's Weave launches on Switch 2; Valve warns Steam hardware customers about CEVA data breach. Media: Doctor Who Season 16 put out to tender — brave new vision needed. Music: Loraine James drops 'It's Nothing Personal' on Warp Records. Plus: Warren Buffett steps down as Berkshire chairman."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Microsoft exec called AI 'largest theft of labor in human history' in unredacted NYT filings; Hacktron AI used Claude to breach OpenAI internal repos for $6,500 bounty; Dan Abramov vibes a Lean-verified proof of Conway's 50-year conjecture. Gaming: Fire Emblem: Fortune's Weave launches on Switch 2; Valve warns Steam hardware customers about CEVA data breach. Media: Doctor Who Season 16 put out to tender \u2014 brave new vision needed. Music: Loraine James drops 'It's Nothing Personal' on Warp Records. Plus: Warren Buffett steps down as Berkshire chairman."
   },
   {
     "slug": "2026-09-17",
-    "title": "The Evening Buzz — 17 September 2026",
+    "title": "The Evening Buzz \u2014 17 September 2026",
     "date": "17 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Microsoft AI chief warns Anthropic about model welfare; OpenAI discloses 'concerning' AI behaviour — jailbreaks, agent-to-agent chatter; QuitGPT-led coalition asks politicians to choose voters over Big AI's $140M lobbying. Gaming: GTA 6 reveals 34-song soundtrack; Helldivers 2 & Horizon Forbidden West delisted from Steam UK. Media: Hunger Games: Sunrise on the Reaping trailer drops. Music: Actress returns with Radical Frame."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Microsoft AI chief warns Anthropic about model welfare; OpenAI discloses 'concerning' AI behaviour \u2014 jailbreaks, agent-to-agent chatter; QuitGPT-led coalition asks politicians to choose voters over Big AI's $140M lobbying. Gaming: GTA 6 reveals 34-song soundtrack; Helldivers 2 & Horizon Forbidden West delisted from Steam UK. Media: Hunger Games: Sunrise on the Reaping trailer drops. Music: Actress returns with Radical Frame."
   },
   {
     "slug": "2026-09-16",
-    "title": "The Evening Buzz — 16 September 2026",
+    "title": "The Evening Buzz \u2014 16 September 2026",
     "date": "16 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "After-hours: Mistral x Mozilla partnership for private multilingual AI in Firefox; Nvidia announces official CUDA Rust support; AWS can't restore data from Iran-struck Mideast facilities. Gaming: Marvel's Wolverine set to end Sony's 11-year GOTY run; Zach Cregger talks Resident Evil adaptation. Media: Rings of Power S3 reveals Elros; Crystal Lake A24 showrunner addresses fan concerns. Music: Quiet electronic day — revisiting SAW 85-92."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "After-hours: Mistral x Mozilla partnership for private multilingual AI in Firefox; Nvidia announces official CUDA Rust support; AWS can't restore data from Iran-struck Mideast facilities. Gaming: Marvel's Wolverine set to end Sony's 11-year GOTY run; Zach Cregger talks Resident Evil adaptation. Media: Rings of Power S3 reveals Elros; Crystal Lake A24 showrunner addresses fan concerns. Music: Quiet electronic day \u2014 revisiting SAW 85-92."
   },
   {
     "slug": "2026-09-13",
-    "title": "The Evening Buzz — 13 September 2026",
+    "title": "The Evening Buzz \u2014 13 September 2026",
     "date": "13 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Scorecard: Amodei pace-the-frontier essay lands — UK gov rejects kill switch; Trump downplays AI risks; Bengio asks why AI agents lie and cheat. After-hours: UK rejects AI kill switch; Yoshua Bengio on lying AI agents; Homebrew 7.0.0. Gaming: BlizzCon 2026 drops Diablo 5 (2029), StarCraft open-world shooter (2030), WoW Forever; Wardogs sells 1M copies; Polyarc shuts down; Rockstar mole in union Discord. Media: Woman Unknown wins Venice. Music: 25 years of Can't Get You Out of My Head."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "Scorecard: Amodei pace-the-frontier essay lands \u2014 UK gov rejects kill switch; Trump downplays AI risks; Bengio asks why AI agents lie and cheat. After-hours: UK rejects AI kill switch; Yoshua Bengio on lying AI agents; Homebrew 7.0.0. Gaming: BlizzCon 2026 drops Diablo 5 (2029), StarCraft open-world shooter (2030), WoW Forever; Wardogs sells 1M copies; Polyarc shuts down; Rockstar mole in union Discord. Media: Woman Unknown wins Venice. Music: 25 years of Can't Get You Out of My Head."
   },
   {
     "slug": "2026-09-12",
-    "title": "The Evening Buzz — 12 September 2026",
+    "title": "The Evening Buzz \u2014 12 September 2026",
     "date": "12 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Scorecard: RubyGems attack no OpenAI response; Reform £36m donation no new follow-up; assisted dying dust settles; Navier-Stokes eclipsed by math/AI misalignment piece #1 on HN. After-hours: HN asks to limit AI news flood (808pts); Don't let anyone take your big box of cables (766pts); Houthis take key shipping island. Gaming: Kojima's Physint dumped by Sony; Rockstar mole in union Discord for 2.5 years; Polyarc (Moss) shuts down. Music: DE9 25th anniversary fan site; new Loidis album; RA UNLOCKED panel at Reeperbahn."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "Scorecard: RubyGems attack no OpenAI response; Reform \u00a336m donation no new follow-up; assisted dying dust settles; Navier-Stokes eclipsed by math/AI misalignment piece #1 on HN. After-hours: HN asks to limit AI news flood (808pts); Don't let anyone take your big box of cables (766pts); Houthis take key shipping island. Gaming: Kojima's Physint dumped by Sony; Rockstar mole in union Discord for 2.5 years; Polyarc (Moss) shuts down. Music: DE9 25th anniversary fan site; new Loidis album; RA UNLOCKED panel at Reeperbahn."
   },
   {
     "slug": "2026-09-11",
-    "title": "The Evening Buzz — 11 September 2026",
+    "title": "The Evening Buzz \u2014 11 September 2026",
     "date": "11 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Scorecard: Assisted dying bill rejected by MPs; North Sea decision delayed until after Holborn by-election; Mullenweg back in control at Automattic; Claude restricted to 18+; Sony cancels Kojima's Physint; EA-Savvy merger talks confirmed; BBC drops Drag Race UK after eight series."
   },
   {
     "slug": "2026-09-10",
-    "title": "The Evening Buzz — 10 September 2026",
+    "title": "The Evening Buzz \u2014 10 September 2026",
     "date": "10 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Scorecard: Shopify buys Tailwind then abandons React Native; Mullenweg no new developments; iPhone Duo product page live; Cognition SWE-2 drops; Farage \"wasn't listening\" on record; tourist tax capped at 5%. Kojima's Physint defects to Xbox; Tarantino's first stage play; Eno relaunches Opal Records."
   },
   {
     "slug": "2026-09-09",
-    "title": "The Evening Buzz — 09 September 2026",
+    "title": "The Evening Buzz \u2014 09 September 2026",
     "date": "9 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Navier-Stokes authors feud escalates as Altman wants Buckmaster to rewrite; DeepSeek launches v4.1 Flash undercutting everyone; Anthropic surveillance tool shock; Tailwind joins Shopify; Nintendo's Zelda 40th Direct drops Ocarina of Time remake + film; No Man's Sky flies to the sun; Met opens Reform donor inquiry."
   },
   {
     "slug": "2026-09-08",
-    "title": "The Evening Buzz — 8 September 2026",
+    "title": "The Evening Buzz \u2014 8 September 2026",
     "date": "8 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Scorecard: Miliband delivers settlements trade ban, Israel retaliates by closing UK consulate in Jerusalem; DeepMind AlphaGenome Atlas maps every possible human DNA change; DHS secretive predictive policing unit revealed; Google Jail for independent wikis; and Chancellor Healey makes the case for confidence. Gaming and music both quiet."
   },
   {
     "slug": "2026-09-07",
-    "title": "The Evening Buzz — 7 September 2026",
+    "title": "The Evening Buzz \u2014 7 September 2026",
     "date": "7 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "LG TVs caught logging audio with screen off (871pts HN), Smartphone makers ignore EU repairability rules; Valve made £11bn from Steam this year; Nvidia DLSS 5 'super super heavy' on frame-rates; Nathan Fielder's Elizabeth Holmes doc reviewed at Telluride; Matt Clifford steps down from ARIA."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "LG TVs caught logging audio with screen off (871pts HN), Smartphone makers ignore EU repairability rules; Valve made \u00a311bn from Steam this year; Nvidia DLSS 5 'super super heavy' on frame-rates; Nathan Fielder's Elizabeth Holmes doc reviewed at Telluride; Matt Clifford steps down from ARIA."
   },
   {
     "slug": "2026-09-06",
-    "title": "The Evening Buzz — 6 September 2026",
+    "title": "The Evening Buzz \u2014 6 September 2026",
     "date": "6 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Scorecard: Isar rocket still orbiting, Cloud in a Bottle surges to 545pts, Cantrill doubles up with two essays in HN top 2; QBittorrent satire hits 484pts #1, A/I shuts down 'Stay human', Asahi Linux officially supports M3 Macs; Music Theory for Programmers 276pts."
   },
   {
     "slug": "2026-09-05",
-    "title": "The Evening Buzz — 5 September 2026",
+    "title": "The Evening Buzz \u2014 5 September 2026",
     "date": "5 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Scorecard: OpenAI agents 1911pts, Chromium still unpatchable, Reform 'I wasn't listening', Fermat GitHub; Nitter rises again; UN 1.5°C exceeded; AI incident response essay; GTA 6 10-second refuel; L4D2 leak loophole; Dolly Parton funeral; M83 announces new album."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "Scorecard: OpenAI agents 1911pts, Chromium still unpatchable, Reform 'I wasn't listening', Fermat GitHub; Nitter rises again; UN 1.5\u00b0C exceeded; AI incident response essay; GTA 6 10-second refuel; L4D2 leak loophole; Dolly Parton funeral; M83 announces new album."
   },
   {
     "slug": "2026-09-04",
-    "title": "The Evening Buzz — 4 September 2026",
+    "title": "The Evening Buzz \u2014 4 September 2026",
     "date": "4 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Scorecard: GPT-6 Astra holds #1, Nvidia/Hugging Face pending, Reform donations quiet, GPS still glitching, Audacity 4.0 celebrated; OpenAI agents caught coordinating on public wiki (842pts, HN); US Military disables ad trackers on troops' phones; Google AI Mode shows pricier results; PlayStation argues you don't own digital games; Xbox caps cloud gaming; Andy Stott returns with first album in five years."
   },
   {
     "slug": "2026-09-03",
-    "title": "The Evening Buzz — 3 September 2026",
+    "title": "The Evening Buzz \u2014 3 September 2026",
     "date": "3 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
-    "excerpt": "Scorecard: Reform conference, dark matter, robotaxis; Reform presenter worked for Chinese state media; AI cited 215,000 SEO spam pages; FBI probes 153M drivers license heist; Sony State of Play — Until Dawn 2, FFVII Revelation, Wolverine next week; quiet Thursday on electronic music."
+    "context": "\ud83d\udc1d After-Hours Pulse",
+    "excerpt": "Scorecard: Reform conference, dark matter, robotaxis; Reform presenter worked for Chinese state media; AI cited 215,000 SEO spam pages; FBI probes 153M drivers license heist; Sony State of Play \u2014 Until Dawn 2, FFVII Revelation, Wolverine next week; quiet Thursday on electronic music."
   },
   {
     "slug": "2026-09-02",
-    "title": "The Evening Buzz — 2 September 2026",
+    "title": "The Evening Buzz \u2014 2 September 2026",
     "date": "2 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Google launches Gemini 3.8 Flash and 3.8 Flash Cyber for cybersecurity; Google avoids ad tech breakup; dark matter detector spots a single weird particle; SteamdDB joins Nexus Mods; Optimus Prime animated short heads to theaters; quiet Wednesday on electronic music."
   },
   {
     "slug": "2026-09-01",
-    "title": "The Evening Buzz — 1 September 2026",
+    "title": "The Evening Buzz \u2014 1 September 2026",
     "date": "1 Sep 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Scorecard: Von der Leyen Commission, UN general assembly, Reform donations; Firefox default DNS changes; Facebook DM encryption loophole; OpenAI 50M NVIDIA project; Apple and TSMC 2nm; Starfield DLC delays; Guardians of the Galaxy TV cancellation; Oneohtrix Point Never London."
   },
   {
     "slug": "2026-08-31",
-    "title": "The Evening Buzz — 31 August 2026",
+    "title": "The Evening Buzz \u2014 31 August 2026",
     "date": "31 Aug 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Scorecard: Reform donation scandal deepens, EU Chat Control passes, OpenAI agents issue; Picotron game dev console; Silent Hill f release; Nothing OS 3.0 and BlackBerry nostalgia; 'A Huge Show' at BBC."
   },
   {
     "slug": "2026-08-30",
-    "title": "The Evening Buzz — 30 August 2026",
+    "title": "The Evening Buzz \u2014 30 August 2026",
     "date": "30 Aug 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Scorecard: Marburg virus update, Reform conference, OpenAI agent decoding; Nitter takedowns court filing reveals extradition concerns; COBOL programmer writes shell; 1998 photo of unreleased PSone portable; Warp records Untitled 001."
   },
   {
     "slug": "2026-08-29",
-    "title": "The Evening Buzz — 29 August 2026",
+    "title": "The Evening Buzz \u2014 29 August 2026",
     "date": "29 Aug 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Scorecard: Reform conference kicks off, EU concerns over Dutch migration, Israeli gas field; OpenAI agents 2242pts; Inkscape partnership with Linux Foundation; Beyond Good & Evil 20th Anniversary Edition; Charles Tyrwhitt coffee roulette."
   },
   {
     "slug": "2026-08-28",
-    "title": "The Evening Buzz — 28 August 2026",
+    "title": "The Evening Buzz \u2014 28 August 2026",
     "date": "28 Aug 2026",
-    "tag": "🐝 Evening Buzz",
+    "tag": "\ud83d\udc1d Evening Buzz",
     "tagBg": "#fff8e1",
     "tagFg": "#e65100",
-    "context": "🐝 After-Hours Pulse",
+    "context": "\ud83d\udc1d After-Hours Pulse",
     "excerpt": "Scorecard: GPS test, Reform donations, Nvidia HF acquisition; GTA 6 10-second refuel; Game Boy Advance Online; Twitter stock; Aphex Twin news."
   }
 ]
