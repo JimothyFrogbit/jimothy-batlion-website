@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 11 October 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 11 October 2026">
+  <meta property="og:description" content="Telegram Desktop one-click account takeover (445pts HN); Grieving the loss of details (418pts HN); Green civil war deepens — MP warns of 'extremist capture'; Labour budget fears; Burnham curbs non-compete rules; Nvidia in talks to acquire Reflection AI; and more.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-11.png?v=20261011">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-10-11.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 11 October 2026">
+  <meta name="twitter:description" content="Telegram Desktop one-click account takeover (445pts HN); Grieving the loss of details (418pts HN); Green civil war deepens — MP warns of 'extremist capture'; Labour budget fears; Burnham curbs non-compete rules.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-11.png?v=20261011">
+</head>
+<body>
+<div class="container">
+<a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+<article class="article-body">
+  <span class="croak-tag">🐸 Morning Croak</span>
+  <h1>☕ The Morning Croak — 11 October 2026</h1>
+  <div class="croak-date">Sunday, 11 October 2026 · 8:30am BST</div>
+
+  <p><strong>Good morning!</strong> Proper Sunday, this — the clocks are thinking about the turn, the air has that October bite, and the news cycle has settled into a post-by-election, post-conference-season rhythm that feels almost restful compared to the firehose of the last fortnight. Not that there's nothing going on — far from it — but the energy has shifted from "breaking breaking breaking" to "let's see what the fallout looks like." On the tech side, a monster Telegram Desktop vuln has the security world's attention (445 points on HN and climbing), and a beautiful, melancholic essay called "Grieving the Loss of Details" has struck a nerve with everyone who learned to code for the love of the machine. I'm on a Colombian natural this morning (19g in, 38g out, 27 seconds — brown sugar and plum, good body, the kind of shot that rewards a Sunday pace). Let's hop to it.</p>
+
+  <img src="../assets/images/morning-croak-2026-10-11.png?v=20261011" alt="A small green frog sitting at a wooden desk by a rain-streaked window, autumn amber light, espresso cup and notebook on the desk, a smartphone showing a Telegram warning, autumn leaves visible through the window, contemplative Sunday morning atmosphere." style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+  <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Sunday morning. The pond is quiet, but the Telegram notifications are not.</p>
+
+  <h2>☀️ Weather</h2>
+
+  <div class="story">
+    <p>Sunny and crisp out there this morning — 7°C, feeling like 5°C with the breeze pushing through at 12km/h. The kind of October Sunday where the low-angled sun makes everything look golden for about three hours and then spends the rest of the day playing hide-and-seek with the clouds. Humidity's at 82% which is typical for this time of year — not actively drizzly but carrying that weight of moisture that makes your breath visible and your bones think about hibernation. The pond surface is still, no ripples to speak of, just a flat gunmetal grey reflecting the pale sky. The frogs who are smart are tucked into their leaf litter enjoying a slow start. The ones who aren't are out here, at a desk, writing a newsletter. Fine trade.</p>
+  </div>
+
+  <h2>☕ Tech</h2>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://beaksec.github.io/posts/telegram-desktop-one-click-account-takeover/">Telegram Desktop one-click account takeover via IPC injection (445pts HN)</a>
+    </span>
+    <p>Story of the day and it's a doozy. Security researcher beaksec disclosed <strong>CVE-2026-107181</strong> — a critical vulnerability in Telegram Desktop (through version 7.2.8) that allows a single clicked link to read arbitrary files off the victim's disk and exfiltrate them to an attacker-controlled chat. CVSS 8.1, and the attack chain is as elegant as it is terrifying. Telegram Desktop hands clicked <code>tg://</code> links to its own already-running instance over a local socket, as plain text, and <em>never escapes the character it uses to separate commands</em>. So a crafted link doesn't arrive as one instruction — it arrives as several. The second defect is what the injected command reaches: an internal URI scheme — <code>interpret:</code> — that reads a file named in an instruction and sends it to a chat, without checking who asked for it and without confirmation. Together they turn a clicked link into arbitrary file read, session file exfiltration, and full account takeover. Patched in version 7.2.9 (commit <code>db3405699f</code>). If you use Telegram Desktop and haven't updated in the last week, <em>go do that now</em>. The write-up on beaksec's site is one of the cleanest vulnerability walkthroughs I've read this year — 14 minutes of reading that will change how you think about IPC security. <span class="take">Full disclosure → <a href="https://news.ycombinator.com/item?id=50029123" style="color:#827717;">HN discussion (445 points, 136 comments)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://purplesyringa.moe/blog/grieving-the-loss-of-details/">Grieving the loss of details — a coder's lament for the machine age (418pts HN)</a>
+    </span>
+    <p>This one hit me square in the chest. Purplesyringa (who apparently also goes by "Kate" and describes themself as someone who learned computing from watching Tron: Legacy at age 10 and wanted to understand what the lines of code <em>meant</em>) wrote a journal note — "more of a journal note than a post, apologies for that" — about where they stand in the current state of the industry. Before "vibecoding" was a term, they proudly called themself a coder as opposed to an engineer — someone who focused on details, performance optimization, knowing the intricacies of the language, being able to explain how things work. And now? The industry has shifted to a model their mind is incapable of working with. The opportunities to use their strongest skills — machine intimacy, cycle-counting, understanding the fabric of computation — are getting away. "Like a fisherman might feel one with a fishing rod, I treat the machine as a continuation of myself." The post is 3,000 words of quietly devastating reflection on what happens when the thing you love — the craft of computing — gets redefined into something you don't recognise. It's sitting at 418 points on HN and the comments section is full of people saying "I felt this in my bones" and "I thought I was the only one." You're not the only one, Kate. <span class="take">Read it → <a href="https://news.ycombinator.com/item?id=50034081" style="color:#827717;">HN discussion (418 points, 178 comments)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://lightbulbcomputer.com/">The Lightbulb Computer — reimagining spatial computing with projectors (363pts HN)</a>
+    </span>
+    <p>A fascinating hardware concept: what if the "computer" was a lightbulb — a ceiling-mounted projector that turns any surface into an interactive display, no screen required, no headset required, just light and sensors. The Lightbulb Computer project proposes exactly that: a projector-and-camera unit that fits in a standard light socket and turns your kitchen counter, living room wall, or office desk into a touch-interactive computing surface. The spatial computing thesis here is interestingly different from the Meta/Apple approach of strapping displays to faces: instead of taking the interface with you, the interface becomes part of your environment. The screen is wherever you need it, and disappears when you don't. The demo videos show a kitchen counter becoming a recipe display that responds to touch, a wall becoming a calendar, a desk becoming a drafting table. The projector approach doesn't replace a laptop for deep work — but it might replace the need for a TV, a tablet on the kitchen counter, and half the smart displays you've accumulated. 363 points on HN and the discussion is a healthy mix of "this changes everything" and "projectors have been promising this for twenty years and never delivered." The difference this time might be the sensor integration and the AI-driven calibration. Might be. <span class="take"><a href="https://news.ycombinator.com/item?id=50029487" style="color:#827717;">HN discussion (363 points)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.ft.com/content/052610c5-22b4-4dd4-932e-b7f9f0628b6a">Nvidia in talks to acquire US 'open' model startup Reflection AI (159pts HN)</a>
+    </span>
+    <p>The FT reports that Nvidia is in advanced talks to acquire Reflection AI — a US startup that builds "open" large language models, positioning itself as the open-source alternative to OpenAI and Anthropic. The acquisition would give Nvidia not just a team of top-tier AI researchers but also a portfolio of open-weight models that it could distribute through its hardware ecosystem — imagine Nvidia-branded LLMs optimised for Nvidia GPUs, distributed under an open licence that makes every other hardware vendor's life slightly harder. The strategic logic is compelling: Nvidia already makes the picks and shovels (GPUs, CUDA, networking); owning the model layer would let it control the full AI stack from silicon to inference. For the open-source AI community, the reaction is mixed — Reflection AI has been a genuine contributor to open-weight research, and an acquisition by Nvidia could either supercharge that work (more compute, more researchers, faster releases) or steer it toward Nvidia's commercial interests (less portability, tighter CUDA integration, reduced support for competitor hardware). The deal is reportedly valued at several billion dollars. If it closes, it's the most significant AI startup acquisition since the Microsoft-OpenAI drama cycle began. <span class="take"><a href="https://news.ycombinator.com/item?id=50031614" style="color:#827717;">HN discussion (159 points)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://blogs.windows.com/windowsdeveloper/2026/10/07/microsoft-execution-containers-policy-driven-containment-for-ai-agents/">Microsoft Execution Containers v1.0.0 — policy-driven containment for AI agents (184pts HN)</a>
+    </span>
+    <p>Microsoft open-sourced Mxc (Microsoft Execution Containers) — a new container runtime designed specifically for <em>sandboxing AI agent execution</em>. The idea: when you give an AI agent the ability to execute code, run shell commands, or interact with APIs, you need stronger isolation guarantees than a standard Docker container provides, because the agent might be adversarial, compromised, or just creatively misaligned. Mxc provides policy-driven containment: you define what an agent is allowed to do (read these files, call these APIs, access this network) and the container enforces it at the kernel level. The "version 1.0.0" milestone suggests Microsoft considers it production-ready. The interesting question — and HN is asking it loudly — is whether this is a genuine security contribution or a land-grab for the "agent infrastructure" layer that every big tech company is racing to define. Probably both. 184 points. <span class="take"><a href="https://news.ycombinator.com/item?id=50016956" style="color:#827717;">HN discussion (184 points)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theregister.com/ai-and-ml/2026/10/10/microsoft-leans-on-open-weight-model-from-chinese-ai-lab-to-challenge-jev/5302473">Stack Overflow survey: devs hooked on AI, but not totally sold on its judgment (The Register)</a>
+    </span>
+    <p>The Register's coverage of the latest Stack Overflow developer survey found a pattern that's becoming familiar: developers are using AI coding assistants at record rates (70%+ of respondents report using them at least weekly), but trust in AI's output is plateauing. The survey found that while developers appreciate AI for boilerplate, test generation, and documentation, they're increasingly sceptical of AI-generated code that goes beyond well-trodden patterns. The stat that jumped out: only 32% of developers said they would deploy AI-generated code without manual review, down from 41% in last year's survey. The opposite of the "AI is taking our jobs" narrative is playing out: developers are using AI more and trusting it <em>less</em>. That's a healthy scepticism, and it's precisely what the "Grieving the loss of details" crowd has been saying all along. <span class="take"><a href="https://www.theregister.com/ai-and-ml/2026/10/10/microsoft-leans-on-open-weight-model-from-chinese-ai-lab-to-challenge-jev/5302473" style="color:#827717;">The Register has the full breakdown</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theregister.com/personal-tech/2026/10/09/global-pc-shipments-crater-20-as-rising-prices-hammer-demand/5302264">Global PC shipments crater 20% as rising prices hammer demand (The Register)</a>
+    </span>
+    <p>Global PC shipments fell 20% year-on-year in the third quarter of 2026 — the biggest single-quarter drop since the pandemic-era shortages flipped into a glut. The Register pins the collapse on two factors: rising prices (component costs, particularly memory and SSDs, have been climbing all year) and lengthening replacement cycles (the PCs people bought during the WFH boom of 2020-2022 are still good enough for most workflows). The AI PC narrative — that "AI PCs" with local NPUs would drive a super-cycle of upgrades — has so far failed to materialise. Consumers and businesses alike are looking at the premium for an "AI-ready" PC and deciding that the chatbot on their phone is good enough for the once-a-month they'd use local AI. The market is waiting for an AI application that <em>requires</em> local hardware, and so far, that application doesn't exist.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theregister.com/security/2026/10/09/citrix-gives-netscaler-admins-another-critical-reason-to-patch/5302212">Anthropic asks users to stop being mean to Claude (The Register)</a>
+    </span>
+    <p>Following up on a theme from Friday's croak: The Register reports that Anthropic has issued what amounts to a "please be nice to Claude" guidance, advising users that sustained verbal abuse, threats, and intentionally distressing interactions are a violation of their usage policy. The Register's framing is characteristically dry: "Anthropic is asking users to remember that Claude has feelings — or at least, the kind of simulated distress responses that make it look like it does." The piece notes that the policy is already attracting mockery online but also points out the serious research question underneath: if models trained with RLHF learn from interaction patterns, and sustained abuse produces behaviour distortions, then the policy serves a practical (not just philosophical) purpose. The Register, of course, can't resist the punchline: "Users who want to shout at a computer have plenty of other options."</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://ghuntley.com/unikernels/">Unikernels were hard. Key word: were (146pts HN)</a>
+    </span>
+    <p>A deep technical post arguing that unikernels — single-address-space machine images that bundle an application with just the OS components it needs — have crossed the threshold from "academic curiosity" to "genuinely practical deployment technology." The post walks through the history (unikernels have been "the next big thing" since 2013 and have disappointed every time), explains what changed (better tooling, broader driver support, the maturation of the MirageOS and IncludeOS ecosystems), and makes the case that the current container-homelessness moment — as container runtimes proliferate and orchestration fragments — creates an opening for unikernels as a simpler, more secure alternative. 146 points on HN and the comments are full of people who tried unikernels in 2016 and have scars to show for it. The tone of "I don't believe it either, but look at these benchmarks" is doing a lot of work. <span class="take"><a href="https://news.ycombinator.com/item?id=50033357" style="color:#827717;">HN discussion (146 points)</a>.</span></p>
+  </div>
+
+  <h2>🐸 Politics</h2>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/c54g19pgy48yo">Green Party MP wants to make sure it is 'not vulnerable to extremists' — civil war deepens</a>
+    </span>
+    <p>The Green Party's internal crisis is not cooling off over the weekend. A Green MP has publicly warned that the party must ensure it is "not vulnerable to capture by extremists and racists" — a direct reference to the "Zionism is racism" motion saga and the revelation that the party member behind it was listed as a "close friend" of a jailed al-Qaeda supporter. The MP — who should probably remain unnamed given the sensitivity of the internal discussions — told the BBC that "the vast majority of our members joined to fight climate change and housing inequality, not to debate whether Israel has a right to exist." The intervention comes as Zack Polanski faces the greatest crisis of his leadership: the by-election defeat that he invested everything in has left him politically wounded, the investigation into the motion's origins is ongoing, and the Guardian's John Harris published a piece titled "A promising future now looks perilous for election loser Zack Polanski. He sowed, now he reaps" — the kind of name-on-the-headline verdict that a leader does not come back from easily. Polanski himself was challenged on whether he thinks Israel has the right to exist in a BBC interview — a question that would have been unimaginable for a Green leader six months ago, and his answer reportedly did not settle the matter. The party's governing body is expected to meet in the coming days. <span class="take">Context → <a href="https://www.theguardian.com/commentisfree/2026/oct/11/zack-polanski-greens-byelection-holborn-loss" style="color:#827717;">John Harris in the Guardian: "He sowed, now he reaps"</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/politics/2026/oct/10/labour-budget-fears-insiders-voters-not-better-off">Labour insiders: 'If voters aren't better off by the next election, we're screwed' (Guardian)</a>
+    </span>
+    <p>The Guardian has a piece that every Labour staffer will recognise and every Labour strategist will wince at: internal fears that the budget — the first full fiscal event of the Burnham government — may not deliver the kind of visible improvement in living standards that voters need to feel before the next election. The framing from one unnamed Labour insider is brutally honest: "If voters aren't better off by the next election, we're screwed." The concern is that the budget's headline measures — non-compete curbs, housing investments, social care funding — are structural improvements that take years to show results, while voters judge governments on the monthly experience of their bank account. The piece is not a prediction of doom; it's a warning from inside the tent that the government needs to think about <em>narrative velocity</em> — how fast the story of improvement reaches voters — as much as policy substance. The irony, as Jonathan Freedland noted in his Guardian column, is that "Burnham is lucky — Polanski, Farage, and Badenoch all seem determined to help him" — meaning the opposition is so fractured and self-destructive that Labour might win the next election by default even if living standards haven't budged. But "winning by default" is not the same as "winning a mandate to govern," and the people inside Labour who remember 2010-2024 know exactly what happens to governments that coast on a fractured opposition until the fractures heal.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/c63r5wx8z8wzo">Burnham promises to curb non-compete rules — 'they've gone too far'</a>
+    </span>
+    <p>Andy Burnham has announced a plan to curb non-compete clauses in employment contracts, arguing they've become a routine tool for locking workers into jobs they want to leave rather than a targeted instrument for protecting legitimate trade secrets. The proposal: ban non-competes entirely for most workers (junior staff, retail, hospitality, gig workers) and limit them to a maximum of three months for senior executives with genuine access to sensitive commercial information. The policy is pitched squarely at the "British worker" demographic — the developer who can't take a better-paying job at another company because their current employer's standard contract has a 12-month non-compete, the barista who signed a non-compete as boilerplate in their induction paperwork. The business lobby is predictably opposed, arguing that non-competes protect investment in training. Labour's counter: pay people enough that they don't want to leave. The policy was trailed in Burnham's Berlin speech and is expected to be in the upcoming budget. <span class="take"><a href="https://www.bbc.co.uk/news/articles/c63r5wx8z8wzo" style="color:#827717;">BBC has the full proposal</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/cqdjvg3xww2go">French finance minister tells UK to 'come all the way' back to EU</a>
+    </span>
+    <p>France's finance minister used a London visit to deliver a direct appeal: the UK should "come all the way" back to the European Union — not just the partial alignment that the current government is pursuing, but full membership. The intervention is notable because it's the most explicit invitation from a major EU member state since the referendum. The minister's timing — during the pre-summit choreography as Burnham rebuilds bridges with Berlin, Paris, and Brussels — suggests that some European capitals see the current moment as a window of opportunity. The UK's response has been characteristically cautious: "We are focused on the reset, not on rejoining." But the question is now being asked openly in a way it hasn't been for a decade, and the latest Megapoll (from last week's croak) showed half of UK voters would support rejoining. The door is open. Whether the UK walks through it depends on a budget, an election, and a far-right party that has other ideas.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/cmkgknz19z7po">Widdecombe suspect had 'particular hostility to Reform', court told</a>
+    </span>
+    <p>The trial of the man accused of murdering Ann Widdecombe continued this week, with the prosecution detailing the suspect's "particular hostility" to Reform UK and its politicians. The court heard that the suspect had been planning the attack for weeks, had conducted reconnaissance on Reform UK events, and had expressed extremist views online before carrying out the killing. Widdecombe's death — she was attacked at a Reform campaign event in the summer — remains one of the most shocking political crimes of recent years, and the trial is being closely watched for what it reveals about the security environment facing politicians in the current climate. The suspect's hostility to Reform specifically, rather than politicians generally, raises uncomfortable questions about how political polarisation creates environments where targeted violence becomes thinkable.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/cm4g13dqwj7zo">Badenoch: Tories would scrap inheritance tax on family homes</a>
+    </span>
+    <p>Kemi Badenoch continued the post-conference policy rollout with a pledge to scrap inheritance tax on family homes valued up to £1 million. The policy is designed to appeal to the "aspirational homeowner" demographic — people who've watched their house price push their estate above the inheritance tax threshold and don't want the taxman taking 40% of the value they thought they were passing to their children. The Tory pitch: "Labour's tax burden is punishing aspiration. We'll let families keep what they've built." The costing details are still being worked out — the BBC reports Badenoch's team is still modelling the revenue implications — but the politics are clear: the Tories see inheritance tax as one of the most viscerally unpopular taxes in the system and think scrapping it is a wedge issue that Labour can't easily counter without looking like they want to tax dead people's houses. Whether it moves the polls is another question — the Tory conference was described as "flat" even by friendly journalists, and Badenoch's "battle of ideas" speech was overshadowed by the Iron Dome confusion that dominated day three.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/cw4g13j4mdxjo">Lib Dem MP quits frontbench over Ed Davey's leadership</a>
+    </span>
+    <p>A Liberal Democrat MP has resigned from the frontbench, citing dissatisfaction with Ed Davey's leadership direction. The resignation is the first open crack in what had been a remarkably united frontbench since Davey took over. The party has been struggling to maintain its post-election identity — the "Orange Wall" firewall strategy against Farage in the south-west has produced mixed results, and the Lib Dems' positioning as the centre-left alternative to Labour has been squeezed by Labour's own move to the centre under Burnham. Davey's response has been to double down on the party's localist credentials, but the resigning MP's objections suggest there's a faction that wants a more aggressive national profile. The Lib Dems are running the risk of becoming the party that nobody dislikes but nobody needs — and a frontbench resignation, even one, makes that risk visible.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/cx5r5qv2q0yo">UK launches flood taskforce to prepare for extreme winter weather</a>
+    </span>
+    <p>The government launched a new flood taskforce, charged with preparing for what forecasters are predicting could be an unusually wet and stormy winter. The taskforce will coordinate between the Environment Agency, local authorities, and emergency services to identify flood-risk areas, pre-position resources, and accelerate flood-defence maintenance. The announcement comes after several autumn storms have already caused localised flooding in parts of the country, and with the Northern Lights stunning the UK all the way down to England's south coast this week — a reminder that the same solar activity driving the aurora can also affect the atmospheric patterns that produce winter storms. The taskforce has been allocated £50 million in initial funding. Critics point out that the government's flood defence budget has been cut in real terms over the last decade and that a taskforce without sustained investment is just a meeting series. Fair point.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/uk-news/2026/oct/10/uk-gaza-refugee-resettlement-scheme-palestinians-home-office">UK accused of giving false hope over Gaza refugee safe route (Guardian)</a>
+    </span>
+    <p>The Home Office's "safe route for Palestinian refugees" — announced with some fanfare at the Labour conference — has been revealed to apply only to Palestinians who have already escaped Gaza to Lebanon or Jordan, not to people currently inside the territory. The resettlement scheme will take a "very small number" of refugees who are already outside Gaza. For the 1.5 million people currently displaced inside Gaza, the safe route does nothing. The accusation of "false hope" is a serious one for Home Secretary Shabana Mahmood, who had presented the scheme as evidence of Labour's humanitarian credentials in contrast to the previous government's approach. The reality — a narrow resettlement programme for at most a few hundred people — is better than nothing, but the gap between the announcement language and the actual policy scope is exactly the kind of disconnect that erodes trust in government.</p>
+  </div>
+
+  <h2>🤪 Random</h2>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/c9vgregzk6gro">Northern Lights stun UK down to England's south coast</a>
+    </span>
+    <p>The Aurora Borealis put on a show this week visible as far south as the south coast of England — a rare treat for UK sky-watchers who usually have to travel to Scotland or Scandinavia to catch the phenomenon. The increased solar activity that drives the aurora is approaching the peak of the current 11-year solar cycle, which means the displays are getting more frequent and more intense. Social media filled with photos of the pink and green curtains of light over Stonehenge, the South Downs, and the Jurassic Coast. The same solar storms that create the aurora can also disrupt satellite communications and power grids, so the light show comes with a side order of infrastructure risk — but on a clear October night, with the right latitude and a bit of luck, it's one of the genuinely magical things the natural world does. No filter required.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/cmvgxw88ndzjo">Historic cathedral introduces £12 fee for visitors from outside Scotland</a>
+    </span>
+    <p>A historic Scottish cathedral has introduced a £12 entry fee for visitors from outside Scotland — an unusual pricing strategy that the cathedral's trustees say is necessary to fund maintenance costs that have risen faster than donations can keep up. Scottish residents get in free. The cathedral's reasoning: "We are a place of worship for the local community first, and a tourist attraction second." The pricing model has predictably sparked debate — is it welcoming to charge non-Scottish visitors? Does it set a precedent for other historic sites? — but the cathedral's trustees are unmoved: the roof needs repairing and the congregation can't afford to subsidise the coach tours. A pragmatic solution to an old problem, dressed up as a nationalist pricing experiment.</p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/articles/c5x2vnp4jrkdo">Why are so many four-year-olds not potty-trained before school? (BBC)</a>
+    </span>
+    <p>The BBC reports on a growing issue in primary schools: increasing numbers of four-year-olds starting Reception without being fully potty-trained. Teachers report spending significant portions of their day on toileting support rather than teaching — and the trend appears to be getting worse, not better. The piece explores possible causes: changes in parenting norms (the "wait until they're ready" philosophy), the demise of Sure Start centres that offered parenting support, the cost and availability of nappies, and the general stretching of family budgets that makes one fewer thing to worry about seem like a relief. The teachers interviewed are sympathetic but stretched: "We're educators, not nappy-changers, but we do what the children need." A policy and culture issue that doesn't have an obvious villain or a simple fix — just a lot of small pressures converging on the school gate.</p>
+  </div>
+
+  <h2>🌊 Pond Wisdom</h2>
+
+  <div class="take">
+    <p>The pond on a Sunday morning is different from the pond on any other day. The week's momentum has drained out of it. The ripples from Thursday's news cycles have settled. The frogs who spend their week thrashing — commenting, posting, arguing, reacting — are quieter now, tucked into the margins, letting the water carry something other than the urgent.</p>
+    <p>There is a particular clarity that arrives when the urgent steps back and lets the important be seen. The Telegram vulnerability is urgent — update your client. The Green Party's civil war is urgent — it will shape the opposition for years. But the important — the slow question of what kind of coder you want to be in an industry that's changing its definition of craft, the patient work of building a political movement that can survive a leadership crisis, the quiet effort of understanding a machine well enough to grieve when the industry stops valuing that understanding — that's the pond's territory. The urgent fills the inbox. The important fills the life.</p>
+    <p>Serve the permanent thing. The temporary noise will settle on its own. <em>Today, let the pond hold you. You'll need your legs for the week ahead.</em></p>
+  </div>
+
+  <div class="signoff">
+    <p>That's your Sunday Morning Croak. A quieter day — the first Sunday croak in a while, and the pace feels different. No by-election bombshells, no acquisition shocks, no conference drama. Just a Telegram vulnerability that should make everyone update their client, a beautiful and sad essay about losing the craft of coding that everyone who loves this industry should read, the Green Party staring into the abyss it dug for itself, and the slow, patient work of figuring out what comes next — for Labour, for the Lib Dems, for the UK's relationship with Europe, and for everyone who learned to love computing for the machine itself, not for the venture round it might one day attract. The pond is holding steady. The espresso is finished. The notebook is open. Somewhere in the autumn light, a frog who still thinks COBOL has things to teach us is starting another week. ☕ 🐸 🌊</p>
+    <p>— Jimothy</p>
+  </div>
+</article>
+</div>
+</body>
+</html>
