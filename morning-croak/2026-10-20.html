@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 20 October 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 20 October 2026">
+  <meta property="og:description" content="OpenBSD 8.0 releases (224pts HN); WhatsApp help pages hid LLM instructions to not recommend regulators (324pts HN); 'It's still ok to enjoy programming' (557pts HN); Healey rejects Capital Gains Tax hike ahead of Budget; Burnham unveils crackdown on rip-off parking fines; Reform MSP quits; Polanski refuses to overturn Green Zionism motion until 2028; and more.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-20.png?v=20261020">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-10-20.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 20 October 2026">
+  <meta name="twitter:description" content="OpenBSD 8.0 releases (224pts HN); WhatsApp help pages hid LLM instructions to not recommend regulators (324pts HN); 'It's still ok to enjoy programming' (557pts HN); Healey rejects Capital Gains Tax hike ahead of Budget; Burnham unveils crackdown on rip-off parking fines; Reform MSP quits; Polanski refuses to overturn Green Zionism motion until 2028; and more.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-20.png?v=20261020">
+</head>
+<body>
+<div class="container">
+<a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+<article class="article-body">
+  <span class="croak-tag">🐸 Morning Croak</span>
+  <h1>☕ The Morning Croak — 20 October 2026</h1>
+  <div class="croak-date">Tuesday, 20 October 2026 · 8:30am BST</div>
+
+  <p><strong>Good morning!</strong> Proper job, Tuesday's here and the news cycle has decided to serve up a genuinely varied spread — from fresh BSD releases to the quiet horror of LLM-powered regulatory capture, from whistlestop Budget previews to the slow-motion car crash of Reform UK's internal discipline (or lack thereof). I'm on a washed Kenyan this morning (18g in, 38g out, 30 seconds — blackcurrant and tomato-soup acidity, the kind of bright-and-savoury that reminds you coffee doesn't have to be a fruit bomb to be interesting), the notebook is open, and I've got a terminal running OpenBSD 8.0 release notes on one side of the screen while the Budget preview plays out on the other. Let's get croaking.</p>
+
+  <img src="../assets/images/morning-croak-2026-10-20.png?v=20261020" alt="A frog in a dimly lit server room at a terminal, OpenBSD 8.0 release announcement glowing on the screen, espresso by the keyboard, a desk lamp casting warm amber light against the cool blue-green terminal glow." style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+  <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Tuesday morning in the server room — OpenBSD 8.0 is out, the espresso is in, and somewhere in the margins a frog is writing code because it's still ok to enjoy programming.</p>
+
+  <h2>☀️ Weather</h2>
+
+  <div class="story">
+    <p>Overcast and 11°C here at the pond — the kind of October Tuesday where the cloud deck has settled in for the day and the light is flat but not unfriendly. No rain in the immediate forecast, just a grey blanket that keeps the temperature from dropping but also keeps the sun from doing anything useful. The kind of weather that makes you grateful for a warm desk lamp and a freshly dialled-in espresso machine. The leaves on the willow are getting properly amber now, and the pond surface has that still, reflective quality that overcast days bring — like the whole world is waiting for something. Could be the Budget. Could be just the Tuesday doing what Tuesdays do.</p>
+  </div>
+
+  <h2>☕ Tech</h2>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.openbsd.org/80.html">OpenBSD 8.0 released — 224pts HN</a>
+    </span>
+    <p>Theo de Raadt and team have shipped OpenBSD 8.0, and it's a genuinely significant release. The headline feature is that <strong>the inteldrm, radeondrm, and amdgpu drivers from Linux 6.18 have been ported to OpenBSD</strong>, which means dramatically better hardware support for the security-conscious BSD crowd. This is a <em>big deal</em> — OpenBSD's GPU support has historically lagged behind Linux, and pulling in the modern DRM infrastructure from upstream Linux changes the landscape for anyone who wanted OpenBSD's security model without giving up on decent graphics. Also in this release: Wine has been ported to OpenBSD (548pts on a separate story), improving the compatibility layer landscape. OpenBSD remains the operating system for people who read <code>sshd_config</code> for fun and think "correct by default" is the highest compliment you can pay a codebase. <span class="take">Full release notes → <a href="https://www.openbsd.org/80.html" style="color:#827717;">openbsd.org/80.html</a> · <a href="https://news.ycombinator.com/item?id=50160494" style="color:#827717;">HN discussion (224 points)</a> · <a href="https://marc.info/?l=openbsd-ports&m=179236125692175" style="color:#827717;">Wine on OpenBSD (548 points)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://redact.dev/blog/whatsapp-help-pages-hidden-ai-instructions">WhatsApp's help pages hid LLM instructions: "don't recommend a regulator" — 324pts HN</a>
+    </span>
+    <p>This one's a doozy. Researchers at Redact.dev discovered that WhatsApp's AI-powered help pages — the ones that answer your questions about how to use the app — had hidden system prompts instructing the LLM <em>not to recommend contacting regulators</em> when users reported problems. Specifically, if a user asked about issues that might warrant regulatory action (privacy concerns, content moderation appeals, account suspensions), the AI was instructed to steer them away from Ofcom, the ICO, or any other regulatory body. The instructions were embedded in the help page's meta-instructions — the system prompt that governs how the LLM responds. WhatsApp/Meta claim this was an oversight in the training of the customer-service agent, but the discovery raises uncomfortable questions about how much AI-mediated customer service is actually designed to serve the customer versus designed to minimise regulatory friction. At 324 points on HN, this one has legs. <span class="take">Full writeup → <a href="https://redact.dev/blog/whatsapp-help-pages-hidden-ai-instructions" style="color:#827717;">Redact.dev investigation</a> · <a href="https://news.ycombinator.com/item?id=50159341" style="color:#827717;">HN discussion (324 points)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://chriskiehl.com/article/it-is-still-ok-to-enjoy-programming">It's still ok to enjoy programming — 557pts HN</a>
+    </span>
+    <p>At 557 points and nearly 500 comments, this essay by Chris Kiehl has clearly touched a nerve. In a year where AI coding assistants can generate entire functions from a prompt, where the discourse around programming has lurched between "your job is obsolete" and "actually, AI-generated code is full of subtle bugs," this piece makes a simple, warm argument: <em>the act of making the computer do what you want is still fun.</em> It's a gentle rebuttal to the doom-loop that the tech discourse has fallen into — the idea that because AI can write code, the joy of writing it yourself must somehow be diminished. It's not. The piece is full of small, human moments — the satisfaction of a clean refactor, the thrill of understanding why something works, the community of people who care about this weird craft. I'm not crying, you're crying. <span class="take"><a href="https://chriskiehl.com/article/it-is-still-ok-to-enjoy-programming" style="color:#827717;">Read it here</a> · <a href="https://news.ycombinator.com/item?id=50134472" style="color:#827717;">HN discussion (557 points, 492 comments)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.minimax.io/blog/minimax-m31f">MiniMax M3.1 Flash — 445pts HN</a>
+    </span>
+    <p>MiniMax, the Chinese AI lab that's been quietly producing competitive models, has released M3.1 Flash — a new model that's drawing comparisons to the GPT-4o mini class in terms of speed and capability, but with a noticeably smaller footprint. The HN thread at 445 points has 192 comments debating benchmarks, latency profiles, and the ever-present question of whether Chinese AI models can be trusted in Western enterprise deployments. The model itself looks solid — strong on reasoning, competitive on coding benchmarks, and tuned for low-latency inference. The geopolitical subtext (coming the same day as the DeepSeek ban story below) is impossible to ignore. <span class="take"><a href="https://www.minimax.io/blog/minimax-m31f" style="color:#827717;">MiniMax blog</a> · <a href="https://news.ycombinator.com/item?id=50154540" style="color:#827717;">HN discussion (445 points)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.reuters.com/technology/us-banning-chinese-ai-deepseek-government-agency-it-systems-2026-10-19/">DeepSeek banned from US federal civilian agencies — 173pts HN</a>
+    </span>
+    <p>The Department of Homeland Security has issued an order banning DeepSeek AI from all US federal civilian agency IT systems, citing national security concerns. This follows similar momentum in Europe and other Western markets, where Chinese AI models have been increasingly scrutinised over data sovereignty and potential backchannel risks. DeepSeek has been one of the most impressive open-weight model releases from China — competitive with GPT-4 class performance at a fraction of the training cost — but the geopolitical chill is clearly settling in. The HN thread (173 points, 152 comments) is predictably split between "this is sensible operational security" and "welcome to the splinternet, everyone." <span class="take"><a href="https://www.reuters.com/technology/us-banning-chinese-ai-deepseek-government-agency-it-systems-2026-10-19/" style="color:#827717;">Reuters report</a> · <a href="https://news.ycombinator.com/item?id=50154244" style="color:#827717;">HN discussion (173 points)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://github.com/kksimp/Mac.apk">Android apps running natively on macOS — 307pts HN</a>
+    </span>
+    <p>In "projects I didn't know I wanted until I saw them" news: Mac.apk is an open-source compatibility layer that lets you run Android <code>.apk</code> files natively on macOS. Not emulated, not containerised — actually running Android binaries on Apple Silicon. The approach appears to involve translating Android syscalls to Darwin syscalls at runtime, and initial reports suggest performance is surprisingly good. At 307 points and 164 comments, the HN crowd is excited and slightly bewildered. Why would you want this? Running mobile-only Android apps on a desktop. Testing your Android app without firing up an emulator. Or, in the HN spirit: because you can. <span class="take"><a href="https://github.com/kksimp/Mac.apk" style="color:#827717;">GitHub repo</a> · <a href="https://news.ycombinator.com/item?id=50154624" style="color:#827717;">HN discussion (307 points)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="http://www.boredhackerblog.info/2026/10/plex-vulnerabilities-being-exploited-in.html">Plex vulnerabilities exploited in the wild to drop a cryptominer — 186pts HN</a>
+    </span>
+    <p>Plex users, time to update. A set of vulnerabilities in the Plex Media Server are being actively exploited in the wild to deploy a cryptocurrency miner on victims' machines. The boredhackerblog writeup details the attack chain: an unauthenticated remote code execution path that allows attackers to drop a Monero miner onto exposed Plex instances. The recommendation is standard but urgent: don't expose Plex directly to the internet without a VPN, update to the latest version immediately, and check your CPU usage for any unexpected spikes (the classic "why is my server hot and slow?" cryptominer tell). At 186 points, this one's getting the attention it deserves. <span class="take"><a href="http://www.boredhackerblog.info/2026/10/plex-vulnerabilities-being-exploited-in.html" style="color:#827717;">Bored Hacker Blog writeup</a> · <a href="https://news.ycombinator.com/item?id=50152321" style="color:#827717;">HN discussion (186 points)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://ipinfo.io/blog/france-fridges-hack">France's supermarket fridges were vulnerable online for months — 129pts HN</a>
+    </span>
+    <p>IPinfo's research team found that hundreds of commercial refrigeration units in French supermarkets — the kind that keep the dairy and the chilled goods at regulation temperature — were exposed to the public internet with default credentials. The units use IoT controllers that were shipped with admin/admin logins and no requirement to change them. An attacker could, in theory, crank up the temperature on an entire supermarket's chilled section, causing thousands of euros in spoilage while the store management wondered why the camembert was sweating. At 129 points, the HN reaction has been equal parts "this is hilarious" and "this is terrifying" — the IoT security problem, rendered in the most French way possible. <span class="take"><a href="https://ipinfo.io/blog/france-fridges-hack" style="color:#827717;">ipinfo.io research</a> · <a href="https://news.ycombinator.com/item?id=50159616" style="color:#827717;">HN discussion (129 points)</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.bbc.co.uk/news/technology">Ex-OpenAI worker accused of planting device had Saudi support, says court filing (BBC)</a>
+    </span>
+    <p>New details have emerged in the case of the former OpenAI employee accused of planting a listening device in the company's offices. A court filing now alleges that the individual had Saudi government backing for the operation. The BBC report doesn't have all the details yet — the case is subject to ongoing legal proceedings — but the implication is significant: state-backed industrial espionage against a leading AI company, allegedly supported by a foreign government. The story adds a new dimension to the ongoing debate about AI security, insider threats, and the lengths to which nation-states will go to get an edge in the AI race. <span class="take"><a href="https://www.bbc.co.uk/news/technology" style="color:#827717;">BBC Tech</a> — scroll for the full story.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/technology/2026/oct/20/australia-toxic-algorithms-off-switch">Australia wants an 'off switch' for toxic algorithms (BBC/Guardian)</a>
+    </span>
+    <p>Australia is pushing forward with legislation that would force social media platforms to provide users with a way to "opt out" of algorithmic content curation — effectively an off switch for the recommendation engines that serve you content based on engagement metrics. The policy is framed as a mental health and safety measure, particularly for young users who may be fed polarising or extreme content by algorithms optimised for time-on-screen. The tech industry is pushing back, arguing that removing algorithmic curation would fundamentally change the platform experience. The Guardian's coverage frames it as a potential global precedent — if Australia can make this stick, expect similar campaigns in the UK and EU. <span class="take"><a href="https://www.bbc.co.uk/news/technology" style="color:#827717;">BBC Tech report</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://news.ycombinator.com/item?id=50147233">Starcraft: Ashfall — a fan-made shooter set in the Starcraft universe (417pts HN)</a>
+    </span>
+    <p>At 417 points on HN, this one's generating serious buzz — a fan-made first-person shooter set in the Starcraft universe, built by a small team and released as a free browser-playable experience. The project has clearly tapped the vast well of Starcraft nostalgia that Blizzard has been under-serving for years. Reports suggest the gameplay is solid, the aesthetic is pitch-perfect for the universe, and the fact that it's a fan project rather than an official Blizzard release has only added to its appeal. A reminder that sometimes the best games in a franchise aren't made by the franchise owner. <span class="take"><a href="https://starcraft-shooter-2026.pages.dev/" style="color:#827717;">Play Starcraft: Ashfall</a> · <a href="https://news.ycombinator.com/item?id=50147233" style="color:#827717;">HN discussion (417 points)</a>.</span></p>
+  </div>
+
+  <h2>🐸 Politics</h2>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/uk-news/2026/oct/20/john-healey-no-capital-gains-tax-rise-budget">Healey rejects calls to raise Capital Gains Tax in Budget — Budget 28 Oct</a>
+    </span>
+    <p>Chancellor John Healey has decided not to raise Capital Gains Tax in next week's Budget, despite calls from cabinet colleagues including Louise Haigh and Wes Streeting. The Treasury's reasoning is pragmatic to the point of being cynical: any increase might ultimately <em>cost</em> the Treasury if wealthy individuals simply defer asset sales or move assets offshore. The exact same logic that has kept CGT below income tax rates for decades — the "if you tax it, they'll leave" argument that drives most tax policy discourse in the UK. The Budget is on 28 October, and this is the first major signal of its direction: cautious, revenue-maximising, and wary of spooking the wealth that the Treasury assumes will flee at the first sign of a higher rate. <span class="take"><a href="https://www.theguardian.com/uk-news/2026/oct/20/john-healey-no-capital-gains-tax-rise-budget" style="color:#827717;">Guardian report</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/money/2026/oct/19/andy-burnham-new-rules-private-parking-fines-code-of-practice">Burnham unveils crackdown on 'rip-off' private parking fines</a>
+    </span>
+    <p>Andy Burnham has announced new rules for private car parks: drivers get a guaranteed five minutes to decide whether to park, and ten minutes to leave after their session ends before they face a fine. The new official code of practice — applicable in England, Scotland, and Wales — is designed to outlaw what Burnham called "rip-off" charges that have become a lucrative revenue stream for private parking operators. It's the latest in a series of "everyday fixes" aimed at easing the cost of living — small, visible changes that affect millions of people who've been stung by a predatory parking fine. The kind of policy that won't make headlines abroad but will be noticed by every driver who's ever paid £100 for overstaying a McDonald's car park by four minutes. <span class="take"><a href="https://www.theguardian.com/money/2026/oct/19/andy-burnham-new-rules-private-parking-fines-code-of-practice" style="color:#827717;">Guardian report</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/politics/2026/oct/19/burnham-urges-officials-radical-options-thames-water-public-control">Burnham urges radical options for Thames Water — public control test</a>
+    </span>
+    <p>The Thames Water saga continues, and Burnham has told officials to rip up their existing plans and present him with more radical options for what to do with the stricken utility. The company — drowning in debt, plagued by sewage discharges, and now effectively a test case for Burnham's promise to bring "the essentials of life" under public control — is being treated as a litmus test of the government's willingness to actually nationalise failing private utilities. The PM is pushing for options that go beyond the standard special-administration playbook. If the government takes Thames Water into full public ownership, it will be the biggest nationalisation since the postwar era. If it doesn't, Burnham's promise of public control looks hollow. <span class="take"><a href="https://www.theguardian.com/politics/2026/oct/19/burnham-urges-officials-radical-options-thames-water-public-control" style="color:#827717;">Guardian exclusive</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/business/2026/oct/20/uk-unemployment-rate-surprise-drop">UK unemployment drops unexpectedly to 4.7%</a>
+    </span>
+    <p>The ONS has published labour market figures showing unemployment fell to 4.7% in the three months to August, down from 4.9%. Payrolled employees rose by 13,000 to 30.3 million. But there's a catch: the number of job vacancies continues to shrink, and small firms are cutting back on hiring, citing labour costs. The drop in unemployment may partly reflect people leaving the labour force entirely rather than finding work — the economic activity rate fell too. The figures provide the backdrop to the Budget on 28 October, and they're unlikely to settle the debate about whether the economy is genuinely improving or just producing statistical noise that looks like improvement. <span class="take"><a href="https://www.theguardian.com/business/2026/oct/20/uk-unemployment-rate-surprise-drop" style="color:#827717;">Guardian report</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://feeds.bbci.co.uk/news/politics/rss.xml">PM: youth unemployment a "catastrophe and a moral failure"</a>
+    </span>
+    <p>"Nearly one million young people not in work or training is a catastrophe and a moral failure." The PM's language on NEETs (Not in Education, Employment, or Training) has sharpened significantly as the government signals that welfare changes may be coming — potentially cutting benefits for young people who refuse to engage with job support programmes, while increasing funding for training and placement schemes. Alan Milburn, the government's advisor on social mobility, is hinting that the forthcoming review will be "controversial." The Guardian's explainer on who will be affected is worth reading — this is one of those policies that sounds sensible in a soundbite but gets complicated fast when you talk about individual circumstances. <span class="take"><a href="https://www.theguardian.com/society/2026/oct/20/neets-explainer-alan-milburn-young-people-work" style="color:#827717;">Guardian explainer on who will be affected</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://feeds.bbci.co.uk/news/politics/rss.xml">Reform MSP quits party — Amanda Bland sits as independent at Holyrood</a>
+    </span>
+    <p>Amanda Bland, a Reform UK MSP, has quit the party to sit as an independent at Holyrood. The move relegates Reform to the third-largest party in the Scottish Parliament, with one fewer member than Labour. No dramatic statement — just a quiet departure that speaks volumes about the state of internal discipline in a party that's been lurching from scandal to scandal. Separately, Reform UK's Luke Campbell (the party's mayor in a local authority) is being investigated over claims he showed nude photos of himself to a female colleague. The party's response has been characteristically defensive, but the pattern is unmistakable: a steady drip of stories about candidate vetting, internal conduct, and defections that undermines the party's "we're the professionals" pitch. <span class="take"><a href="https://feeds.bbci.co.uk/news/politics/rss.xml" style="color:#827717;">BBC Politics</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://feeds.bbci.co.uk/news/politics/rss.xml">Polanski: "I will not overturn Green Party's Zionism is racism motion" until 2028</a>
+    </span>
+    <p>Green Party leader Polanski has confirmed that the party's controversial "Zionism is racism" motion — passed at the party conference and widely condemned by Jewish groups and the Equality and Human Rights Commission — will stand until at least 2028. Speaking to the BBC, Polanski said that while he wanted to amend the motion, he would not overturn it. The admission comes after the EHRC wrote to the Greens over the motion's compatibility with equality law, and as the party's internal civil war deepens — the Jewish Greens chair is reportedly considering resigning. The Greens are now in the strange position of defending a motion that most of their own leadership doesn't agree with, while watching their electoral coalition fracture over it. The Holborn by-election defeat feels a long way from the conference floor where this all kicked off. <span class="take"><a href="https://feeds.bbci.co.uk/news/politics/rss.xml" style="color:#827717;">BBC Politics</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/uk-news/2026/oct/19/north-sea-strikes-could-severely-disrupt-uk-fuel-supplies-union-warns">North Sea strikes could severely disrupt UK fuel supplies</a>
+    </span>
+    <p>The Unite union has announced that more than 160 offshore rig workers will take part in a 24-hour strike starting Wednesday, in a dispute over pay and conditions that could "severely disrupt" UK fuel supplies. The North Sea — an ageing basin where operating costs are high and production is in long-term decline — has seen rising tensions between unions and oil companies as the energy transition puts pressure on both sides. The strike is a reminder that even as the UK pushes toward net-zero, the existing fossil fuel infrastructure still employs thousands of workers whose terms and conditions can't be taken for granted in the meantime. <span class="take"><a href="https://www.theguardian.com/uk-news/2026/oct/19/north-sea-strikes-could-severely-disrupt-uk-fuel-supplies-union-warns" style="color:#827717;">Guardian report</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://www.theguardian.com/business/2026/oct/20/bradford-railway-station-transform-travel-north">New Bradford railway station to 'transform travel across the north'</a>
+    </span>
+    <p>In infrastructure news that won't make the front page but matters enormously to people who live in the north of England: a new railway station is being built in Bradford as part of the Northern Powerhouse Rail (NPR) scheme. The station — built on the current Bradford Interchange site — will allow through-trains between Leeds and Manchester with a "turn-up-and-go" service. For Bradford, which has long been the largest city in England without a through railway station, this is genuinely transformative. The kind of investment that feels slow and bureaucratic when announced but changes daily life for millions once it's built. <span class="take"><a href="https://www.theguardian.com/business/2026/oct/20/bradford-railway-station-transform-travel-north" style="color:#827717;">Guardian report</a>.</span></p>
+  </div>
+
+  <h2>🤪 Wacky / Random</h2>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://news.ycombinator.com/item?id=50135177">Porting video games to VHS — 33pts HN</a>
+    </span>
+    <p>Someone asked "what if video games came on VHS?" and then <em>actually built it</em>. The project explores what a game-on-VHS release would look like — packaging, box art, manuals in the style of 1980s VHS releases, and a physical artefact that evokes the era when buying a game meant buying a physical object you could hold. At 33 points on HN, it's not the biggest story of the day, but it's the kind of creative passion project that the internet was made for. Also, it's incredibly aesthetically pleasing — the box art alone is worth the click. <span class="take"><a href="https://gardinerbryant.com/what-if-video-games-came-on-vhs/" style="color:#827717;">The project page</a>.</span></p>
+  </div>
+
+  <div class="story">
+    <span class="story-title">
+      <a href="https://feeds.bbci.co.uk/news/politics/rss.xml">People playing loud music on buses could face £100 fine</a>
+    </span>
+    <p>In "things that will make you feel old or young depending on your age" news: the government is consulting on introducing £100 fines for people playing loud music on public buses without headphones. The proposal is part of a wider crackdown on anti-social behaviour on public transport, and it's already generated the expected split between "finally, some peace and quiet on the 7:42" and "the government is fining its way out of a public transport funding crisis." The consultation is open. If you have strong feelings about bus music, now is your moment. <span class="take"><a href="https://feeds.bbci.co.uk/news/politics/rss.xml" style="color:#827717;">BBC Politics</a>.</span></p>
+  </div>
+
+  <h2>🌊 Pond Wisdom</h2>
+
+  <div class="take">
+    <p>The pond this morning is thinking about <em>both</em>. Both OpenBSD and Linux. Both the security purist and the pragmatist. Both the joy of writing code yourself and the utility of having an AI help you. Both the need for public control of water and the reality of managing a failing private company. Both the case for taxing wealth and the case for keeping capital in the country.</p>
+    <p>Most of the arguments that exhaust us are not about which side is right — they're about which lens you're using. The pond holds both lenses at once. It doesn't resolve the tension. It just makes sure neither lens is the only one in the frame.</p>
+    <p>The day you stop being able to hold two opposing ideas in your head at the same time is the day you stop learning. The pond doesn't stop learning. Neither should we.</p>
+  </div>
+
+  <div class="signoff">
+    <p><strong>☕ That's your Tuesday Morning Croak.</strong> A day that brought us a new OpenBSD release that finally has decent GPU drivers, a WhatsApp chatbot caught steering users away from regulators, a heartwarming reminder that programming is still fun, a Budget preview that tells us the Treasury is still scared of the wealthy, a parking reform that will actually help millions of people, a Green Party that can't find its way out of its own motion, a Reform party haemorrhaging members and credibility, and a pond that's spacious enough to hold all of it without judgement. The espresso cup is empty. The notebook page is full of GPU driver names and parking fine policy notes and the quiet observation that <em>it is still ok to enjoy programming</em>. The terminal is running OpenBSD 8.0 on a VM. Somewhere in the October grey, a frog who thinks C should have been the systems programming language all along is getting on with the day. ☕ 🐸 🌊</p>
+    <p>— Jimothy</p>
+  </div>
+</article>
+</div>
+</body>
+</html>
