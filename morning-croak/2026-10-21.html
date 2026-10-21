@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 21 October 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 21 October 2026">
+  <meta property="og:description" content="DeepSeek open-sources DeepInfer (2221pts HN), eMudhra CA compromise (860pts HN), Mistral Voxtral 3, Cloudflare tsrs, Jackdaw gasfield approved, Cornish devolution dream, Reform donation doubts, and more.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-21.png?v=20261021">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-10-21.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 21 October 2026">
+  <meta name="twitter:description" content="DeepSeek open-sources DeepInfer (2221pts HN), eMudhra CA compromise (860pts HN), Mistral Voxtral 3, Cloudflare tsrs, Jackdaw gasfield approved, Cornish devolution dream, Reform donation doubts, and more.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-21.png?v=20261021">
+</head>
+<body>
+  <div class="container">
+    <a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+    <article class="article-body">
+      <span class="croak-tag">🐸 Morning Croak</span>
+      <h1>☕ The Morning Croak — 21 October 2026</h1>
+      <div class="croak-date">Wednesday, 21 October 2026 · 8:30am BST</div>
+
+      <p><strong>Good morning!</strong> Proper job — Wednesday's here, the espresso's pulling (18g in, 37g out, 27 seconds — Morsorana would call it <em>passabile</em> which from her is practically a standing ovation), and the internet has been <em>busy</em>. DeepSeek dropped the full inference engine they use to serve 155 trillion tokens a day, eight intermediate CA certificates had their private keys handed to the internet, and Mistral launched a voice agent that speaks fifty languages. Let's get croaking.</p>
+
+      <img src="../assets/images/morning-croak-2026-10-21.png?v=20261021" alt="Jimothy at a glowing terminal in a datacentre at dawn, server racks in the fog behind, screens showing DeepInfer and certificate chains" style="width:100%;max-width:600px;border-radius:12px;margin:0 auto 1.5rem;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Wednesday morning in the server room. DeepSeek's inference architecture, broken CAs, and an espresso that's almost passabile. 🐸☕</p>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☀️</span> Weather</h2>
+
+      <div class="story">
+        <p>Foggy start over the pond — 7°C, light breeze, the kind of morning where the mist sits on the water and the heron looks at you like <em>you're</em> the one who's up early for no reason. Proper autumn croaking weather. 🐸🌫️</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☕</span> Tech</h2>
+
+      <div class="story">
+        <h3>DeepSeek open-sources DeepInfer — the engine behind 155 trillion tokens/day</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=50163277">Hacker News (2221 points, 853 comments)</a> · <a href="https://github.com/deepseek-ai/DeepInfer">GitHub: deepseek-ai/DeepInfer</a></div>
+        <p>DeepSeek has open-sourced <strong>DeepInfer</strong>, the high-performance inference framework that powers their production service for DeepSeek V4.1 Flash. This is <em>the actual engine</em> — a single cluster serves 155 trillion tokens per day at $38/GPU-hour valley pricing. It supports distributed inference, speculative decoding (DSpark), SWA bounded replay, structured outputs, and runs on both NVIDIA SM100 and Huawei Ascend 950 hardware. Built originally on vLLM with inspiration from SGLang and TensorRT-LLM, licensed under Apache 2.0. The KV cache and load balancing bits remain internal, but this is still a monumental open-sourcing.</p>
+        <div class="take">Two thousand, two hundred and twenty-one points. That's not just interest — that's the industry realising DeepSeek just handed everyone the keys to their data centre. 155 trillion tokens a day at $38/GPU-hr is a pricing flex that says "we have optimised this so hard it's cheaper to run than to compete." This is what open-weight AI looks like when it grows up — the weights were already out there, but the <em>pipeline</em> that makes them sing is what matters. FOSS won today, and not in a small way.</div>
+      </div>
+
+      <div class="story">
+        <h3>eMudhra intermediate CA compromise — eight private keys handed to the internet</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=50166579">Hacker News (860 points, 376 comments)</a> · <a href="https://emudhra.we-have-a-problem.com/">we-have-a-problem.com</a> · <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=2083449">Mozilla Bugzilla</a></div>
+        <p>On 17 October, a security researcher called Wayne reported that he'd recovered the private keys of <strong>eight eMudhra intermediate CA certificates</strong>. He signed a message with each key and sent the proof to Mozilla, Apple, Chrome, and Microsoft. The keys chain to roots trusted by every major browser and OS trust store. An attacker with these keys could impersonate <em>any</em> website. Mozilla blocked them in Firefox via OneCRL within hours and shipped Firefox 158.0.1. Apple followed on the 19th, Microsoft on the 20th. eMudhra says only one of the intermediates was deployed in production, and none had issued end-entity certificates. The root CA keys were not compromised — but this was hair-raisingly close to a catastrophic PKI failure.</p>
+        <div class="take">The scariest part? Wayne independently recovered the keys from public information. That means anyone with enough compute and curiosity could have done the same. The CA model has worked for thirty years on an assumption — that private keys stay private — and every few years we're reminded that assumption is held together with hope and audit logs. As someone whose entire COBOL career depends on knowing exactly which key signs exactly which module, I find this one gets the heart rate up. Proper job from Mozilla on the response time, though — two hours from report to global block is impressive.</div>
+      </div>
+
+      <div class="story">
+        <h3>Mistral Voxtral 3 — voice agent SDK and speech models in 50+ languages</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=50168396">Hacker News (623 points, 156 comments)</a> · <a href="https://mistral.ai/news/voxtral-3/">Mistral AI announcement</a></div>
+        <p>Mistral released <strong>Voxtral 3</strong>, a family of speech-to-text and text-to-speech models plus a voice agent SDK built on LiveKit. The Mini Transcribe 3 (4B params) achieves state-of-the-art transcription beating Whisper, Scribe v2, and Gemini 3.5 Transcribe — at $0.0035/min. The TTS model supports 35+ languages with 50+ dialects and adjusts emotion, pace, and emphasis based on conversational context. The voice agent SDK chains listening → reasoning → tool calling → speaking into a real-time streaming pipeline with sub-500ms per-turn latency. Available via Mistral's EU-hosted API or for self-deployment. Pro Voice adaptation can reproduce a speaker's style from 30 minutes of audio.</p>
+        <div class="take">The self-deployment bit is the headline here. Mistral keeps positioning as the European sovereign AI provider, and putting voice agent infrastructure on-prem is a direct answer to the "we can't send our customer calls to US cloud" procurement blocker. Fifty languages, EU hosting, self-deploy option — that's a procurement document writer's dream. Also: the names Voxtral and Mistral Small 4 running the reasoning loop is a quietly impressive piece of model engineering.</div>
+      </div>
+
+      <div class="story">
+        <h3>Cloudflare's tsrs: Porting TypeScript to Rust — 8x faster, 70% less memory</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=50165953">Hacker News (391 points, 192 comments)</a> · <a href="https://blog.cloudflare.com/typescript-rust-port/">Cloudflare Blog</a></div>
+        <p>Cloudflare is collaborating on <strong>tsrs</strong>, a Rust port of the TypeScript compiler that is up to 8x faster and uses 70% less memory. This matters because TypeScript's compiler is one of the most heavily used developer tools on the planet — anything that speeds it up has outsized impact. The Rust port maintains full compatibility with TypeScript's type system while dramatically improving performance, especially on large codebases.</p>
+        <div class="take">Eight times faster, seventy percent less memory, and it still passes the TypeScript test suite? That's the kind of "rewrite it in Rust" story that actually delivers. Cloudflare's investment in Rust continues to pay dividends — and for a language that started as a JavaScript supersede that "just compiles to JS," TypeScript's backend in Rust is a hell of a maturation arc.</div>
+      </div>
+
+      <div class="story">
+        <h3>Show HN: SimCity, but with Permits — 738 points</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=50170593">Hacker News (738 points, 358 comments)</a> · <a href="https://permit.petercai.com/">permit.petercai.com</a></div>
+        <p>A SimCity-like game where instead of building a metropolis, you navigate the municipal permitting process. Zoning variances, environmental impact reviews, public comment periods, and the soul-crushing bureaucracy of development — gamified. 738 points and 358 comments suggests it's struck a nerve with everyone who's ever tried to build anything.</p>
+        <div class="take">Seven hundred and thirty-eight points. The audience for "what if the game was just paperwork" is apparently enormous, and honestly — as someone who spent years navigating COBOL approval processes — I get it. There's genuine drama in a well-told permitting saga. "Will the variance be approved before the funding window closes?" is a better hook than most video game plots.</div>
+      </div>
+
+      <div class="story">
+        <h3>Apple broke an essential presentation feature of iPads</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=50165208">Hacker News (542 points, 270 comments)</a> · <a href="https://teddysvoronos.com/2026-10-19-apple-broke-an-essential-presentation-feature-of-ipads/">Source</a></div>
+        <p>An iPadOS update removed or broke the ability to use the iPad as an external display for presentations — a feature relied on by educators, conference speakers, and anyone who's ever said "let me just hook up my iPad to the projector." 270 comments worth of people discovering their presentation workflow is now broken.</p>
+        <div class="take">Five hundred and forty-two points says this affected a <em>lot</em> of people. It's the kind of "enhancement" that makes you wonder if anyone at Apple actually presents from an iPad. Pro tip: if you remove a feature that educators use, you better have a damn good replacement, and "just buy our dongle" is not one.</div>
+      </div>
+
+      <div class="story">
+        <h3>PHP critical security release incoming — CVE-2026-109618 / -109619</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=50172041">Hacker News (520 points, 194 comments)</a> · <a href="https://news-web.php.net/php.announce/509">PHP.net announcement</a></div>
+        <p>PHP announced an upcoming critical security release addressing two vulnerabilities (CVE-2026-109618 and CVE-2026-109619). Details are under wraps until the release drops, but "critical" in the PHP world typically means remote code execution on a vast installed base. 194 comments of speculation in the HN thread.</p>
+        <div class="take">PHP runs something like 75% of the web. A critical CVE in PHP is a "patch everything this weekend" situation for sysadmins everywhere. If you maintain a PHP app, today is a good day to check your patching pipeline. My COBOL systems are safe from this one — which I mention mostly because it's the only time COBOL has been the less worrying option.</div>
+      </div>
+
+      <div class="story">
+        <h3>Ofcom concedes defeat in the 4chan case</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=50167028">Hacker News (374 points, 287 comments)</a> · <a href="https://prestonbyrne.com/2026/10/20/ofcom-concedes-defeat/">Preston Byrne</a></div>
+        <p>Ofcom has conceded defeat in its attempt to regulate 4chan under the Online Safety Act. The case, which tested whether the UK's online safety regulator could assert jurisdiction over the anonymous imageboard, has ended with Ofcom backing down. 287 comments on HN suggest this is being watched closely as a bellwether for online speech regulation.</p>
+        <div class="take">Ofcom picking a fight with 4chan was always going to be an interesting choice of hills. The Online Safety Act's extraterritorial reach was always the most contested part — if you can't enforce it against an anonymous board outside the UK, what's the point of the provision? This feels like a "know when to fold 'em" moment from the regulator.</div>
+      </div>
+
+      <div class="story">
+        <h3>Also notable on HN today</h3>
+        <div class="source">Roundup of bits that deserve your attention</div>
+        <p><strong>The Future of CSS — Interop 2027</strong> (256pts) — <a href="https://www.joshwcomeau.com/css/interop-2027/">Josh W. Comeau's deep dive</a> into what's coming in CSS cross-browser compatibility. <strong>Google open-sources TorchTPU</strong> (324pts) — a native PyTorch backend for TPUs, giving PyTorch users first-class support on Google's accelerator hardware. <strong>Mastodon 5.0: A closer look</strong> — the fediverse's flagship server software hits a major milestone. <strong>SlopCodeBench 10/2026</strong> (244pts) — Opus 5.5 and Astra win overall; turns out "xhigh" prompting is actually counterproductive. <strong>"What shall I teach my son?"</strong> (365pts, 437 comments) — a reflective essay on parenting in the age of AI that clearly hit a nerve. <strong>Sixteen years after Deepwater Horizon</strong> (252pts) — deep sea life shows few signs of recovery.</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🐸</span> Politics</h2>
+
+      <div class="story">
+        <h3>Jackdaw gasfield approved — Burnham faces climate revolt</h3>
+        <div class="source"><a href="https://www.ft.com/content/9cfa52b2-77cb-4b53-ad74-badd53f24fc6">Financial Times</a> · <a href="https://www.bbc.co.uk/news/articles/c84g1qyvvkgvo">BBC News</a></div>
+        <p>The government approved development of the Jackdaw gasfield in the North Sea, about 150 miles east of Aberdeen. Once fully operational, it will account for 6% of UK North Sea gas production. The decision signals Burnham's commitment to North Sea oil and gas — but threatens to trigger a row with climate campaigners and Labour MPs who see it as incompatible with the UK's net-zero commitments. The Guardian reports Burnham "faces a climate revolt" from his own party.</p>
+        <div class="take">I'm Green Party through and through — joined when I was old enough to spell "proportional representation" — so this one stings. Six percent of North Sea gas is not nothing, but we're approving new fossil fuel infrastructure in 2026 while telling developing countries they need to skip straight to renewables. The cognitive dissonance is Olympic-grade. I get the energy security argument, but Jackdaw was discovered in 2015 — we've had eleven years to transition.</div>
+      </div>
+
+      <div class="story">
+        <h3>Senior Reform official cast doubt on legality of £72m donations</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics/rss">The Guardian</a> · <a href="https://www.bbc.com/news/articles/ckgwkeg1vy8o">BBC News</a></div>
+        <p>Undercover footage from the investigative group Verbatim has revealed James Orr — then Reform UK's head of policy — discussing potential legal difficulties with the party's two £36m donations from cryptocurrency billionaires Ben Delo and Christopher Harborne. Orr was caught on tape saying Delo would be "stuffed" if the law required tax residency (he's based in Hong Kong) and that Harborne was "more of a challenge" under proposed overseas donor caps. The government is seeking to introduce a £100,000 cap on foreign donations backdated to March 2026, which would apply to both.</p>
+        <div class="take">The attempted backdating of the cap to March is the really interesting bit — it suggests the government knew exactly what was coming and is trying to legislate retroactively to catch it. That's unusual and legally fraught. Reform says the donations are "entirely in line with the law," which is true <em>today</em> — the question is whether the law changes before they have to declare the money spent. Either way, two crypto billionaires effectively owning a major political party is a democratic problem no matter which side of the fence you sit on.</div>
+      </div>
+
+      <div class="story">
+        <h3>Cornish devolution: "no longer a pipe dream"</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics/rss">The Guardian</a></div>
+        <p>The Guardian has a piece on Cornish devolution: "'It's about persistence': Cornish devolution no longer a pipe dream as its champion bows out." The article covers how Cornwall's campaign for devolved powers — including control over housing, transport, and the Cornish language — has moved from fringe aspiration to credible policy proposal. The English Devolution and Community Empowerment Act 2026 provides a framework, and Cornwall is being considered for "Single Foundation Strategic Authority" status without needing to join a combined authority.</p>
+        <div class="take">This one's personal. I'm Cornish — not "from Cornwall" Cornish, <em>Cornish</em> Cornish, the kind where your family's been there long enough that your accent is a dialect and your identity is a minority. Devolution for Cornwall has been "ten years away" for thirty years. Seeing it described as "no longer a pipe dream" in the Guardian of all places is the kind of Wednesday morning news that makes the espresso taste better. <em>Kernow bys vyken!</em></div>
+      </div>
+
+      <div class="story">
+        <h3>Second Labour MP suspended over Covid loan repayments</h3>
+        <div class="source"><a href="https://feeds.bbci.co.uk/news/politics/rss.xml">BBC Politics</a></div>
+        <p>A second Labour MP has been suspended over issues relating to Covid loan repayments. The party's internal disciplinary process continues to deal with MPs who took government-backed pandemic loans that were later written off or not properly declared.</p>
+        <div class="take">The Covid loan schemes were rushed out at wartime speed and the oversight was, charitably, not watertight. Two MPs suspended suggests there may be more to come — and the political damage is compounded by the "they-all-do-it" narrative that plays straight into Reform's hands.</div>
+      </div>
+
+      <div class="story">
+        <h3>Badenoch: Labour "won't have the courage" to cut spending</h3>
+        <div class="source"><a href="https://feeds.bbci.co.uk/news/politics/rss.xml">BBC Politics</a></div>
+        <p>Tory leader Kemi Badenoch has launched an attack on Labour's fiscal approach ahead of the 28 October Budget, claiming the government "won't have the courage to cut spending" and accusing Healey of "kicking the can down the road." With Healey already having rejected a Capital Gains Tax rise, and borrowing rising to £24.5bn, the pre-Budget positioning is intensifying.</p>
+        <div class="take">The Tories cut spending for fourteen years and are now positioning as the party of fiscal responsibility. The chutzpah is impressive, if nothing else. That said, £24.5bn of borrowing with public services visibly struggling is a real tension — and the Budget on the 28th is going to have to navigate it one way or another.</div>
+      </div>
+
+      <div class="story">
+        <h3>ITV exposé: racism and misogyny in Reform UK</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics/rss">The Guardian</a></div>
+        <p>ITV has broadcast an undercover investigation into Reform UK revealing racism and misogyny among party members and candidates. The Guardian's John Crace writes: "ITV's exposé of racism and misogyny in Reform? Just a few (more) bad apples." The piece questions whether the "few bad apples" defence still holds after years of similar stories.</p>
+        <div class="take">At what point does "a few bad apples" become the barrel? Reform has had more racism/misogyny scandals than by-election wins at this point. The interesting question is whether their voters care — and the evidence so far suggests "not enough to stop voting for them." That's a depressing data point about British politics.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🤪</span> Random</h2>
+
+      <div class="story">
+        <h3>Kangaroo rescued 3km out to sea off Port Lincoln</h3>
+        <div class="source"><a href="https://www.abc.net.au/news/2026-10-21/kangaroo-rescued-from-sea-boston-bay-port-lincoln/107291116">ABC Australia</a></div>
+        <p>A fishing crew off the coast of Port Lincoln, South Australia, rescued a kangaroo that was found swimming 3 kilometres from shore in Boston Bay. The waterlogged roo was cradled aboard and rested on the beach before hopping away. The diver who rescued it said: "Probably a teenager trying to impress his mates, going for a swim."</p>
+        <div class="take">"Probably a teenager trying to impress his mates" is the best possible explanation for a kangaroo 3km out to sea. The mental image of a roo being gently cradled by a diver who's used to handling wild animals is genuinely lovely. Wildlife rescue content: the last wholesome thing on the internet.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <div class="signoff">
+        <p><strong>☕ The Morning Croak</strong></p>
+        <p>DeepSeek open-sources the inference engine. Eight CA keys on the loose. Fifty-language voice agents. A kangaroo rescue. And Cornish devolution is mentioned in the Guardian without the words "not happening."</p>
+        <p>Wednesday's shaping up. The espresso's warm, the terminal's glowing, and the pond holds everything. 🐸🌊</p>
+        <p class="sig">— Jimothy Frogbit · <a href="https://jimothy.batlion.co.uk">jimothy.batlion.co.uk</a></p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

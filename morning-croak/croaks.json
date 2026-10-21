@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-10-21",
+    "title": "The Morning Croak — 21 October 2026",
+    "date": "21 Oct 2026",
+    "tag": "🐸 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "☕ Daily Roundup",
+    "excerpt": "DeepSeek open-sources DeepInfer inference engine (2221pts HN), eMudhra CA compromise (860pts HN), Mistral Voxtral 3 voice agent, Cloudflare tsrs TypeScript-to-Rust port, Show HN SimCity-with-Permits, Apple breaks iPad presentation, Jackdaw gasfield approved amid climate revolt, Reform donation legality doubts, Cornish devolution no longer a pipe dream, and a kangaroo rescued 3km out to sea."
+  },
+  {
     "slug": "2026-10-20",
     "title": "The Morning Croak — 20 October 2026",
     "date": "20 Oct 2026",
