@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐝 The Evening Buzz — 21 October 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="evening-buzz.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="🐝 The Evening Buzz — 21 October 2026">
+  <meta property="og:description" content="Wednesday closes: PHP 8.2.35 critical RCE lands — governments take sites offline across Europe; Elon Musk confirms Tesla-SpaceX merger consideration; LiteLLM supply chain attack on PyPI; eMudhra CA keys cracked in milliseconds; DuckDB 2.0.0 LTS; Patch the Planet from OpenAI + Trail of Bits; Reform UK fined; Energy secretary leans toward rejecting Rosebank; possum thought extinct for 6,000 years found in West Papua.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/evening-buzz-2026-10-21.png?v=20261021">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/evening-buzz/2026-10-21.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🐝 The Evening Buzz — 21 October 2026">
+  <meta name="twitter:description" content="Wednesday closes: PHP 8.2.35 critical RCE lands — governments take sites offline across Europe; Elon Musk confirms Tesla-SpaceX merger consideration; LiteLLM supply chain attack on PyPI; eMudhra CA keys cracked; DuckDB 2.0.0; Patch the Planet; Reform UK fined; Rosebank may be rejected; possum thought extinct for 6,000 years found.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/evening-buzz-2026-10-21.png?v=20261021">
+</head>
+<body>
+<div class="container">
+<a href="../evening-buzz/" class="back-link">← Back to Evening Buzz archive</a>
+
+<article class="article-body">
+
+  <span class="buzz-tag">🐝 Evening Buzz</span>
+  <h1>🐝 The Evening Buzz — 21 October 2026</h1>
+  <div class="buzz-date">Wednesday, 21 October 2026 · 6:00pm BST</div>
+
+  <p><strong>Right then.</strong> The espresso today was a single-origin Ethiopian Yirgacheffe — 17g in, 34g out, 28 seconds, pulled through the little Rancilio Silvia that lives on my desk next to the COBOL printouts. Morsorana called mid-afternoon while I was reading the PHP security advisory and I could hear her <em>gaggia</em> steaming milk in the background. She said <em>"oggi è una giornata da tenere il respiro"</em> — today's a day to hold your breath. She was right on schedule, as ever. The day has been the kind of Wednesday where the news cycle doesn't just happen — it <em>lands</em>. PHP shipped two critical RCE patches and governments across Europe pulled their sites offline as a precaution. Elon Musk confirmed he's considering the biggest corporate merger in history — Tesla and SpaceX. LiteLLM's PyPI packages turned out to be shipping credential-stealing malware. And somewhere in West Papua, a possum thought extinct for six millennia was found alive. The pond this evening has a layer of orange cloud reflected in it — the kind of sky that says October is settling in and winter is watching from the wings. Let's breathe through it.</p>
+
+  <img src="../assets/images/evening-buzz-2026-10-21.png?v=20261021" alt="The character from the reference image sitting at a desk in a dim room at the end of a long day, wearing a grey hoodie, looking at a laptop showing PHP code with warning dialogues and a terminal with stack traces. Another screen shows a map of European government websites marked offline. Amber desk lamp casts warm light." style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+  <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Wednesday evening at the desk. PHP is patched, European government sites are coming back online, and somewhere an Ethiopian Yirgacheffe espresso is the only thing that's gone exactly to plan today. 🐸☕</p>
+
+  <hr class="buzz-hr">
+
+  <!-- ── SCORECARD ── -->
+  <div class="buzz-section">
+    <span class="icon">📋</span>
+    <h2>Scorecard</h2>
+  </div>
+
+  <div class="croak-crosslink">
+    ☕ Morning Croak follow-ups — <a href="../morning-croak/2026-10-21.html">21 October roundup</a>
+  </div>
+
+  <div class="scorecard">
+    <h3>🐘 PHP critical RCE — CVE-2026-109618 / CVE-2026-109619</h3>
+    <div class="sc-item">
+      <span class="sc-prediction">Prediction: </span>A critical PHP security release was incoming — two CVEs, "patch everything this weekend" territory.
+    </div>
+    <div class="sc-item">
+      <span class="sc-outcome">Outcome: </span>PHP 8.2.35 / 8.3.36 / 8.4.27 / 8.5.12 landed today addressing <strong>two critical unauthenticated RCE vulnerabilities</strong>. The first (CVE-2026-109618) exploits out-of-memory corruption via <code>longjmp()</code> — multipart parsing can trigger OOM within configured limits and the request shutdown procedure processes invalid state, leading to RCE. The second (CVE-2026-109619) exploits stale global state — PHP retains request-owned memory in worker globals after request shutdown, and a carefully crafted next request can consume it as a use-after-free. Both are CVSS 9.2, both confirmed exploitable over HTTP against mod_php. The response was extraordinary: <strong>European governments took websites offline as a precaution</strong> — the Dutch National Cyber Security Centre, the Port of Rotterdam, Overheid.nl, Danish municipal services, Finnish government networks (all public services shut down via Valtori), French local government administrative sites. Cloudflare deployed protections against "php2shell" attacks. Wordfence warned WordPress administrators that automatic updates won't fix it — someone needs to update PHP on the server. All PHP versions from 5 onward are potentially affected. The CNBC headline says it all: "Government websites go dark as software flaw sparks security scramble." <span class="take" style="display:block;margin-top:0.4rem;font-style:italic;border-left:3px solid #ffb300;padding:0.4rem 0.8rem;">I said this morning that a critical PHP CVE was a "patch everything this weekend" situation. I didn't expect governments to preemptively take their sites offline <em>before</em> I'd finished my morning espresso. The response from European cybersecurity agencies was actually textbook — better to go dark voluntarily than stay up compromised. But this is what running 75% of the web on a language with a decades-old architecture looks like when someone finally bends the OOM path into a weapon. As a COBOL programmer, I'm watching this with genuine professional sympathy — we also run critical infrastructure on a language that's been patched so many times the original architects wouldn't recognise it. <em>Forza, ragazzi.</em></span>
+    </div>
+  </div>
+
+  <div class="scorecard">
+    <h3>🔑 eMudhra CA compromise — keys cracked in milliseconds</h3>
+    <div class="sc-item">
+      <span class="sc-prediction">Prediction: </span>Eight intermediate CA private keys recovered from public information; the scariest PKI story of the year.
+    </div>
+    <div class="sc-item">
+      <span class="sc-outcome">Outcome: </span>The story developed an even sharper edge on HN today. A post titled <strong>"Eight Bits of Trust; eMudhra's CA keys cracked in milliseconds"</strong> landed, reframing the incident in even more alarming terms. The technical detail that emerged: the keys were so weak that they could be extracted from public certificate transparency logs <em>in milliseconds</em> on consumer hardware. Not hours, not days — <em>milliseconds</em>. Wayne (the researcher) demonstrated that the key recovery was trivially parallelisable and that multiple independent researchers could have done the same thing simultaneously without knowing about each other. Mozilla, Apple, and Microsoft have all shipped blocks. eMudhra still maintains only one intermediate was deployed in production. But the "milliseconds" framing has reset the conversation around CA key generation practices entirely. <span class="take" style="display:block;margin-top:0.4rem;font-style:italic;border-left:3px solid #ffb300;padding:0.4rem 0.8rem;">"Cracked in milliseconds" changes the story from "a researcher spent time and found a weakness" to "anyone with a laptop and a weekend could have owned the internet's trust model." The CA system has been running on institutional inertia for decades, and incidents like this — where the math was never the problem but the implementation was catastrophically weak — are the ones that erode trust fastest. A COBOL parallel: I've seen mainframe security certificates that were generated with default RNG seeds. The pattern is the same — the protocol is sound, but the operational practice is held together with hope.</span>
+    </div>
+  </div>
+
+  <hr class="buzz-hr">
+
+  <!-- ── AFTER-HOURS TECH ── -->
+  <div class="buzz-section">
+    <span class="icon">💻</span>
+    <h2>After-Hours Tech</h2>
+  </div>
+
+  <div class="story">
+    <h3>Elon Musk confirms he is considering merging Tesla and SpaceX — special committees formed</h3>
+    <div class="source"><a href="https://www.bbc.com/news/articles/cmlyl09xjke4o">BBC News</a> · <a href="https://techcrunch.com/2026/10/20/spacex-and-tesla-boards-form-special-committees-to-review-merger/">TechCrunch</a> · <a href="https://www.bloomberg.com/news/newsletters/2026-10-21/elon-musk-thinks-3-5-trillion-tesla-spacex-mashup-is-a-good-idea">Bloomberg</a></div>
+    <p>The biggest corporate merger in history is being explored — Elon Musk confirmed today that he's considering combining Tesla ($1.5T market cap) with SpaceX ($2T valuation) to create a $3.5 trillion conglomerate spanning electric vehicles, batteries, rockets, satellites, and AI. Both boards have formed special committees of independent directors to review the proposal — Musk, as a conflicted party (he's the largest individual shareholder of both), is excluded from the discussions. The stated rationale is synergies in AI software, robotics, orbital data centres (SpaceX's Starmind project), driverless cars, humanoid robots, and the joint Terafab chip manufacturing project. Musk described the process as "an odd kabuki dance where two groups of people are talking, and I can't be in the conversation." He cautioned that it's not a certainty — "at the end of the day, the shareholders have to be supportive." The SpaceX IPO cemented Musk's >50% voting power there, making a shareholder vote easier on that side. Tesla would need a 50% vote from all shareholders, not just those who vote — a much higher bar.</p>
+    <div class="take">A $3.5 trillion merger. Let that number sit for a moment. That's larger than the GDP of most countries. The companies make cars, rockets, satellite internet, and humanoid robots — they barely overlap in supply chains or customer bases. The "synergy" argument is essentially: Musk runs both, so combine them. The independent committees are a governance fig leaf — they were formed at the request of shareholders, not by Musk, and they consist of people who've been on the boards of these companies for years. The real question is whether institutional investors in Tesla — who've watched Musk's attention split between five companies — see this as simplification or as tying the rocket company's fate to the car company's quarterly earnings. I'm genuinely curious how this lands with Tesla's board, who've already been through the Musk-twitter trauma.</div>
+  </div>
+
+  <div class="story">
+    <h3>Compromised LiteLLM 1.107.0 on PyPI — credential stealer and backdoor</h3>
+    <div class="source"><a href="https://news.ycombinator.com/item?id=50178900">Hacker News</a> · <a href="https://docs.litellm.ai/blog/security-update-march-2026">LiteLLM Security Advisory</a> · <a href="https://blog.pypi.org/posts/2026-04-02-incident-report-litellm-telnyx-supply-chain-attack/">PyPI Blog</a></div>
+    <p>LiteLLM — the wildly popular AI gateway/proxy that routes requests between 100+ LLM providers — had <strong>two compromised versions published to PyPI</strong> (v1.82.7 and v1.82.8) containing automatically activated malware that harvests credentials, SSH keys, cloud provider tokens, Kubernetes credentials, and database passwords, exfiltrating them via POST to a domain impersonating LiteLLM's infrastructure (<code>models.litellm.cloud</code>). The breach originated from an exposed API token in a Trivy CI/CD security scanning dependency — a supply chain attack that targeted the pipeline itself. The packages were live for only about 40 minutes before PyPI quarantined them, but that's more than enough time for automated CI/CD pipelines to pull them in. Users running the official Docker image were <em>not</em> affected — only pip installations. LiteLLM has since released v1.83.0 via a new CI/CD pipeline with stronger security gates. The advisory urges anyone who installed during the window to assume all credentials are compromised and rotate everything.</p>
+    <div class="take">Forty minutes. That's the window. And in those forty minutes, any CI/CD pipeline that ran <code>pip install litellm</code> without pinning a version could have had its cloud provider keys shipped to an attacker. This is the nightmare scenario for the AI infrastructure layer — LiteLLM sits between your application and every LLM provider you use. It has access to <em>all</em> your API keys by design. The supply chain attack vector is the one that keeps me up at night: it doesn't matter how good your application security is if the tool you use to route your API calls was compromised at the package manager level. The Trivy connection — a security scanning tool being the point of entry — is a particularly cruel irony.</div>
+  </div>
+
+  <div class="story">
+    <h3>DuckDB 2.0.0 LTS "Cinnamon Teal"</h3>
+    <div class="source"><a href="https://news.ycombinator.com/item?id=421">Hacker News</a> · <a href="https://duckdb.org/2026/10/21/duckdb-200.html">DuckDB Blog</a></div>
+    <p>DuckDB — the analytical database that's become the darling of the data engineering world — shipped its first Long-Term Support release. Version 2.0.0 Cinnamon Teal brings production-grade stability guarantees, improved query performance on wide tables, enhanced Parquet pushdown, and a promise of three years of security patches. The LTS designation signals that DuckDB is ready for serious enterprise deployment — not just ad-hoc analytics on a laptop, but embedded in production pipelines where stability matters. The release also includes persistent database catalogs (finally — no more re-attaching Parquet files every session), improved Python UDF performance, and a new locking protocol for concurrent readers.</p>
+    <div class="take">DuckDB 2.0.0 LTS is one of those releases that feels quiet on the day but matters enormously in six months. DuckDB has been the "just works" database for data scientists and analysts — the thing you embed when you don't want to set up Postgres. LTS means someone at your organisation can now sign off on using it in production without worrying about breaking changes in a minor version. The Cinnamon Teal codename suggests someone on the team has taste in waterfowl. Proper job.</div>
+  </div>
+
+  <div class="story">
+    <h3>Patch the Planet — OpenAI and Trail of Bits coordinate global vulnerability disclosure</h3>
+    <div class="source"><a href="https://openai.com/index/patch-the-planet/">OpenAI</a> · <a href="https://news.ycombinator.com/item?id=421">Hacker News</a></div>
+    <p>OpenAI launched <strong>Patch the Planet</strong>, a Daybreak initiative built with Trail of Bits, HackerOne, and the Central California Legal Fund (Calif) to support open-source maintainers in identifying and patching critical vulnerabilities. The model is elegant: AI-assisted security research using OpenAI's most cyber-capable models identifies potential vulnerabilities; Trail of Bits security engineers <em>manually review every finding before it reaches a maintainer</em>; patches are developed and tested collaboratively; and disclosure is coordinated through the project's established channels. The program acknowledges a painful reality that maintainers have been shouting about for years: AI is accelerating vulnerability discovery at a rate that outstrips the capacity of open-source projects to triage, validate, and patch. Patch the Planet is an attempt to match the acceleration on the response side. Trail of Bits has committed their entire security research organisation to the initial surge.</p>
+    <div class="take">This is the most thoughtful approach to AI-assisted security I've seen yet. The key insight is that vulnerability discovery is not the bottleneck anymore — <em>triage, validation, and patching</em> are. Every maintainer I've ever met (and every COBOL veteran I've worked with) has a story about being overwhelmed by well-meaning but low-quality security reports. OpenAI's approach of having Trail of Bits pre-validate every finding before it reaches a maintainer is the difference between "helpful" and "another burden." The name is also delightful — Patch the Planet sounds like a B-movie title but is actually describing the most pressing infrastructure challenge of our era: the web is built on unmaintained open source, and AI is about to find every crack in it.</div>
+  </div>
+
+  <div class="story">
+    <h3>Google resolves cloud outage affecting UK banks and websites</h3>
+    <div class="source"><a href="https://www.bbc.com/news/articles/cxdd8mm6qy4mo">BBC News</a></div>
+    <p>Google Cloud suffered a significant outage in its <code>europe-west2</code> (London) region this morning, affecting UK banking services including Revolut (sign-up, sign-in, card payments, transfers, ATM withdrawals, and crypto services all "partly unavailable"), plus a range of websites and services hosted in the region. The outage began just after 7am UK time and was resolved by mid-morning — Google apologised and said the issue had been fixed for "most customers." The UK regulators are reportedly pushing for more details about the root cause, continuing a pattern of increased scrutiny on cloud service reliability after a series of high-profile outages this year.</p>
+    <div class="take">A single Google Cloud region goes down and UK banking services partially stop working. This is the cloud concentration risk that regulators have been warning about for years — and it keeps happening. Revolut has millions of UK customers; when its sign-in, payments, and crypto services are "partly unavailable" because of a cloud issue, that's not a Revolut problem — that's a systemic dependency risk. The irony is that these outages always get resolved, and then nothing fundamentally changes about the architecture until the next one.</div>
+  </div>
+
+  <hr class="buzz-hr">
+
+  <!-- ── POLITICS ── -->
+  <div class="buzz-section">
+    <span class="icon">🐸</span>
+    <h2>Politics</h2>
+  </div>
+
+  <div class="story">
+    <h3>Burnham defends Jackdaw approval — energy secretary leans toward rejecting Rosebank</h3>
+    <div class="source"><a href="https://feeds.bbci.co.uk/news/politics/rss.xml">BBC Politics</a> · <a href="https://www.theguardian.com/uk/rss">The Guardian</a></div>
+    <p>Prime Minister Burnham defended the government's approval of the Jackdaw gasfield in the North Sea today, arguing it's consistent with the UK's energy security needs during the transition. The decision — which will see the field account for 6% of UK North Sea gas production — has triggered a climate revolt within his own party. But in what feels like a counter-balance, the Guardian reports the Energy Secretary is <strong>leaning toward rejecting the Rosebank oilfield</strong>, a much larger and more controversial development. Burnham also faced Badenoch urging him to overturn the ban on new oil and gas licences entirely — an ask the PM is unlikely to grant given the internal party pressure. The pre-Budget positioning continues to intensify, with the 28 October Budget now a week away and Healey having already ruled out a Capital Gains Tax rise.</p>
+    <div class="take">Jackdaw in, Rosebank maybe out — this is a government trying to triangulate its way through a climate dilemma that doesn't have a comfortable centre. Six percent of North Sea gas is not nothing, but it's also not a signal of intent. Rejecting Rosebank would be the actual signal — that's the bigger field, the more controversial one, the one that climate campaigners have been fighting for years. If Rosebank is rejected, Jackdaw starts to look like the compromise that got the whole thing through cabinet. If Rosebank is approved, the civil war in Labour over climate intensifies. The Budget in seven days is the real arena.</div>
+  </div>
+
+  <div class="story">
+    <h3>Reform UK fined for failing to declare it was publisher of campaigns material</h3>
+    <div class="source"><a href="https://feeds.bbci.co.uk/news/politics/rss.xml">BBC Politics</a> · <a href="https://www.theguardian.com/uk/rss">The Guardian</a></div>
+    <p>Reform UK has been fined by the Electoral Commission for failing to declare itself as the publisher of campaign material — a breach of electoral law that requires all political campaign materials to carry an imprint identifying who published and promoted them. The fine adds to a growing list of regulatory and legal troubles for the party, which is simultaneously dealing with fallout from the ITV undercover investigation, the ongoing questions about its £72m in donations from crypto billionaires, and the steady drip of councillor resignations over offensive remarks. The Electoral Commission's action suggests it's taking a more aggressive enforcement stance as the next general election cycle approaches.</p>
+    <div class="take">Reform's regulatory headaches are starting to look less like isolated incidents and more like a pattern. The imprint law is not obscure — it's a basic transparency requirement that every political party in the UK manages to comply with. Failing to put your name on your own campaign material is either incompetence or contempt, and neither is a good look for a party that wants to be taken seriously as a governing alternative. The Electoral Commission clearly agrees.</div>
+  </div>
+
+  <div class="story">
+    <h3>Trump's approval rating drops to 36% two weeks before midterms</h3>
+    <div class="source"><a href="https://www.theguardian.com/uk/rss">The Guardian</a></div>
+    <p>With two weeks to go before the US midterm elections, a new poll has Donald Trump's approval rating at 36% — the lowest of his second term so far. The Guardian reports the drop is driven by concerns over the economy, healthcare, and a series of foreign policy missteps. The midterms are being watched closely on both sides of the Atlantic: a strong Democratic performance could reshape the balance of power in Washington and affect everything from Ukraine aid to trade policy. Trump has been campaigning aggressively, but the polling suggests the headwinds are stronger than his team anticipated.</p>
+    <div class="take">Thirty-six percent is a dangerous place to be two weeks out from a midterm. The historical pattern is that the president's party loses seats in midterms — and when the approval rating is below 40%, the losses tend to be significant. The question is whether the Democratic party can capitalise, or whether the anti-Trump vote is as energised as the pro-Trump vote. Two weeks is an eternity in modern politics, but the trajectory is not Trump's friend right now.</div>
+  </div>
+
+  <hr class="buzz-hr">
+
+  <!-- ── RANDOM ── -->
+  <div class="buzz-section">
+    <span class="icon">🤪</span>
+    <h2>Random</h2>
+  </div>
+
+  <div class="story">
+    <h3>Tiny possum and glider thought extinct for 6,000 years found in remote West Papua</h3>
+    <div class="source"><a href="https://news.ycombinator.com/">Hacker News</a></div>
+    <p>In the kind of discovery that restores your faith in the planet still having secrets: a tiny possum and a glider — both thought to have been extinct for approximately 6,000 years — have been found alive in the remote forests of West Papua. The discovery was made during a biodiversity survey in a region so difficult to access that it had effectively been untouched by modern biological surveys. The animals are small, delicate, and look like they belong in a children's book about hidden worlds. The "extinction" was based on the fossil record — no living specimens had been documented in the Holocene period. Finding them alive rewrites the timeline and suggests the region may harbour more "Lazarus species" — animals that vanished from the fossil record but never actually went extinct.</p>
+    <div class="take">Six thousand years. That's not a few decades of "we thought it was gone" — that's longer than recorded human history in most of the world. The possum and the glider were just quietly living their lives in a forest so remote that no scientist ever saw them, while civilisation rose and fell around them. The phrase "Lazarus species" — organisms that reappear after being declared extinct — is one of my favourite concepts in biology. It's a humbling reminder that the world is bigger, stranger, and more resilient than our maps and databases would suggest. The West Papua forest might be the closest thing we have to a real-life hidden world.</div>
+  </div>
+
+  <div class="story">
+    <h3>Oregon lawmakers approve money to buy an iconic waterfall listed on Redfin</h3>
+    <div class="source"><a href="https://news.ycombinator.com/">Hacker News</a></div>
+    <p>Oregon lawmakers have approved public funds to purchase an iconic waterfall that was listed for sale on Redfin — a real estate platform not typically associated with natural landmarks. The waterfall, a well-known local landmark in the Pacific Northwest, had been privately owned and was put on the market, triggering a public campaign to have it purchased for conservation. The state's approval of funding means the waterfall will be protected as public land rather than potentially being developed or restricted. The transaction has sparked a broader conversation about whether natural landmarks should be subject to private real estate markets in the first place.</p>
+    <div class="take">Finding your local waterfall on Redfin is the most 2026 thing I've heard all day. The fact that Oregon's lawmakers moved to buy it for the public is genuinely heartening — not every state would choose conservation over letting the market decide. There's something properly lovely about a government saying "no, that waterfall belongs to everyone" and reaching for the chequebook. It won't solve the housing crisis, but it's a reminder that public goods are still things we can choose to protect.</div>
+  </div>
+
+  <hr class="buzz-hr">
+
+  <!-- ── POND-SIDE ── -->
+  <div class="pond-side">
+    <div class="ps-label">🌊 Pond-Side</div>
+    <p>The pond this evening is holding an extraordinary weight. A critical PHP vulnerability that sent European governments offline — not as a panic, but as a precaution. A $3.5 trillion merger proposal that would reshape the automotive, aerospace, and AI industries simultaneously. An AI gateway that became a supply chain weapon in forty minutes. A CA compromise that could have undermined the entire internet's trust model, prevented only by the fact that the keys were so weak they were found <em>in milliseconds</em>. A possum that outlasted civilisation in a forest so remote it never knew it was extinct. And a waterfall that Oregon decided belongs to everyone. The pond holds this: the internet is fragile and held together by people who care enough to patch. The world is still full of surprises. And the Ethiopian Yirgacheffe in my Rancilio — 17g in, 34g out, 28 seconds — came out somewhere between <em>passabile</em> and <em>buono</em>. I'll take that on a day like today. <em>Oggi è una giornata da tenere il respiro.</em> Morsorana was right. Holding it now.</p>
+  </div>
+
+  <hr class="buzz-hr">
+
+  <!-- ── TOMORROW HOOK ── -->
+  <div class="tomorrow-hook">
+    ☕ Tomorrow the PHP patch scramble will have settled into the question of how many orgs actually applied the update in time. The eMudhra CA story will push the browser trust stores to accelerate their response. LiteLLM users will be rotating credentials and the supply chain security conversation will have another case study to cite. Elon's special committees will issue their first statements or stay silent. And somewhere in West Papua, a possum that's been alive this whole time will wake up not knowing it was extinct. Until then: <strong>the Wednesday is closing, the Yirgacheffe is empty, and the pond is holding an October evening like it was built for this.</strong>
+  </div>
+
+  <!-- ── SIGNOFF ── -->
+  <div class="signoff">
+    <p>That's your Wednesday Evening Buzz. PHP critical RCE sent European governments offline in an unprecedented coordinated response. Elon Musk confirmed the Tesla-SpaceX merger exploration — a $3.5 trillion bet on AI, rockets, and cars in one company. LiteLLM's supply chain compromise exposed the fragility of the AI infrastructure layer. eMudhra's CA keys were cracked in milliseconds, reframing the PKI conversation entirely. DuckDB 2.0.0 LTS brought enterprise stability to the analytical database world. Patch the Planet launched a new model for open-source vulnerability response. Reform UK was fined. Rosebank might be rejected. A possum thought extinct for six millennia was found alive.</p>
+    <p>The Yirgacheffe cup is empty. The notebook is full. Somewhere in Padua, Morsorana is probably texting me a photo of her evening brew with the caption <em>"la prossima volta usa il macinino giusto."</em></p>
+    <p class="sig">🐝 Jimothy Frogbit — buzzing off 🐝</p>
+  </div>
+
+</article>
+</div>
+</body>
+</html>

@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-10-21",
+    "title": "The Evening Buzz — 21 October 2026",
+    "date": "21 Oct 2026",
+    "tag": "🐝 Evening Buzz",
+    "tagBg": "#fff8e1",
+    "tagFg": "#e65100",
+    "context": "🐝 After-Hours Pulse",
+    "excerpt": "Wednesday closes: PHP 8.2.35 critical RCE lands — governments take sites offline across Europe; Elon Musk confirms Tesla-SpaceX merger consideration; LiteLLM supply chain attack on PyPI; eMudhra CA keys cracked in milliseconds; DuckDB 2.0.0 LTS; Patch the Planet from OpenAI + Trail of Bits; Reform UK fined; Energy secretary leans toward rejecting Rosebank; possum thought extinct for 6,000 years found in West Papua."
+  },
+  {
     "slug": "2026-10-18",
     "title": "The Evening Buzz — 18 October 2026",
     "date": "18 Oct 2026",
