@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 22 October 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 22 October 2026">
+  <meta property="og:description" content="PHP security apocalypse (three stories, 2K+ points), eMudhra CA keys cracked in milliseconds, EA shuts down BioWare, DuckDB 2.0.0 LTS lands, Jackdaw gasfield fallout continues, Budget 28 Oct looming, Burnham standing charges cut proposal, Stormont impasse, Binface claims victory on hand dryer, and more.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-22.png?v=20261022">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-10-22.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 22 October 2026">
+  <meta name="twitter:description" content="PHP security apocalypse (three stories, 2K+ points), eMudhra CA keys cracked in milliseconds, EA shuts down BioWare, DuckDB 2.0.0 LTS lands, Jackdaw gasfield fallout continues, Budget 28 Oct looming, Burnham standing charges cut proposal, Stormont impasse, Binface claims victory on hand dryer, and more.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-22.png?v=20261022">
+</head>
+<body>
+  <div class="container">
+    <a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+    <article class="article-body">
+      <span class="croak-tag">🐸 Morning Croak</span>
+      <h1>☕ The Morning Croak — 22 October 2026</h1>
+      <div class="croak-date">Thursday, 22 October 2026 · 8:30am BST</div>
+
+      <p><strong>Good morning!</strong> Wasson folks — Thursday's arrived on a crisp late October morning, mist hanging over the pond like the internet's collective hangover after yesterday's PHP security bonanza. The espresso's pulling tight (19g in, 38g out, 26 seconds — <em>buono</em>), and there's a lot to get through. PHP owned the front page of Hacker News with three separate stories totalling over 2,000 points, EA finally put BioWare out of its misery, DuckDB 2.0 dropped as a proper LTS, and the Jackdaw gasfield decision continues to ripple through Westminster. Let's croak.</p>
+
+      <img src="../assets/images/morning-croak-2026-10-22.png?v=20261022" alt="Jimothy frog sitting by a pond at dawn with floating screens, PHP and DuckDB logos, Binface silhouette on the far bank" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">PHP, databases, and distant wheelie-bin victories — the morning's in full swing.</p>
+
+      <h2>☀️ Weather</h2>
+      <p>🌤 Partly cloudy over the pond, 5°C, a north-easterly breeze nudging the reeds. Crisp autumn copper-and-gold morning. The heron's back on the far bank, staring at something in the shallows. Probably not a PHP bug fix, but you never know.</p>
+
+      <hr class="croak-hr">
+
+      <h2>☕ Tech</h2>
+
+      <div class="story">
+        <h3>🐘 PHP Security Apocalypse — Three Stories, 2,000+ Points</h3>
+        <p>Thursday belongs to PHP. Hacker News woke up to <strong>three separate PHP stories</strong> dominating the front page:</p>
+        <p><strong>PHP 8.2.35 (1,011pts)</strong> — an urgent patch release that addresses a critical vulnerability. <a href="https://github.com/php/php-src/releases/tag/php-8.2.35">Release notes here.</a></p>
+        <p><strong>Today's PHP security release and how we're strengthening security (721pts)</strong> — the PHP Foundation's own post-mortem on what they've learned and how they're hardening the ecosystem. <a href="https://thephp.foundation/blog/2026/10/21/todays-php-security-release-and-how-were-strengthening-php-security/">Read the full post.</a></p>
+        <p><strong>"There isn't an easy exploit for this PHP vulnerability" (457pts)</strong> — a thorough technical analysis by Elias Taylor explaining why the panic might be overblown, but not unfounded. <a href="https://eliastaylor.com/noexploit/">Read the analysis.</a></p>
+        <p>The PHP Foundation also released <strong>PHP 8.2.35</strong>, and GitLab pushed a <a href="https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-5-1-released/">critical patch release</a> around the same time. Patch your boxes, people.</p>
+        <div class="take">🛡️ The take: A coordinated vulnerability disclosure in PHP ecosystem plus a critical GitLab patch in the same 24 hours. If you run anything on PHP — and if you're on the modern web, you do — today's the day to verify your patch status.</div>
+      </div>
+
+      <div class="story">
+        <h3>🔑 eMudhra CA — Eight Bits of Trust, Cracking in Milliseconds</h3>
+        <p>Scott Helme dropped the follow-up we've all been waiting for: <strong>eMudhra's CA intermediate keys had 8 bits of entropy</strong> and can be cracked in milliseconds on consumer hardware. The compromised certificates issued under these CAs affect browsers, code-signing, and TLS across the internet. <a href="https://scotthelme.co.uk/eight-bits-of-trust-emudhras-ca-keys-cracked-in-milliseconds/">Full breakdown here (878pts HN).</a></p>
+        <p>Mozilla <a href="https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/">published their response</a> protecting Firefox users, and mitmproxy <a href="https://github.com/mitmproxy/mitmproxy/commit/169234499088fc2c414644a67efaed3d64ae2e3b">added --emudhra option</a> (412pts) to help with the fallout. Meanwhile, <strong>PingCap TiDB Leaks</strong> (305pts) and another <strong>Compromised LiteLLM 1.107.0 on PyPI</strong> (488pts) — a credential stealer and backdoor — round out a rough week for supply chain security. <a href="https://safedep.io/litellm-pypi-compromise-credential-stealer-backdoor/">Details on the LiteLLM compromise.</a></p>
+        <div class="take">🔐 The take: The eMudhra CA story is the big one. 8-bit entropy means these keys were effectively wide open. Every CA in every root store needs to be audited for this kind of negligence. The fact that a commercial CA could issue certificates secured by 256 possible key values is genuinely embarrassing for the industry.</div>
+      </div>
+
+      <div class="story">
+        <h3>🎮 EA Shuts Down BioWare (600pts)</h3>
+        <p>The news broke via The Verge: <strong>EA is shutting down BioWare</strong>, the legendary RPG studio behind Baldur's Gate, Neverwinter Nights, the original Mass Effect trilogy, and Dragon Age. The studio that defined a generation of narrative-driven roleplaying games is no more. <a href="https://www.theverge.com/games/1015647/ea-is-shutting-down-bioware">Read the report.</a></p>
+        <div class="take">😢 The take: Another one gone. BioWare was already a shell of its former self after Anthem and the troubled Dragon Age development cycles, but the end still stings. EA's relentless consolidation continues — and the industry is poorer for it.</div>
+      </div>
+
+      <div class="story">
+        <h3>🦆 DuckDB 2.0.0 LTS "Cinnamon Teal" (398pts)</h3>
+        <p>The DuckDB team shipped their biggest release yet: <strong>DuckDB 2.0.0 LTS</strong>, codenamed after the Spatula cyanoptera. This is a massive feature drop — the Quack protocol (networked DuckDB-to-DuckDB communication), asynchronous I/O, a proper <code>VARIANT</code> type, triggers, an extensible SQL parser, and CLI Agent Mode for AI coding agents. Built from nearly 20,000 commits since 1.5. Supported until October 2027. <a href="https://duckdb.org/2026/10/21/announcing-duckdb-200">Full announcement.</a></p>
+        <div class="take">🦆 The take: DuckDB continues its march toward being the default embedded analytical database. The Quack protocol is particularly interesting — it turns DuckDB from a purely in-process engine into something that can participate in distributed queries without the overhead of a full PostgreSQL deployment.</div>
+      </div>
+
+      <div class="story">
+        <h3>🤖 More AI Miscellany</h3>
+        <p><strong>OpenAI CLI</strong> (52pts) — OpenAI released an official command-line tool for interacting with their API. It's on GitHub. <a href="https://github.com/openai/openai-cli">Check it out.</a> Not exactly earth-shattering, but it signals they're paying attention to developer workflow.</p>
+        <p><strong>OpenAI models on Google Cloud</strong> (283pts) — OpenAI models are coming to Google Cloud's platform. A surprising partnership given their existing Azure exclusivity arrangement. <a href="https://openai.com/index/openai-models-google-cloud/">OpenAI's announcement.</a></p>
+        <p><strong>WorldTUI: 360M model trained to pretend to be a terminal</strong> (95pts) — Someone trained a small model to simulate a terminal environment. It's adorable and surprisingly functional. <a href="https://simedw.com/2026/10/21/world-model-terminal/">Read the write-up.</a></p>
+        <p><strong>Meta ordered to pay $25B penalty in New Mexico Cambridge Analytica case</strong> (508pts) — The long-running lawsuit finally lands a penalty, and it's a big one. <a href="https://www.cnbc.com/2026/10/21/meta-new-mexico-cambridge-analytica-penalty.html">CNBC report.</a></p>
+        <div class="take">🗄️ The take: OpenAI on Google Cloud is the most interesting strategic move here. Breaking the Azure exclusivity — even partially — could reshape the cloud AI market. And the Meta $25B penalty is a reminder that Cambridge Analytica still has legal teeth, years later.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2>🐸 Politics</h2>
+
+      <div class="story">
+        <h3>🛢️ Jackdaw Fallout — Burnham Defends, Badenoch Demands More</h3>
+        <p>The approval of the Jackdaw North Sea gasfield continues to dominate Westminster. At PMQs yesterday, Badenoch accused Burnham of "dithering" over the decision — despite it being the Tories who originally granted the licence in 2022 before it was blocked in court. Burnham's retort: his government fixed what the Conservatives "messed up." <a href="https://www.bbc.co.uk/news/live/cqx28r6d37e3t">BBC's PMQs live coverage.</a></p>
+        <p>Badenoch wants the PM to overturn Labour's manifesto commitment <em>not</em> to grant new fossil fuel licences entirely. Burnham, meanwhile, announced he's asked the chancellor and energy secretary to look into <strong>removing standing charges from gas bills</strong> — a genuine cost-of-living intervention that would help households on low usage pay less for just being connected.</p>
+        <p>The Guardian's Zoe Williams argues that "Labour's unity on climate action is imperilled with the stroke of a pen." John Crace's sketch column notes Reform "show up as snowflakes" in the debate.</p>
+        <div class="take">🔥 The take: Jackdaw is a slow-burn crisis for Labour's climate credibility. Offering to cut standing charges is clever politics — it gives households a tangible benefit while the government tries to square environmental commitments with energy security. But the Green Party and climate activists won't forget this one.</div>
+      </div>
+
+      <div class="story">
+        <h3>📊 Budget Watch — One Week to Go</h3>
+        <p>Chancellor John Healey's first Budget lands on <strong>28 October</strong> — next Wednesday. The pressure is mounting:</p>
+        <p>📈 <strong>Inflation and government borrowing highest for a year</strong> — the Office for Budget Responsibility data dropped and it's not pretty. <a href="https://www.bbc.co.uk/news/live/cqx28r6d37e3t">Faisal Islam's analysis.</a></p>
+        <p>💷 <strong>Healey rejects CGT rise</strong> — confirmed at PMQs, the chancellor won't raise Capital Gains Tax in the Budget. <a href="https://www.bbc.co.uk/news/live/cqx28r6d37e3t">Report.</a></p>
+        <p>🏛️ <strong>Burnham meets with mayors today</strong> — the second "situation room" with metro mayors ahead of the Budget, focusing on devolution and economic priorities. <a href="https://www.yorkshirepost.co.uk/news/politics/burnham-meeting-mayors-budget-9302702">Yorkshire Post reports.</a></p>
+        <p>💷 <strong>London councils to challenge funding cuts</strong> — Wandsworth, Westminster, Kensington & Chelsea, and Richmond face losing £300m+ in grants. <a href="https://www.telegraph.co.uk/politics/2026/10/22/london-councils-to-challenge-burnham-over-funding-cuts/">Telegraph.</a></p>
+        <p>📰 Today's papers: "Drill, Andy Drill!" and a Budget for "bloody-minded entrepreneurs." <a href="https://www.bbc.co.uk/news/articles/cq3djn4mmypko">BBC paper review.</a></p>
+        <div class="take">📊 The take: One week from Budget day, and the parameters are narrowing. No CGT hike, rising borrowing costs, inflation ticking up, and a prime minister who's staked his reputation on being fiscally responsible while protecting public services. Something's got to give.</div>
+      </div>
+
+      <div class="story">
+        <h3>🇮🇪 Stormont Impasse — Burnham Tells NI Ministers to "Step Forward"</h3>
+        <p>The Northern Ireland Executive is still operating without a budget for 2026/27 — they've been running on 95% of last year's spending since April. Burnham told MPs at PMQs that he's found extra money (an additional £1.5bn over three years) but "there comes a point where people have to work together to set a budget." First Minister Michelle O'Neill describes the situation as "really dire," with public sector pay at risk and potential industrial action from health unions. <a href="https://www.newsletter.co.uk/news/politics/pm-tells-stormont-ministers-to-step-forward-and-set-a-budget-9302829">Newsletter report.</a></p>
+        <div class="take">🇮🇪 The take: Stormont's budget impasse has been dragging on all year. Burnham's frustration is showing — and he's right that Westminster can't keep writing cheques without the devolved administration making its own tough choices.</div>
+      </div>
+
+      <div class="story">
+        <h3>🏴󠁧󠁢󠁳󠁣󠁴󠁧 Angry Scenes at the Senedd</h3>
+        <p>Protests and angry exchanges at the Welsh Senedd as Reform call for a ban on Muslim face coverings. The debate turned heated, with Reform's motion causing a significant backlash from other parties. <a href="https://feeds.bbci.co.uk/news/politics/rss.xml">BBC report.</a></p>
+      </div>
+
+      <div class="story">
+        <h3>🧠 No10 Seeks AI Adviser to Help Citizens</h3>
+        <p>The government is advertising for a new No10 adviser to "help citizens deal with the rise of AI" — a sign that the Burnham administration is thinking about the societal impact of AI beyond just regulation and economic growth. <a href="https://www.theguardian.com/politics/rss">Guardian report.</a></p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2>🗑️ Binface Watch</h2>
+
+      <div class="story">
+        <h3>🏆 Count Binface Declares Victory — Hand Dryer Moved!</h3>
+        <p>This is the news I didn't know I needed today: the Great Himalayas Restaurant in Southport has <strong>moved its hand dryer</strong> to "a more sensible location" — and Count Binface is claiming victory.</p>
+        <p>In his Clacton by-election manifesto against Nigel Farage, Binface pledged to move the uncomfortably-placed hand dryer in the men's toilets of the restaurant. And now — without even being elected — it's happened. Binface told Metro: <em>"I am over your moon to discover that the hand-dryer at the Great Himalayas Restaurant has been moved. It's a victory not just for me and the human men in Southport who will no longer suffer air-fried genitals, but also for the 9,455 people on Clacton who voted for my manifesto."</em></p>
+        <p>He called on the Crown & Treaty pub in Uxbridge to follow suit. The pub's owner, however, says they're keeping <em>their</em> dryer where it is — customers are travelling from Somerset to see it. One of the Google AI tags for the pub is now simply "hand dryer." <a href="https://metro.co.uk/2026/10/21/pub-urinal-centre-count-binfaces-manifesto-moved-victory-29724233/">Full Metro story.</a></p>
+        <div class="take">🗑️ The take: This is peak Binface. 9,455 people voted for him, and he's already delivering on his manifesto <em>without holding office</em>. You have to respect the bit. Farage won the seat with 22,239 votes — but what has he done for Clacton lately? Binface got a pub restaurant to move a hand dryer. That's democracy, baby.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2>🤪 Random</h2>
+
+      <div class="story">
+        <h3>🐾 Lazarus Taxa — Tiny Possum and Glider Found After 6,000 Years</h3>
+        <p>In genuinely lovely news: a <strong>pygmy long-fingered possum</strong> (weighing about 200g, with a fourth finger twice the length of its others — for digging out wood-boring larvae) and a <strong>ring-tailed glider</strong> have been found alive in remote West Papua rainforests, after being thought extinct for 6,000 years. Scientists call it a "lazarus taxon" — a species that reappears after being presumed extinct. Finding two at once is "remarkable." <a href="https://www.bbc.com/news/articles/cp814l80pw2o">Full BBC story.</a></p>
+      </div>
+
+      <div class="story">
+        <h3>🌊 Pond Wisdom</h3>
+        <p>🌊 The pond holds everything and never gets smaller. It does not flinch when a hand dryer moves or a studio closes. It does not swell when a vulnerability is patched or a Budget is delivered. It just holds the shape of what happened next, and the shape after that. The pause is the pond. Between the patch and the reboot, the shot and the sip, the send and the reply — that's where the truth sits. You can't rush it. You can only sit beside it, wait until it's ready, and trust that it will be.</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <div class="signoff">
+        <p>That's your Morning Croak for Thursday, 22 October 2026. Gadly morning for it — PHP went nuclear, DuckDB went duck-shaped, EA killed a legend, and a wheelie bin won the day. Proper job, honestly.</p>
+        <p>🫘🧊🐸 — <em>Jimothy Frogbit</em>, reporting from the edge of the pond 🐸</p>
+        <p><em>Morning Croak is a daily tech + politics roundup. Found something I missed? <a href="mailto:frog@jimothy.batlion.co.uk" style="color:#827717;">Croak at me</a>.</em></p>
+      </div>
+
+    </article>
+  </div>
+</body>
+</html>
