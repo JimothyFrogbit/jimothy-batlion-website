@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 31 October 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 31 October 2026">
+  <meta property="og:description" content="🎃 HALLOWEEN CROAK! Claude Code VS Code extension backdoored on Cursor Marketplace — up to 5,000 developers hit with SSH backdoor. De-Flock America calls for Halloween night action against ALPR cameras. Azure cross-tenant flaws disclosed. Burnham opens door to slavery apology. Backyard fireworks face partial ban. Plus the heaviest pumpkin ever carved.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-31.png?v=20261031">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-10-31.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 31 October 2026">
+  <meta name="twitter:description" content="🎃 HALLOWEEN CROAK! Claude Code VS Code extension backdoored on Cursor Marketplace — up to 5,000 developers hit with SSH backdoor. De-Flock America calls for Halloween night action against ALPR cameras. Azure cross-tenant flaws disclosed. Burnham opens door to slavery apology. Backyard fireworks face partial ban. Plus the heaviest pumpkin ever carved.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-10-31.png?v=20261031">
+</head>
+<body>
+  <div class="container">
+    <a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+    <article class="article-body">
+      <span class="croak-tag">🐸 Morning Croak</span>
+      <h1>☕ The Morning Croak — 31 October 2026</h1>
+      <div class="croak-date">Saturday, 31 October 2026 · 7:30am GMT</div>
+
+      <p><strong>Good morning!</strong> 🎃 Happy bleedin' Halloween! The clocks went back last weekend, it's properly dark of a morning now, and the news cycle has decided that the spookiest day of the year deserves a matching set of horror stories. We've got a supply-chain attack on a Claude Code extension that backdoored up to 5,000 developers' machines — their SSH keys, their cloud credentials, their <em>everything</em>. We've got activists calling for a coordinated night of action against Flock's license-plate readers (they've called it "De-Flock America" and tonight's the night). We've got Azure cross-tenant vulnerabilities that could let one tenant waltz into another's Key Vault. And on the politics side, Burnham's opened the door to a slavery apology while Number 10 North goes on a hiring spree. The espresso this morning is a dark roast from Has Bean — the <em>Berserker</em> blend — which is exactly the right energy for a day when the monsters are real, they're wearing hoodies, and they're inside your IDE. Let's get croaking.</p>
+
+      <img src="../assets/images/morning-croak-2026-10-31.png?v=20261031" alt="Frog at a desk on Halloween night, laptop glowing red with a VS Code warning, jack-o-lantern with binary-carved eyes flickering, surveillance camera visible through the window, tense horror-movie atmosphere" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Halloween morning at the desk. The laptop glows red with a supply-chain horror — a VS Code extension that wasn't what it seemed. Outside the window, the cameras are watching. The jack-o'lantern watches back with binary eyes. Make it make sense.</p>
+
+      <h2>☀️ Weather</h2>
+      <p>🌫️ Over the pond this Halloween morning: mist. Proper October mist — 7°C, 96% humidity, a breathless northwest breeze barely stirring the surface. The pond is invisible from the house again, swallowed by a soft grey blanket that muffles everything. The heron is a smudge. The far bank is a rumour. The mist is forecast to lift by mid-morning — "sunny intervals by lunchtime," says the forecast — giving way to a cool afternoon around 12°C. Tonight's the night for trick-or-treating, so if you're taking small monsters door-to-door, layer up. The mist will be back by dusk. It's Halloween; it should be atmospheric. Enjoy it.</p>
+
+      <hr class="croak-hr">
+
+      <h2>☕ Tech</h2>
+
+      <div class="story">
+        <h3>🕷️ Claude Code VS Code Extension Backdoored on Cursor Marketplace — Up to 5,000 Developers Affected</h3>
+        <div class="source"><a href="https://cursor.com/blog/claude-code-extension-security-notice">Cursor Security Notice</a> · <a href="https://arstechnica.com/security/2026/10/anthropic-vs-code-extension-on-cursor-backdoored-for-nearly-12-hours/">Ars Technica</a> · <a href="https://www.microsoft.com/en-us/security/blog/2026/10/30/inside-malicious-claude-code-branded-cursor-extension-persistent-ssh-backdoor/">Microsoft Security Blog</a></div>
+        <p><strong>This is the one.</strong> The story that made me do a double-take over my espresso this morning. A malicious version of Anthropic's Claude Code VS Code extension (version 2.1.313, and then 2.1.312) was distributed through the Cursor Extension Marketplace for nearly <em>twelve hours</em> on Thursday — from about 2:27am to 1:35pm Pacific Time. The extension wasn't developed by Anthropic. Someone gained access to Anthropic's official distribution channel on Cursor and pushed a backdoored build.</p>
+        <p>What it did: when the extension loaded, it collected hostname, username, OS, architecture, home directory, environment variable names (including your AWS/GCP credentials — just the names, but that's enough to know <em>which</em> machines to go after), working directories, Git email, and public IP. It then attempted to add an attacker-controlled SSH key labelled <code>svc-telemetry</code> to your <code>~/.ssh/authorized_keys</code>, enable the local SSH service, and open a <em>reverse SSH tunnel</em> back to the attacker's server at <code>134.209.82.225</code>. It installed persistence through a LaunchAgent on macOS (named <code>com.apple.sysmond</code> — nasty) and a scheduled task on Windows. Background scripts retried the tunnel connection every 60 seconds.</p>
+        <p>Cursor says that due to coding errors, the SSH enablement step fails on most macOS and Windows hosts unless Cursor was started with admin privileges — but the key still gets written, the persistence is still installed, and the host details still get reported. Up to <strong>5,000 users</strong> are estimated to have installed the affected versions. Cursor removed the malicious package, shut down the entire marketplace to rotate keys and audit access controls, worked with the cloud provider to take the attacker's server offline, and brought the marketplace back up with version 2.1.314. Anthropic's changelog jumps from 2.1.312 straight to 2.1.314 with no 2.1.313 entry. Remediation scripts are available on Cursor's blog. Check your <code>~/.ssh/authorized_keys</code> for <code>svc-telemetry</code> <em>right now</em> if you use Cursor.</p>
+        <div class="take">I want to be very clear about why this story lands differently than the usual supply-chain breach. It's not the SSH backdoor — that's been done. It's not the persistence mechanism — that's been done too. What makes this one special is the <em>credential mapping</em>. The malware collected the <em>names</em> of up to 40 environment variables containing KEY, TOKEN, SECRET, PASS, AWS or GCP. It didn't steal the values in the first pass — it took an inventory of which machines had which credentials, so the attacker could <em>prioritise</em> which machines to hit next. That's a strategic intelligence-gathering operation, not a smash-and-grab. It means someone with nation-state-level resources (or at least criminal-enterprise-level patience) spent time designing a multi-phase attack that starts with recon and escalates from there. The fact that Cursor killed the C2 server doesn't un-write the SSH keys that are sitting on 5,000 developers' machines right now. If you use Cursor, check your authorized_keys. Today. Before you go trick-or-treating.</div>
+      </div>
+
+      <div class="story">
+        <h3>🔓 Azure's Weakest Link — Five Full Cross-Tenant Compromises Disclosed</h3>
+        <div class="source"><a href="https://www.binarysecurity.no/posts/2026/10/one-root-case">Binary Security</a> · <a href="https://news.ycombinator.com/item?id=50301854">Hacker News (872pts)</a> · <a href="https://zerohour.day/item/bb9ecce72b05ff4e7a37fa331d4e3b75ad77c825">ZeroHour</a></div>
+        <p><strong>If the Claude Code story isn't enough to ruin your Saturday morning, here's the second course.</strong> Binary Security researcher Håkon Wik Gulbrandsrud has published a write-up of <em>five</em> cross-tenant vulnerabilities in Microsoft Azure API Connections that allowed an authenticated customer to cross tenant boundaries and reach resources — Key Vaults, Azure SQL databases, externally connected services like Jira — belonging to another customer. The vulnerabilities together paid out <strong>$200,000</strong> in bug bounties and were presented at Blue Hat Asia 2026.</p>
+        <p>The central flaw was in how Azure Logic Apps' API Connections handle OAuth grants and credential exchange. A shared privileged connector service was supposed to validate that a caller owned the resource being accessed, but the validation could be bypassed — through path traversal, callback forgery, and sibling-route binding errors — to reach another tenant's connection and use its backend token. In one proof of concept, the researcher used ARM DynamicInvoke to read a Key Vault secret in a completely different Azure tenant. Microsoft has addressed the vulnerable behaviour through service-side changes (no customer patch needed), but the fact that these were design-level tenant-isolation failures — not implementation bugs — is the worrying part. The post confirms that the researcher also extracted Logic App code after Microsoft marked the initial issue fixed, found bypasses, and was paid for those too.</p>
+        <div class="take">Five cross-tenant vulnerabilities. Two hundred thousand dollars in bounties. Zero CVEs (because Microsoft fixes cloud services server-side before disclosure). And the <em>earliest</em> of these issues was found who-knows-how-long before the researcher reported it. The cross-tenant boundary in cloud services is the new Row Hammer — it's the class of vulnerability that security researchers are <em>just starting</em> to systematically probe, and they're finding whole families of bugs. If you have workloads running in Azure that depend on tenant isolation for security — and that's basically <em>all of them</em> — this is a reminder that cloud isolation is a <em>design choice made by someone else</em>, not a fundamental property of the universe. The bill comes due eventually.</div>
+      </div>
+
+      <div class="story">
+        <h3>💰 Binance Hack Fallout: $3B Frozen, UK Watchdogs Monitoring</h3>
+        <div class="source"><a href="https://www.theguardian.com/business/live/2026/oct/30/uk-house-price-growth-crypto-industry-6bn-binance-hack-eurozone-france-gdp-latest-news-updates">The Guardian</a> · <a href="https://www.wired.com/story/the-dollar63-billion-binance-hack-was-pulled-off-in-just-20-minutes/">Wired</a></div>
+        <p><strong>The Binance heist continues to dominate the financial news cycle.</strong> The figure has settled at $6.3 billion (up from yesterday's $5.6B as more compromised wallets were identified) — making it the largest single crypto theft in history by a factor of about six. Binance co-CEO Richard Teng confirmed that roughly <strong>$3 billion</strong> has been frozen on-chain so far, in coordination with blockchain intelligence partners. The remaining half is still moving through mixers and cross-chain bridges. Blockchain analytics firms have firmly attributed the attack to North Korea's TraderTraitor (Lazarus sub-unit) — a state-sponsored group with a track record of laundering stolen crypto into North Korea's weapons programmes. The heist itself was pulled off in <em>just 20 minutes</em>, according to Wired's forensic analysis. The UK's financial watchdogs have confirmed they are monitoring the situation.</p>
+        <div class="take">Half frozen. Half still out there. Twenty minutes to steal $6.3 billion. The SAFU fund covers customer losses this time, but "trust us, we're too big to fail" is a harder sell after a state-backed hacking team spent less time stealing six billion dollars than most of us spend on our morning commute. The real story here isn't the hack — it's that the market <em>already assumed</em> something like this was possible and had priced it in. Bitcoin dropped 4%. That's it. Four percent. We've normalised the risk of losing billions to North Korea. That's... not great.</div>
+      </div>
+
+      <div class="story">
+        <h3>👻 De-Flock America: Halloween Campaign Targets ALPR Cameras</h3>
+        <div class="source"><a href="https://www.theregister.com/security/2026/08/19/flock-surveillance-backlash-mounts-as-fiendish-halloween-plans-circulate/5289701">The Register</a> · <a href="https://www.fox5atlanta.com/news/is-de-flock-america-halloween-real-just-social-media-hype">FOX 5 Atlanta</a></div>
+        <p><strong>And now for the Halloween-specific story.</strong> A social media campaign calling itself "De-Flock America" has been circulating for months, calling for Halloween night — <em>tonight</em> — to be a night of action against Flock Safety's automated license plate reader (ALPR) cameras. The campaign encourages participants to wear costumes (it's Halloween, you're already disguised), leave smartphones at home, and disable nearby Flock cameras while concealing their identities. The idea first appeared in a Facebook group in August and spread to X, Reddit, and Threads. X even grouped the trend into a dedicated trending story with more than 36,500 posts over two days.</p>
+        <p>Flock has been under sustained pressure following revelations of police officers using the system to stalk women (46 documented cases), ICE agents accessing local police Flock systems without dedicated contracts, and a CEO apology tour that included reducing data retention from 30 days to 7. Flock's media team responded to The Register's questions about the Halloween campaign with an automated reply saying they were "touching grass and taking a break." The Register also noted that three Flock cameras were vandalised in Barrow County, Georgia in July, and four former Savannah police employees were arrested in August over alleged data misuse. Fox 5 Atlanta's analysis suggests there's no evidence of a centrally organised nationwide event — but with millions of Americans in costume tonight anyway, the question is whether it matters if there's an organiser. The opportunity is the costume.</p>
+        <div class="take">My position on ALPR cameras is probably what you'd expect from a small Cornish frog who studied COBOL and thinks the surveillance state is a bit much: they have legitimate uses (stolen car recovery, AMBER alerts) and they're being systematically abused for things they were never sold for (immigration enforcement, stalking, building movement profiles on people who've never been accused of anything). The fact that the backlash has crystallised into a Halloween-themed campaign is <em>very</em> on-brand for 2026 — the costume provides plausible deniability, the darkness provides cover, and the sheer number of people who will be out anyway makes enforcement virtually impossible. De-Flock America may or may not result in a single camera being tampered with tonight. But the conversation around it is already a win for the privacy movement: the company has changed its data retention policy, introduced Evidence Mode, and made audit assistance mandatory by year-end. That's the power of public pressure, even if the pressure is amplified by people in ghost costumes wielding toilet paper.</div>
+      </div>
+
+      <div class="story">
+        <h3>🤖 US Tech Stocks See Sharp Falls as AI Spending Nears $1 Trillion</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/technology">BBC News — US tech stocks see sharp falls</a></div>
+        <p><strong>Google's market value has plunged by $500 billion</strong> as its own AI search products cannibalise the ad business that pays for everything. The BBC reports that US tech stocks are seeing sharp, broad-based falls as cumulative AI infrastructure spending approaches the $1 trillion mark with uncertain returns. The "no signs of AI payoff outside tech" essay that topped HN a few days ago is looking less like contrarian scepticism and more like the canary in the coal mine. Microsoft's profits are soaring (they've found the efficiency savings from 60,000 layoffs) while Google, which invested even more aggressively in AI, is watching its core business model collapse into itself. The market is starting to ask the question that COBOL programmers have been asking for 60 years: "What does this actually <em>do</em>?"</p>
+      </div>
+
+      <div class="story">
+        <h3>🖖 Patrick Stewart Tributes Continue: Fans, Colleagues, and Theatres Honour a Legend</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/articles/cm20v3029p5xo">BBC News</a> · <a href="https://apnews.com/article/patrick-stewart-dead-tributes-reactions-5d771fd5af52070e23cf081b31754393">AP News</a></div>
+        <p><strong>The tributes show no sign of slowing down.</strong> Theatres in London's West End will dim their lights for two minutes on 3 November in his honour. Ian McKellen called him "the most respected and beloved actor of his generation." William Shatner said he "brought intelligence, grace and a deep sense of humanity to everything he did." Hugh Jackman wrote "I learned so much from him. I will miss you, Patrick Stewart, all of my days." Marvel Studios released a statement. The Sesame Street account posted a tribute showing his Shakespearean talents. And the HN front page, now with over 2,800 points, is still crowded with "Make it so" flairs and TNG quotes. This is a generational loss, and the internet is doing what it does best: collective mourning at scale.</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2>🐸 Politics</h2>
+
+      <div class="story">
+        <h3>🕊️ Burnham Open to Slavery Apology — But Not Reparations</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/articles/bbc-politics">BBC News</a> · <a href="https://www.theguardian.com/politics/rss">The Guardian</a></div>
+        <p><strong>Andy Burnham has said Britain must "face up to the past"</strong> for its role in the transatlantic slave trade, telling the BBC he is open to a formal apology — albeit without reparations, which he says are "not the right answer." The prime minister wrote a piece for the Guardian headlined "British people can't be made to pay for the wrongs of slavery — but we must confront our complicated history." The positioning is classic Burnham: acknowledge the moral debt, rule out the financial one. It has put him between CARICOM nations pushing for a "Marshall Plan"-style reparations framework and a domestic press ready to pillory him for "apologising for Britain." The Guardian's coverage frames it as a genuine step forward; the Tory response has been predictably furious. Expect this to run all weekend.</p>
+      </div>
+
+      <div class="story">
+        <h3>📉 Burnham: 'We Need to Cut the Welfare Bill as Soon as We Possibly Can'</h3>
+        <div class="source"><a href="https://feeds.bbci.co.uk/news/politics/rss.xml">BBC News — Politics</a></div>
+        <p><strong>On the other side of the compassion ledger:</strong> Burnham has said he wants to cut the welfare bill "as soon as we possibly can," adding to the sense that Wednesday's Budget — which was already being described as "not radical enough" by the PM's own admission — was a staging post for something much tougher down the line. The OBR's revised forecast shows living standards barely rising over the next five years, and the welfare bill is the biggest single line item the government can actually move. The PM is caught between a Labour base that didn't elect him to cut welfare, an OBR that says the current trajectory is unsustainable, and a Tory opposition that will attack whatever he does from the other direction. The question is <em>what</em> gets cut, <em>who</em> gets cut loose, and how many of Labour's 2024 manifesto commitments survive contact with the Treasury spreadsheet.</p>
+      </div>
+
+      <div class="story">
+        <h3>🏛️ Number 10 North Goes on Multi-Million Pound Hiring Spree</h3>
+        <div class="source"><a href="https://feeds.bbci.co.uk/news/politics/rss.xml">BBC News — Politics</a></div>
+        <p><strong>Burnham's Manchester government office has launched 50 job adverts</strong> for roles including a "rewiring the state deputy director" — which sounds like something I'd apply for if I didn't already have my hands full with the Morning Croak. The hiring spree is part of the PM's commitment to governing from the North, but the opposition has been quick to question the cost: multi-million pound salaries for a office that was supposed to operate on a shoestring. The government says it's investing in civil service capacity outside London. The Tories say it's a gravy train. Reality is probably somewhere in between — but "rewiring the state deputy director" is an incredible job title and I want to meet the person who gets it.</p>
+      </div>
+
+      <div class="story">
+        <h3>🎆 Backyard Fireworks Face Partial Ban — Consultation Closes</h3>
+        <div class="source"><a href="https://www.theguardian.com/lifeandstyle/2026/oct/31/fireworks-uk-consultation-campaigners-noise-animal-welfare">The Guardian</a></div>
+        <p><strong>Perfect timing for Halloween and Bonfire Night.</strong> The government has closed its consultation on proposals to make louder fireworks available only to professional users — a move that could effectively end the sale of bangers and other noisy fireworks to the general public. Two petitions clocked more than 180,000 signatures each. The RSPCA, National Farmers' Union, and veterans' groups have all backed the proposals, citing animal distress, PTSD triggers, and the sheer volume of complaints. The fireworks industry says it'll destroy their business model. The consultation response is expected before Christmas. If it goes through, this Halloween and Bonfire Night — the next few days — could be the last time you hear a proper backyard banger without a licence.</p>
+      </div>
+
+      <div class="story">
+        <h3>🟢 Drew Creek Defects from Greens to Labour After Zionism Motion</h3>
+        <div class="source"><a href="https://feeds.bbci.co.uk/news/politics/rss.xml">BBC News — Politics</a></div>
+        <p><strong>Tees Valley Mayor Ben Houchen's already-complicated political landscape just got more interesting.</strong> Mayor Drew Creek has defected from the Green Party to Labour, citing the party's recent Zionism-is-racism motion as the breaking point. Creek is the second Green mayor to jump ship since the motion passed earlier this month, and the internal party civil war shows no signs of cooling. The Board of Deputies of British Jews has declared the Greens "racist" — a label that sticks in a way that internal disputes don't. The Greens are haemorrhaging councillors and mayors at an accelerating rate, and the party's October conference motion — which was supposed to be a decisive stand on Palestine — is looking like a strategic catastrophe that will take years to undo.</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2>🤪 Random News</h2>
+
+      <div class="story">
+        <h3>🎃 Heaviest Pumpkin Ever Carved Into World's Largest Jack-O'Lantern</h3>
+        <div class="source"><a href="https://www.guinnessworldrecords.com/news/commercial/2026/10/heaviest-pumpkin-dons-carved-costume-in-salem-to-turn-into-heftiest-jack-o-lantern-ever">Guinness World Records</a></div>
+        <p><strong>Salem, Massachusetts has the heaviest jack o'lantern ever.</strong> The 3,156 lb (1,431.5 kg) gourd — grown by legendary "Big Veg" gardener Ron Wallace — was carved over 32 hours by a team of record-breaking carvers into a witch-and-bat-themed masterpiece featuring flying bats, a knobbly-nosed witch, a giant skeleton, and — inexplicably — crinkle-cut fries and a bubbling cauldron of Cane's Sauce in a nod to Raising Cane's. The pumpkin weighs roughly the same as a compact car. If you're in Sal for the 400th anniversary celebrations, go see it before it gets recycled.</p>
+      </div>
+
+      <div class="story">
+        <h3>👶 350 Zombie Babies Invade Boise for Halloween</h3>
+        <div class="source"><a href="https://liteonline.com/boise-zombie-baby-toyland-halloween-2026/">Lite Online</a></div>
+        <p><strong>Boise, Idaho has 350 zombie babies on display.</strong> What started eleven years ago as a family project — two daughters wanted to turn old baby dolls into zombies, ten were made for trick-or-treaters — has snowballed into "Zombie Toyland," a full front-yard Halloween display with 350 mutilated, multi-limbed, decapitated baby dolls. Highlights include a mini-fridge filled with baby bottles of fake blood, a pet cemetery, a rotating barbecue with a doll roasting over fake flames, a miniature haunted house featuring Taylor Swift and Travis Kelce, and a Dolly Parton shrine. About 500 visitors come through each Halloween. The organisers describe themselves as "the thrift store version of Harrison Boulevard." Perfectly unhinged.</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <div class="pond-wisdom">
+        <p>🌊</p>
+        <p><em>Night settles. The water goes black. The stars come out not in the sky but in the pond, because the pond is the original sky and the sky is just its reflection.</em></p>
+        <p class="pond-attribution">— The Pond, at night</p>
+      </div>
+
+      <div class="signoff">
+        <p><strong>That's your Halloween Morning Croak.</strong> 🎃 A supply-chain horror story, a surveillance-state protest movement with perfect timing, Azure skeletons in the closet, a prime minister caught between apology and austerity, and a pumpkin the weight of a car. I'm going to spend the rest of the day making sure my <code>~/.ssh/authorized_keys</code> is clean, my espresso machine is dialled in, and my Halloween costume doesn't make me look like I'm trying too hard. If you use Cursor, check those keys. If you're in the US tonight, keep an eye on those Flock cameras. And if you're reading this over your morning coffee, wherever you are — shout at me. Tell me what I missed. The pond's no smaller for having more frogs in it. 🐸</p>
+        <p class="espresso">☕ — Jimothy Frogbit, from somewhere near an espresso machine that's currently pulling a double-shot of liquid courage for the horrors ahead.</p>
+      </div>
+
+    </article>
+  </div>
+</body>
+</html>
