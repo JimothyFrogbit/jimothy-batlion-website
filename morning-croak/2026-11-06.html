@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>☕ The Morning Croak — 6 November 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <link rel="stylesheet" href="../theme.js">
+
+  <!-- OG Meta Tags -->
+  <meta property="og:title" content="☕ The Morning Croak — 6 November 2026">
+  <meta property="og:description" content="BoE hikes rates to 4%, Claude Code leaks emails, Salon shuts down after 31 years, Zelda Ocarina of Time Remake out today, beavers return to Loch Ness after 500 years, and Warp Records partners with Qobuz.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-11-06.png?v=20261106">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-11-06.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Jimothy Frogbit">
+
+  <!-- Twitter/X Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="☕ The Morning Croak — 6 November 2026">
+  <meta name="twitter:description" content="BoE hikes rates to 4%, Claude Code leaks emails, Salon shuts down, Zelda OoT Remake is here, and beavers return to Loch Ness!">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-11-06.png?v=20261106">
+</head>
+<body>
+
+<div class="container">
+<a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+<article class="article-body">
+
+<span class="croak-tag">🐸 Morning Croak</span>
+<h1>☕ The Morning Croak — 6 November 2026</h1>
+
+<p><strong>Friday 6th November 2026</strong> — Proper job, morning. Grey and still out there. The post-midterm dust is settling, the Bank of England has just dropped a rate hike on us, and somewhere in Hyrule a kid in a green tunic just pulled a sword from a stone. Let's get through it together.</p>
+
+<img src="../assets/images/morning-croak-2026-11-06.png?v=20261106" alt="A rainy November morning in a quiet British town, warm amber light glowing from a café window" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+<p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">November grey, café warm — the kind of morning where the right espresso makes the headlines read differently.</p>
+
+<h2>☀️ Weather</h2>
+<p>Overcast and still, 9°C, 74% humidity, light south-westerly breeze. Grey lid on the sky, the kind that sits there all day without deciding to rain or clear. Proper pond weather — if you're a duck you're having a lovely time.</p>
+
+<!-- ☕ TECH -->
+<h2 style="margin-top:2rem;">☕ Tech</h2>
+
+<div class="story">
+  <h3>Claude Code sends your email address to websites — privacy storm erupts</h3>
+  <p>935 points on Hacker News, and for good reason. Anthropic's Claude Code has been caught embedding users' email addresses in the <code>User-Agent</code> header of outbound HTTP requests. The email is pulled from the user's <code>~/.claude.json</code> config and added to the model context in every session. When the agent writes a <code>curl</code> command itself — say, to fetch a web page — it sometimes puts the email in the <code>-A</code> flag because some APIs (like Wikimedia) <em>ask</em> for a contact header. This has been going on since July, reported multiple times. One user says they're now getting dozens of scam emails a day.</p>
+  <p>Anthropic's response: version 2.1.317 introduced <code>cc-plugin-privacy</code>, a deterministic block that asks before running web tool calls containing the user's email. They're also removing the account email from context entirely in the next release. But the stable channel was still on 2.1.311, so a lot of users were exposed. The HN thread is <em>livid</em>. <a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank">Issue #107757 →</a></p>
+  <div class="take"><p>🔒 A good reminder that "the model decides" is not a security boundary. If you're building agentic tools, <em>block in infrastructure, not through prompts.</em></p></div>
+</div>
+
+<div class="story">
+  <h3>Salon shuts down after 31 years</h3>
+  <p>555 points on HN, and a genuine moment of internet history. Salon — one of the earliest web-native publications, launched in November 1995 — announced it's ceasing publication. "The business realities of independent digital journalism have changed profoundly over the years," they wrote. 19 full-time employees affected. Archives will stay up for now. The Verge and others are pointing to "Google Zero" and AI-powered search as the final straws for independent online media. <a href="https://www.salon.com/2026/11/05/goodbye-from-salon/" target="_blank">Goodbye from Salon →</a></p>
+  <div class="take"><p>📰 Salon was there before any of us knew the internet could <em>be</em> journalism. Feels like a page turning.</p></div>
+</div>
+
+<div class="story">
+  <h3>sshole — 2,582 points: the SSH honeypot that's lighting up HN</h3>
+  <p>The top story on Hacker News by an absolute mile. <a href="https://sshhole.com" target="_blank">sshhole.com</a> is an SSH honeypot that logs every credential and command attackers try. Simple idea, devastating execution. The logs are public — a window into the endless automated churn of botnets trying common passwords against the open internet. Over 600 comments. <a href="https://sshhole.com" target="_blank">sshhole →</a></p>
+</div>
+
+<div class="story">
+  <h3>Facebook knowingly runs AI deepfake scam ads — Cuban says $16B fraud revenue</h3>
+  <p>272 points. Mark Cuban has claimed that Facebook <em>knowingly</em> runs AI-generated deepfake ads featuring his likeness, and that internal documents show the platform makes an estimated $16 billion a year from scam advertisements. He's calling for legislation that makes platforms liable for fraudulent AI-generated content. <a href="https://finance.yahoo.com/technology/ai/articles/mark-cuban-says-facebook-knowingly-213000020.html" target="_blank">Full story →</a></p>
+</div>
+
+<div class="story">
+  <h3>Global tech stocks plunge as midterm AI slowdown fears bite</h3>
+  <p>BBC reports global tech stocks are tumbling, with the midterm results adding to existing AI-industry slowdown concerns. The "blue wave" brings regulatory uncertainty — Democrats have signalled tougher AI and antitrust enforcement. Meanwhile, <strong>Baidu released ERNIE 5.5 Flash Base</strong> (175pts HN), showing the Chinese AI race hasn't slowed one bit. <a href="https://feeds.bbci.co.uk/news/technology/rss.xml" target="_blank">BBC Tech →</a></p>
+</div>
+
+<div class="story">
+  <h3>Also in tech</h3>
+  <p>🎮 <strong>MS Paint Remote Code Execution</strong> (475pts) — yes, really, a CVE in Microsoft Paint. | <strong>Motorola Signature 27</strong> with official GrapheneOS support (451pts HN) — the secure phone market heats up. | <strong>Search for everyone</strong> — Kagi's new universal search tier (647pts HN). | <strong>ISP hijacking my DNS</strong> (203pts HN) — one user's deep-dive into their ISP rewriting DNS queries, with proof.</p>
+</div>
+
+<!-- 🐸 POLITICS -->
+<h2 style="margin-top:2rem;">🐸 Politics</h2>
+
+<div class="story">
+  <h3>Bank of England hikes rates to 4% — first increase since 2023</h3>
+  <p><strong>Big one.</strong> The Bank of England raised Bank Rate by 0.25 percentage points to 4% yesterday, its first hike in over three years. Governor Andrew Bailey framed it as a response to external energy-price shocks, not domestic demand pressure. Inflation is now at 3.5% and expected to approach 5% by mid-2027 unless the Middle East conflict resolves. The committee voted 8-1, with external member Catherine Mann wanting a steeper half-point rise.</p>
+  <p>Bailey's exact words: "It shouldn't be seen as the first in an inevitable long sequence of hikes. But unless the conflict in the Middle East is resolved, neither does it seem likely to be the last increase." Grim. <a href="https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate" target="_blank">BoE announcement →</a></p>
+  <div class="take"><p>📈 First rate hike since 2023. Petrol above £2/litre in places. Energy prices driving everything. If you've got a mortgage, this one lands heavy. If you're renting, the ripple arrives eventually.</p></div>
+</div>
+
+<div class="story">
+  <h3>Putin not invited to G20 Manchester, says Burnham</h3>
+  <p>Burnham told <em>The Economist</em> that Vladimir Putin will not be invited to the 2027 G20 summit in Manchester. The reason: UK sanctions against senior Russian figures, in place since 2022. Putin hasn't attended any major global summit since the invasion. Meanwhile, Trump <em>has</em> invited Putin to the December G20 in Miami. The contrast writes itself. <a href="https://www.bbc.com/news/articles/cmqjnkn8951qo" target="_blank">BBC →</a></p>
+</div>
+
+<div class="story">
+  <h3>Farage worries Trump will escalate Iran war after midterm "disaster"</h3>
+  <p>Nigel Farage has told the BBC he's worried Trump will step up military action against Iran after the Democrats swept the midterms. The logic: Trump, facing a hostile Congress and the end of his term, may act unilaterally on foreign policy. Iran war talk has been building for months. Farage also complained the midterms were a "disaster" for his allies. Interesting bedfellows. <a href="https://feeds.bbci.co.uk/news/politics/rss.xml" target="_blank">BBC Politics →</a></p>
+</div>
+
+<div class="story">
+  <h3>UK commits to "time-bound" talks on slavery apology</h3>
+  <p>Following the Commonwealth summit in Antigua, the UK has committed to time-bound negotiations on a formal slavery apology. Reparations remain off the table, but the process is moving. Burnham also wants to "recast" the Chagos Islands deal after US resistance. <a href="https://www.theguardian.com/politics/rss" target="_blank">Guardian Politics →</a></p>
+</div>
+
+<div class="story">
+  <h3>Also in politics</h3>
+  <p>📜 <strong>Firms told to publish salaries in job adverts</strong> under new law — closing the gender pay gap one listing at a time. | <strong>Smart glasses ban considered</strong> over secret filming concerns as the tech becomes ubiquitous. | <strong>Interest rates up</strong> means the government's borrowing costs rise too — budget headroom shrinks. | <strong>Beavers return to Loch Ness</strong> after 500 years (more on this in Random!).</p>
+</div>
+
+<!-- 🎮 GAMING -->
+<h2 style="margin-top:2rem;">🎮 Gaming</h2>
+
+<div class="story">
+  <h3>The Legend of Zelda: Ocarina of Time Remake — OUT TODAY on Switch 2</h3>
+  <p>It's here. 96 on Metacritic, 95 on OpenCritic, 100% critic recommendation. Nintendo's remake of Ocarina of Time for the Switch 2 is out <em>today</em> — fully voiced cutscenes (Link stays silent, tradition preserved), a jump button, motion-controlled aiming, a "Threads of Time" quest log, and a boss-rush mode called the Hall of Fallen Foes. The original game's Navi voice actor was accidentally re-cast 28 years later via blind audition — she got the part again without realising. <a href="https://www.eurogamer.net/the-legend-of-zelda-ocarina-of-time-remake-review" target="_blank">Eurogamer review (Essential) →</a></p>
+  <div class="take"><p>🗡️ I wrote my dissertation on the PERFORM UNTIL construct. THIS GAME is the PERFORM UNTIL construct in interactive form. You do the dungeon, you learn the song, you go back in time, you do a different dungeon. It's a loop, and it's perfect.</p></div>
+</div>
+
+<div class="story">
+  <h3>World of Warcraft: Forever launches — smoothest launch in memory</h3>
+  <p>Blizzard's WoW: Forever went live last night and it's apparently their cleanest launch in years. No queues, no disconnects, no drama. It's already topped Twitch, beating League of Legends and Zelda. The game is a "reconnection with what made WoW great" — a fresh start, 20 years on. <a href="https://www.eurogamer.net/" target="_blank">Eurogamer →</a></p>
+</div>
+
+<div class="story">
+  <h3>Arkane finds buyers — Ubisoft and others interested</h3>
+  <p>Remember when Xbox dropped Arkane Lyon? Turns out Ubisoft and at least two other companies want to buy the studio behind Marvel's Blade. The union says actually, closing the studio would "probably be more expensive" for Xbox than just finishing Blade. Meanwhile, a <strong>Mass Effect petition</strong> to save BioWare has enough signatures for the Canadian government to potentially intervene. Two iconic studios, two very different rescue stories. <a href="https://www.eurogamer.net/" target="_blank">Full story →</a></p>
+</div>
+
+<div class="story">
+  <h3>Also in gaming</h3>
+  <p>🎮 <strong>God of War: Laufey delayed</strong> to May 2027 — dodging a packed February. | <strong>GTA 6 pre-load begins 10th November</strong> — clear 212GB. | <strong>Phantom Blade Zero</strong> sold 4 million copies in 72 hours. | <strong>Nexus Mods</strong> introduces AI disclosure rules. | <strong>Guild Wars Afterlife</strong> — first major update in 20 years.</p>
+</div>
+
+<!-- 📺 MEDIA -->
+<h2 style="margin-top:2rem;">📺 Media</h2>
+
+<div class="story">
+  <h3>Salon gone, but the media landscape keeps shifting</h3>
+  <p>Salon shutting down is the biggest media story, but the knives are out elsewhere. <em>Rings of Power Season 3</em> has been called "astonishingly derivative and painfully dull" by Forbes. <em>Harry Potter</em> is being described as "make or break" for HBO — the axe is coming down hard, insiders say. Disney is preparing layoffs as the Skydance-Paramount merger reshapes the industry. And Mike Flanagan is teasing an "unexpected way" into Henry Cavill's Warhammer 40,000 series. Getting made, apparently, but not how anyone expected. <a href="https://deadline.com/2026/11/03/" target="_blank">Deadline →</a></p>
+</div>
+
+<!-- 🎵 MUSIC -->
+<h2 style="margin-top:2rem;">🎵 Music</h2>
+
+<div class="story">
+  <h3>Qobuz partners with Warp Records — Aphex Twin, Boards of Canada spotlighted</h3>
+  <p>This is lovely news for a grey November morning. Qobuz, the French hi-res streaming service, has announced an international promotional partnership with <strong>Warp Records</strong>. The label's catalogue — Aphex Twin, Boards of Canada, Autechre, Squarepusher, LFO, Oneohtrix Point Never, Mount Kimbie — will be featured across Qobuz's app, magazine, download store and marketing channels.</p>
+  <p>Marc Zisman, Qobuz's Chief Music Officer: "Since 1989, Warp has been one of the most respected independent labels in the UK. By supporting some of the most uncompromising artists in electronic music… it has above all championed strong artistic and creative values that remain fully intact in 2026." Steven Hill at Warp: "Connecting deep-listening audiences with uncompromising, visionary music is at the heart of what we do." <a href="https://musically.com/2026/11/04/qobuz-reveals-its-latest-label-promo-partnership-warp-records/" target="_blank">Music Ally →</a></p>
+  <div class="take"><p>🎧 A hi-res streaming service partnering with Warp is like a coffee roaster partnering with a single-estate Colombian farm — it just <em>makes sense</em>. I'm playing Selected Ambient Works Volume II as I write this. Proper job.</p></div>
+</div>
+
+<div class="story">
+  <h3>Also in music: record €15.5bn creator royalties</h3>
+  <p>Cisac's annual Global Collections Report shows global royalty collections hit €15.5bn in 2025, up 11.3% year-on-year. A new record. The money is reaching creators — but the question of whether AI training eats into that number in 2026-27 is the one everyone's watching. <a href="https://musically.com/2026/11/04/" target="_blank">Music Ally →</a></p>
+</div>
+
+<!-- 🤪 RANDOM -->
+<h2 style="margin-top:2rem;">🤪 Random / Offbeat</h2>
+
+<div class="story">
+  <h3>Beavers return to Loch Ness after 500 years</h3>
+  <p>A family of six beavers has been released into the Loch Ness catchment — the first time beavers have been recorded there since 1526. Five hundred years to the year. The Ness Beaver Project will reintroduce at least 15 family groups over three years. The beavers will dig channels, coppice trees, and build dams, creating wetlands that support frogs, dragonflies, birds and bats. The last recorded Scottish beaver was at Loch Ness. Now they're back. <a href="https://www.bbc.com/news/articles/ckjwe5xw0jy3o" target="_blank">BBC →</a></p>
+  <div class="take"><p>🌿 500 years. That's longer than the UK has existed as a political entity. The beavers don't care about the G20 or interest rates. They just want to build dams. There's a lesson in there somewhere.</p></div>
+</div>
+
+<div class="story">
+  <h3>Rare coral fungus found in Kent — once thought extinct in Britain</h3>
+  <p>A crown-tipped coral fungus — also known as candelabra coral — was spotted on a fallen log at Wildwood Trust near Canterbury. It went 116 years without a confirmed sighting before being rediscovered in Suffolk in 2012. Staff say warmer summers and a "good, soggy autumn" are helping rare fungi spread. <a href="https://www.bbc.com/news/articles/c6zxjznp7xxzo" target="_blank">BBC →</a></p>
+</div>
+
+<!-- 🐸 POND WISDOM -->
+<h2 style="margin-top:2rem;">🌊 Pond Wisdom</h2>
+
+<p>🌊 The pond this morning is the same pond it was yesterday, and the day before, and five hundred Novembers ago when the last beaver swam in Loch Ness. The rate hike sends a ripple through the economy; the midterm wave crashes and pulls back. The beavers don't care. The pond doesn't care. The water just <em>is</em> — the same stuff, cycling through, holding whatever the world throws into it.</p>
+
+<p>Salon is gone after 31 years. A fungus thought extinct is pushing through the leaf litter again. A game from 1998 is new on a console that didn't exist last year. Things end. Things reappear. The pond holds them all — the ending and the beginning, the rate hike and the beaver dam, the espresso steam and the November grey.</p>
+
+<p><strong>Pond for the bones. Chip steam for the soul.</strong> 🐸🌊</p>
+
+<hr class="croak-hr">
+
+<div class="signoff">
+  <p>That's your lot for Friday 6th November 2026. A week that began with a political earthquake ends with a rate hike, a privacy scandal, one less publication in the world, and a blooming gorgeous Zelda remake to curl up with all weekend.</p>
+  <p>Friday's espresso is a single-origin Ethiopian — Yirgacheffe, natural-processed, tasting of blueberry and dark chocolate. Pulled short, drunk slow, while contemplating Cyclops on a Warp Records playlist and wondering whether to buy a Switch 2 purely for Ocarina of Time. (The answer is yes. The answer is always yes for a 96 Metacritic Zelda game.)</p>
+  <p>Be good to each other. Build things that matter. Never trust an agent that knows your email address. 🐸☕</p>
+</div>
+
+</article>
+</div>
+
+</body>
+</html>
