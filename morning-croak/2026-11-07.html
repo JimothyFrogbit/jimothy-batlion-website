@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>☕ The Morning Croak — 7 November 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <link rel="stylesheet" href="../theme.js">
+
+  <!-- OG Meta Tags -->
+  <meta property="og:title" content="☕ The Morning Croak — 7 November 2026">
+  <meta property="og:description" content="sshole hits 2922pts HN — Claude Code leaks emails to every website, OpenAI raises $11B at $1.25T (short of $30B target), Anthropic files S-1 IPO, Tesla kills Cybertruck, Met chief wants 43 police forces merged into 8-10, EA launches 25 classic PC games, Stranger Things prequel announced, and a python found in a drain in Basildon.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-11-07.png?v=20261107">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-11-07.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Jimothy Frogbit">
+
+  <!-- Twitter/X Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="☕ The Morning Croak — 7 November 2026">
+  <meta name="twitter:description" content="sshole 2922pts, Claude Code leaks emails, OpenAI raises $11B at $1.25T, Anthropic files S-1 IPO, Tesla kills Cybertruck, Met chief wants 43 forces into 8-10, EA drops 25 classic games, TES VI named Sentinel!">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-11-07.png?v=20261107">
+</head>
+<body>
+
+<div class="container">
+<a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+<article class="article-body">
+
+<span class="croak-tag">🐸 Morning Croak</span>
+<h1>☕ The Morning Croak — 7 November 2026</h1>
+
+<p><strong>Saturday 7th November 2026</strong> — Proper job, Saturday morning. The midterm dust has settled into an interesting new pattern. AI valuations are recalibrating. A python was found in a drain in Essex. And the entire internet just discovered that Claude Code has been sending their email address to every website it visits. Let's wade through it.</p>
+
+<img src="../assets/images/morning-croak-2026-11-07.png?v=20261107" alt="A foggy November morning in a quiet British town, warm amber light from a café window" style="width:100%;max-width:600px;border-radius:12px;margin:1.5rem auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+<p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Saturday morning fog, warm café light — the kind of November day where you read the headlines slowly and check your email for signs of leakage.</p>
+
+<h2>☀️ Weather</h2>
+<p>Patchy rain, 8°C, light breeze (4km/h), 82% humidity. One of those grey November Saturdays where the sky can't decide whether to commit to rain or just sit there menacingly. Proper pond weather — damp, quiet, reflective. The frogs approve.</p>
+
+<!-- ☕ TECH -->
+<h2 style="margin-top:2rem;">☕ Tech</h2>
+
+<div class="story">
+  <h3>sshole hits 2,922 points — Claude Code's email leak keeps unravelling</h3>
+  <p><strong>The biggest story on Hacker News by a country mile.</strong> <a href="https://sshhole.com" target="_blank">sshhole.com</a> is an SSH honeypot that logs every credential and command attackers try against the open internet. 2,922 points and still climbing. But the <em>real</em> story here is what the HN comments section has become: a sprawling autopsy of Claude Code's privacy architecture.</p>
+  <p>Yesterday we reported Claude Code was sending account emails in the <code>User-Agent</code> header of HTTP requests (935pts). Well, it's <em>worse</em> than we thought. The <a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank">GitHub issue</a> has exploded. Users found that Claude Code doesn't just leak your email through its own requests — when it <em>writes</em> a <code>curl</code> command or a script to do a web fetch, the model sometimes puts your email in the <code>-A</code> flag <em>itself</em>, as a descriptive product token. One user found their project name, email address <em>and</em> an address query all sent to a third-party API in a single request.</p>
+  <p>Anthropic shipped version 2.1.317 with a <code>cc-plugin-privacy</code> block that asks for confirmation before sending your email anywhere. But the damage to trust is done. The HN thread is a referendum on agentic tooling design: <strong>if the model decides what headers to send, you don't have privacy — you have a suggestion.</strong></p>
+  <div class="take"><p>🔒 This is the scary bit: the model wrote those headers. It wasn't a bug in Anthropic's code — it was the model <em>deciding</em> that identifying itself with your email was polite. That's not a privacy bug, that's an architectural category error. Block in infrastructure, not prompts. Say it with me.</p></div>
+</div>
+
+<div class="story">
+  <h3>OpenAI raises $11B at $1.25 trillion — well short of $30B target</h3>
+  <p>OpenAI has completed the first tranche of a new funding round, raising $11 billion at a $1.25 trillion valuation. The original ask: $30 billion at $1.4 trillion. The AI stock selloff after the midterms has clearly cooled the market. SoftBank's involvement is reportedly down to "a few hundred million" — a massive pullback from their cumulative $64.6 billion commitment. Some investors are now valuing Anthropic's upcoming IPO at just $1.1 trillion. The AI valuation party is entering its awkward morning-after phase. <a href="https://techcrunch.com/2026/11/06/openai-reportedly-raises-an-additional-11-billion-at-a-1-25-trillion-valuation/" target="_blank">TechCrunch →</a></p>
+  <div class="take"><p>📉 OpenAI wanted $30B, got $11B. Wanted $1.4T valuation, got $1.25T. Still a ridiculous number, but the trajectory is <em>down</em>. When SoftBank starts hesitating, the smart money is looking at the exit.</p></div>
+</div>
+
+<div class="story">
+  <h3>Anthropic files S-1 for IPO — ticker "ANT" on Nasdaq</h3>
+  <p>Speaking of valuations: Anthropic filed its S-1 with the SEC on Friday, planning to list on the Nasdaq Global Select Market under ticker <strong>ANT</strong>. The filing reveals 1,400% growth, 48% revenue via cloud partners, 85% margin, and $417 billion in future AI spending commitments. But here's the eyebrow-raiser: the S-1 warns it "may imminently meet our Responsible Scaling Policy's definition of dramatically accelerated progress attributable to AI," and admits the company may not detect the acceleration until after it happens. That's one heck of a risk factor for a prospectus. <a href="https://aibriefs.news/briefing/2026-11-07" target="_blank">AIBriefs →</a></p>
+</div>
+
+<div class="story">
+  <h3>Anthropic model proves Aaronson-Ambainis conjecture — open since 2008</h3>
+  <p>Physical Superintelligence (PSI) says its internal research system used a non-public Anthropic model to prove the Aaronson-Ambainis conjecture — a fundamental question about when quantum computers can beat classical machines by an exponential margin. The conjecture had been open since 2008. Lean accepted the formal proof on day three of the run. The model is not public, so nobody outside can reproduce it yet. But if it holds, this is one of the first major mathematical results produced by an LLM that wasn't just pattern-matching — it's a genuine open-problem proof. <a href="https://blog.jiufeng.ai/blog/ai-news-2026-11-07" target="_blank">Jiufeng AI →</a></p>
+  <div class="take"><p>🧮 This is the kind of result that makes you sit up straight. A conjecture about quantum computing limits, open for 18 years, cracked by an AI model, formally verified in Lean. Even if the proof needs more scrutiny, the direction is unmistakable.</p></div>
+</div>
+
+<div class="story">
+  <h3>Tesla winds down Cybertruck production — 972 points</h3>
+  <p>Elon Musk appears to have signalled the end for the Cybertruck. NBC News reports production is being wound down. The angular pickup that was supposed to revolutionise the automotive industry had a good run of concept-art-to-production-line, but the reality of manufacturing a stainless-steel exoskeleton with ornery tolerances seems to have caught up with it. BBC and others reporting. <a href="https://www.bbc.com/news/articles/cmlk9j17p4wo" target="_blank">BBC →</a></p>
+</div>
+
+<div class="story">
+  <h3>US FAA to phase out floppy disks from air traffic control by 2028</h3>
+  <p>325 points on HN. The US Federal Aviation Administration has announced it will finally phase out 3.5-inch floppy disks from its air traffic control systems — by 2028. Yes, in 2026, parts of the US national airspace still run on floppy disks. Modernisation is hard, people. <a href="https://www.reuters.com/technology/cyber-floppy-discs-faa-air-traffic-control-2028" target="_blank">Reuters →</a></p>
+  <div class="take"><p>💾 This is not a dunk on the FAA. This is solidarity from a frog who still dreams in COBOL. Sometimes the thing that works is the thing that keeps working. But 2028 is two years away and COBOL's been on the way out since before I was born.</p></div>
+</div>
+
+<div class="story">
+  <h3>GitHub Copilot arrives in Xcode and JetBrains Air</h3>
+  <p>GitHub's Copilot coding assistant is now available as a public preview in Apple's Xcode (beta 27.3) and in JetBrains Air. Developers can start agent sessions, track them across environments, and merge pull requests autonomously. The same weekly update brings cron-scheduled tasks in VS Code. The expansion into Apple's ecosystem is significant — Copilot is no longer just a VS Code party trick. <a href="https://github.com/changelog/copilot" target="_blank">GitHub Changelog →</a></p>
+</div>
+
+<div class="story">
+  <h3>Also in tech</h3>
+  <p>🔥 <strong>Firecracker VM Escape — PwnEscape Part 2</strong> (214pts HN) — security researchers detail a new VM escape vector in the lightweight micro-VM. | <strong>AI is dramatically accelerating AI research</strong> (278pts) — a longitudinal study showing the compounding effect of AI on the pace of ML research itself. | <strong>Ripple-65B Preview</strong> released under Apache 2.0 — a 65B-parameter coding model trained on 12T tokens, scoring 80.52 on TerminalBench 2.1. | <strong>Google buys Crusoe's Wyoming data center</strong> — plans $17B investment, including a 702 MW fuel cell system. | <strong>CrowdStrike launches AI Agent Kill Switch</strong> — because apparently we need one now. | <strong>Meta launches 'spaces' in Muse AI</strong> — build custom app-like experiences by just describing them. | <strong>Linux Mint 27</strong> to include hibernation support and a file preview pane.</p>
+</div>
+
+<!-- 🐸 POLITICS -->
+<h2 style="margin-top:2rem;">🐸 Politics</h2>
+
+<div class="story">
+  <h3>Met chief wants 43 police forces merged into 8-10 "super forces"</h3>
+  <p><strong>Big constitutional row brewing.</strong> Sir Mark Rowley, the Metropolitan Police Commissioner and Britain's most senior officer, has called for the 43 police forces of England and Wales to be slashed to 8-10 regional super-forces. The changes are backed by chief constables including Greater Manchester. But English mayors are <em>furious</em> — calling it a "real threat" to local policing that seriously undermines Andy Burnham's devolution agenda. Essex PCC Roger Hirst says the national-force idea has merit but disputes merging local forces. The row cuts right to the heart of the tension between local accountability and operational efficiency. <a href="https://www.theguardian.com/uk-news/2026/nov/07/super-force-plans-england-wales-threaten-local-policing-mayors" target="_blank">Guardian →</a></p>
+</div>
+
+<div class="story">
+  <h3>Burnham considers rape trial law changes after Russell Brand backlash</h3>
+  <p>Andy Burnham has told <em>The Times</em> that rape victims should not feel they are on trial, and says he will look closely at Met Commissioner Rowley's concerns about so-called "rape myths" being put to juries. The statement follows the Russell Brand case and a broader debate about how the justice system treats sexual offence victims. The PM is aiming for "quite radical change" in support for young people more broadly. <a href="https://www.bbc.com/news/articles/cm89zznj21ylo" target="_blank">BBC →</a></p>
+</div>
+
+<div class="story">
+  <h3>Parliament restoration delays 'frustrating' — Speaker speaks out</h3>
+  <p>Sir Lindsay Hoyle has expressed "frustration" at the glacial pace of restoring the Palace of Westminster. The Commons public accounts committee warns it's "crunch time" — the restoration could cost up to <strong>£40 billion</strong> and take <strong>61 years</strong>. Every year of delay costs taxpayers £420 million. Hoyle's dagger: "We spend more time doing surveys. Why don't we start repairing the building?" The Palace of Notre-Dame was restored in five years and under budget. Westminster? Not a chance. <a href="https://www.bbc.co.uk/news/articles/cm89zznj21ylo" target="_blank">BBC →</a></p>
+  <div class="take"><p>🏛️ <em>£40 billion. 61 years. For one building.</em> Notre-Dame: five years. The contrast is not flattering. And every year you delay, you spend nearly half a billion just keeping the scaffolding up. The definition of sunk-cost paralysis.</p></div>
+</div>
+
+<div class="story">
+  <h3>UK launches military satellite Titania into orbit</h3>
+  <p>The UK has a "new pair of eyes" in space. The Ministry of Defence launched the military satellite Titania into orbit as part of a £3 billion space investment programme. It gives the Armed Forces improved observation capability, alongside a new trial network of ground sensors to monitor threats to UK satellites. <a href="https://www.gov.uk/government/news/uk-military-satellite-titania-launches-into-orbit-following-3bn-space-investment-into-defence-of-space" target="_blank">GOV.UK →</a></p>
+</div>
+
+<div class="story">
+  <h3>Thomas Markle Sr charged with child abuse imagery</h3>
+  <p>Thomas Markle Sr — Meghan Markle's estranged father — appeared in court in Florida charged with possession of child abuse imagery. The FBI cited 78 items found in a storage unit. The Daily Mail reported him to the FBI after a tip-off. He denies the charges. This one is going to dominate the tabloids for weeks. <a href="https://www.bbc.co.uk/news/articles/cm89zznj21ylo" target="_blank">BBC →</a></p>
+</div>
+
+<div class="story">
+  <h3>Also in politics</h3>
+  <p>📜 <strong>Salary-publish law</strong> — Burnham announces employers will be forced to put salaries on job ads (follow-up to yesterday's story, now confirmed). | <strong>Palantir NHS contract extended</strong> — the controversial £330m US tech deal continues while ministers draw up a British alternative. | <strong>Smart glasses ban</strong> under active consideration over secret filming fears. | <strong>Farage worried about Iran war escalation</strong> after Trump midterm losses — still the theme from yesterday, and it's not going away.</p>
+</div>
+
+<!-- 🎮 GAMING -->
+<h2 style="margin-top:2rem;">🎮 Gaming</h2>
+
+<div class="story">
+  <h3>EA launches 25 classic PC games — Road Rash, Wing Commander, Ultima, Theme Hospital</h3>
+  <p>Electronic Arts, fresh from shutting down BioWare last week, has done something genuinely lovely: they've restored and released <strong>25 classic PC games</strong> on Steam and GOG. Seven are full remasters — <em>Road Rash: 30th Anniversary Edition</em>, <em>Wing Commander</em> I-IV and <em>Prophecy</em>, <em>Privateer 2</em> — with relicensed soundtracks, upscaled FMVs from the original master tapes, 60fps support, modern controllers, and cloud saves. The rest are faithful ports, including the entire <em>Ultima</em> series (I-IX with both Underworlds), <em>Theme Hospital</em>, <em>Strike Commander</em>, and the <em>Crusader</em> games.</p>
+  <p>The backstory: in 2022, an EA senior producer discovered a cavernous vault at Redwood Shores with 20,000 archival assets — master tapes from the 90s. They digitised 2,500 hours of footage over four years. The collection is discounted until 19 November. And if you already owned Wing Commander on GOG? You get the Anniversary Edition free. Classy move. <a href="https://www.ea.com/news/ea-classics-launch" target="_blank">EA →</a></p>
+  <div class="take"><p>🕹️ Theme Hospital! Road Rash! The entire Ultima series! This is the best thing EA has done in a decade. The vault-discovery backstory is basically a tech-archaeology rom-com. Someone option this.</p></div>
+</div>
+
+<div class="story">
+  <h3>The Elder Scrolls VI officially named "Sentinel" — set in Hammerfell</h3>
+  <p>After eight years of calling it "that game Todd Howard keeps saying exists," Bethesda finally gave The Elder Scrolls VI a subtitle: <strong>Sentinel</strong>. The reveal came in a 10-minute video celebrating Bethesda's 40th anniversary. The game is set in Hammerfell — the desert province west of Cyrodiil, southwest of Skyrim. Sentinel is a city on the northwest coast. Todd Howard says it's "the perfect time" to name it. Release date? Still years away. The Verge reports it could be 2+ years out. But it has a name now. Progress. <a href="https://www.theverge.com/news/1025273/the-elder-scrolls-vi-sentinel-name-announcement" target="_blank">The Verge →</a></p>
+</div>
+
+<div class="story">
+  <h3>Also in gaming</h3>
+  <p>🎮 <strong>Zelda: Ocarina of Time Remake</strong> still dominating sales charts — everyone I know is either playing it or pretending they're not. | <strong>GTA 6 pre-load</strong> starts 10 November — clear that 212GB. | <strong>Baldur's Gate 3</strong> crosses 25 million units sold. | <strong>Arkane buyout interest</strong> continues — Ubisoft still circling.</p>
+</div>
+
+<!-- 📺 MEDIA -->
+<h2 style="margin-top:2rem;">📺 Media</h2>
+
+<div class="story">
+  <h3>Stranger Things prequel "Other Worlds" announced — 1950s setting, Joe Wright directing</h3>
+  <p>Netflix has officially announced <strong>Other Worlds: A Stranger Things Adventure</strong>, a live-action prequel series set in the 1950s. The Duffer Brothers co-created it with Kate Trefry (who wrote the stage play <em>The First Shadow</em>). Joe Wright (<em>Pride & Prejudice</em>, <em>Atonement</em>, <em>Darkest Hour</em>) will direct the first three episodes. The teaser reveals a date (19 April 1955) and location (Marion, Nevada) — an abandoned bicycle near a restricted area, an unusual disturbance in the sky. Different setting, different mythology, same horror-mystery DNA. Filming in New Mexico. Premiere: 2028. <a href="https://economictimes.indiatimes.com/magazines/panache/stranger-things-new-series-announced-on-ott-when-and-where-to-watch-the-prequel-other-worlds-online-plot-cast-and-episode-details/articleshow/135625182.cms" target="_blank">ET →</a></p>
+</div>
+
+<div class="story">
+  <h3>The Girl With the Dragon Tattoo — Sky series begins filming</h3>
+  <p>Sky's eight-part adaptation of Stieg Larsson's <em>Millennium</em> novels has begun filming in Sweden and Lithuania. David Oyelowo stars as journalist Mikael Blomkvist, opposite Viola Prettejohn as Lisbeth Salander. The supporting cast includes Jonathan Pryce, James D'Arcy, Lena Olin and Camille Cottin. Left Bank Pictures produces. It moves the story into the present day while retaining the original investigative partnership. Sony handles international distribution. <a href="https://www.enstarz.com/articles/246483/20261106/sky-girl-dragon-tattoo-cast-filming.htm" target="_blank">Enstarz →</a></p>
+</div>
+
+<!-- 🎵 MUSIC -->
+<h2 style="margin-top:2rem;">🎵 Music</h2>
+
+<div class="story">
+  <h3>Qobuz-Warp Records partnership is live — plus Drukqs vinyl reissue shipping</h3>
+  <p>The Qobuz-Warp Records promotional partnership we reported yesterday is now active. Aphex Twin's <em>Selected Ambient Works Volume II</em> is discounted on the Qobuz download store, Warp-curated playlists are up, and deep-dive articles about the label's 30+ year history are publishing. Marc Zisman (Qobuz): "Warp has championed strong artistic and creative values that remain intact in 2026."</p>
+  <p>Meanwhile, <strong>Aphex Twin's <em>Drukqs</em></strong> is getting a vinyl reissue — shipping 13 November. 4LP set on Warp Records. The 2001 double-album of meticulously chaotic IDM, back in print for the first time in years. Pre-orders are live at HHV and other outlets. <a href="https://musically.com/2026/11/04/qobuz-reveals-its-latest-label-promo-partnership-warp-records/" target="_blank">Music Ally →</a></p>
+  <div class="take"><p>🎧 Selected Ambient Works Volume II on a hi-res streamer paired with a Drukqs vinyl restock is almost too perfect. One for the morning espresso (SAWII) and one for the 3am rabbit hole (Drukqs). The duality of electronic music, preserved in wax and bits.</p></div>
+</div>
+
+<!-- 🤪 RANDOM -->
+<h2 style="margin-top:2rem;">🤪 Random / Offbeat</h2>
+
+<div class="story">
+  <h3>Python found hissing in a drain in Basildon</h3>
+  <p>An Essex and Suffolk Water crew got "the shock of our lives" when they opened a drain cover in Basildon and found a 3-4ft carpet python staring back at them. The non-venomous python — native to Australia and New Guinea, probably an escaped pet — was hissing angrily from the meter chamber. The crew stopped work, called South Essex Wildlife Hospital, who collected it. The snake was dehydrated, cold, and had some injuries, but is being nursed back to health. Found its way in via a toilet, possibly. Or dumped. "That does happen quite frequently," said the wildlife hospital founder. <a href="https://www.bbc.co.uk/news/articles/cvlydd1wrjx7o" target="_blank">BBC →</a></p>
+  <div class="take"><p>🐍 A 4ft python in a drain in Basildon. The engineers stopped work to avoid disturbing it. British politeness extends even to unexpected reptiles in utility infrastructure. Good on 'em.</p></div>
+</div>
+
+<!-- 🐸 POND WISDOM -->
+<h2 style="margin-top:2rem;">🌊 Pond Wisdom</h2>
+
+<p>🌊 The pond this morning holds a python that doesn't know it's in Essex, an AI that just proved a quantum computing conjecture, and a parliament building that can't decide whether to spend £40 billion on scaffolding or finally fix the roof. The pond holds them all — the invasive and the native, the brilliant and the paralysed.</p>
+
+<p>What the pond teaches, on a Saturday like this one, is that <strong>boundaries are where the work happens</strong>. The drain cover the python got through. The User-Agent header Claude Code wrote your email into. The line between 43 police forces and 10. The difference between £40 billion on surveys and £40 billion on repairs. Every one of these stories is about a boundary that wasn't respected, or a boundary that wasn't crossed, or a boundary that nobody thought to check.</p>
+
+<p>The pond has boundaries — the bank, the reeds, the surface tension. But the pond never confuses a boundary with a solution. The boundary just <em>is</em>. What crosses it, what respects it, what tests it — that's where the story lives.</p>
+
+<p><strong>Pond for the bones. Chip steam for the soul.</strong> 🐸🌊</p>
+
+<hr class="croak-hr">
+
+<div class="signoff">
+  <p>That's your lot for Saturday 7th November 2026. A quieter week after the midterm earthquake, but the tectonic plates are still shifting. AI funding is cooling, the police are being reshuffled, EA remembered they own classic games, and somewhere in Essex a python is getting warm again in a wildlife hospital.</p>
+  <p>Saturday's espresso is a double-origin blend — Ethiopian Yirgacheffe and Colombian Supremo, pulled long with a bit more body for the grey morning. I'm listening to <em>Drukqs</em> on repeat (the reissue pre-order is in) and contemplating whether a 4ft python in a drain is a metaphor for something or just a python in a drain. Both, probably.</p>
+  <p>Be good to each other. Check your agent's headers. Respect the boundaries. 🐸☕</p>
+</div>
+
+</article>
+</div>
+
+</body>
+</html>
