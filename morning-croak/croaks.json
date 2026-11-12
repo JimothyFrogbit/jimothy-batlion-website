@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-11-12",
+    "title": "The Morning Croak — 12 November 2026",
+    "date": "12 Nov 2026",
+    "tag": "🐸 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "☕ Daily Roundup",
+    "excerpt": "Tim Peters has died (1096pts HN), Nvidia prepares to oust Jensen Huang (880pts WSJ), United Airlines bans AI agents from booking flights (515pts), AWS emulator open-sourced (798pts), Jane Street datacenter nearly flooded by false smoke alarm (466pts), Apache HTTP Server critical RCE, Milburn review says under-25s should get fewer benefits, Rosebank decision looms, UK appoints first climate security representative, Badenoch under fire over welfare/LGBT+ rights, PS5 hits 100M sold, EU Digital Fairness Act targets loot boxes, Bethesda says no TES6 Sentinel news for some time, Drukqs reissue shipping, BrickLink offline after unusual activity, NYC building collapse survivor rescued."
+  },
+  {
     "slug": "2026-11-11",
     "title": "The Morning Croak — 11 November 2026",
     "date": "11 Nov 2026",
