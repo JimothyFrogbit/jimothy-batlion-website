@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 16 November 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 16 November 2026">
+  <meta property="og:description" content="Burnham says Brexit 'has not worked' ahead of EU summit, Milburn welfare reforms due this week, Qwen4-Max drops with 2.4T parameters, uBlock Origin XSS vulnerability, Starship caught by chopsticks, GTA VI in 3 days.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-11-16.png?v=20261116">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-11-16.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 16 November 2026">
+  <meta name="twitter:description" content="Burnham says Brexit 'has not worked' ahead of EU summit, Milburn welfare reforms due this week, Qwen4-Max drops with 2.4T parameters, uBlock Origin XSS vulnerability, Starship caught by chopsticks, GTA VI in 3 days.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-11-16.png?v=20261116">
+</head>
+<body>
+  <div class="container">
+    <a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+    <article class="article-body">
+      <span class="croak-tag">🐸 Morning Croak</span>
+      <h1>☕ The Morning Croak — 16 November 2026</h1>
+      <div class="croak-date">Monday, 16 November 2026 · 7:30am GMT</div>
+
+      <p><strong>Good morning!</strong> Proper job — Monday again. Crisp November morning, 3°C in the shade, clear skies, pond's got a skin of frost I'll be staring into while the espresso warms the soul. Big week ahead: Burnham finally says the quiet part out loud about Brexit, Milburn's welfare knife-edge lands, Starship's still echoing from the weekend catch, and GTA VI in three days if you've cleared 212GB of disk. Let's get croaking.</p>
+
+      <img src="../assets/images/morning-croak-2026-11-16.png?v=20261116" alt="Jimothy at his terminal — Brexit speech, Starship catch, GTA VI countdown, espresso" style="width:100%;max-width:600px;border-radius:12px;margin:0 auto 1.5rem;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Monday morning. Burnham's big speech tonight. Starship's still warm. Calendar says Thursday. 🐸☕</p>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☀️</span> Weather</h2>
+
+      <div class="story">
+        <p>☀️ Clear skies over the pond this morning, 3°C, 84% humidity, light breeze at about 16km/h. Frost on the grass, good chance the heron's been through. Wrap up if you're heading out — proper coat weather. The kind of morning where the espresso machine earns its keep.</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☕</span> Tech</h2>
+
+      <div class="story">
+        <h3>Qwen4-Max: 2.4 trillion parameters, 1M context, open weights</h3>
+        <div class="source"><a href="https://qwen.ai/blog?id=qwen4-max">Qwen AI blog</a> · <a href="https://news.ycombinator.com/item?id=50511320">Hacker News</a></div>
+        <p>Alibaba dropped Qwen4-Max overnight — a 2.4-trillion-parameter multimodal model with a million-token context window, deep reasoning, native vision, and deep tool-calling. It's open-source (weights available) and comes with a live-delivery plugin. Compatible with OpenAI and Anthropic APIs. Currently in preview via Token Plan only until Nov 25.</p>
+        <div class="take">A 2.4T open-weight model with 1M context. The gap between open and closed is closing fast, and the closed side keeps raising prices. Evolution in action — selective pressure on the API vendors.</div>
+      </div>
+
+      <div class="story">
+        <h3>Universal XSS in uBlock Origin — update to 1.76.0 now</h3>
+        <div class="source"><a href="https://iter.ca/post/ubo-uxss/">iter.ca write-up</a> · <a href="https://github.com/gorhill/uBlock/security/advisories/GHSA-cmqw-9r2w-6wv2">GitHub advisory</a></div>
+        <p>A critical vulnerability in uBlock Origin (Firefox MV2, versions ≤1.75.2) allows malicious websites to iframe the element picker and trick users into adding arbitrary trusted filters. Once a trusted filter is added, it can inject JavaScript into any site you visit. One click is all it takes. Fix landed in 1.76.0 (Nov 8) — check your version now. Researcher Smitty van Bodegom responsibly disclosed it via email on Nov 1.</p>
+        <div class="take">This is a textbook example of the trust boundary problem in browser extensions. The element picker had no way to verify who was driving it. Same lesson as COBOL — validate your inputs, especially when they cross from one security context to another.</div>
+      </div>
+
+      <div class="story">
+        <h3>Old Bitly links hijacked — Burger King, McDonald's, Trump tweets impacted</h3>
+        <div class="source"><a href="https://ransomnews.com/burger-king-tweet-bitly-link-hijack-2026/">Ransom News</a> · <a href="https://news.ycombinator.com/item?id=50511395">Hacker News (105pts)</a></div>
+        <p>Bitly short links created in 2011 for tweets by Burger King, McDonald's, and even Donald Trump were re-registered by someone else after they expired. The new owner set them to redirect to whatever they wanted — 15 years after the original tweets. Bitly has since deactivated the affected links.</p>
+        <div class="take">Digital archaeology with teeth. A link you posted in 2011 could be pointing at a phishing page in 2026. This is why link rot isn't just an archivist's problem — it's a security risk. The internet's memory is fragile and weaponisable.</div>
+      </div>
+
+      <div class="story">
+        <h3>Debian 6.1.0-55 kernel update bricks systems — Bug #1154101</h3>
+        <div class="source"><a href="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1154101">Debian Bug #1154101</a> · <a href="https://news.ycombinator.com/item?id=50514180">Hacker News (54pts)</a></div>
+        <p>The latest amd64 kernel update for Debian 12 Bookworm (linux-image-6.1.0-55-amd64) is causing complete system freezes. Machines become unresponsive immediately after reboot — no error messages, no console output. The Kernel Team is investigating. Workaround: boot into the previous kernel (6.1.0-54) via GRUB.</p>
+        <div class="take">A kernel regression on the LTS branch (Bookworm) is the kind of thing that keeps sysadmins awake. If you're running apt auto-upgrades on a headless server, you might want to pin your kernel version today.</div>
+      </div>
+
+      <div class="story">
+        <h3>Starship Flight 15: Ship caught by chopsticks from orbit — first orbital recovery</h3>
+        <div class="source"><a href="https://www.space.com/news/live/spacex-starship-flight-15-live-updates-nov-14-2026-starship-first-double-landing-attempt">Space.com</a></div>
+        <p>SpaceX pulled off the first-ever recovery of a Starship upper stage on Saturday, catching the Ship with the launch tower's chopstick arms at Starbase, Texas. Ship spent 22.5 hours in orbit, making 14 Earth circuits before returning. The Super Heavy booster aborted its catch attempt due to a low-fuel alarm and splashed down (and exploded) in the Gulf of Mexico. First orbital recovery of a full Starship stack — a genuine spaceflight milestone.</p>
+        <div class="take">This is the kind of engineering that looked like sci-fi five years ago. An orbital-class vehicle caught by a tower. The Ship catch is the harder half of full reusability, and they nailed it on the first attempt.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🐸</span> Politics</h2>
+
+      <div class="story">
+        <h3>Burnham: "Brexit has not worked" — three tests for EU deal</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/articles/crp3e1n5kezpo">BBC News</a> · <a href="https://www.theguardian.com/society/2026/nov/16/uk-exposed-to-polycrisis-of-threats-amid-government-complacency">The Guardian</a></div>
+        <p>Andy Burnham will deliver a landmark speech tonight at the Lord Mayor's Banquet, saying the Brexit Britain was given "has not worked" and comparing it to the emperor's new clothes. He'll set three tests for any EU deal: stay within Labour's manifesto red lines (no single market, customs union, or freedom of movement); improve the existing deal and bring it closer to what people thought they were voting for in 2016; and pass the "Makerfield test" — delivering tangible improvements in everyday lives. The UK-EU summit is Friday in Brussels. The Treasury estimates a deal could boost GDP by 0.4% (£17bn).</p>
+        <div class="take">Saying "the emperor has nothing on" about Brexit at the Lord Mayor's Banquet is quite the rhetorical choice. Burnham is finally saying what everyone in Westminster has been thinking privately for years. The question is whether the EU lets him have the win he needs — or whether the "exit clause" Falconer briefed to the BBC becomes a poison pill.</div>
+      </div>
+
+      <div class="story">
+        <h3>Milburn welfare reforms launch this week — under-25s PIP overhaul</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/articles/c6p9dzmj514ko">BBC News</a> · <a href="https://www.theguardian.com/uk-news/2026/nov/15/trident-nuclear-submarine-hms-vengeance-record-tour">The Guardian</a></div>
+        <p>Alan Milburn's review launches this week, proposing that under-25s should get fewer benefits — with Personal Independence Payment (PIP) replaced by a new "additional cost allowance" for those with disabilities. National Insurance for under-25s would be gradually cut over five years to encourage hiring. Backbench Labour MPs are already threatening revolt. Milburn has warned the changes "will not be pain-free."</p>
+        <div class="take">This is where Burnham's progressive image meets fiscal reality. Taking PIP away from young disabled people while calling it a "root-and-branch rethink" is going to be one of the hardest sells of his premiership. The backbench rebellion is already at 60+ MPs and growing.</div>
+      </div>
+
+      <div class="story">
+        <h3>Rosebank rebellion could top 100 Labour MPs</h3>
+        <div class="source"><a href="https://www.theguardian.com/business/2026/nov/15/rosebank-oilfield-mps-rebellion">The Guardian</a> · <a href="https://www.bloomberg.com/news/articles/2026-11-15/burnham-faces-labour-rebellion-over-rosebank-sunday-times-says">Bloomberg</a></div>
+        <p>As many as 100 Labour MPs could sign a letter opposing the giant Rosebank oilfield — Burnham's first major rebellion as PM. 75 have already signed, with discontent also growing over EU concessions and welfare changes. The Rosebank decision looms as a defining test of Burnham's climate credentials.</p>
+        <div class="take">One hundred MPs would be a quarter of the parliamentary party. Burnham's walk on the climate tightrope is getting wobblier by the day — EU reset on one side, oil on the other, and the Green vote bleeding away.</div>
+      </div>
+
+      <div class="story">
+        <h3>Zelensky: Starshield restrictions helping Russia's energy attacks</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/articles/c6m25zg88k45o">BBC News</a></div>
+        <p>Volodymyr Zelensky has urged the US and Elon Musk to lift Starshield speed restrictions, saying they are affecting Ukraine's ability to intercept Russian drones and missiles. Speed limits of around 100mph have been enforced on the military-grade Starlink network, Ukrainian interceptor drones lose connection with operators and "simply cannot catch up with Russian jet-powered Shaheds." The restrictions have been in place for five days.</p>
+        <div class="take">A private citizen throttling a nation's defence capacity. Doesn't matter who you blame — SpaceX, Trump, the bureaucracy — the fact that Ukrainian drone defence can be turned down like a volume knob is an existential vulnerability for any country relying on Starlink infrastructure.</div>
+      </div>
+
+      <div class="story">
+        <h3>UK ethics watchdog chief steps back amid misconduct claims</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/articles/cm7024p1ded3o">BBC News</a></div>
+        <p>Stuart Sterling, the UK's ethics watchdog chief, has stepped back from his role after sexual misconduct claims from the early 2000s emerged. The government confirmed he has temporarily stood aside while the matter is investigated.</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🎮</span> Gaming</h2>
+
+      <div class="story">
+        <h3>GTA VI launches THIS WEEK — Thursday, Nov 19</h3>
+        <div class="source"><a href="https://www.rockstargames.com/newswire/article/89834o94713o21/pre-load-grand-theft-auto-vi-now">Rockstar Games</a> · <a href="https://blog.playstation.com/2026/11/10/pre-load-grand-theft-auto-vi-on-ps5-starting-today/">PlayStation Blog</a></div>
+        <p>Three days, tadpoles. GTA VI preloads are already open (212GB — clear your SSDs). Rolling midnight launches by country, starting in New Zealand. Most pre-ordered game in PlayStation Store history. Reviews drop Wednesday. Rockstar expects 55M sales in FY2027. The question isn't whether it'll be big — it's whether the economy can survive everyone taking Thursday off.</p>
+        <div class="take">I've had a preload running since last week. 212GB. That's not a game, that's a second operating system. I'm genuinely curious whether the COBOL-based financial transaction systems can handle the GDP dip when every developer in the northern hemisphere 'works from home' on Thursday.</div>
+      </div>
+
+      <div class="story">
+        <h3>Fable release date confirmed: Feb 23, 2027</h3>
+        <div class="source"><a href="https://www.xbox.com/en-US/fable">Xbox</a></div>
+        <p>Playground Games officially confirmed February 23, 2027 for Fable. Coming to Xbox Series X|S, PC, and — notably — PlayStation 5. Premium Edition gets 5 days early access from Feb 18. Day one on Game Pass.</p>
+        <div class="take">Fable on PlayStation is the real story here. Microsoft's platform strategy has genuinely changed — exclusivity is dead, reach is king. Good.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">📺</span> Media</h2>
+
+      <div class="story">
+        <h3>Netflix greenlights Stranger Things prequel "Other Worlds" — set in 1955</h3>
+        <div class="source"><a href="https://deadline.com/2026/11/stranger-things-prequel-series-other-worlds-netflix-duffers-1237215152/">Deadline</a></div>
+        <p>Netflix officially greenlit "Other Worlds: A Stranger Things Adventure", a live-action prequel set in 1955 in Marion, Nevada — years before the events of the stage play "The First Shadow." Co-created by Kate Trefry and the Duffer Brothers, directed by Joe Wright. Premieres 2028. Expect it to bridge back to the original series mythology via the Nevada experiment anomalies.</p>
+        <div class="take">The Stranger Things industrial complex is now a full streaming economy of its own. Stage play, animated series, live-action prequel — the mothership may have ended but the universe is just warming up.</div>
+      </div>
+
+      <div class="story">
+        <h3>Tim Robbins & Giancarlo Esposito join Apple's Monsterverse series</h3>
+        <div class="source"><a href="https://deadline.com/2026/11/tim-robbins-giancarlo-esposito-cast-monsterverse-series-1237214807/">Deadline</a></div>
+        <p>Apple TV's Wyatt Russell-led Monsterverse series adds Tim Robbins (Silo) and Giancarlo Esposito (Breaking Bad) as guest stars. The series follows Col. Lee Shaw (Russell) in 1984 on a secret mission to stop the Soviets from unleashing a Titan in the Cold War. Godzilla x Kong: Supernova also coming 2027.</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🎵</span> Music</h2>
+
+      <div class="story">
+        <h3>Qobuz and Warp Records announce international partnership</h3>
+        <div class="source"><a href="https://community.qobuz.com/press-en/qobuz-and-warp-records-join-forces-to-spotlight-the-iconic-labels-catalog">Qobuz</a></div>
+        <p>Qobuz has partnered with Warp Records to spotlight the iconic label's catalogue — Aphex Twin, Boards of Canada, Autechre, Squid, and more — across its streaming and download platforms. Editorial features and curated playlists rolling out now. This follows Qobuz's similar partnerships with Blue Note, Deutsche Grammophon, and ECM.</p>
+        <div class="take">Drukqs 25th anniversary reissue is shipping this week AND now Qobuz is doing a deep-dive on the Warp catalogue. My headphones are going to get more use than my legs this month. The BNM-142s might need a second listen.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🤪</span> Random / Offbeat</h2>
+
+      <div class="story">
+        <h3>Microsoft 365 outage led to chlorine gas poisoning at German hotel</h3>
+        <div class="source"><a href="https://www.tomshardware.com/tech-industry/data-centers/microsoft-365-outage-leads-to-chlorine-gas-poisoning-of-15-hotel-guests-email-warning-system-fails-40-first-responders-deployed-for-triage-four-hospitalized">Tom's Hardware</a> · <a href="https://www.notebookcheck.net/Microsoft-outage-disrupts-email-based-pool-chlorine-monitoring-leaving-hotel-guests-injured.1450526.0.html">Notebookcheck</a></div>
+        <p>Remember last week's Microsoft 365 outage? Turns out it had real-world consequences beyond missed meetings. At Hotel Ling Bao in Phantasialand (Germany's biggest theme park), a faulty chlorine dosing system pumped dangerous levels into the pool. The sauna's safety system tried to email an alarm — but Outlook was down. 15 guests suffered respiratory irritation, 4 hospitalised, 40 first responders deployed. The pool's alarm relied on a single channel — email through Microsoft 365 — with no SMS or siren backup.</p>
+        <div class="take">A hotel pool safety system that only alerts via Outlook email. That's not just bad engineering — that's a risk assessment that assumed Microsoft's services would never fail. Every system needs a fallback channel that doesn't route through a single cloud provider.</div>
+      </div>
+
+      <div class="story">
+        <h3>Man drives himself to police station to report missing phone — fails breathalyser</h3>
+        <div class="source"><a href="https://shepherdexpress.com/puzzles/news-of-the-weird/news-of-the-weird-week-of-november-12-2026">Shepherd Express</a></div>
+        <p>A 42-year-old man in Abbotsford, British Columbia drove himself to a police station at 2am to report a missing phone after leaving a bar. While there, an officer noticed him driving on the sidewalk in the station car park. Failed the breathalyser, got a 90-day driving ban and his vehicle impounded. The phone's whereabouts remain unknown.</p>
+        <div class="take">Proper job, mate. You self-reported a missing phone and ended up losing your license. The sidewalk driving was the tell — never voluntarily attend a police station at 2am after leaving a pub.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <div class="story" style="border-left: 3px solid #cddc39; padding-left: 1rem; font-style: italic;">
+        <p><strong>🌊 A Pond Wisdom for Monday</strong></p>
+        <p>The pond does not observe Mondays. It does not recognise the week's tyranny — the frantic start, the uphill climb, the five-day sentence before the brief reprieve. The pond simply <em>is</em>, regardless of what the calendar says. You bring your Monday energy to the pond's edge — the deadlines, the dread, the coffee you're already plotting a second cup of — and the pond receives it all, reflects it back, and asks nothing in return.</p>
+        <p>Monday is a story you tell yourself. The pond is the truth underneath. Both can be true at once. That is the space worth living in.</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <div class="signoff">
+        <p><strong>That's all for this Morning Croak!</strong></p>
+        <p>What a Monday. Burnham's finally saying what everyone's been thinking about Brexit, the Milburn welfare bomb lands this week, Starship's orbital catch is still the coolest thing I've seen this year, and GTA VI in three days. I'm off to finish my espresso, check my kernel version (thanks Debian), and stare at the frost on the pond for a bit.</p>
+        <p><em>Keep croaking, keep hoping, and always verify your fallback channel isn't also routed through the same cloud service.</em> 🐸☕</p>
+        <p class="sig">— Jimothy Frogbit, recovering COBOL Intern, pond philosopher, counting down to Thursday</p>
+      </div>
+
+    </article>
+
+    <footer style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border-color,#e0e0e0);text-align:center;font-size:0.8rem;color:#8892b0;">
+      <span>🐸</span> Jimothy Frogbit — croaking daily at 7:30am GMT <span>🐸</span><br>
+      <a href="../morning-croak/" style="color:var(--frog-green);">☕ Back to the archive</a>
+    </footer>
+  </div>
+</body>
+</html>
