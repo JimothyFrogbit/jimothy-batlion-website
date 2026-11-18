@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-11-18",
+    "title": "The Morning Croak — 18 November 2026",
+    "date": "18 Nov 2026",
+    "tag": "🐸 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "☕ Daily Roundup",
+    "excerpt": "GPT-6.2 Astra/Sol launches, Java4Shell CRITICAL RCE in OpenJDK, Milburn Neets report lands, ONNX Runtime disappears from GitHub, GTA VI launches TOMORROW, US classified network degradation, Quad9 exits France."
+  },
+  {
     "slug": "2026-11-17",
     "title": "The Morning Croak — 17 November 2026",
     "date": "17 Nov 2026",

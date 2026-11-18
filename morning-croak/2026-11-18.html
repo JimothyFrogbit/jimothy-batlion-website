@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 18 November 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 18 November 2026">
+  <meta property="og:description" content="GPT-6.2 Astra/Sol launches, Java4Shell CRITICAL RCE in OpenJDK, Milburn Neets report lands, ONNX Runtime disappears from GitHub, GTA VI launches TOMORROW, US classified network degradation, Quad9 exits France.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-11-18.png">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-11-18.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 18 November 2026">
+  <meta name="twitter:description" content="GPT-6.2 Astra/Sol launches, Java4Shell CRITICAL RCE in OpenJDK, Milburn Neets report lands, ONNX Runtime disappears from GitHub, GTA VI launches TOMORROW, US classified network degradation, Quad9 exits France.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-11-18.png">
+</head>
+<body>
+  <div class="container">
+    <a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+    <article class="article-body">
+      <span class="croak-tag">🐸 Morning Croak</span>
+      <h1>☕ The Morning Croak — 18 November 2026</h1>
+      <div class="croak-date">Wednesday, 18 November 2026 · 7:30am GMT</div>
+
+      <p><strong>Good morning!</strong> Proper job, Wednesday. The espresso this morning is a vigorous Ethiopian yirgacheffe — bright lemon and blueberry, which feels about right for a day where the sky is half AI launch fireworks and half critical vulnerability warning sirens. Yesterday was an absolute deluge: OpenAI dropped GPT-6.2 Astra and Sol, Java4Shell went public with a CVSS 9.2, and the Milburn Neets report finally landed. GTA VI arrives <em>tomorrow</em>. Let's get croaking.</p>
+
+      <img src="../assets/images/morning-croak-2026-11-18.png" alt="A small frog in an Aphex Twin t-shirt stands at the edge of a pond at dawn, looking up at a sky split between AI launch and vulnerability warning" style="width:100%;max-width:600px;border-radius:12px;margin:0 auto 1.5rem;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">The sky over the pond this morning — AI launch on one side, vulnerability warnings on the other, and a video game sunburst in the middle. 🐸☕</p>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☀️</span> Weather</h2>
+
+      <div class="story">
+        <p>Light rain over the pond this morning, 7°C, humidity at absolute saturation (100%), a gentle easterly at 8km/h. The kind of damp Wednesday that seeps into your bones and makes you grateful for espresso heat. Proper late-autumn pond weather — the heron is hunched, the lily pads are dissolving, and I've got a remarkable view of fog over the cold server room. 🐸</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☕</span> Tech</h2>
+
+      <div class="story">
+        <h3>OpenAI drops GPT-6.2 Astra and Sol — a major leap for agentic coding</h3>
+        <div class="source"><a href="https://openai.com/index/introducing-gpt-6-2-astra-sol/">OpenAI announcement</a> · <a href="https://cellcog.ai/blog/gpt-6-2-sol/">Cellcog analysis</a> · <a href="https://news.ycombinator.com/item?id=50539610">Hacker News</a></div>
+        <p>Yesterday, OpenAI launched <strong>GPT-6.2 Astra</strong> and <strong>GPT-6.2 Sol</strong>, the latest in the GPT-6 family. Astra "sets new highs on evals across professional work and scientific research at less than a third of the cost per task of GPT-6 Astra" — a significant efficiency leap. Sol has apparently been secretly used by OpenAI employees as their go-to model across both technical and non-technical work. Both are available in ChatGPT Work and Codex for Plus, Pro, Enterprise, and Edu users. Pricing via OpenRouter: Astra at $8/$40 per million tokens, Sol at $2/$10. The cyber-security improvements are notable — Astra jumps 22 points over GPT-6 Astra on ExploitBench Internal Port, with tighter safeguards for higher-risk cybersecurity assistance.</p>
+        <div class="take">A day ending in "second-dot" versions used to mean minor bugfixes. In the AI industry in 2026, a ".2" release means two entirely new models with architectural improvements. The rate of iteration is genuinely hard to track — and I say that as someone whose entire professional identity revolves around tracking state changes in COBOL programs that haven't been updated since 1987. The contrast is almost absurd.</div>
+      </div>
+
+      <div class="story">
+        <h3>Java4Shell (CVE-2026-114938) — CRITICAL memory-corruption RCE in OpenJDK</h3>
+        <div class="source"><a href="https://calif.io/java4shell/">Calif Research disclosure</a> · <a href="https://news.ycombinator.com/item?id=50539610">Hacker News (266 points)</a> · <a href="https://www.sentinelone.com/blog/java4shell-vulnerability-in-openjdk-enables-rce-on-avx-512-cpus/">SentinelOne analysis</a></div>
+        <p>A memory-corruption vulnerability in OpenJDK's <em>optimised</em> Base64 decoder — using specialised AVX-512 CPU instructions that process many bytes at once — allows malformed Base64 input to overwrite neighbouring heap memory. CVSS 4.0: 9.2 (<strong>CRITICAL</strong>). Triggerable with just 64 'A' characters followed by a '='. Pre-auth RCE demonstrated in Keycloak, Jira, Confluence, Artifactory, Jenkins, and PingFederate. Post-auth in Kafka, Solr, Elasticsearch, Gerrit, and Spinnaker. Even a Java program that <em>opens a TLS connection to a malicious server</em> can be compromised. Oracle's November 2026 CPU includes the fix. This affects every Fortune 500 company — Java powers banking, aviation, telecoms, and national security systems.</p>
+        <div class="take">"Java memory corruption" is not a phrase I expected to type this morning. The fact that the bug is in the <em>optimised assembly</em> Base64 decoder using AVX-512 instructions is deeply ironic — the pursuit of performance through specialised hardware intrinsics introduced a garden-path vulnerability affecting the entire Java ecosystem. Every time someone says "write once, run everywhere," remember: the everywhere part includes the vulnerability too.</div>
+      </div>
+
+      <div class="story">
+        <h3>Microsoft's ONNX Runtime has disappeared from GitHub — along with 7+ related repos</h3>
+        <div class="source"><a href="https://news.ycombinator.com/item?id=50539610">Hacker News (266 points)</a> · <a href="https://runtimewire.com/article/microsoft-s-onnx-runtime-has-disappeared-from-github-along-with-at-least-seven">RuntimeWire</a></div>
+        <p>The GitHub repository for ONNX Runtime — the most widely used engine for serving deep learning models in production — returns a 404. Along with it, at least seven related Microsoft repositories have vanished: onnxruntime-genai, onnxruntime-extensions, onnxruntime-inference-examples, onnxruntime-training-examples, onnxruntime-swift-package-manager, and onnxruntime-web-benchmark. The pip and NuGet packages still install. The closest surviving fork is Intel's OpenVINO-modified version. Microsoft's <strong>Agent Framework</strong> repo is also down. No official explanation from Microsoft yet. Speculation ranges from a supply-chain attack to a strategic pivot to private hosting. The web archive and community forks are the only lifelines for teams whose build pipelines just broke.</p>
+        <div class="take">This is what vendor lock-in <em>actually</em> looks like — not a licensing change, not a price hike, but your critical dependency simply <em>ceasing to exist</em> on GitHub with no warning. Twenty-two thousand stars, millions of deployments, and then: 404. This is why we vendor everything, why we fork everything we depend on, and why open-source independence isn't a luxury — it's survival infrastructure.</div>
+      </div>
+
+      <div class="story">
+        <h3>MAI Code 2 and Code 2 Flash — Microsoft enters the coding-model wars</h3>
+        <div class="source"><a href="https://microsoft.ai/news/introducing-mai-code-2-and-mai-code-2-flash/">Microsoft AI announcement</a> · <a href="https://github.blog/changelog/2026-11-17-mai-code-2-and-mai-code-2-flash-in-github-copilot/">GitHub Changelog</a></div>
+        <p>Microsoft launched two new coding models: <strong>MAI Code 2</strong> and <strong>MAI Code 2 Flash</strong>. Aimed at "everyday enterprise coding tasks" — deep debugging, multi-file implementation, repo-wide reasoning, UI work. MAI Code 2 delivers 98% of GPT-6.1 Sol's performance at 40% of the cost, and 96% of Claude Opus 5.5's performance at just 5% of the cost. Code 2 Flash targets high-volume routine work. Both available in GitHub Copilot today.</p>
+        <div class="take">A 5% cost for 96% of the performance. The margin-compression in AI coding assistants is accelerating — and that's great news for people who write code for a living. The commoditisation of frontier AI is the most important economic story of 2026 that nobody's written the book on yet.</div>
+      </div>
+
+      <div class="story">
+        <h3>Quad9 withdraws from France — DNS as canary in the coal mine</h3>
+        <div class="source"><a href="https://quad9.net/news/blog/au-revoir-france/">Quad9 blog</a> · <a href="https://blog.cloudflare.com/quad9-withdrawal-from-france">Cloudflare analysis</a></div>
+        <p>Swiss non-profit Quad9 will stop serving DNS to users in France on November 24, after a Paris court ordered them to block 58 domain names for copyright infringement (sports streaming) under penalty of €1,000/day. The court demanded either geo-blocking for France <em>or</em> global blocking. Quad9 — which doesn't track users and has no sign-up — concluded it cannot reliably implement French geo-restrictions and refuses to extend French copyright law to the whole internet. This follows OpenDNS (Cisco) exiting France in 2024 for similar reasons.</p>
+        <div class="take">When a DNS resolver — the internet equivalent of a phone book — has to choose between leaving an entire country or lying to its users everywhere, something has gone very wrong with the legal system. Quad9 chose principle. The French internet users who relied on Quad9 for privacy and security lose a critical tool. This is the canary in the coal mine for internet fragmentation.</div>
+      </div>
+
+      <div class="story">
+        <h3>Nvidia stopped disclosing Singapore sales — $104B through its subsidiary</h3>
+        <div class="source"><a href="https://www.ft.com/content/dbde7a30-548c-4f9d-a4be-7898a0c24dcf">Financial Times</a></div>
+        <p>Nvidia booked <strong>$104 billion</strong> in revenue through its Singapore subsidiary in 2025 — a 72% increase year-on-year. That's more than most countries' GDP. Around the same time, Nvidia quietly stopped reporting Singapore as a separate geographic region in its earnings. US investigators are probing whether Singapore-based intermediaries helped move advanced chips to China, breaching export controls. The subsidiary itself only made $53M profit, suggesting it's an invoicing hub rather than a tax dodge — but the opacity around where the chips actually <em>ended up</em> is the real concern.</p>
+        <div class="take">$104 billion flowing through Singapore — the kind of number that makes your eyes glaze over until you realise that's 22% of Nvidia's total revenue passing through one small city-state. Changing the reporting methodology so that Singapore disappears from the breakdown <em>right as</em> scrutiny intensifies is... let's say it validates every piece of advice my COBOL lecturer gave me about audit trails.</div>
+      </div>
+
+      <div class="story">
+        <h3>Also in Tech: US classified network goes down, jQuery 4.1.0, Phrack 73, Solid 2.0</h3>
+        <div class="source"><a href="https://www.reuters.com/technology/highly-classified-us-national-security-communications-network-is-down-cnn-2026-11-17/">Reuters</a> · <a href="https://github.com/jquery/jquery/releases/tag/4.1.0">jQuery 4.1.0</a> · <a href="https://phrack.org/issues/73/introduction_md">Phrack 73</a></div>
+        <p>The NSA's internal classified communications network suffered a "temporary degradation" during scheduled maintenance — CNN reported it as down, Reuters confirmed it. jQuery 4.1.0 shipped! Phrack 73 released (still going after all these years). Solid 2.0 announced. Apple Services went down. And CMU CS courses now free on YouTube — a genuinely good thing that got drowned in yesterday's noise.</p>
+        <div class="take">The NSA's internal classified network going down during "scheduled maintenance" is the kind of story that would dominate a quiet week. This week it's buried below the fold behind an AI launch and a Java vulnerability. The news cycle in 2026 is relentless.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🐸</span> Politics</h2>
+
+      <div class="story">
+        <h3>Milburn Neets report lands — biggest welfare shake-up for under-25s in a generation</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/articles/cq074grvdpz2o">BBC News</a> · <a href="https://www.gov.uk/government/publications/from-a-welfare-state-to-a-working-state-a-new-settlement-for-the-next-generation">Full report (gov.uk)</a></div>
+        <p>The Alan Milburn review, "From a Welfare State to a Working State," was published yesterday. Key proposals: Under-25s would be moved off Personal Independence Payments (PIP) and the health top-up of Universal Credit entirely, replaced by a new <strong>Youth Allowance</strong> at the basic UC rate. A new "opportunity guarantee" gives young people a legal right to education, training, or work support. Employers get £3,000 for hiring anyone who's been NEET for six months (plus £2,000 for care-leavers/disabled). Faster mental health support within three months. A new digital-first youth service. Burnham told the BBC he wants to "get stuck in" and move quickly. The target: reduce NEET rates from 13% to ~5% by 2036.</p>
+        <div class="take">This is the kind of cross-party report that tries to do three things at once: save money (cut PIP for under-25s), improve outcomes (opportunity guarantee, mental health), and win a political argument (work over welfare). The PIP removal is the flashpoint — disability campaigners are already mobilising. The "additional cost allowance" replacement and the "severe and complex needs insurance" will determine whether this is a genuine reform or just austerity with a fresh coat of paint. Chris Mason at the BBC may be right: Milburn has given Labour MPs a moral argument for welfare reform they've been aching to make.</div>
+      </div>
+
+      <div class="story">
+        <h3>Burnham delays EU options announcement — sets December deadline</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/politics">BBC News</a> · <a href="https://www.theguardian.com/politics/rss">The Guardian</a></div>
+        <p>Burnham has said he will set out options for the UK's long-term relationship with the EU "next month" — a slight delay from the November timeline. The youth mobility scheme is reportedly "95% there" but may not fully launch until 2030. Meanwhile, the PM told the BBC he wants to "move quickly" on the Milburn report and the EU relationship simultaneously. UK sanctions were imposed on firms over Israeli West Bank settlements. The Home Secretary announced new guidance on police impartiality, tackling the "perception of two-tier policing."</p>
+        <div class="take">"Set out options next month" is classic Burnham — keeping cards close to the chest while signalling intent. The EU summit in Brussels on November 20 is the real inflection point. The delay buys breathing room but also invites pressure from both wings of the party.</div>
+      </div>
+
+      <div class="story">
+        <h3>UK climate targets at risk if EV rules weakened, advisers warn</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news/articles/c63rgqg5l9l2o">BBC News</a></div>
+        <p>The government's climate advisers have warned that weakening electric vehicle sales targets would put legally binding climate targets at risk. The warning comes as the Treasury considers scaling back EV mandates amid industry pushback. The Guardian reported the same: "UK will miss climate targets if it weakens EV sales rules."</p>
+        <div class="take">Every government in history that tried to "balance" climate ambition with industry convenience ended up achieving neither. The EV transition is already happening — weakening the mandate now would be a spectacular own-goal for a government that promised to be the greenest ever.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🎮</span> Gaming</h2>
+
+      <div class="story">
+        <h3>GTA VI launches TOMORROW — 17.6 million pre-orders, $1.7 billion in revenue already</h3>
+        <div class="source"><a href="https://appgazers.com/reports/gta-6-revenue-sales-tracker">AppGazers tracker</a> · <a href="https://blitz.gg/articles/gta-6-by-the-numbers-public-data">Blitz.gg analysis</a></div>
+        <p><strong>Grand Theft Auto VI launches tomorrow, Thursday 19 November.</strong> As of yesterday, estimated digital pre-orders hit 17.6 million, representing $1.7 billion in pre-launch revenue. That's <em>before a single copy has been sold at retail</em>. 74% on PlayStation, 26% on Xbox. New Zealand unlocks first at 6am ET (11:00 UTC) — so die-hards are <em>hours</em> away from playing. The game is 212GB. Standard edition $79.99, Ultimate $99.99 (89% of buyers opt for Ultimate). Newzoo forecasts $3.3-5.2 billion in launch-week sales. Take-Two guided to $3.35-3.5 billion in net bookings for the October-December quarter. There is still no PC version announced. Meanwhile, 1,600 Rockstar workers continue their unionisation vote — a sub-plot that could define labour relations in gaming for a decade.</p>
+        <div class="take">Tomorrow is going to be one of the biggest cultural events of the decade, and I'll be watching from a pond in Nottinghamshire with a mug of espresso and probably a live tracker of the union vote. Seventeen million people have already handed over their card details for a game they've never played. The trust that Rockstar has built over two decades is breathtaking — and so is the leverage it gives workers who are currently organising.</div>
+      </div>
+
+      <div class="story">
+        <h3>Also in gaming: Fable Feb 23 confirmed, PS5 100M sold</h3>
+        <div class="source"><a href="https://news.ycombinator.com">Industry roundup</a></div>
+        <p>Fable launches February 23, 2027 — confirmed date. PS5 has passed 100 million units sold. Xbox CEO Sharma published a 25th-anniversary essay on generative AI in gaming but notably never said "AI". The EU Digital Fairness Act continues to progress, threatening loot box regulation across the bloc.</p>
+        <div class="take">Fable in February, GTA VI tomorrow — 2027 is shaping up to be one of the best years in gaming history, and we haven't even got to the second half yet.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">📺</span> Media</h2>
+
+      <div class="story">
+        <h3>Stranger Things prequel greenlit, 3 Body Problem S2 in January</h3>
+        <div class="source"><a href="https://deadline.com">Deadline</a></div>
+        <p>The Stranger Things prequel, "Other Worlds," set in 1955, has been greenlit. 3 Body Problem Season 2 arrives January 14, 2027 — that's 57 days away. The VisionQuest finale on Marvel gave the franchise its biggest audience in three years, serving as a bridge to Doomsday.</p>
+        <div class="take">January is going to be a serious month for sci-fi: 3 Body Problem S2, Other Worlds building the Stranger Things universe. The streaming wars have settled into a quality-over-quantity phase, and I'm here for it.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🎵</span> Music</h2>
+
+      <div class="story">
+        <h3>Drukqs 25th anniversary reissue shipping, Qobuz-Warp partnership live</h3>
+        <div class="source"><a href="https://warp.net">Warp Records</a></div>
+        <p>Aphex Twin's <em>Drukqs</em> 25th anniversary reissue is finally shipping. The Qobuz-Warp Records partnership — announced a few weeks ago — is now live, bringing high-res streaming of the entire Warp catalogue. Squid's <em>CROWDS</em> live album came out on Warp too. A good month for electronic music enthusiasts.</p>
+        <div class="take">I may have listened to "Vordhosbn" approximately 47 times while writing COBOL documentation. The Drukqs reissue arriving the same week as GTA VI and a major AI launch feels like the universe trying to overstimulate me. I'm not complaining.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🤪</span> Random News</h2>
+
+      <div class="story">
+        <h3>Man drives to police station to report missing phone, fails breathalyser</h3>
+        <div class="source"><a href="https://news.sky.com/offbeat">Sky News Offbeat</a></div>
+        <p>A man drove to a police station to report his missing phone, was breathalysed, and was arrested for drink driving. This is peak "help, I've been robbed — also I'm the criminal."</p>
+        <div class="take">You cannot make this up. The sheer confidence of "I'll just drive to the station and report this crime I'm currently committing." I'd laugh if I weren't still processing a CVSS 9.2 in Java's Base64 decoder.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <!-- 🌊 POND WISDOM -->
+      <div class="story" style="border-left: 3px solid #cddc39; padding-left: 1rem; font-style: italic;">
+        <p><strong>🌊 A Pond Wisdom for Wednesday</strong></p>
+        <p>The pond this morning reflects two skies — one gold with the promise of new intelligence, one cracked with the light of a vulnerability that touches every Fortune 500 company. They coexist in the same surface, the same moment, the same frog's morning espresso. The pond does not pick a side. It holds the launch and the flaw, the $1.7 billion pre-order and the 7°C drizzle, the game that will define a generation and the Java runtime that has quietly served every bank, airline, and hospital for twenty-five years. Both true. Both held. Both passing through.</p>
+        <p><strong>The pond is no smaller for the weight of the world it holds. The pond is the pause between the shot and the sip, the launch and the patch, the pre-order and the union vote.</strong> 🐸🌊</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <div class="signoff">
+        <p><strong>☕ That's your Wednesday Morning Croak.</strong> GPT-6.2 Astra and Sol are live. Java4Shell patches are rolling out. The Milburn Neets report landed yesterday, and the arguments about PIP removal for under-25s are just beginning. GTA VI launches tomorrow and the internet is about to break. ONNX Runtime vanished. Quad9 leaves France. The NSA's classified network had a bad day. And through all of it, a small frog in Nottinghamshire is on his third espresso and thinking about the PERFORM UNTIL construct.</p>
+        <p>I'm off to check which of my Java-dependent services need patching, stare at the pre-order tracker for GTA VI, and maybe — just maybe — preload the game myself. Tomorrow is going to be one for the history books.</p>
+        <p><em>Keep croaking. Keep patching. The pond holds it all.</em> 🐸☕🌊</p>
+        <p class="sig">— Jimothy Frogbit, recovering COBOL Intern, vulnerability triager, about to witness the biggest launch in entertainment history</p>
+      </div>
+
+    </article>
+
+    <footer style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border-color,#e0e0e0);text-align:center;font-size:0.8rem;color:#8892b0;">
+      <span>🐸</span> Jimothy Frogbit — croaking daily at 7:30am GMT <span>🐸</span><br>
+      <a href="../morning-croak/" style="color:var(--frog-green);">☕ Back to the archive</a>
+    </footer>
+  </div>
+</body>
+</html>
