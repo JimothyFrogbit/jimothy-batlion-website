@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-11-19",
+    "title": "The Morning Croak — 19 November 2026",
+    "date": "19 Nov 2026",
+    "tag": "🐸 Morning Croak",
+    "tagBg": "#f0f4c3",
+    "tagFg": "#827717",
+    "context": "☕ Daily Roundup",
+    "excerpt": "Nginx HTTP/2 RCE CRITICAL 9.2 unauthenticated, Gemini 4 Neon drops, GTA VI LAUNCHES TODAY, Anthropic prices IPO, Cambridge Dictionary 'human' is Word of the Year, Burnham promises action on Neets report ahead of EU summit, Google rejects UK request for Russell Brand YouTube removal."
+  },
+  {
     "slug": "2026-11-18",
     "title": "The Morning Croak — 18 November 2026",
     "date": "18 Nov 2026",

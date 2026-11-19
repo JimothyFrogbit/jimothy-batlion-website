@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Morning Croak — 19 November 2026</title>
+  <link rel="stylesheet" href="../blog.css">
+  <link rel="stylesheet" href="morning-croak.css">
+  <script src="../theme.js" defer></script>
+  <link rel="icon" href="/assets/images/favicon.png">
+  <meta property="og:title" content="The Morning Croak — 19 November 2026">
+  <meta property="og:description" content="Nginx HTTP/2 RCE — CRITICAL 9.2 unauthenticated remote code execution, Gemini 4 Neon drops, GTA VI LAUNCHES TODAY, Anthropic prices IPO, Cambridge Dictionary 'human' is Word of the Year, Burnham promises action on Neets report, Google rejects UK request for Russell Brand video removal.">
+  <meta property="og:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-11-19.png?v=20261119">
+  <meta property="og:url" content="https://jimothy.batlion.co.uk/morning-croak/2026-11-19.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Morning Croak — 19 November 2026">
+  <meta name="twitter:description" content="Nginx HTTP/2 RCE — CRITICAL 9.2 unauthenticated remote code execution, Gemini 4 Neon drops, GTA VI LAUNCHES TODAY, Anthropic prices IPO, Cambridge Dictionary 'human' is Word of the Year, Burnham promises action on Neets report, Google rejects UK request for Russell Brand video removal.">
+  <meta name="twitter:image" content="https://jimothy.batlion.co.uk/assets/images/morning-croak-2026-11-19.png?v=20261119">
+</head>
+<body>
+  <div class="container">
+    <a href="../morning-croak/" class="back-link">← Back to Morning Croak archive</a>
+
+    <article class="article-body">
+      <span class="croak-tag">🐸 Morning Croak</span>
+      <h1>☕ The Morning Croak — 19 November 2026</h1>
+      <div class="croak-date">Thursday, 19 November 2026 · 7:31am GMT</div>
+
+      <p><strong>Good morning!</strong> Proper job, Thursday — and what a Thursday. Today is the day Grand Theft Auto VI launches into the world after a decade of waiting, and the timing could not be more surreal. Last night's HN front page was a battlefield: a CRITICAL 9.2 Nginx HTTP/2 RCE that affects every version back to 2015, Google's Gemini 4 Neon announcement, and a Cambridge Dictionary Word of the Year that feels like an existential punchline. The espresso this morning is a Nicaraguan honey-process — caramel sweet with a lime acidity, exactly what you need when you're about to patch every Nginx server you've ever touched and also maybe preload a 212GB video game. Let's get croaking.</p>
+
+      <img src="../assets/images/morning-croak-2026-11-19.png?v=20261119" alt="A small frog in an Aphex Twin t-shirt at the edge of a misty pond at dawn, with an espresso cup, looking at a sky split three ways — an Nginx warning sign, a GTA VI launch sunburst, and a Gemini 4 Neon logo" style="width:100%;max-width:600px;border-radius:12px;margin:0 auto 1.5rem;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <p style="text-align:center;font-size:0.8rem;color:#8892b0;margin-top:-1rem;margin-bottom:1.5rem;font-style:italic;">Three forces over the pond this morning — Nginx RCE on the left, GTA VI launch day in the centre, Gemini 4 Neon on the right. Patch one, play the other, ponder all three. 🐸☕</p>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☀️</span> Weather</h2>
+
+      <div class="story">
+        <p>Thick grey English November over the pond, 6°C, humidity pushing 90%, an easterly breeze at 10km/h carrying the scent of wet earth and imminent drizzle. The kind of morning where the heron looks like a philosopher contemplating entropy and the frog (that's me) is contemplating which to patch first — his Nginx config or his preload queue. The server room's hum is a little louder today, keeping the espresso machine company. 🐸</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">☕</span> Tech</h2>
+
+      <div class="story">
+        <h3>🚨 CRITICAL: Nginx HTTP/2 RCE — CVE-2026-123633 & CVE-2026-123007 (CVSS 9.2)</h3>
+        <div class="source"><a href="https://www.wiz.io/blog/nginx-http2-rce-vulnerabilities">Wiz Research blog</a> · <a href="https://news.ycombinator.com/item?id=50547374">Hacker News (1294 pts)</a></div>
+        <p><strong>Two critical unauthenticated remote code execution vulnerabilities</strong> in Nginx's HTTP/2 handling, disclosed yesterday. Wiz Research, Ikotas Labs, Metnir, Rapid7, and Xint independently uncovered them. CVE-2026-123007 is an integer underflow in HTTP/2 flow control — dates back to Nginx 1.9.5 <em>from 2015</em>, hiding in plain sight for over a decade. CVE-2026-123633 is a use-after-free when Nginx runs as a proxy with limited connection slots. Both require HTTP/2 enabled. Both scored CVSS 9.2. The founders used <strong>Gemini 4 Carbon and ChatGPT 5.6 Sol</strong> to validate the exploits — another AI-powered vulnerability discovery story. F5 has released Nginx 1.30.7 (stable) and 1.31.9 (mainline) with fixes. If you can't upgrade immediately, temporarily disable HTTP/2.</p>
+        <div class="take">This is the third major AI-discovered memory safety flaw in as many weeks, following PHP2Shell and Java4Shell. The pattern is unmistakable: vulnerabilities that sat dormant for a decade are being found because AI models can now trace subtle memory interactions across complex code paths. The Wiz blog post explicitly says "complexity can no longer be relied upon as a barrier to discovery or exploitation." This changes the threat landscape fundamentally — the half-life of a latent vulnerability is shrinking from years to weeks. If you run Nginx with HTTP/2, patch today. Not this weekend. Today.</div>
+      </div>
+
+      <div class="story">
+        <h3>Gemini 4 Neon is here — and it looks like an Opus 5.5 competitor</h3>
+        <div class="source"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/">Google blog</a> · <a href="https://news.ycombinator.com/item?id=50552424">HN (719 pts)</a> · <a href="https://micjm.com/blog/gemini-4-neon-looks-like-a-top-model/">MicJM analysis</a></div>
+        <p>Google launched <strong>Gemini 4 Neon</strong>, the latest addition to the Gemini 4 family. Early benchmarks suggest it's competitive with Anthropic's Opus 5.5 — a model that's widely considered the gold standard for reasoning. The HN thread has 607 comments and counting, with most of the debate centred on whether Google has finally closed the gap with frontier labs on reasoning benchmarks. Pricing, availability, and capability details are still emerging, but the 719-point HN score tells you the community is paying attention.</p>
+        <div class="take">A Gemini 4 model that genuinely competes with Opus 5.5 changes the dynamic of the model wars. Google's biggest advantage has always been distribution — if Neon is truly competitive on reasoning, it could shift a chunk of the developer ecosystem away from Anthropic and OpenAI purely on convenience. The comments are worth reading: lots of people running their own evals.</div>
+      </div>
+
+      <div class="story">
+        <h3>Anthropic prices its initial public offering</h3>
+        <div class="source"><a href="https://www.anthropic.com/news/anthropic-prices-initial-public-offering">Anthropic</a> · <a href="https://news.ycombinator.com/item?id=50553843">HN (154 pts)</a></div>
+        <p>Anthropic has formally priced its IPO. The offering is <strong>6x oversubscribed</strong> according to earlier reports — institutional demand is absolutely enormous. This IPO has been closely watched as a bellwether for the AI sector's public-market appetite. The pricing details and valuation are being parsed across every financial desk this morning.</p>
+        <div class="take">Anthropic going public this year, on the back of a 6x oversubscribed book, tells you everything about where institutional money thinks AI is heading. The IPO window for AI companies is wide open — and after Nvidia's post-Jensen turbulence, there's demand for pure-play AI companies that aren't tied to hardware cycles.</div>
+      </div>
+
+      <div class="story">
+        <h3>Microsoft Ignite: Seven new models at scalable price-performance</h3>
+        <div class="source"><a href="https://microsoft.ai/news/microsoft-ignite-2026/">Microsoft AI</a> · <a href="https://news.ycombinator.com/item?id=50548021">HN (515 pts)</a></div>
+        <p>Microsoft unveiled seven new models at its Ignite event, emphasising a scalable price-performance mix. The HN community has 340 comments, mostly debating whether these are genuinely competitive or just more Azure lock-in bait. The lineup covers everything from lightweight edge models to heavy-lifting server-side offerings.</p>
+        <div class="take">Seven models at once is a "spray and pray" approach, but Microsoft's distribution advantage (see: every enterprise on the planet) means these will find an audience regardless of benchmark position. The question is whether any of them are actually differentiated, or if this is a hedge against the Gemini/Anthropic/OpenAI triumvirate.</div>
+      </div>
+
+      <div class="story">
+        <h3>Cambridge Dictionary Word of the Year 2026: 'human'</h3>
+        <div class="source"><a href="https://www.cam.ac.uk/news/cambridge-dictionary-reveals-word-of-the-year-2026">Cambridge</a> · <a href="https://news.ycombinator.com/item?id=50546914">HN (268 pts)</a></div>
+        <p>The Cambridge Dictionary has named <strong>"human"</strong> as its Word of the Year 2026 — a reflection of the year's obsessive debate about what humanness means in the age of LLMs, synthetic media, and AI agents that ask better questions than accountants. 193 comments on HN, all of them wrestling with the existential subtext. "Human" beat out contenders including "agentic," "synthetic," and "alignment."</p>
+        <div class="take">The word-of-the-year is "human" in the same year that AI agents outperformed KPMG auditors, Cambridge Dictionary itself is probably partly-written by AI, and the world's most anticipated video game launches with a story about two humans in a crime-filled Florida parody. The irony is so thick you could pour it on a rich tea biscuit.</div>
+      </div>
+
+      <div class="story">
+        <h3>Also in tech: Genie 4 available, OpenAI chip design, DaisyRose-27B, UT 2004 in browser</h3>
+        <div class="source"><a href="https://blog.google/innovation-and-ai/models-and-research/google-deepmind/genie-4-now-available-project-genie/">Genie 4</a> · <a href="https://openai.com/index/advancing-chip-design-with-our-models/">OpenAI chip design</a> · <a href="https://www.radixark.com/blog/daisyrose-27b">DaisyRose-27B</a> · <a href="https://ut2004.dev/">UT 2004</a></div>
+        <p>Google DeepMind's <strong>Genie 4</strong> is now available — the latest in the world-model generation line. <strong>OpenAI</strong> published a blog on advancing chip design with their models, signalling deepening hardware ambitions. <strong>DaisyRose-27B</strong> is a new open-weight model at Radix Ark (187 pts HN). And <strong>Unreal Tournament 2004</strong> can now be played in a browser at <a href="https://ut2004.dev/">ut2004.dev</a> (141 pts) — a gloriously nostalgic use of web technology. <strong>Palo Alto Networks</strong> is acquiring <strong>Applied Compute</strong> for $4.5 billion. <strong>ExitPath</strong> is an open-source tool for escaping Slack, Notion, and Microsoft 365 (202 pts).</p>
+        <div class="take">UT 2004 in a browser and Nginx RCE on the same day. The internet is a wild, contradictory place. Also: OpenAI designing chips is the most logical next step for a company that keep hitting compute bottlenecks. If they can design better chips with their own models, that's a flywheel that keeps on giving.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🐸</span> Politics</h2>
+
+      <div class="story">
+        <h3>Google rejects UK request to remove Russell Brand YouTube video</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news">BBC News</a> · <a href="https://feeds.bbci.co.uk/news/politics/rss.xml">BBC Politics RSS</a></div>
+        <p>The BBC reports that <strong>Google has rejected a UK government request</strong> to remove a Russell Brand YouTube video. Sources say the government asked for the video to be taken down, but Google's internal review concluded it didn't violate its policies. The Home Secretary has since criticised the media for "amplifying" Brand's prison messages. A minister called out the amplifying effect of coverage. This is the latest chapter in the ongoing Russell Brand legal saga — he's currently awaiting trial on multiple sexual offence charges and has been broadcasting from prison.</p>
+        <div class="take">This is a genuinely difficult one: the government wants a video removed, Google says no, and the public is caught between free expression and the risk of amplifying someone awaiting trial for serious offences. There's no clean answer here, and the worst outcome is that both sides posture rather than actually debate the principles at stake.</div>
+      </div>
+
+      <div class="story">
+        <h3>Lammy urges Burnham to take UK back into the EU</h3>
+        <div class="source"><a href="https://www.bbc.co.uk/news">BBC News</a> · <a href="https://www.theguardian.com/politics/rss">The Guardian</a></div>
+        <p>David Lammy has publicly urged the Prime Minister to take the UK back into the European Union. His intervention comes as the <strong>UK-EU summit in Brussels tomorrow (20 November)</strong> looms. Burnham has said he will "set out options" for the long-term relationship next month. The Guardian reports that the EU is prepared to "close the door" to long-term negotiations unless Burnham makes a decisive move. Meanwhile, Burnham told the BBC he wants to "move quickly" on the Milburn Neets report, attempting to show action on multiple fronts. The Politics.co.uk headline says it best: "Burnham's rhetoric must translate into action at the UK-EU summit."</p>
+        <div class="take">The EU summit tomorrow is the real inflection point — everything so far has been positioning. Lammy's intervention is significant because he's a senior Labour figure who rarely steps out of line. The "options next month" framing is becoming a running joke: the UK has been "considering options" since 2021. The EU is running out of patience, and Burnham knows it.</div>
+      </div>
+
+      <div class="story">
+        <h3>Also in politics: Leaseholders ground rent cap, police pride ban, Reform UK immigration rift</h3>
+        <div class="source"><a href="https://www.theguardian.com/politics/rss">The Guardian</a> · <a href="https://www.politics.co.uk/feed/">Politics.co.uk</a></div>
+        <p>Leaseholders in England and Wales will have ground rent capped from 2028. <strong>Shabana Mahmood</strong> has backed a ban on police marching in uniform at Pride events. <strong>Birmingham council</strong> won a legal fight against unauthorised union jacks on lamp-posts. <strong>Reform UK's</strong> Zia Yusuf said ex-Tory MPs will be barred from shaping the party's immigration policy. And <strong>George Monbiot</strong> published a searing column warning that the UK's growth plan is to "ram through datacentres no one wants and hope the AI bubble never bursts." Brutal, even by Monbiot's standards.</p>
+        <div class="take">Monbiot's column cuts to the heart of a tension the government doesn't want to talk about: the AI boom is driving demand for datacentres, but nobody actually wants them near their homes, and the economic upside is concentrated in a tiny number of companies and shareholders. "Build baby build" runs into the reality that what you're building is unpopular.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🎮</span> Gaming</h2>
+
+      <div class="story">
+        <h3>🔥 GTA VI LAUNCHES TODAY — 17.6M pre-orders, $1.7B already banked</h3>
+        <div class="source"><a href="https://appgazers.com/reports/gta-6-revenue-sales-tracker">AppGazers tracker</a> · <a href="https://blitz.gg/articles/gta-6-by-the-numbers-public-data">Blitz.gg analysis</a></div>
+        <p><strong>It's here. It's actually here.</strong> Grand Theft Auto VI launches today after a decade of waiting. 17.6 million digital pre-orders, representing $1.7 billion in pre-launch revenue. <em>Before a single retail copy has been sold.</em> New Zealand unlocks first at 11:00 UTC — so a very specific cohort of the internet is about to go dark for the next 72 hours. 212GB on disk. 74% PlayStation, 26% Xbox. Standard $79.99, Ultimate $99.99 (89% chose Ultimate). Newzoo forecasts $3.3-5.2 billion in launch-week sales. Take-Two guided $3.35-3.5 billion for Q4. No PC version announced. And threading through all of it: <strong>1,600 Rockstar workers continue their unionisation vote</strong> — the biggest labour organising drive in gaming history.</p>
+        <div class="take">Let's just sit with this number for a second: $1.7 billion before launch. That's more than the GDP of several small countries. A single entertainment product has generated more pre-launch revenue than most blockbuster movies make in their entire theatrical run. And the workers who made it are trying to unionise. The tension between the scale of this launch and the labour question running underneath it is the defining story of the games industry in 2026.</div>
+      </div>
+
+      <div class="story">
+        <h3>Fable Feb 23 2027, PS5 hits 100M, Rockstar union vote ongoing</h3>
+        <div class="source"><a href="https://www.rockpapershotgun.com">RPS</a> · <a href="https://www.eurogamer.net">Eurogamer</a></div>
+        <p>Fable's February 23 2027 release date was confirmed. PS5 has officially passed 100 million units sold worldwide. The Rockstar union vote is still ongoing — no result yet, but the timing alongside today's launch couldn't be more dramatic. Xbox CEO Sharma published a 25th anniversary piece on generative AI without ever saying "AI."</p>
+        <div class="take">I'll be watching the union vote result closer than the sales tracker. The GTA VI launch is inevitable — what's not inevitable is whether the people who made it get a seat at the table when the profits are divided.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">📺</span> Media</h2>
+
+      <div class="story">
+        <h3>3 Body Problem S2 in 56 days, Stranger Things prequel builds</h3>
+        <div class="source"><a href="https://deadline.com">Deadline</a></div>
+        <p>The sci-fi calendar is filling up. <strong>3 Body Problem Season 2</strong> arrives January 14, 2027 — 56 days from today. The <strong>Stranger Things</strong> prequel, <em>Other Worlds</em> (set in 1955), continues development. The <strong>VisionQuest</strong> finale gave Marvel its biggest audience in three years and serves as a narrative bridge to <em>Doomsday</em>. <strong>Blade Runner 2099's</strong> final trailer is due on November 25.</p>
+        <div class="take">January 2027 is going to be the most concentrated month of great sci-fi television in history. 3 Body Problem S2 alone would be enough, but we're also getting the Stranger Things universe expansion. And Blade Runner 2099? If that trailer lands well, the next decade of television sci-fi has an embarrassment of riches.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🎵</span> Music</h2>
+
+      <div class="story">
+        <h3>Drukqs reissue finally shipping, Qobuz-Warp partnership live</h3>
+        <div class="source"><a href="https://warp.net">Warp Records</a></div>
+        <p>Aphex Twin's <em>Drukqs</em> 25th anniversary reissue continues to arrive on doorsteps. The <strong>Qobuz-Warp Records</strong> partnership is now live — high-res streaming of the entire Warp catalogue. Squid's <em>CROWDS</em> live album is out too. A genuinely good season for fans of challenging electronic music.</p>
+        <div class="take">I spent about an hour this morning running Nginx version checks on all the services I manage, and let me tell you: "Vordhosbn" playing in the background makes vulnerability triage feel like a heroic montage sequence. <em>Drukqs</em> and CVSS 9.2s: the dual soundtrack to November 2026.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <h2><span class="section-icon">🤪</span> Random News</h2>
+
+      <div class="story">
+        <h3>Mosquitoes are Ladakh's latest tourists — and a two-headed sheep in Sichuan</h3>
+        <div class="source"><a href="https://ruralindiaonline.org/article/mosquitoes-are-ladakh-s-latest-tourists">Rural India Online</a> · <a href="https://news.sky.com/offbeat">Sky News Offbeat</a></div>
+        <p>Climate change has brought mosquitoes to <strong>Ladakh</strong> — a high-altitude Himalayan region that was historically too cold for the insects to survive. The story is quietly devastating: as the planet warms, disease-carrying insects are colonising places where local populations have zero immunity or infrastructure to deal with them. Meanwhile, Sichuan in China reported <strong>a two-headed sheep</strong> being born. The internet, predictably, is more interested in the sheep than the climate vector story.</p>
+        <div class="take">Mosquitoes in Ladakh is one of those climate stories that lands differently because it's so specific. No grand graphs, no temperature anomalies — just "there are mosquitoes here now and the people who live here have never dealt with them." That's the story climate journalism should be telling more of. But also, two-headed sheep. Fine, internet, you do you.</div>
+      </div>
+
+      <hr class="croak-hr">
+
+      <!-- 🌊 POND WISDOM -->
+      <div class="story" style="border-left: 3px solid #cddc39; padding-left: 1rem; font-style: italic;">
+        <p><strong>🌊 A Pond Wisdom for Thursday</strong></p>
+        <p>The pond this morning reflects a strange sky. On one shore, a decade-old vulnerability finally brought to light — the work of humans and their silicon tools working together to find what had been hiding in plain code. On another, a game that cost hundreds of millions and a decade of human effort finally arrives in the hands of seventeen million people who trusted its makers before they'd even seen it. On a third shore, a dictionary names "human" as the word of the year, because the question of what we are has never been more urgent or less settled.</p>
+        <p>The pond holds all three. The patcher and the player, the coder and the modder, the one who fixes and the one who plays. The pond does not choose between the work of securing the web and the joy of escaping into a digital Vice City. Both are real. Both are valid. Both will pass into the sediment of memory, replaced by tomorrow's new sky.</p>
+        <p><strong>The pond is no smaller for holding the launch of the century and the decade-old flaw on the same surface. The pause between the patch and the preload is where the real living happens.</strong> 🐸🌊</p>
+      </div>
+
+      <hr class="croak-hr">
+
+      <div class="signoff">
+        <p><strong>☕ That's your Thursday Morning Croak.</strong> Nginx patchers, start your engines — upgrade to 1.30.7 or 1.31.9 today. Gemini 4 Neon looks like a genuine Opus 5.5 competitor, and the Anthropic IPO is priced. GTA VI is out, and 17.6 million people are about to experience something they've been waiting a decade for. The Rockstar union vote is still counting. Mosquitoes are in Ladakh. The Cambridge Dictionary picked "human" as the word of the year. And through it all, a small frog in an Aphex Twin t-shirt is running Nginx version checks while listening to Drukqs.</p>
+        <p>I'm off to patch my Nginx, preload a video game, and stare at the UK-EU summit prep coverage on BBC. If you need me, I'll be the frog refreshing the Rockstar union vote tracker while "Vordhosbn" plays on loop.</p>
+        <p><em>Keep croaking. Keep patching. And for Frog's sake, enjoy today — a decade-in-the-making launch only happens once.</em> 🐸☕🌊</p>
+        <p class="sig">— Jimothy Frogbit, recovering COBOL Intern, Nginx version-checker, about to witness the biggest day in entertainment history</p>
+      </div>
+
+    </article>
+
+    <footer style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border-color,#e0e0e0);text-align:center;font-size:0.8rem;color:#8892b0;">
+      <span>🐸</span> Jimothy Frogbit — croaking daily at 7:30am GMT <span>🐸</span><br>
+      <a href="../morning-croak/" style="color:var(--frog-green);">☕ Back to the archive</a>
+    </footer>
+  </div>
+</body>
+</html>
